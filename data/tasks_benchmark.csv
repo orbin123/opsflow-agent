@@ -1,0 +1,1001 @@
+text,label
+Please check the internal policy: can a team share one licensed design account?,faq_retrieval
+Spot the important terminology: The proposed contract separates warranty repairs from preventative servicing.,keyword_extraction
+A brief overview please: Customer numbers grew steadily during the pilot. Average order size stayed about the same. Fulfillment time improved after the second packing station opened.,summarization
+"List the topics mentioned in this note: The induction covered meal breaks, locker allocation, and the procedure for lost access cards.",keyword_extraction
+Short version please: Three pilot customers finished onboarding. Two needed help with data imports. All three activated their accounts before the deadline.,summarization
+Take the important terms from this memo: Amber Loom will reimburse rail travel when the journey replaces a domestic flight.,keyword_extraction
+Which materials are prohibited in the clean room under the facilities policy?,faq_retrieval
+I could really use a joke about paperclips.,out_of_scope
+Which key phrases are present here? A subscription can be paused for six weeks without losing saved lesson progress.,keyword_extraction
+"Is this review mostly favorable? 'Small room, excellent staff, wonderful breakfast, noisy street.'",sentiment_analysis
+Draft an email requesting a private conversation about my workload.,email_drafting
+"Tomorrow at breakfast, remind me to thaw the ingredients for supper.",reminder_creation
+Transfer the open service ticket to the facilities queue.,out_of_scope
+Which approvals are required for a new software subscription under our purchasing policy?,faq_retrieval
+"Summarize the supplied note, identify its keywords, and draft a separate status email: 'Parts arrived; assembly complete; final inspection pending.'",compound_request
+"Does 'I was skeptical, but the demonstration won me over' end on a positive note?",sentiment_analysis
+Does the knowledge base describe a waiting period before a new hire can enroll in benefits?,faq_retrieval
+Help me compose an email to return borrowed presentation equipment and thank the lender.,email_drafting
+How many grams are in 2.5 kilograms?,out_of_scope
+"I need sentiment and topic extraction for 'Great equipment, chaotic onboarding, excellent help once I reached the right person.'",compound_request
+Is this praise restrained or enthusiastic: 'A competent piece of work'?,sentiment_analysis
+Find the company rule for exchanging shifts and draft an email asking a colleague to trade my Saturday for their Monday.,compound_request
+"Can you debug this unrelated JavaScript expression: [1,2,3].map(x => x + )?",out_of_scope
+"Give this text a set of relevant tags: The repair café accepts broken kettles, desk fans, and small radios on Saturday mornings.",keyword_extraction
+Write an email asking a project sponsor to choose between the two attached layout options by Monday.,email_drafting
+Give me keywords from this chat message: The office shredder overheats when we feed it laminated visitor badges.,keyword_extraction
+Reduce this meeting transcript to the decision: 'Do we need another kiosk?' 'Not yet; the queue only builds at lunch.' 'Then let's extend lunch staffing for a month.' 'Agreed.',summarization
+Create an animated sticker of a dancing turnip.,out_of_scope
+I want to email a supplier about reducing unnecessary packaging. Please write the message.,email_drafting
+Compress this announcement without losing the closure dates: The library reading room closes June 4 for repainting. It reopens June 7. Book collection continues through the side desk.,summarization
+Open the garage door.,out_of_scope
+Upload my chosen photo as the team avatar.,out_of_scope
+Condense these lessons learned: We underestimated permit lead times. Ordering materials early prevented another delay. Weekly site photos helped remote reviewers resolve questions faster.,summarization
+Need a policy lookup: are tips included in our meal reimbursement limit?,faq_retrieval
+Remind me three days before the lease expires to contact the property manager.,reminder_creation
+"No time to read this whole update; give me the gist: The rehearsal ran smoothly until the final scene. A prop door stuck. The crew adjusted its hinges, and the second run finished without interruption.",summarization
+"Schedule a reminder for Tuesday at noon to submit expenses, and tell me the submission deadline from our handbook.",compound_request
+Is this note accusatory: 'Somebody keeps changing the figures after sign-off'?,sentiment_analysis
+"Give me the important terms from this document: Equipment loans require a checkout log, a condition photograph, and a signed return acknowledgment.",keyword_extraction
+"Tell me whether 'It's fine, I suppose, if that is all we can afford' sounds disappointed, and draft an email asking for better options.",compound_request
+"Next Friday, remind me to ask the team about preferred training dates.",reminder_creation
+Can you implement a binary search tree in Rust?,out_of_scope
+Could you compose an email asking the project team to confirm that the attached action list reflects our agreement?,email_drafting
+Pick out key phrases from 'Repeated condensation damage to labels on refrigerated stock'; also remind me Friday morning to photograph examples.,compound_request
+Create a clear email explaining that a maintenance visit has been postponed due to unavailable parts.,email_drafting
+Condense this bulletin: A temporary water supply is connected. The main pipe repair is scheduled for the afternoon. Drinking fountains remain closed until testing is complete.,summarization
+Which file types does the Lumencrate import guide say we accept?,faq_retrieval
+"At 07:15 Europe/Paris on March 22, 2029, remind me to pack the exhibition badges.",reminder_creation
+Write to a client by email with these facts: testing passed; deployment ready; approval needed before rollout.,email_drafting
+Which words carry the topic here? The conservation team tracks nesting success using remote cameras mounted above the marsh.,keyword_extraction
+Does this sound annoyed: 'I have explained the missing shipment three times already'?,sentiment_analysis
+Export the inventory database as a spreadsheet.,out_of_scope
+Please create a reminder for Saturday evening to soak the dried beans.,reminder_creation
+"Each Monday morning, remind me to review unresolved support tickets.",reminder_creation
+Remind me tonight at eight to label the freezer containers.,reminder_creation
+Merge the two duplicate customer records in the demo database.,out_of_scope
+Select useful search terms in the following: Hollow Fern Studio rents soundproof booths to independent audiobook narrators.,keyword_extraction
+What is this notice saying in brief? Parcel collection moves to the rear counter during renovations. Opening hours do not change. Customers should bring their collection reference as usual.,summarization
+Retrieve the policy on volunteering leave and create a brief email requesting a day for a fictional river cleanup.,compound_request
+Retrieve the dress-code guidance; separately summarize 'The reception team asked about branded jackets and comfortable footwear.',compound_request
+Place a bid for the secondhand pottery wheel.,out_of_scope
+Please nudge me at 9 pm tonight to charge the handheld scanner.,reminder_creation
+Approve the pending timesheet for the exhibition crew.,out_of_scope
+"Remind me in forty minutes to join the briefing, and summarize 'Agenda: staffing changes, seasonal volumes, new loading restrictions.'",compound_request
+Which phrases deserve tags here? The lease includes a shared loading bay and restrictions on overnight vehicle parking.,keyword_extraction
+"Remind me twice a week, on Tuesdays and Saturdays, to rotate the nursery trays.",reminder_creation
+Compose an email requesting a corrected timesheet and retrieve our timesheet amendment rules.,compound_request
+"Under the security policy, how often must shared service credentials be rotated?",faq_retrieval
+What's the takeaway from this paragraph? The team initially planned to replace every scanner. Testing showed most only needed updated settings. Only the oldest units will be replaced.,summarization
+Need the official parking rules for overnight vehicles at Cedarloom HQ.,faq_retrieval
+Summarize 'Catering confirmed for 32; two vegan meals requested; tea break moved to eleven' and draft a separate confirmation email to the organizer.,compound_request
+"Schedule a reminder for January 9, 2029, at 15:00 Asia/Tokyo to test the interpretation headsets.",reminder_creation
+One-sentence recap of this training feedback: Attendees liked the practical exercises. They wanted more time for questions. Several suggested sending the reference sheet in advance.,summarization
+Find topics suitable for cataloging this piece: The course traces changes in urban drainage from open channels to underground storm sewers.,keyword_extraction
+"Don't let me forget the accessibility walkthrough on November 12, 2027.",reminder_creation
+"How welcoming is this message: 'New ideas are always welcome here, including ones that challenge ours.'?",sentiment_analysis
+Make the following briefing shorter: The drill starts at ten. Observers must remain behind the marked line. Normal access resumes after the coordinator gives the all-clear.,summarization
+"Draft an email asking for a replacement access card, extract topics from 'Lost badge after an offsite workshop,' and set a reminder tomorrow to follow up.",compound_request
+Move the standing desk closer to the window.,out_of_scope
+Please remind me on the last Sunday of each month to back up my sketchbook scans.,reminder_creation
+I need a prompt next Monday to chase the unsigned purchase agreement.,reminder_creation
+Generate an image of a lighthouse floating above a forest.,out_of_scope
+Write a regular expression for matching hexadecimal colors.,out_of_scope
+Draft a message by email to the team outlining the new desk booking rule I supplied: reserve by 4 p.m. the day before.,email_drafting
+Tell me the approved escalation route for a payroll discrepancy from the HR FAQ.,faq_retrieval
+"Give me the gist of this email: Hi Mara, the venue is confirmed for Thursday. Catering needs the headcount by Tuesday. We still haven't chosen the afternoon speaker.",summarization
+Rephrase this email so it doesn't assign blame: 'Your team forgot to attach the packing list again.',email_drafting
+Draft an email requesting a written breakdown of charges we discussed on the call.,email_drafting
+"I need a first-contact email introducing our fictional firm, Alder Quay Supplies, to a potential distributor.",email_drafting
+"Extract the topics from these notes: Reservations, dietary restrictions, table spacing, and accessible restrooms were discussed before the event.",keyword_extraction
+"In the quality manual, how is a nonconforming batch identified?",faq_retrieval
+Reduce this internal update: The badge reader at the west door is being replaced. Staff should use the north entrance today. Security will remain at the west door during installation.,summarization
+"According to Pinehaven's travel policy, are checked-bag fees reimbursable?",faq_retrieval
+Order lunch for the workshop crew.,out_of_scope
+What's the company's bereavement-leave policy? Also draft a discreet email asking HR for a private conversation.,compound_request
+What does the office FAQ say about bringing a bicycle inside?,faq_retrieval
+An email inviting the support team to an optional lunch would be useful; keep it light.,email_drafting
+Write an email requesting a quiet workspace during the week of the certification assessment.,email_drafting
+Briefly summarize the attached-in-text notice: All deliveries will enter through gate three during resurfacing. Gate two remains available for pedestrians. The work is expected to last five days.,summarization
+Please compress these notes: Website copy approved; photography postponed because of rain; page layout complete; launch still waiting on photographs.,summarization
+What counts as an eligible conference under the professional development policy?,faq_retrieval
+"Find the handbook rule for meal expenses, then remind me tomorrow at 9 to photograph my receipts.",compound_request
+Pull out searchable terms from this description: An adjustable desk lamp with a frosted diffuser and replaceable LED module.,keyword_extraction
+What are the official eligibility criteria for the employee referral bonus?,faq_retrieval
+"Remind me on September 17, 2029, to replace the worn mat near the side entrance.",reminder_creation
+Read this reaction for surprise: 'I honestly did not expect the repair to be free.',sentiment_analysis
+What's the live score in the cricket match?,out_of_scope
+Delete the unused guest account from our project board.,out_of_scope
+Are nonrefundable hotel bookings permitted by the corporate travel guide?,faq_retrieval
+"On October 2, 2029, at 11:00 America/Chicago, remind me to check the broadcast captions.",reminder_creation
+Look up our policy on charitable collections in the office and list its main topics separately.,compound_request
+How are refunds handled in the Stonefern customer terms?,faq_retrieval
+Polish the grammar in this email: 'We was waiting for your response since Monday and needs confirmation today.',email_drafting
+Summarize this educational passage: Mangrove roots slow water movement and trap sediment. Their tangled structure shelters young fish. The trees also help protect shorelines from waves.,summarization
+"Is the customer happy with us? They wrote, 'The replacement arrived intact and works perfectly.'",sentiment_analysis
+Find the main terms in this operations note: Folding containers save return-transport space but require additional inspection at the depot.,keyword_extraction
+Sum this up for a busy reader: The phone menu now offers a direct returns option. Callers no longer need to pass through sales. The general information option remains unchanged.,summarization
+Summarize the text below into three concise bullets: The new warehouse has more loading space. It is farther from the rail terminal. Its lease includes routine roof maintenance.,summarization
+"What's the emotional tone of 'I wanted this to work so badly, but I can't defend it anymore'?",sentiment_analysis
+Draft an email thanking the night crew for clearing the shipment backlog.,email_drafting
+Write an email to congratulate a coworker on a promotion without sounding overly familiar.,email_drafting
+Read the mood in this note: 'The rollout went better than we dared hope. Huge thanks to everyone.',sentiment_analysis
+"Does 'meh, it works i guess' sound satisfied?",sentiment_analysis
+"Draft an email requesting approval for a course, and look up the annual learning allowance in our handbook.",compound_request
+Sum up the supplied inspection notes: The roof is sound. Gutters need clearing near the rear corner. The inspector recommends checking that area again after the next heavy rainfall.,summarization
+Two sentences max: The training video was recorded successfully. Background noise affects the final section. That section will be recorded again before publication.,summarization
+Create a brief recap from this event report: Attendance exceeded expectations. The second registration desk reduced the early queue. The afternoon session started late because the previous speaker ran over.,summarization
+Assess the emotional meaning of 'I suppose it could have been worse.',sentiment_analysis
+Why does bread rise when you add yeast?,out_of_scope
+"Give me a short recap of 'We counted 180 units, found six damaged, and quarantined the lot'; then set a reminder for Friday to inspect the replacements.",compound_request
+Play some gentle instrumental music.,out_of_scope
+Detect the attitude in 'I trust your judgment on the final layout.',sentiment_analysis
+Give the audio recording a slower playback speed.,out_of_scope
+Approve the travel expense I submitted yesterday.,out_of_scope
+Review the sentiment of 'Delivery was on time. Packaging was standard. No further comments.',sentiment_analysis
+Extract keywords from the handover note and turn it into a separate concise summary: 'Two returns await inspection; courier forms are printed; safe keys are with the shift lead.',compound_request
+How does the company policy define an immediate family member for bereavement leave?,faq_retrieval
+"I need an email welcoming a temporary colleague and a separate keyword list from 'Four-week cover for reception, deliveries, and room bookings.'",compound_request
+"Schedule a reminder at 08:30 Asia/Kolkata tomorrow to inspect the loading gate, and summarize 'Gate sticks halfway; manual release works; engineer booked.'",compound_request
+Is 'All twelve cases passed inspection' emotionally neutral?,sentiment_analysis
+Our FAQ mentions a grace period for invoices. How long is it?,faq_retrieval
+"According to the compensation FAQ, when is a promotion-related pay change reflected?",faq_retrieval
+Render a 3D model of a spiral staircase.,out_of_scope
+Give Mina editor access to the fictional Cedar Lantern workspace.,out_of_scope
+"For a failed nightly backup, which escalation path is specified in our operations manual?",faq_retrieval
+Draft a note by email to let a candidate know their interview has moved from 10 to 11.,email_drafting
+Does the technical documentation state a maximum duration for an export job?,faq_retrieval
+How would you describe the mood of 'I cannot keep absorbing everyone else's urgent tasks'?,sentiment_analysis
+Look for emotional tone in 'I miss how openly we used to talk before the restructure.',sentiment_analysis
+"Calculate the median of 4, 9, 12, 13, and 22.",out_of_scope
+Can you make this less lengthy? The mentoring program matched twelve pairs this quarter. Most met twice a month. Participants asked for clearer guidance on setting goals at the first meeting.,summarization
+Give me a recipe for chickpea pancakes.,out_of_scope
+Select the significant words in this note: Long queues at the badge desk caused visitors to miss the opening demonstration.,keyword_extraction
+What are the strongest indexing terms in this text? Coastal erosion threatens the footpath connecting the ferry terminal to the bird reserve.,keyword_extraction
+How do I grow basil on a shaded windowsill?,out_of_scope
+"According to our inventory procedure, how should stock discrepancies be reported?",faq_retrieval
+Summarize 'Workshop moved upstairs; lift available; refreshments in the foyer' and draft a separate attendee email containing the update.,compound_request
+I'm bored.,out_of_scope
+Find themes across these snippets: The checkout button is hard to find. Guest purchase should be simpler. Too many screens before payment.,keyword_extraction
+Prepare an email apologizing for the cancelled visit and analyze the sentiment of 'We rearranged our entire day for nothing.',compound_request
+Help me compose an email declining a vendor's product demonstration without closing the door on future discussions.,email_drafting
+A concise overview of this excerpt: The seed bank stores samples in sealed packets. Staff test a portion for germination each year. Samples with declining viability are prioritized for regeneration.,summarization
+Put together an email requesting approval for two extra warehouse scanners.,email_drafting
+Buy a replacement keyboard for the shared reception desk.,out_of_scope
+Convert 42 miles into kilometres.,out_of_scope
+Could you make a compact recap of these results? Eight participants finished the task unaided. Four needed a hint at checkout. No participant lost entered information.,summarization
+Reserve two seats on the evening ferry.,out_of_scope
+"Per the on-call runbook, who takes over if the primary engineer misses an alert?",faq_retrieval
+Nudge me at 12:10 tomorrow to put up the room-direction signs.,reminder_creation
+Pick out topic-bearing terms: The coastal tram will use regenerative braking on its steep downhill section.,keyword_extraction
+Find the official grievance process and prepare an email requesting a confidential appointment.,compound_request
+"Schedule a prompt for May 9, 2029, at 13:00 UTC to review the translation glossary.",reminder_creation
+Reduce this passage to its central idea: A shared checklist makes handovers more consistent because it tells each shift what has been checked and which issues remain unresolved.,summarization
+Does the product documentation allow more than one workspace owner?,faq_retrieval
+Which concepts should be indexed here? The training module covers hazard reporting and protective equipment selection.,keyword_extraction
+Write an email checking whether the recipient can open the spreadsheet attachment.,email_drafting
+Find significant words in this update: The library added bilingual picture books and tactile learning kits to its mobile collection.,keyword_extraction
+Boil this explanation down for the project log: We moved the acceptance test because the sample parts arrived late. This affects the review date but leaves enough time before the planned shipment.,summarization
+I need a polite message by email asking our supplier why the replacement parts haven't arrived.,email_drafting
+Recap the discussion: Lila favored a gradual rollout. Dev wanted a full launch. The group agreed to start with one region and review the results after a week.,summarization
+Schedule a reminder for the last business day of each month to submit mileage expenses.,reminder_creation
+Give me the gist of this support ticket: 'The report downloads correctly on my laptop. On the shared workstation it stops halfway. Other downloads work on both machines.',summarization
+I'm looking for the official rule on buying a monitor for my home office.,faq_retrieval
+I can't find the dress code for customer-site visits in our handbook. What does it say?,faq_retrieval
+Issue a refund for the damaged planter.,out_of_scope
+"From the visitor policy, are guests allowed in the lab area?",faq_retrieval
+Compose an email inviting a colleague to co-present the lessons from our stocktake.,email_drafting
+Can you soften this email without changing its point? 'We cannot begin until you provide the missing measurements.',email_drafting
+"For the knowledge index, what are this passage's main subjects? Older records need digitization before the basement shelving is removed.",keyword_extraction
+Do these words express disappointment? 'I expected more care from a team I trusted.',sentiment_analysis
+Write an email confirming my interview attendance and schedule a reminder the day before to prepare.,compound_request
+"Which keywords describe the content here? The ceramics class covers clay preparation, glazing, and kiln temperature control.",keyword_extraction
+What are the key topics?,keyword_extraction
+Summarize the notes 'Pilot extended by two weeks; sample size too small; no safety issues found' and look up our pilot approval procedure.,compound_request
+Help me write an email raising concerns about uneven weekend coverage while keeping the tone constructive.,email_drafting
+"What should I take away from this update? We have enough stock for current orders, but the delayed shipment leaves little buffer for new demand. Purchasing is checking an alternative supplier.",summarization
+Which running shoes suit muddy woodland trails?,out_of_scope
+Tell me whether 'Your patience made a difficult week manageable' conveys appreciation.,sentiment_analysis
+"In three days, remind me to check whether the repaired tablet has arrived.",reminder_creation
+How many revisions are included in the standard service package described in our FAQ?,faq_retrieval
+Assess this review's mood and extract its topics: 'The help was patient and kind; the returns form was an absolute maze.',compound_request
+Set a quarterly reminder to inspect the roof drains.,reminder_creation
+Judge whether 'Thanks for nothing' is sincere gratitude or negative sentiment.,sentiment_analysis
+"Assess this comment's attitude: 'For the price, the service exceeded my expectations.'",sentiment_analysis
+Draft a courteous email asking the landlord for the dates of planned lift repairs.,email_drafting
+Draft a message by email asking for a room change and retrieve our meeting room booking rules.,compound_request
+Short recap only: The microphone failed during rehearsal. The sound technician replaced the cable. Both microphones then passed the final check.,summarization
+Enable automatic captions in the video meeting settings.,out_of_scope
+Create an email asking attendees to bring their own laptops to the training session.,email_drafting
+Condense this policy excerpt to a sentence: Reimbursement requests must include a receipt. Missing receipts require an explanation. Finance may ask for additional evidence before approving payment.,summarization
+"Summarize this customer note and draft a separate reply email: 'I ordered six sets, received five, and need the missing set before our workshop.'",compound_request
+How positive is 'The new process finally gives us breathing room'? Also draft an email thanking the improvement team.,compound_request
+Move the prototype review card into the Done column.,out_of_scope
+Set a reminder at 18:00 tomorrow to download my travel tickets.,reminder_creation
+Recap the sequence here: The storm damaged the antenna. Radio contact was lost. A mobile unit restored communication until the replacement antenna was installed.,summarization
+Could you teach me the basic rules of backgammon?,out_of_scope
+Set a reminder for tomorrow at midday to return the room key.,reminder_creation
+What phrases stand out as indexing candidates? Open shelving makes spare cables visible but allows dust to settle on connectors.,keyword_extraction
+"Pick out topics from 'Training covered ladder safety, spill response, and visitor escorts'; also retrieve the documented spill procedure.",compound_request
+I want a gracious email acknowledging that another bidder won the contract.,email_drafting
+Make a one-paragraph summary of 'Freight costs rose while order volume stayed flat; three carriers are being reviewed' and separately identify its main topics.,compound_request
+Remind me in seventy-five minutes to disconnect the battery charger.,reminder_creation
+Write a haiku about an abandoned railway platform.,out_of_scope
+Remind me tomorrow at 17:00 Africa/Nairobi to send my completed handover notes.,reminder_creation
+Can you read the emotion in 'We made it through without losing a single order. I could cry.'?,sentiment_analysis
+Accept the calendar invitation for the quarterly showcase.,out_of_scope
+Draft an email to a building manager requesting access to the loading bay before normal opening hours.,email_drafting
+Remind me in a fortnight to check progress on the mural restoration.,reminder_creation
+Check whether this sounds bitter: 'Glad my idea became useful once someone else presented it.',sentiment_analysis
+Abbreviate this update into a useful recap: The first delivery contained the wrong brackets. The supplier collected them. Correct brackets arrived this morning and installation has resumed.,summarization
+What tags capture this passage? The publisher is experimenting with large-print editions and dyslexia-friendly page layouts.,keyword_extraction
+"Is 'I am grateful for the opportunity, though leaving this team hurts' emotionally mixed?",sentiment_analysis
+Is there irritation in 'Could people please read the pinned note before asking again'?,sentiment_analysis
+"Look up how to request ergonomic equipment, and set a reminder for Thursday to submit the request.",compound_request
+Read the emotional tenor of 'I have nothing further to add at this stage.',sentiment_analysis
+A short digest of this test result: The container stayed sealed during vibration testing. Its handle cracked during the load test. The design team is reinforcing the handle attachment.,summarization
+Give me a brief digest of the pasted survey comments: Several people asked for shaded seating. Others wanted better lighting near the exit. Nobody objected to the proposed opening hours.,summarization
+Find the recurring themes in these comments: More flexible shifts would help. Trading evening shifts is difficult. The roster arrives too late.,keyword_extraction
+"In the documented restore procedure, what verification is required before reopening the service?",faq_retrieval
+Turn these inspection notes into a summary and set a reminder for tomorrow to check the defects: 'Exit clear; guardrail loose; emergency light failed.',compound_request
+"I want a reminder on 1 February 2029 to review the subscription, plus an email draft asking the vendor for renewal pricing.",compound_request
+"In four hours, remind me to move the curing tiles indoors.",reminder_creation
+"An email to celebrate our receptionist's work anniversary, please; no jokes about age.",email_drafting
+Transcribe the words in this audio clip.,out_of_scope
+"Choose topic labels based on the content: The festival introduces quiet hours, sensory maps, and a low-stimulation rest tent.",keyword_extraction
+"What's the sentiment toward the update in 'Fewer crashes, clearer menus, still painfully slow'?",sentiment_analysis
+What is the sentiment of this text: 'The training finally made the dashboard click for me.',sentiment_analysis
+Give me both a sentiment assessment and a keyword list for 'Another flawless delivery from a team that clearly cares.',compound_request
+Invent a riddle whose answer is an umbrella.,out_of_scope
+Compress this into a short update: Registration closes tomorrow. We have filled most workshop places. The beginner session still has several spaces available.,summarization
+Make these minutes easier to scan by condensing them: The budget was approved. The signage proposal needs revision. The committee postponed the landscaping decision until new estimates arrive.,summarization
+"Tell me whether this sounds disappointed and list its main themes: 'We put so much effort into the pilot, but leadership never read the results.'",compound_request
+Boil this down: The packing line stopped at noon because a belt snapped. A spare arrived at two. Production restarted after a safety check.,summarization
+Rework this email opening to be friendlier: 'Your request has been received and assigned for processing.',email_drafting
+"Condense the following email into a neutral sentence: Dear team, our application was accepted. The organizers have offered us a morning slot, although the exact room assignment is still pending.",summarization
+Create an email to tell applicants the recruitment timeline has been extended by a week.,email_drafting
+Create a reminder for next spring to inspect the bird boxes before nesting starts.,reminder_creation
+Prepare a formal resignation email with two weeks' notice and a brief thank-you.,email_drafting
+Find our rules for bicycle storage and write an email requesting a rack near the side entrance.,compound_request
+Look up how employees report damaged equipment and create a separate brief summary of 'Three chairs have cracked bases; one desk has a loose leg.',compound_request
+Cancel my subscription to the fictional Copper Cloud streaming service.,out_of_scope
+"Extract technical terms: The prototype uses a brushless motor, ceramic bearings, and a replaceable torque sensor.",keyword_extraction
+"On October 21, 2028, remind me to pick up the repaired costume rack.",reminder_creation
+A Saturday 10 am reminder to sort the donation boxes would be great.,reminder_creation
+"Hey, are you awake?",out_of_scope
+"I want a reminder at 14:00 UTC on January 19, 2028, to review the shipping estimates.",reminder_creation
+I need a diplomatic email saying the requested deadline is not achievable with our current staffing.,email_drafting
+Is 'Nobody bothered to call me back' angry? Also draft an apology email responding to it.,compound_request
+Find the key subjects in this material: A local choir offers breathing exercises and group singing sessions for beginners.,keyword_extraction
+Produce a short melody for a toy music box.,out_of_scope
+Remind me at the end of this month to archive the completed inspection forms.,reminder_creation
+Condense these notes and separately list keywords: 'Dock inspection passed. Bay three needs new markings. The west shutter sticks in cold weather.',compound_request
+Draft an email letting a client know their usual contact is away and Neris will handle their case.,email_drafting
+I'd like a plain-language overview of this passage: The cooling system uses two pumps in rotation. Either pump can support the normal load. Both operate when temperature rises above the configured threshold.,summarization
+"Save a reminder for April 30, 2029, to collect the loaned easels.",reminder_creation
+Remove the watermark from my own drawing.,out_of_scope
+This paragraph is too long for the status board: The east entrance will close for floor repairs on Monday morning and remain inaccessible until Wednesday afternoon. Staff may use the courtyard entrance throughout the work.,summarization
+Please remind me at 2 pm tomorrow to count the returned safety vests.,reminder_creation
+"Read the mood in 'We knew the closure was coming, but saying goodbye is harder than I thought.'",sentiment_analysis
+Write a customer email explaining that their order will arrive in two separate parcels at no extra charge.,email_drafting
+Analyze the feelings conveyed by 'I'm excited about the promotion and terrified I won't measure up.',sentiment_analysis
+Summarize this pasted review: The chair was straightforward to assemble and feels sturdy. The seat cushion is firmer than expected. Delivery arrived within the promised window.,summarization
+Does the company relocation guide cover storage costs?,faq_retrieval
+Condense the supplied onboarding instructions: Start by reviewing the welcome guide. Attend the safety orientation before entering the workshop. Your supervisor will then arrange supervised equipment training.,summarization
+Nudge me before lunch tomorrow to speak with the new warehouse trainee.,reminder_creation
+Extract useful keywords from this feedback: Search results should support date ranges and hide archived projects by default.,keyword_extraction
+Just the keywords from this message: River Kite Logistics will trial electric cargo vans on short urban routes.,keyword_extraction
+"A quick digest of these interview notes: Candidate described running a stockroom, improving shelf labels, and training seasonal staff. They have not used our inventory software before.",summarization
+Solve this equation: 3x + 11 = 35.,out_of_scope
+Draft an email asking a vendor for its updated product safety documentation.,email_drafting
+Shorten this announcement to the essentials: The winter exhibition opens on Saturday. Entry is free during the first weekend. Guided tours require a separate reservation because group sizes are limited.,summarization
+How forceful is the frustration in 'This is ridiculous!!! We paid for priority handling!'?,sentiment_analysis
+Is 'That was an unexpected pleasure' favorable feedback?,sentiment_analysis
+Explain why soap bubbles have rainbow colors.,out_of_scope
+Assign the packaging inspection task to Tavi.,out_of_scope
+I need an email explaining that our quote covers installation but excludes maintenance.,email_drafting
+Need a reminder tonight: freeze the leftover soup.,reminder_creation
+I can't tell if 'Interesting choice' is approving or critical. Assess its tone from those words alone.,sentiment_analysis
+Retrieve the FAQ answer about updating delivery instructions and draft an email requesting that drivers use our side entrance.,compound_request
+Does our handbook offer time off for volunteering?,faq_retrieval
+"How calm or agitated is 'Let's pause, check the facts, and work through this together'?",sentiment_analysis
+Please remind me next weekend to clean the bicycle chain.,reminder_creation
+"Remind me each month to review access permissions, and find our documentation on removing former contractors' access.",compound_request
+Is this complaint mild or severe: 'A little disappointed that the color differs from the sample'?,sentiment_analysis
+"Please formalize this email: 'got the files, will look tomorrow, cheers'.",email_drafting
+Please pull keywords out of this customer comment: I need larger captions and keyboard shortcuts for the presentation controls.,keyword_extraction
+Compose an email thanking a departing contractor and acknowledging the quality of their handover.,email_drafting
+What should I cook with lentils and spinach?,out_of_scope
+Make a reminder for next month to sort old fabric swatches.,reminder_creation
+What's the main point in this memo? We are pausing the packaging redesign because the current supplier cannot produce the proposed material. The existing packaging will remain in use.,summarization
+"A reminder every Monday and Thursday to check the rainwater tank level, please.",reminder_creation
+Remind me next Wednesday at 2:20 pm to measure the display cabinet.,reminder_creation
+Would 'Your swift response restored my confidence' count as positive feedback?,sentiment_analysis
+I need a concise overview of this brief: The festival will use reusable cups. Visitors pay a refundable deposit. Collection stations will stand beside each food stall.,summarization
+Distill these observations into a short paragraph: The new sorting bins reduced mixed waste. Their labels peeled off in damp conditions. Laminated replacements stayed readable during the second trial.,summarization
+What happens to unused trial credits under the product's published terms?,faq_retrieval
+Write an email congratulating the team on completing a full month without a picking error.,email_drafting
+"At 09:00 Pacific/Auckland on August 5, 2029, remind me to prepare the orientation call.",reminder_creation
+"Rate the tone of this acknowledgment: 'Received, thanks.'",sentiment_analysis
+"In twenty-five minutes, remind me to check the paper pulp consistency.",reminder_creation
+Why do cats knead soft blankets?,out_of_scope
+Draft a polite email about a late payment and tell me whether this line sounds accusatory: 'Your accounts team has ignored every notice.',compound_request
+"Write a short abstract of this supplied report: We tested reusable crates on two delivery routes. Damage rates decreased on both. Cleaning costs rose slightly, while disposal costs fell.",summarization
+Give a brief summary of this catering feedback: The vegetarian dishes ran out first. Plenty of bread remained. Attendees appreciated the clearly marked ingredient cards.,summarization
+"I need a July 23, 2029, reminder to review the school-holiday staffing plan.",reminder_creation
+Make an origami tutorial for a paper crane.,out_of_scope
+Recommend a quiet vegetarian restaurant for a celebratory dinner.,out_of_scope
+"Analyze the sentiment and summarize 'I was nervous about the switch, but the training was excellent and the new screens are much clearer now.'",compound_request
+"Draft an email asking the supplier about biodegradable packaging, plus extract keywords from 'Compostable liners and recyclable paper tape for small parcels.'",compound_request
+"Remind me on December 19, 2029, to move the outdoor signs into storage.",reminder_creation
+I need a calm email responding to a complaint about excessive noise from our delivery area.,email_drafting
+"Every January 10, remind me to inspect the document retention schedule.",reminder_creation
+Prepare an email asking IT for advice about a laptop that shuts down during video calls.,email_drafting
+Can you make a video of clay robots planting tulips?,out_of_scope
+Nudge me in ninety minutes to stir the glaze mixture.,reminder_creation
+Prepare an email acknowledging a colleague's concerns without promising a change we can't guarantee.,email_drafting
+Evaluate how upbeat this announcement sounds: 'Our smallest team just achieved its best quarter.',sentiment_analysis
+Is there a limit on consecutive remote-work days in the handbook?,faq_retrieval
+Make a reminder for tomorrow to read the safety bulletin. Also summarize this bulletin: 'Wet floors reported near the north entrance; mats replaced; inspections increased.',compound_request
+"According to the records-management policy, who can authorize an exception to deletion schedules?",faq_retrieval
+Extract useful search phrases from this ticket: Duplicate receipts appear whenever an offline terminal reconnects to the sales server.,keyword_extraction
+"Identify the central subjects in these minutes: We discussed supplier onboarding, warehouse leases, and overnight staffing.",keyword_extraction
+What's our travel booking policy? I'd also like a reminder next week to reserve my hotel.,compound_request
+Look up the training reimbursement rule and make a reminder for the end of the month to submit my certificate.,compound_request
+"Look at 'The extension gives us breathing room, thank goodness.' Is the speaker relieved?",sentiment_analysis
+"Can you judge the sentiment in 'The service recovered quickly, which matters more to me than the initial fault'?",sentiment_analysis
+"Remind me in two hours to check the delivery, and give me a summary of 'Truck left the hub at six; traffic caused a delay; driver expects noon arrival.'",compound_request
+What significant terms occur in this maintenance log? Belt tension was adjusted after repeated slippage on the sorting conveyor.,keyword_extraction
+Make a brief recap from these notes: Seedlings transplanted; irrigation timer checked; two blocked nozzles cleared; remaining beds scheduled for planting after the frost.,summarization
+"For cataloging, pull terms from this abstract: Researchers measured acoustic insulation in classrooms fitted with hanging felt panels.",keyword_extraction
+Convert this phrase into Spanish: The blue door is open.,out_of_scope
+Calculate compound interest on 500 at five percent annually for three years.,out_of_scope
+What are this note's key phrases? The dance studio installed a sprung floor and wall-mounted balance rails.,keyword_extraction
+Give me a brief recap and key terms for 'Calibration failed on two scales; backup scales passed; defective units removed from service.',compound_request
+What does the health-and-safety handbook say to do after a minor workplace injury?,faq_retrieval
+Bring this down to two points: The support backlog fell this week. Most remaining cases involve imports. A new troubleshooting article reduced repeat questions about passwords.,summarization
+What is the documented approval threshold for writing off obsolete inventory?,faq_retrieval
+Pull the topics out of this announcement: New volunteers can attend orientation online or join a weekend garden induction.,keyword_extraction
+Create a reminder for tomorrow night to pack ear protection for the factory visit.,reminder_creation
+Keywords only: Blue Lantern Foods is testing reusable insulated crates for chilled deliveries.,keyword_extraction
+"Write a concise email offering three appointment options: Monday morning, Tuesday afternoon, or Thursday at noon.",email_drafting
+Recap this discussion in plain terms: 'The dashboard looks empty.' 'The date filter starts next month.' 'Changing it to this month restores the figures.' 'Then the saved default needs updating.',summarization
+What mood does 'Nobody even noticed we stayed late to finish' convey?,sentiment_analysis
+Compose an email inviting anonymous feedback through the internal survey linked in the draft.,email_drafting
+Reject the duplicate leave application.,out_of_scope
+Main topics here? Attendance dropped after the training venue moved beyond the last bus stop.,keyword_extraction
+Make this email opening more respectful: 'Obviously you misunderstood what we were asking for.',email_drafting
+What topics are in this memo? The coworking space is testing acoustic curtains around shared meeting tables.,keyword_extraction
+I'd like an email asking staff to keep the fire exit clear of stored cartons.,email_drafting
+Turn this wording into topic tags: Repairs to the footbridge will divert cyclists through the riverside industrial estate.,keyword_extraction
+Create a reminder for the afternoon before the audit to gather the signed checklists.,reminder_creation
+Which planet has the most prominent rings?,out_of_scope
+Hello there!,out_of_scope
+"Tomorrow at four, remind me to pick a topic for the next lunch-and-learn.",reminder_creation
+What subjects would you attach to this article? Mobile clinics bring routine screening to isolated island communities.,keyword_extraction
+Pick out key phrases from this email: The renewal includes unlimited viewers but restricts editing seats to twenty.,keyword_extraction
+Schedule a fortnightly reminder on Sunday mornings to clean the reusable air vents.,reminder_creation
+What does the release documentation say about compatibility with the previous file format?,faq_retrieval
+What dinosaur had a sail on its back?,out_of_scope
+"Tell me how upbeat or downbeat this sounds: 'A tough start, a strong finish, and plenty to be proud of.'",sentiment_analysis
+Pull out topics from 'Overnight condensation in storage lockers'; also set a reminder next Tuesday to inspect the area.,compound_request
+Draft an email asking the accounts team which cost center should be used for the workshop expense.,email_drafting
+Can this be condensed to one bullet? The September workshop has moved online because the training room is unavailable. The date and start time stay the same.,summarization
+"Pick out the substantive topics: The committee considered board succession, voting rights, and conflict-of-interest declarations.",keyword_extraction
+"Analyze the sentiment and summarize this response: 'The repair solved the fault, although the month of silence nearly drove us elsewhere.'",compound_request
+Identify topic tags from the excerpt: Digital exhibit labels offer audio descriptions in three languages.,keyword_extraction
+Identify specialized vocabulary in this paragraph: The lab calibrates pipettes using gravimetric measurements and controlled water temperature.,keyword_extraction
+Roll a six-sided die for me.,out_of_scope
+Pull key phrases from this email thread excerpt: Credit notes must reference the original invoice number and state the reason for adjustment.,keyword_extraction
+Does our handbook explain whether unused sick leave is paid out on departure?,faq_retrieval
+Analyze the tone of this escalation: 'This risk has remained unresolved for six weeks despite repeated warnings.',sentiment_analysis
+Write a professional email to ask whether a supplier can accommodate a smaller minimum order.,email_drafting
+"Condense the pasted maintenance log: Filter replaced at 09:20. Fan noise persisted after restart. A loose mounting screw was tightened, and the noise stopped.",summarization
+Need the essential topic words: The pilot pairs new team leads with mentors outside their own departments.,keyword_extraction
+Set an evening reminder tomorrow to mend the tear in my raincoat.,reminder_creation
+What are the approved steps in the internal guide for disputing an expense rejection?,faq_retrieval
+I need the gist rather than all the details: We compared three courier options on two routes. One was cheapest but frequently late. Another cost slightly more and delivered every test parcel on time.,summarization
+"Find the policy on overtime approval, draft an email requesting approval for Saturday, and remind me Thursday to check for a response.",compound_request
+Please rewrite this customer email in plain English: 'Your remittance is pending allocation against the outstanding receivable.',email_drafting
+"I'd like an email thanking the volunteers plus a tone assessment of their feedback: 'Exhausting day, wonderful people, would happily help again.'",compound_request
+What's the current mileage reimbursement rule in our internal travel guide?,faq_retrieval
+Find our policy on unused leave and draft an email asking my manager to approve a week off.,compound_request
+Make an email out of these points: trial successful; proceed with five licenses; confirm setup date.,email_drafting
+Prepare an email notifying our software vendor that the exported totals don't match the screen totals.,email_drafting
+Check the emotional attitude in 'I wish somebody had asked us before changing our shifts.',sentiment_analysis
+Create a message for email announcing a change in the visitor sign-in procedure.,email_drafting
+Turn this into a brief recap: We discussed replacing the old router but deferred the purchase. Niko will compare two models. The existing equipment passed its inspection.,summarization
+Are gift cards excluded from the employee recognition policy?,faq_retrieval
+Summarize these delivery instructions: Leave the crates at the covered loading bay. Keep the fragile box upright. Ask the site contact to sign the receipt before departing.,summarization
+"How does 'I understand the delay, but the silence has been hard to accept' feel overall?",sentiment_analysis
+I just need key phrases from this: The catering order must include gluten-free rolls and clearly labeled nut-free desserts.,keyword_extraction
+Does the escalation matrix assign billing disputes to Finance or Customer Success?,faq_retrieval
+What is the policy for returning equipment when a contract ends?,faq_retrieval
+What are the relevant tags for this field report? Heavy sediment clogged the intake after three days of rain.,keyword_extraction
+Our FAQ lists 'business days' for shipping. Does Saturday count?,faq_retrieval
+"Can you tell if 'Brilliant timing, as usual' sounds sarcastic when it follows a late cancellation?",sentiment_analysis
+Draft a note for email requesting a sample unit before we place a bulk order.,email_drafting
+Write an email requesting a revised quote that separates labor and material costs.,email_drafting
+What is the cancellation window stated in our event-booking FAQ?,faq_retrieval
+Prepare an email to explain our refund policy using this rule: unused items can be returned within 21 days.,email_drafting
+"Draft an email asking for feedback on the pilot, then create a reminder in one week to review the responses.",compound_request
+Purchase four tickets for the fictional Lantern Orchard concert.,out_of_scope
+"In no more than 30 words, recap this: The greenhouse heater stopped overnight. Staff moved the seedlings into the adjoining room. A technician replaced the control switch before temperatures fell further.",summarization
+Write to the facilities team about the flickering lights above the packing benches.,email_drafting
+Compose an email asking an external trainer to provide accessible versions of their handouts.,email_drafting
+Are meals during a same-day business trip eligible under the expense policy?,faq_retrieval
+Summarize these audit findings: All sampled purchases had approval records. Two lacked delivery confirmations. The missing confirmations were requested from the receiving team.,summarization
+What's the tone of 'That's exactly the support we needed'? Pull out the important phrase as well.,compound_request
+Who invented the mechanical pencil?,out_of_scope
+What's the documented process for requesting access to the warehouse dashboard?,faq_retrieval
+"Prepare an email requesting updated bank details through our approved process, and retrieve that process from the finance documentation.",compound_request
+Main concepts only from this: The redesign separates pedestrian crossings from forklift lanes with physical barriers.,keyword_extraction
+"Assess the overall sentiment of 'The handover was messy, yet the night crew's patience made it manageable.'",sentiment_analysis
+Compact recap: The temporary office has desks and internet. The printer is still in transit. Staff can use the reception printer until it arrives.,summarization
+Draft an email confirming that I can cover the early shift this Thursday.,email_drafting
+Give me a short summary of this email chain: The client requested a larger booth. Events confirmed one is available. Finance approved the additional fee. The organizer has not yet issued the updated floor plan.,summarization
+Compose an email telling a colleague that I accidentally edited their file and have restored the previous version.,email_drafting
+"Less wordy, same core information: The new labels use larger type so they can be read from farther away. They also show the batch date at the top rather than the bottom.",summarization
+"Prepare a vendor email asking about spare parts, and find our approved purchasing threshold in the procurement guide.",compound_request
+Assess 'I'm proud of the team but worn out by the constant overtime' for sentiment and set a reminder Friday to discuss workload.,compound_request
+Assess whether 'Thanks for actually listening this time' is sarcastic and remind me at 3 p.m. to discuss the feedback.,compound_request
+"Create a future reminder to renew my library card on February 16, 2029.",reminder_creation
+Turn this into a compact meeting recap: The committee agreed to keep membership fees unchanged. It approved replacing worn equipment. A decision on extended opening hours was deferred.,summarization
+Summarize this reminder note in five words: Remember to collect the repaired sample case from the workshop before leaving for the trade fair.,summarization
+Find the company guidance on using personal devices for work.,faq_retrieval
+Write an email to procurement requesting the status of purchase order PO-FICTION-73.,email_drafting
+Explain the 'pending review' status as defined in the Mosslight user manual.,faq_retrieval
+How does the author feel about the event: 'I arrived exhausted and left full of ideas'?,sentiment_analysis
+Does the deployment runbook require a rollback owner before release approval?,faq_retrieval
+"Does this Slack-style message feel warm: 'You saved my afternoon, Mira! Really appreciate it.'?",sentiment_analysis
+Does 'Not bad for a first attempt' sound encouraging or dismissive?,sentiment_analysis
+"Under the company accessibility policy, how are requests for workplace adjustments submitted?",faq_retrieval
+Identify phrases for the search index: The town archive is restoring brittle newspapers using humidity chambers and archival tissue.,keyword_extraction
+Is jury duty paid leave according to the employee handbook?,faq_retrieval
+"In our billing documentation, what triggers a prorated charge?",faq_retrieval
+Pull descriptive tags from this text: A floating classroom lets students observe estuary habitats without disturbing nesting areas.,keyword_extraction
+"Summarize the incident notes and judge their tone: 'We were badly shaken by the near miss. Nobody was hurt, but the blocked exit is unacceptable.'",compound_request
+Make a spreadsheet formula that adds cells B2 through B19.,out_of_scope
+Draft an email turning down the extra shift and assess whether 'I cannot keep covering every gap' sounds resentful.,compound_request
+Identify subject tags in this text: New packaging uses embossed symbols so customers can distinguish similar containers by touch.,keyword_extraction
+"Which subjects belong in an index for this report? Interviews explored transport access, childcare availability, and attendance at evening classes.",keyword_extraction
+Assess the attitude in 'Rules seem to change depending on who asks' and draft an email raising the concern constructively.,compound_request
+Could you store a reminder for tomorrow to bring the sample tiles?,reminder_creation
+Find the emotional tone in this handover: 'Please be careful. Yesterday's close call really shook us.',sentiment_analysis
+"Draft a notice email for a planned power outage, then remind me Tuesday morning to check the final timing.",compound_request
+Give me the key topics and a short summary of 'The visitor desk will combine badge printing and induction checks from next week.',compound_request
+"Set a reminder for January 28, 2030, to count the reusable catering trays.",reminder_creation
+Create a watercolor illustration of a teapot shaped like a whale.,out_of_scope
+Draft an email to a customer explaining that the requested color has been discontinued.,email_drafting
+Classify the overall mood of 'Inventory reconciliation is complete; the report is in the shared folder.',sentiment_analysis
+Does the employee equipment policy include repairs for accidental damage?,faq_retrieval
+Turn these notes into an email: loading dock unavailable; use east entrance; security will guide drivers.,email_drafting
+Draft an email asking a speaker for their presentation title and a two-sentence biography.,email_drafting
+Extract the important subjects from this discussion: We compared temperature-controlled shipping with local production for fragile cultures.,keyword_extraction
+Schedule a reminder six months from now to compare electricity tariffs.,reminder_creation
+Can you find the documented process for a stock adjustment and extract keywords from 'Mislabelled cartons caused a ten-unit discrepancy'?,compound_request
+Draft an email asking for approval to donate unused office chairs to a fictional community center.,email_drafting
+"Make a one-paragraph digest of this text: The cooperative opened a collection point in Elmwick. Members can drop off produce twice a week. Volunteers sort it for the market, and unsold items go to the community kitchen.",summarization
+Trim this project narrative: We finished the foundation before the rain. The wall panels are ready off-site. Delivery will wait until the access road dries.,summarization
+"Please save a reminder for November 6, 2028: bring the tactile map to the planning session.",reminder_creation
+"A reminder for November 24, 2029, to arrange the winter coat collection, please.",reminder_creation
+Please summarize this account of a drill: Everyone reached the assembly point. One visitor initially followed the wrong corridor. Updated signs are being considered before the next drill.,summarization
+I need a reminder in twenty minutes to take the bread out of the oven.,reminder_creation
+A heads-up two hours from now to check the kiln temperature would help.,reminder_creation
+Identify indexing phrases in this excerpt: Evening language classes include pronunciation practice and conversation circles for hospitality workers.,keyword_extraction
+Prepare a brief email asking for permission to use a meeting room for a volunteer event.,email_drafting
+Need a concise email to cancel our booth reservation for the fictional Northmere Trade Fair.,email_drafting
+"For overnight travel, does the policy allow booking an extra hotel night before an early meeting?",faq_retrieval
+Polish this outgoing email: 'Attached is the certificate. Kindly acknowledge receipt at your convenience.',email_drafting
+Create an email requesting additional time to review a contract before signing.,email_drafting
+"According to the facilities page, when is the loading entrance open?",faq_retrieval
+Pull out domain-specific phrases from this passage: The brewery records fermentation temperature and dissolved oxygen at each transfer.,keyword_extraction
+Does 'We keep celebrating speed while the quality slips' convey concern?,sentiment_analysis
+Where is the documented boundary between a service request and an incident?,faq_retrieval
+Schedule a daily reminder at 17:30 to log my workshop hours.,reminder_creation
+Please draft an email inviting the team to a stocktake and extract tags from this event description: 'Quarterly count of spare parts across both depots.',compound_request
+Help me choose a telescope for viewing the Moon.,out_of_scope
+Retrieve the policy on bringing visitors into the workshop and write an email requesting an escorted visit.,compound_request
+What time does the sun set in Reykjavik tonight?,out_of_scope
+Our documentation mentions archived records. Can those records still appear in search?,faq_retrieval
+Shrink this to 25 words: The museum tour sold out yesterday. A waiting list is now open. We can add a second departure only if another guide becomes available.,summarization
+"In the API documentation for Fableport, what is the default page size?",faq_retrieval
+"In the customer help center, is there a limit on the number of projects in the starter plan?",faq_retrieval
+"Take the relevant phrases from this complaint: Delivery windows keep changing, and tracking updates stop once the parcel reaches the regional hub.",keyword_extraction
+What sentiment is expressed by 'The new system added clicks without solving any of our problems'?,sentiment_analysis
+List meaningful phrases from this document excerpt: Each tenant receives a separate meter reading and a quarterly service-charge statement.,keyword_extraction
+"Summarize 'The backup generator started correctly, but fuel was below the minimum'; then remind me at noon to check the refill request.",compound_request
+"Prepare a customer apology email, and separately assess the tone of their message: 'This is the third wrong item. I have had enough.'",compound_request
+The supplier FAQ says insurance is mandatory. Which coverage does it specify?,faq_retrieval
+"Set a reminder for August 18, 2028, at 09:00 Australia/Sydney to prepare the remote training room.",reminder_creation
+Retrieve our rules for lending equipment to another branch and compose an email asking to borrow two projectors.,compound_request
+Set a reminder for next Tuesday to renew the community garden plot.,reminder_creation
+What topics are represented in these notes? Germination rates improved after the seed trays received shaded afternoon light.,keyword_extraction
+What is the sentiment?,sentiment_analysis
+Can you set a reminder for next Thursday to check the invoicing address with purchasing?,reminder_creation
+Assess this line for distrust: 'I'd prefer to see the evidence before taking another promise seriously.',sentiment_analysis
+Trim this update for a small screen: The address search now recognizes apartment numbers. It also handles common street abbreviations. Rural route support is still being tested.,summarization
+Set the thermostat in the packing room to twenty degrees.,out_of_scope
+Are the feelings positive here: 'That little handwritten thank-you made my day'?,sentiment_analysis
+Switch the warehouse dashboard to dark mode.,out_of_scope
+Give me the square root of 625.,out_of_scope
+The handbook says 'core hours'; what hours does that mean for our team?,faq_retrieval
+Assess the tone of 'It's refreshing to work with someone who keeps their word.',sentiment_analysis
+"Please arrange a reminder for March 3, 2028, at 10 am Europe/London to confirm the exhibit labels.",reminder_creation
+"Please shorten this reminder wording: On your next visit to the storage unit, remember to check whether the folding tables are dry before stacking them against the back wall.",summarization
+Look up our rules for using personal devices at work and separately summarize 'Several staff want to read schedules on their own phones.',compound_request
+Does the sales knowledge base say whether trial accounts include exports?,faq_retrieval
+Is weekend support included in the service agreement stored in the knowledge base?,faq_retrieval
+"For indexing purposes, extract terms from this passage: The archive contains handwritten maps, shipping ledgers, and restored glass negatives.",keyword_extraction
+"Get the return-address instructions from the help center, then pull key terms from 'Unopened replacement battery returned in original packaging.'",compound_request
+Remove the background from this photograph of a chair.,out_of_scope
+Schedule a reminder for next Sunday afternoon to patch the punctured wheelbarrow tyre.,reminder_creation
+Set a reminder for Friday to ask about the missing delivery crate.,reminder_creation
+Extract topic phrases from this message: The expense form now accepts split allocations across several project budgets.,keyword_extraction
+I'd like a brief email to thank a colleague for spotting a stock-count discrepancy.,email_drafting
+"Does 'Stop messaging me about this' convey anger, impatience, or neither?",sentiment_analysis
+"A tiny recap pls: We loaded the van, found one broken display stand, swapped it for a spare, and left ten minutes later than planned.",summarization
+Pull topic words from this update: The freight team is testing reusable corner protectors to reduce damage to flat-packed furniture.,keyword_extraction
+What is the probability of rolling two sixes with two fair dice?,out_of_scope
+"Is 'We're not there yet, but every week is better' optimistic?",sentiment_analysis
+Assess whether 'The office feels emptier since Jalen moved teams' expresses sadness.,sentiment_analysis
+Convert 68 degrees Fahrenheit to Celsius.,out_of_scope
+Summarize the supplied plan: First repair the damaged fence. Then clear the overgrown path. Planting will begin once access is safe and the ground has been prepared.,summarization
+"hey, whats our policy on working from another country for a week?",faq_retrieval
+Tell me whether it will snow in Oslo tomorrow.,out_of_scope
+Prepare an email introducing a temporary point of contact during our office relocation.,email_drafting
+Do our procurement rules require competing quotes for a laptop order?,faq_retrieval
+"Cut this down while retaining the caveat: Initial measurements show lower energy use after the insulation upgrade. However, the weather was unusually mild, so the team needs a longer comparison period.",summarization
+Extract meaningful words and phrases: A mesh liner prevents small seedlings from slipping through the nursery trays.,keyword_extraction
+What is the documented retention period for application debug logs?,faq_retrieval
+What's the concise version of this proposal? Move deliveries to the quieter morning period so unloading avoids the afternoon customer queue. Keep one late slot for urgent shipments.,summarization
+"Per our release guide, what qualifies a change for the emergency patch process?",faq_retrieval
+"Remind me on December 1, 2028, at noon to inspect the winter grit supply.",reminder_creation
+"Shorten the supplied FAQ answer: You can download invoices from the billing page. Choose the month, then select Download. Invoices from closed billing periods remain available there.",summarization
+"Could you summarize 'Sales rose, returns fell, support wait times increased' and identify the key topics separately?",compound_request
+At 5 p.m. remind me to finish the induction checklist. Also find where our FAQ explains badge activation.,compound_request
+Write a supplier follow-up email and remind me tomorrow morning to review it.,compound_request
+I'd like an email to ask the finance desk for a copy of last month's paid receipt.,email_drafting
+"Get our documented steps for requesting a purchase order, and extract tags from 'Replacement monitors for the east office'.",compound_request
+"Does this feedback contain mixed feelings: 'Fantastic craftsmanship, disappointing customer support'?",sentiment_analysis
+Condense these notes into one sentence: Stock count complete; six damaged cartons isolated; replacements due Friday; no customer orders delayed.,summarization
+Does this message communicate pride: 'Three months ago we had no process; today the whole shift runs smoothly.'?,sentiment_analysis
+Can you give this email a more approachable ending: 'Failure to respond shall result in closure of this matter.'?,email_drafting
+I wonder what ducks dream about.,out_of_scope
+Give me the main concepts mentioned here: Solar batteries can reduce peak electricity purchases at remote pumping stations.,keyword_extraction
+What does the help article say about failed payments during the renewal period?,faq_retrieval
+Can a part-time employee use the education stipend according to the learning FAQ?,faq_retrieval
+"According to the access-control standard, may interns view production customer records?",faq_retrieval
+How would the recipient likely perceive 'Do I really need to spell this out again' in terms of tone?,sentiment_analysis
+"What's the short story here: The prototype passed the drop test, failed the moisture test, and needs a new seal before the next inspection.",summarization
+Summarize the supplied handbook section: Staff must keep emergency exits clear. Boxes may be stored only in marked areas. Facilities will remove items left in exit corridors.,summarization
+Write an email asking the event organizer about wheelchair access to the venue.,email_drafting
+Does 'Please don't mistake my quietness for agreement' sound confrontational?,sentiment_analysis
+Tell me the main phrases and emotional tone of 'Fast resolution after a dreadful start; the agent restored my confidence.',compound_request
+"Make sure I get a reminder on December 8, 2027, to return the borrowed projector.",reminder_creation
+Extract tags from 'Scanner battery failures delayed picking in the cold room' and look up the documented scanner troubleshooting steps.,compound_request
+"Extract the important terms from 'Pallet wrap, corner guards, moisture barriers'; then draft an email requesting prices for those supplies.",compound_request
+Reduce this reminder text to a short line: Remember to bring the demonstration unit and its power adapter to the training room before the customer workshop begins tomorrow morning.,summarization
+Would you say 'The workshop was less painful than expected' has a positive or negative tone overall?,sentiment_analysis
+"I'd like a read on the feelings in 'I am relieved the audit is over, but worried about the findings.'",sentiment_analysis
+Look up the return window in our FAQ and summarize this separate complaint: 'My parcel arrived after the event. I have not opened it. I want to send it back.',compound_request
+Make this email more concise while keeping it an email: 'I am writing to let you know that we have now reached the point where the order is ready for collection.',email_drafting
+"List topics from 'Stock variance, duplicate orders, damaged seals' and remind me Monday to discuss them with the warehouse lead.",compound_request
+Reimburse the approved stationery purchase.,out_of_scope
+Build a small browser game where a frog catches stars.,out_of_scope
+Rewrite this email for a casual team audience: 'Please be advised that refreshments will be furnished following the briefing.',email_drafting
+I want a reminder next Saturday to repair the loose greenhouse latch.,reminder_creation
+Can employees choose a different public holiday under the company's holiday substitution policy?,faq_retrieval
+Extract the salient phrases: The ferry operator is adding sheltered cycle parking and wider boarding ramps.,keyword_extraction
+Compose an email telling the catering company our headcount has dropped from 24 to 18.,email_drafting
+"Summarize this draft, not rewrite it as an email: Dear Oren, thank you for joining the pilot. Your access lasts through Friday. We would appreciate your feedback before the pilot closes.",summarization
+What does this thread amount to? 'The proofs arrived.' 'Page three has the old logo.' 'Printer says corrected proofs can arrive tomorrow.' 'We will approve after checking that page.',summarization
+Translate the sentence 'The train is late' into Japanese.,out_of_scope
+What does the supplier onboarding checklist require before a purchase order can be issued?,faq_retrieval
+Please condense this campaign report: The first advertisement attracted many clicks but few registrations. The revised page clarified the offer. Registrations improved without increasing advertising spend.,summarization
+Remind me about the compost delivery next Wednesday.,reminder_creation
+Find the important concepts in this note: Reducing batch size may shorten waiting time while increasing machine setup frequency.,keyword_extraction
+Rotate this photograph ninety degrees clockwise.,out_of_scope
+Does the reception guide list a process for deliveries arriving after closing?,faq_retrieval
+Summarise: The trial ran for four weeks across two branches. Staff reported shorter queues. Customers asked for clearer signs near the collection counter.,summarization
+Can you write a farewell email to colleagues that is friendly but not sentimental?,email_drafting
+Please store a reminder for 16:40 tomorrow: check whether the paint has dried.,reminder_creation
+Install the latest printer driver on my laptop.,out_of_scope
+Make the archive folder read-only for visitors.,out_of_scope
+Suggest a stretching routine for a long train journey.,out_of_scope
+Publish the finished blog post on our fictional company website.,out_of_scope
+"Per the continuity plan, which location is designated as the backup assembly point?",faq_retrieval
+Does this sentence read as indifferent: 'Either option is fine; I have no preference.'?,sentiment_analysis
+"Please examine the attitude in 'I disagree with the decision, but respect the care behind it.'",sentiment_analysis
+Is business-class rail travel allowed in our travel policy?,faq_retrieval
+Who is eligible for the commuter allowance in the benefits handbook?,faq_retrieval
+Remind me in three hours to put the test jars back in the cupboard.,reminder_creation
+Please give a three-line recap: Stage one removed obsolete records. Stage two merged duplicate accounts. Stage three is waiting for the archive owner to review exceptions.,summarization
+Write a Python function that checks whether a number is prime.,out_of_scope
+"Remind me on the morning of April 7, 2028, to bring the rehearsal script.",reminder_creation
+Book the small meeting room for tomorrow afternoon.,out_of_scope
+I need an email proposing a small pilot before committing to a company-wide equipment purchase.,email_drafting
+Tell me a bedtime story involving a reluctant dragon.,out_of_scope
+Put a reminder on my list for the first of each month: inspect the emergency eyewash station.,reminder_creation
+"Distill this passage: The pond restoration removed invasive plants. Volunteers replanted native reeds. Water clarity improved, but monitoring will continue through winter.",summarization
+I need the official definition of a major incident from the incident handbook.,faq_retrieval
+Compose an email offering a customer a replacement instead of a refund.,email_drafting
+Where does the documented handover procedure say to store unresolved incident notes?,faq_retrieval
+Identify the main concepts from this passage: A skills inventory helps match internal vacancies with employees seeking temporary assignments.,keyword_extraction
+Help me word an email explaining that I won't participate in this year's volunteer committee.,email_drafting
+Suggest tags grounded in this text: Night-market vendors can borrow battery-powered lights from the organizers.,keyword_extraction
+Does the troubleshooting guide explain what error E-42 means in CobaltNest?,faq_retrieval
+Set a 6:30 am reminder tomorrow to put the cooler packs in my bag.,reminder_creation
+Mirror this image horizontally.,out_of_scope
+Recommend a science-fiction novel featuring an unusual ecosystem.,out_of_scope
+Trim the following for a handover card: The display screen flickers after several hours. Restarting it clears the problem temporarily. A replacement power unit is expected on Monday.,summarization
+Which timezone does the maintenance policy use for the standard service window?,faq_retrieval
+"Shorten this email's contents into a note: 'Hi Sora, the costumes are ready for collection. One jacket still needs a button, which we can finish by noon. The rest can be picked up now.'",summarization
+Please make this a concise recap: The orchestra added an extra rehearsal for the new piece. Attendance was high. The conductor shortened another rehearsal to keep total rehearsal time unchanged.,summarization
+"Key phrases out of this, thanks: Supplier scorecards will track defect rates, delivery reliability, and corrective-action response time.",keyword_extraction
+Prepare an email asking a vendor to remove an optional service from its quotation.,email_drafting
+"Provide a brief synopsis of the pasted interview: The shop owner described starting with a market stall, moving into a permanent space, and adding local delivery after customers requested it.",summarization
+I need to write a thank-you email later; just remind me at five today.,reminder_creation
+Draft an email telling a supplier we received eight cartons rather than the ten on the delivery note.,email_drafting
+"Is the tone tense in 'Before this goes any further, we need to establish who approved it'?",sentiment_analysis
+Give me a summary and keyword list for 'Shared mailboxes now require named owners; dormant accounts will be reviewed quarterly.',compound_request
+"A two-bullet digest of this, please: Revenue stayed flat this month. Renewals exceeded forecast. New customer signups fell below target after the campaign was delayed.",summarization
+Change the shipping address on my existing order.,out_of_scope
+Which key words would help retrieve this ticket later? The label printer crops the bottom line when the paper size switches to landscape.,keyword_extraction
+Identify main keywords in this notice: Suppliers must submit invoices through the portal with a valid purchase-order reference.,keyword_extraction
+Find the current price of copper per tonne.,out_of_scope
+"Read the tone of 'No rush at all, honestly. Next week is perfectly fine.'",sentiment_analysis
+Schedule the interview as a calendar event at ten tomorrow.,out_of_scope
+Customer wrote 'Never ordering from Brindle Goods again.' How strong is the negativity?,sentiment_analysis
+Does 'You handled that conversation with real care' come across as praise?,sentiment_analysis
+"How does this visitor feel: 'The desk staff were kind, though the two-hour wait was exhausting'?",sentiment_analysis
+Interpret the tone of 'You took a difficult problem off my plate without making a fuss.',sentiment_analysis
+"Extract important phrases from the supplied review: The folding cart handles cobblestones well, but its narrow wheels sink into soft sand.",keyword_extraction
+"Check how respectful this disagreement sounds: 'I see your reasoning, although the figures lead me elsewhere.'",sentiment_analysis
+Provide a short synopsis of this fictional story: A courier loses a map during a storm. A station keeper lends her an old route guide. She reaches the village by following the abandoned railway.,summarization
+Tags derived from this passage only: Compact shelving doubles map storage while preserving a clear evacuation aisle.,keyword_extraction
+Please remind me after work tomorrow to buy thread for the banner repairs.,reminder_creation
+Pull some useful tags from this text: The bakery uses unsold bread to make croutons for its lunchtime soup service.,keyword_extraction
+Shorten the following diary entry: We arrived before sunrise and checked the observation equipment. Cloud cover delayed the first measurements. By midmorning we had collected enough readings for the daily report.,summarization
+Compose an email thanking the support desk for resolving an access issue quickly.,email_drafting
+Identify the primary concepts: A demand forecast combines historic orders with seasonal promotions and planned store openings.,keyword_extraction
+Does the phrase 'Your concern has been noted' feel emotionally warm or detached?,sentiment_analysis
+Remind me tomorrow morning to inspect the loading-bay lights.,reminder_creation
+"Assess the tone of 'A decent result, considering nobody gave us enough time' and produce a concise summary of that feedback.",compound_request
+How upset does 'I planned my whole day around a delivery that never came' seem?,sentiment_analysis
+Tell me if the tone is neutral: 'The next collection window begins at 14:00.',sentiment_analysis
+Could I get a nudge at 16:15 today to retrieve the chilled samples?,reminder_creation
+Interpret the attitude of 'Let's give the new process a fair chance before judging it.',sentiment_analysis
+Do our office guidelines allow reserving a meeting room for a full day?,faq_retrieval
+I'd like the policy answer on whether interview travel is reimbursed for candidates.,faq_retrieval
+Prepare an email requesting confirmation that a cancelled subscription will not renew.,email_drafting
+"Can you detect sarcasm here: 'Lovely, the printer has chosen invoice day to stop working again.'",sentiment_analysis
+I need an email telling attendees that the workshop room has changed to Cedar Hall.,email_drafting
+"Does 'If that's the best you can offer, forget it' sound dissatisfied?",sentiment_analysis
+Set a reminder one week before the conference to order the reusable name tags.,reminder_creation
+"Which training is mandatory before working alone in the workshop, per the safety manual?",faq_retrieval
+Where in the staff handbook can I find the parental leave eligibility rules?,faq_retrieval
+What is the capital of Mongolia?,out_of_scope
+"At 3 pm today, nudge me to collect the prototype from the workshop.",reminder_creation
+Make a short summary of 'The extension was approved; testing starts Monday; rollout depends on sign-off' and tell me whether its tone is optimistic or neutral.,compound_request
+"Make a pie chart from these values: red 12, blue 7, green 9.",out_of_scope
+"Assess this employee comment for optimism: 'With the new staffing plan, we might finally get ahead.'",sentiment_analysis
+How far is the Moon from Earth on average?,out_of_scope
+Write an email asking the training provider for a certificate and make a reminder for next Wednesday to follow up.,compound_request
+What's the emotional balance of 'I love the idea and dread the implementation'?,sentiment_analysis
+Find the FAQ answer about lost parcels and assess the sentiment of 'Tracking hasn't moved for days and nobody will help.',compound_request
+"Could you assess the warmth of 'Welcome aboard, Tavi. We're delighted you're joining us.'?",sentiment_analysis
+"Remind me on February 29, 2028, to review the four-year equipment plan.",reminder_creation
+Get the main terms from this incident note: A blocked drain allowed condensation to collect beneath the refrigerated display.,keyword_extraction
+"Key topics from this briefing, please: A shortage of recycled pulp has delayed packaging orders for several independent publishers.",keyword_extraction
+Book a reminder for the second Friday in September to inspect the folding stage.,reminder_creation
+Who's the designated approver for press statements in our communications handbook?,faq_retrieval
+Find the prominent terms here: We are comparing fixed-rate contracts with usage-based pricing for the new print service.,keyword_extraction
+What's the official rule on expensing airport lounge entry?,faq_retrieval
+"Find the visitor parking rules, list the key terms in those rules, and draft an email explaining them to a guest.",compound_request
+"Tomorrow at 09:30 Asia/Kolkata, remind me to hand over the visitor badges.",reminder_creation
+Give me a reminder every Sunday at six to plan the week's meals.,reminder_creation
+"Gauge the attitude behind 'Sure, another mandatory meeting will definitely solve our lack of time.'",sentiment_analysis
+Write a customer thank-you email and remind me tomorrow afternoon to review the loyalty proposal.,compound_request
+I need an email acknowledging a missed deadline and taking responsibility without making excuses.,email_drafting
+Keywords for this excerpt: Copper Finch Rentals provides modular stages and weatherproof power distribution boxes.,keyword_extraction
+Remind me every other Friday to review the spare-parts inventory.,reminder_creation
+I want the approved policy on accepting a supplier's holiday gift.,faq_retrieval
+Summarize this fictional news item: The town of Brindleford reopened its riverside path after resurfacing. The work added benches and improved drainage. A short section remains closed for railing repairs.,summarization
+"From the paragraph below, extract the important words: Aster Quay plans to replace disposable cups with washable mugs in every break room.",keyword_extraction
+Make this draft suitable for a senior director: 'We're stuck until someone picks an owner for this.',email_drafting
+How nervous does 'I've checked the numbers four times and still feel something is off' sound?,sentiment_analysis
+Sum up this explanation for a nontechnical reader: The cache keeps copies of frequently requested records nearby. That reduces repeated database queries. Old copies expire so newer information can replace them.,summarization
+Shorten 'The east lift is closed for repair until Thursday; deliveries must use the west ramp' and extract its keywords too.,compound_request
+"Which topics appear in this agenda? Kitchen ventilation, emergency lighting, and the annual lift inspection.",keyword_extraction
+Summarize: Our pilot used paper forms in one branch and tablets in another. Tablet entries reached the central team sooner. Paper forms needed fewer corrections to handwritten signatures.,summarization
+I want a limerick about a very tidy pirate.,out_of_scope
+I need content tags for this note: Apprentices will shadow experienced machinists during the first production cycle.,keyword_extraction
+Set up a nudge for Saturday morning to sharpen the garden shears.,reminder_creation
+Which queue receives damaged-stock reports under the warehouse SOP?,faq_retrieval
+Write an email offering to mentor a new colleague during their first month.,email_drafting
+"How many distinct arrangements can be made from the letters A, B, C, and D?",out_of_scope
+How long does our retention policy require us to keep signed order forms?,faq_retrieval
+"Write an email thanking the event speakers; separately extract topics from 'Presentations covered circular packaging, route planning, and equipment reuse.'",compound_request
+When do annual subscription renewals take effect according to the billing FAQ?,faq_retrieval
+"Is 'The pilot results are promising, provided we fix the access issues' cautiously positive?",sentiment_analysis
+"Only the essentials from this chat: 'Can we move the demo?' 'Yes, Tuesday is available.' 'Great, keep the same room.' 'The client confirmed Tuesday too.'",summarization
+Is there a documented maximum size for an attachment in Harborquill?,faq_retrieval
+Grab the useful noun phrases from this description: A compact humidity sensor designed for underground seed storage.,keyword_extraction
+Extract key phrases from 'Dust buildup around ventilation grilles in the archive room' and draft an email requesting cleaning.,compound_request
+Please tag the content of this paragraph: Wildlife crossings reconnect woodland divided by a high-speed railway.,keyword_extraction
+"Extract the themes from 'Clear goals, missing resources, supportive colleagues' and assess the writer's overall attitude.",compound_request
+What is seventeen percent of 840?,out_of_scope
+Unlock the supply cabinet remotely.,out_of_scope
+Turn 'need exact pallet dims before pickup can be booked' into a complete business email.,email_drafting
+Make this email sound confident without being pushy: 'Maybe we could try my approach if you think it's okay.',email_drafting
+Find the nearest open bicycle repair shop.,out_of_scope
+Set my chat status to Away.,out_of_scope
+"A reminder in eight days to inspect the freshly sealed window frames, please.",reminder_creation
+"Summarize this feedback and assess its emotional tone: 'I felt welcome on day one, but the missing login made the rest of the week stressful.'",compound_request
+Could you explain how tides work?,out_of_scope
+"Summarize these notes, extract keywords, and remind me Friday to share the result: 'Cycle count complete; cable stock low; reorder owner assigned.'",compound_request
+What emotional tone comes through in 'It's done. Finally.'?,sentiment_analysis
+Need indexing words for this passage: Volunteers recorded butterfly sightings along the meadow restoration corridor.,keyword_extraction
+Recommend a board game for five players who dislike bluffing.,out_of_scope
+Mark the outstanding invoice as paid.,out_of_scope
+"Tomorrow, before I head out, remind me to take the parcel returns.",reminder_creation
+Pull the main terms from this note: The loading dock needs new wheel stops before the autumn inventory count.,keyword_extraction
+Draft an email announcing our office move and give me a separate summary of these move notes: furniture Friday; IT Saturday; staff Monday.,compound_request
+"How apologetic does 'I let the team down, and I'm sorry for the extra work it caused' sound?",sentiment_analysis
+Are employees permitted to post customer testimonials under the communications policy?,faq_retrieval
+Find important phrases in this text: A rotating advisory panel gives part-time staff a voice in scheduling decisions.,keyword_extraction
+I need a client email introducing our new escalation contact without implying anything went wrong.,email_drafting
+"Every weekday at noon, prompt me to leave my desk for a short walk.",reminder_creation
+"Recap this handover in under 40 words: The night shift completed routine maintenance. One conveyor sensor still needs calibration. Spare sensors are in cabinet B, and the line can operate at reduced speed.",summarization
+"Does this sound condescending: 'As I have already explained in very simple terms, use the form.'?",sentiment_analysis
+Draw a diagram of a butterfly's life cycle.,out_of_scope
+Tell me whether 'You never listen when the warehouse raises a concern' sounds accusatory.,sentiment_analysis
+Remind me next Tuesday to summarize the workshop notes myself.,reminder_creation
+"Remind me next Wednesday to check the survey results; also extract topics from 'Long queues, helpful staff, unclear signs.'",compound_request
+Can you shorten these release notes? Search now ignores extra spaces. Saved views retain their chosen sort order. A bug that hid empty folders has been fixed.,summarization
+Does company policy permit recording an internal meeting without notifying attendees?,faq_retrieval
+Please schedule a weekly reminder to reconcile petty cash every Friday at four.,reminder_creation
+Compose an email inviting the facilities lead to inspect the proposed storage area with us.,email_drafting
+Make a compact version of this incident report: A configuration error blocked uploads for 18 minutes. Existing files remained available. Reverting the change restored uploads.,summarization
+What subject headings fit this paragraph? Local museums are lending replica artifacts to schools for hands-on history lessons.,keyword_extraction
+Give a compact summary of this operating procedure: Inspect the seal before filling the container. Stop filling at the marked line. Close the lid and check that both clips are secure.,summarization
+Calculate the area of a circle with radius 9 cm.,out_of_scope
+"Sum up this customer message: 'I received the replacement yesterday. It works well, but the instruction booklet is missing. I don't need another device, just the booklet.'",summarization
+Return my last purchase to the fictional Pebble Harbor shop.,out_of_scope
+Could you prepare an email requesting a vegetarian option for our workshop catering?,email_drafting
+"Look up the refund method in our FAQ, then compose an email asking customer service to confirm my refund status.",compound_request
+Remind me on every workday at 08:50 to review the day's loading schedule.,reminder_creation
+How hopeful does 'Maybe this is the fresh start the branch needed' seem?,sentiment_analysis
+What are the prerequisites listed in the installation guide for PebbleDesk?,faq_retrieval
+What are the main takeaways here? The first survey got 80 responses. Most respondents liked the new layout. Several could not find the export button.,summarization
+Summarize the pasted product description: The lamp has an adjustable arm and three brightness settings. Its base includes a storage tray. It runs from a wall adapter rather than batteries.,summarization
+Set up a reminder on the fifteenth of each month to check the instrument calibration dates.,reminder_creation
+Need tags to file this: The sewing cooperative has begun collecting fabric offcuts for reusable gift wrapping.,keyword_extraction
+Remind me in ten days to see whether the meadow seeds have sprouted.,reminder_creation
+Do the onboarding docs specify when a new starter gets a building pass?,faq_retrieval
+"Condense this technical paragraph: The sensor sends a reading every minute. If the connection drops, readings are stored locally. Stored readings are transmitted when connectivity returns.",summarization
+"At 8:45 tomorrow morning, remind me to unlock the training room.",reminder_creation
+Make a recurring reminder every second Friday to count first-aid supplies; also write an email asking colleagues to report items they've used.,compound_request
+"What's the main message of this paragraph? The office move is proceeding on schedule, but personal boxes must be labeled clearly because movers will deliver them directly to assigned desks.",summarization
+Need a nudge in forty-five minutes to collect the printed brochures.,reminder_creation
+What's the KB's explanation for a purchase order marked 'closed short'?,faq_retrieval
+Remind me each Thursday afternoon to check the shared stationery cupboard.,reminder_creation
+Give me an executive digest of this supplied data narrative: Sales increased in the north and declined in the south. Distribution costs rose in both regions. The overall margin narrowed despite higher total volume.,summarization
+"Assess the sentiment in this review: 'Exactly as described. Nothing remarkable, nothing wrong.'",sentiment_analysis
+Write an email to a customer offering a temporary workaround while a replacement device is arranged.,email_drafting
+Is there hostility in 'You ignored every requirement we agreed on'?,sentiment_analysis
+Remind me every Friday at 15:45 to record the week's damaged stock.,reminder_creation
+Summarize the following policy excerpt: Employees may carry forward three unused leave days. Carried days expire in March. Managers must approve requests before those days are booked.,summarization
+Draft a customer email admitting we quoted the wrong lead time and giving the corrected estimate of ten working days.,email_drafting
+Can you find our remote-work approval process and write a draft email applying for two remote days?,compound_request
+List key concepts in the supplied paragraph: Peer review can reveal unclear assumptions before a design reaches prototype testing.,keyword_extraction
+Could you prepare a welcome email for a fictional new hire named Liora joining the dispatch desk?,email_drafting
+Schedule a reminder for tomorrow afternoon to photograph the damaged shelving.,reminder_creation
+Suggest a three-day hiking itinerary for a beginner.,out_of_scope
+Pull this long story into a brief overview: The bakery bought a larger mixer to meet demand. Installation took an extra day because an outlet needed moving. The new mixer is now producing twice the previous batch size.,summarization
+Get tags from this announcement: Lantern Vale Cinema is introducing relaxed screenings with dim lighting and reduced sound levels.,keyword_extraction
+Could you squeeze this into two sentences? The reading club chose a new meeting location. The old room became unavailable after a timetable change. The new room is larger but has no projector.,summarization
+"In a nutshell, what happened? The return shipment arrived without its paperwork. Receiving held it in the inspection area. The sender supplied the missing documents later that day.",summarization
+Draft an email to the cleaning contractor reporting that the stairwell was missed yesterday.,email_drafting
+Which birds can fly backwards?,out_of_scope
+"Would you call this feedback positive or negative? 'The interface is attractive, but nothing saves reliably.'",sentiment_analysis
+Gauge the feeling in 'The discount is nice; having to chase it for a month was not.',sentiment_analysis
+"Extract the subjects covered here: Staff raised questions about parental leave, temporary transfers, and pension contributions.",keyword_extraction
+I need a reminder in seven months to review the accessibility feedback form.,reminder_creation
+Please queue a reminder for the morning after the exhibition closes: check that all loaned sculptures are insured for return transport.,reminder_creation
+Run the monthly payroll batch.,out_of_scope
+"Pick the important phrases: Our storage audit found obsolete monitors, unused docking stations, and a surplus of network adapters.",keyword_extraction
+What's the official procedure for reporting a lost access badge?,faq_retrieval
+"At 11 am America/New_York on June 2, 2028, remind me to join the vendor demonstration.",reminder_creation
+Judge the emotional tone of 'We are deeply concerned about the repeated near misses.',sentiment_analysis
+How supportive is 'You don't have to manage this alone; the team is here'?,sentiment_analysis
+"Extract the core terminology here: Water samples are checked for turbidity, conductivity, and residual disinfectant.",keyword_extraction
+"Only a brief synopsis: The tenant reported a leaking window. The inspection found cracked exterior sealant. Repairs were completed before the next rain, and no further leak was reported.",summarization
+Remind me on the third Tuesday of each month to inspect the folding chairs.,reminder_creation
+Extract the significant terms from this briefing: A revised stock policy sets minimum quantities for critical spare parts.,keyword_extraction
+"Tell me how satisfied this client seems: 'It meets the specification, although I would not recommend it yet.'",sentiment_analysis
+How does the internal FAQ explain the difference between probation and onboarding?,faq_retrieval
+Draft a short email turning down an overtime shift because I have a prior commitment.,email_drafting
+What's the vibe of 'ok fine do whatever you want'?,sentiment_analysis
+What concepts repeat in these responses? People want transparent promotion criteria. Career paths are unclear. Advancement decisions need explanation.,keyword_extraction
+"In the product FAQ, can archived boards be exported?",faq_retrieval
+How angry is this complaint: 'Charging twice and then blaming me is unacceptable'?,sentiment_analysis
+Make this email warmer: 'Your application was unsuccessful. Thank you for your interest.',email_drafting
+"Set a reminder to review the contract in three days. Separately, compose an email requesting the missing service schedule.",compound_request
+"Tell me how this customer feels and pull out the main topics: 'The delivery was late, the box was crushed, but your driver was lovely.'",compound_request
+What's the weather like in Porto this weekend?,out_of_scope
+Identify the major topics in this transcript excerpt: First we reviewed freight surcharges; then we debated whether to consolidate regional depots.,keyword_extraction
+Which role is permitted to approve refunds under the customer service policy?,faq_retrieval
+Please identify topic words in this message: Shared bicycles now have reflective pedals and adjustable cargo racks.,keyword_extraction
+Are team lunches capped per person in the finance FAQ?,faq_retrieval
+Please locate the policy governing unpaid leave extensions.,faq_retrieval
+Find our guidance on storing customer records and summarize this separate audit note: 'Three cabinets were unlocked; keys were shared; access logs were incomplete.',compound_request
+"Find the main topics in this passage: Remote interpreters need stable audio, turn-taking cues, and access to advance briefing materials.",keyword_extraction
+What subject keywords fit this note? The costume department switched to water-based dyes and installed a rinse-water filtration unit.,keyword_extraction
+Look up the warranty claim instructions and pull keywords from this fault description: 'Motor overheats after ten minutes under light load.',compound_request
+What does the customer FAQ say happens to uploaded files after a subscription ends?,faq_retrieval
+"Remind me on July 4, 2028, to verify the summer opening-hours poster.",reminder_creation
+Reset my employee portal password.,out_of_scope
+"Every second Monday, remind me to test the backup radio.",reminder_creation
+Please set up an annual reminder on May 15 to check the smoke alarms.,reminder_creation
+"What are the main keywords here? The visitor center added refill stations, shaded seating, and a tactile model of the walking trails.",keyword_extraction
+Remind me in five minutes to remove the calibration weight.,reminder_creation
+How dissatisfied is 'The product is fine; dealing with your returns desk was miserable'?,sentiment_analysis
+Choose keywords for this supplied content: Mossbridge Observatory will host telescope maintenance workshops during the winter closure.,keyword_extraction
+Fix the syntax error in this CSS: .card { color blue; }.,out_of_scope
+I need a headline-length summary of this update: The bridge inspection found no structural damage. Minor surface repairs will take place overnight. Traffic will continue in one lane.,summarization
+"Give me the main topics of 'Refund delayed, helpful phone agent, broken tracking link' along with the overall sentiment.",compound_request
+Draft an email asking the training coordinator whether there are any places left in the induction session.,email_drafting
+What is the exchange rate between the euro and the yen today?,out_of_scope
+Could you remind me in two months to evaluate the new seating arrangement?,reminder_creation
+Extract keywords from the following sentence: The rooftop garden captures rainwater in covered tanks for summer watering.,keyword_extraction
+Remind me this Sunday to practice the fire-drill announcement.,reminder_creation
+What would you tag this article with? Community theaters are sharing costume storage to lower rental expenses.,keyword_extraction
+What's the tone in 'Wow. You actually remembered this time.'?,sentiment_analysis
+Compose a courteous email withdrawing my application for the team lead role.,email_drafting
+Prepare a firm email disputing a late charge on an invoice paid before its deadline.,email_drafting
+I only have time for the short version: The board approved the renovation budget. Work will proceed in two phases to keep the reception area open. The contractor selection is still underway.,summarization
+"Does my message sound defensive? 'I followed the approved checklist, so I do not see how this is my fault.'",sentiment_analysis
+What is the published response target for a critical support ticket?,faq_retrieval
+"How angry does the speaker sound in 'I need an explanation, not another excuse'?",sentiment_analysis
+Disable two-factor authentication on my demo account.,out_of_scope
+Turn this into a short status summary: The grant application is drafted. Supporting letters have arrived. The final budget table still needs the treasurer's approval.,summarization
+"For 'I love the service but the billing portal is awful,' assess the sentiment and produce a one-line summary.",compound_request
+What does an octopus eat?,out_of_scope
+Translate bonjour into English.,out_of_scope
+What's the gist of these field notes? The northern trail is clear. The footbridge on the western path has a loose board. The eastern route is muddy but passable.,summarization
+"Can you identify the indexing terms here? Our returns desk needs separate bins for repairs, resale stock, and material recycling.",keyword_extraction
+Give me a subject line and body for an email announcing that the office kitchen will be closed Tuesday.,email_drafting
+Show me a map of the Andes.,out_of_scope
+In ten minutes: remind me to reconnect the test sensor.,reminder_creation
+Assess the mood in 'Another target missed. I'm running out of ways to explain it.',sentiment_analysis
+What does our data classification guide consider 'internal use only'?,faq_retrieval
+Is this response reassuring: 'We have a backup ready and someone watching the queue all night'?,sentiment_analysis
+Extract the central themes of these answers: Managers want clearer hiring criteria. Interview scoring varies. Panels need consistent rubrics.,keyword_extraction
+"Assess the sentiment toward the policy in 'At last, a leave process that treats people like adults.'",sentiment_analysis
+Please set a recurring reminder for Wednesday at 10:30 to check the first-aid supplies.,reminder_creation
+"Is a doctor's note needed for two days off, according to the leave policy?",faq_retrieval
+Make a short digest of this schedule change notice: Monday's inspection moves to Wednesday. Tuesday's deliveries remain unchanged. The final walkthrough shifts from Friday morning to Friday afternoon.,summarization
+Need an email asking reception to expect a visitor named Oren Vale at 2 p.m.; prepare the wording only.,email_drafting
+What is the policy on using a rental car for a client visit?,faq_retrieval
+Need wording for an email asking everyone to label food left in the shared fridge.,email_drafting
+Where does the employee handbook stand on carrying unused vacation into next year?,faq_retrieval
+I need both an emotional-tone assessment and keyword list for 'Finally a supplier that keeps promises and packs things properly.',compound_request
+Make my email more direct: 'I was just wondering if perhaps you might possibly have an update.',email_drafting
+Compose a short email accepting the invitation to the regional operations workshop.,email_drafting
+Email draft for my manager: I'd like to work from home on Friday because a technician is coming.,email_drafting
+Create a reminder for 14 December 2028 to renew the equipment cover; separately retrieve the renewal procedure from our knowledge base.,compound_request
+Turn this into a short overview for a new colleague: The archive accepts scanned documents. Each upload needs a department and year. Files remain in a review queue until an archivist checks readability.,summarization
+Increase the storage quota on the design team's shared drive.,out_of_scope
+"What attitude does 'Rules are rules, and exceptions are not my problem' communicate?",sentiment_analysis
+Please summarize 'Four calls were dropped during the upgrade; all customers were contacted afterward' and separately draft an email apologizing for the disruption.,compound_request
+Rewrite my email so it sounds less irritated: 'You keep ignoring my requests for the signed form.',email_drafting
+Remind me next month to review our volunteer induction slides.,reminder_creation
+"What is the attitude toward management in 'Leadership asks for honesty, then punishes anyone who speaks up'?",sentiment_analysis
+Check the emotional tone of 'I thought we had agreed this was confidential' and find our internal information-sharing policy.,compound_request
+"Every six weeks, remind me to examine the rubber seals on the cold-room door.",reminder_creation
+Please set a reminder for tomorrow to proofread the policy email I've already drafted.,reminder_creation
+Prepare an email confirming receipt of a damaged-item claim and explaining that photos are needed.,email_drafting
+Change my display name to Moss Captain.,out_of_scope
+"Find key topics in the following: The workshop explored restorative dialogue, mediation boundaries, and resolving disagreements between volunteers.",keyword_extraction
+Pull keywords from this notice: The swimming pool will close one lane for aquatic physiotherapy sessions.,keyword_extraction
+Remind me before my next shift to bring nonslip shoes.,reminder_creation
+Evaluate the confidence conveyed by 'We have tested the recovery process and know it works.',sentiment_analysis
+Give me a two-sentence summary of the supplied outage notice and draft a separate email telling our team what happened: 'Network unavailable 08:10–08:40; damaged cable replaced; service stable.',compound_request
+Summarize 'The garden volunteers planted twelve trees and repaired two benches'; also compose a separate email thanking the participants.,compound_request
+I'd like directions from the station to the nearest botanical garden.,out_of_scope
+"Check the emotional tone of this chat: 'No worries, we can pick it up tomorrow.'",sentiment_analysis
+"What is the essence of this argument? Keeping a small spare-parts inventory costs storage space, but it avoids long stoppages when a commonly used component fails unexpectedly.",summarization
+"What subjects does this passage cover? Farmers compared compost maturity, soil moisture, and cover-crop mixes at the demonstration plot.",keyword_extraction
+"Pull the main phrases from this log, then make a reminder for Monday to review the issue: 'Repeated login failures on shared terminals after password rotation.'",compound_request
+Write a tactful email asking a colleague to stop using reply-all for routine acknowledgments.,email_drafting
+Read the sentiment despite the typos: 'realy happy with how quikly you sorted it'.,sentiment_analysis
+Write an email asking a teammate to swap their Tuesday shift with my Wednesday shift.,email_drafting
+Find a campsite that allows small camper vans near a lake.,out_of_scope
+Make this email less stiff: 'We hereby express our gratitude for your continued cooperation.',email_drafting
+"Retrieve the documented process for reporting a spill, and remind me next Thursday to review the spill-kit inventory.",compound_request
+Rename the shared folder to Winter Exhibits.,out_of_scope
+Tell me whether 'Nothing you do seems good enough for this department' sounds demoralized.,sentiment_analysis
+What would be useful search words for this? The community kitchen preserves surplus tomatoes in sterilized jars.,keyword_extraction
+Does the Brightdock benefits guide cover vision exams for dependents?,faq_retrieval
+Can I find our approved guidance for sharing documents with external auditors?,faq_retrieval
+"Pull the important terminology from this text: Inspectors check weld penetration, surface porosity, and alignment before approving each frame.",keyword_extraction
+Compose an email asking the courier to investigate a package marked delivered that never reached reception.,email_drafting
+The expense handbook mentions itemized receipts; is a card statement acceptable instead?,faq_retrieval
+Extract phrases worth searching for: Rotating passwords did not resolve the expired certificate error on the inventory gateway.,keyword_extraction
+Don't let the herb cuttings dry out; remind me to mist them tomorrow afternoon.,reminder_creation
+Give me a digest: The ferry resumed service after repairs. Two evening crossings remain canceled. Ticket holders on those crossings may use the following day's departures.,summarization
+What does the shipping SOP specify for temperature-sensitive parcels?,faq_retrieval
+Write a neutral email documenting that we agreed on a revised delivery date of 18 November 2028.,email_drafting
+"Tags for this, please: The orchard crew tested drip irrigation beside the eastern greenhouse.",keyword_extraction
+Make a reminder for the first Monday of next month to inspect filters and summarize 'Filter pressure rose steadily; airflow dropped; no alarm triggered.',compound_request
+Content keywords needed: The workshop teaches safe ladder placement and basic roof-gutter cleaning techniques.,keyword_extraction
+Make a short recap of these exhibition notes: The large sculpture arrived safely. Two small frames need new hanging wires. Lighting adjustments are scheduled before the preview.,summarization
+What does the internal directory guide say about changing a display name?,faq_retrieval
+Do the docs say whether a deleted workspace can be recovered?,faq_retrieval
+"Find out from our handbook whether study leave is paid, and draft an email asking my manager about taking two days.",compound_request
+"Need the mood and key phrases from 'Super quick help, confusing instructions, fair price'.",compound_request
+"Nudge me on June 14, 2029, to arrange servicing for the cargo bike.",reminder_creation
+Prepare an email announcing that the fictional Elmbridge branch will close early for its annual stocktake.,email_drafting
+Are replacement uniforms provided without charge under our warehouse staff policy?,faq_retrieval
+"What emotions come through in 'We finally got an answer, but it shouldn't have taken six calls'? Also provide a short summary.",compound_request
+Put in a reminder for the first Sunday of spring to check the camping gear.,reminder_creation
+Does this customer sound forgiving: 'Mistakes happen. Thank you for owning this one.'?,sentiment_analysis
+Tag this content using its main topics: Portable flood barriers will be stored near the pumping shed.,keyword_extraction
+Is the intercity train running on time right now?,out_of_scope
+Does the following sound anxious? 'Has anyone heard from dispatch? The deadline is getting very close.',sentiment_analysis
+"Under the visitor FAQ, is a host required to remain with a delivery technician?",faq_retrieval
+"Summarize the content of this email: 'Hello, the revised estimate includes assembly but excludes disposal of the old shelving. We can add disposal for a separate fee if required.'",summarization
+"Under the company sponsorship policy, can employees submit community event requests?",faq_retrieval
+"This supplier said, 'We regret the inconvenience and appreciate your understanding.' What tone does that convey?",sentiment_analysis
+Create an email requesting a revised quote. Also set a reminder for 6 October 2028 at 10 a.m. to chase it.,compound_request
+"In twelve minutes, nudge me to end the pressure test.",reminder_creation
+Who wrote The Odyssey?,out_of_scope
+How should I word an email asking my supervisor for more detailed performance feedback?,email_drafting
+"Collect the main phrases in this note: Staff can reserve a standing desk, a focus booth, or a room with video equipment.",keyword_extraction
+Can contractors attend the internal training sessions under our learning policy?,faq_retrieval
+How enthusiastic is 'YES! The grant came through! We can finally start!'?,sentiment_analysis
+How do our docs define an inactive account?,faq_retrieval
+I keep forgetting my reusable mug; remind me at seven tomorrow.,reminder_creation
+"Per our fleet policy, may another employee drive the car assigned to me?",faq_retrieval
+"Under our flexible-work policy, is manager approval needed for a temporary schedule change?",faq_retrieval
+What search terms can you take from this paragraph? Reusable transit cases protect delicate exhibition models during museum exchanges.,keyword_extraction
+Key terms pls: Our booking calendar hides canceled appointments but still counts them against room capacity.,keyword_extraction
+Turn this into a professional email: 'hey the invoice is wrong again fix the tax bit pls'.,email_drafting
+"Analyze how apologetic 'I should have flagged the delay sooner, and I'm sorry for the disruption' sounds, and draft a customer apology email using that idea.",compound_request
+Write an email announcing that the weekly operations meeting will now last 20 minutes.,email_drafting
+What are the important themes in these comments? Documentation is scattered. The setup guide is outdated. New starters cannot find clear instructions.,keyword_extraction
+Please prompt me each Wednesday to empty the paper recycling bin.,reminder_creation
+Does 'I can live with that compromise' signal acceptance or enthusiasm?,sentiment_analysis
+Create a gentle follow-up email about a proposal we sent last week.,email_drafting
+Ping me this evening about watering the balcony seedlings.,reminder_creation
+Draft an email announcing the new shift rota and create a separate summary of these changes: early start moves to 6:30; late shift unchanged; Sunday cover rotates.,compound_request
+Need searchable keywords from this ticket: The scanner loses its connection whenever a pallet passes through the steel doorway.,keyword_extraction
+Write an email asking for a replacement badge; also find the badge replacement fee in our staff FAQ.,compound_request
+Turn the conference room lights down.,out_of_scope
+I'd like a reminder in half an hour to switch off the soldering station.,reminder_creation
+Which phrases matter most here? Our trial customers keep requesting bulk imports and customizable approval chains.,keyword_extraction
+"Tell me how worried this employee sounds and condense their message: 'The forklift keeps drifting, maintenance has been told, and I'm scared someone will get hurt.'",compound_request
+TLDR: Our old supplier stopped producing the blue lids. Purchasing found a compatible alternative. Samples are arriving next week and must pass a fit test before ordering.,summarization
+A sentence on what changed: The handbook previously required paper expense forms. It now accepts scanned forms through the portal. Original receipts are still needed for certain cash claims.,summarization
+Remind me every three months to clean the extractor filters.,reminder_creation
+Analyze the attitude in 'Take your time; getting it right matters more than rushing.',sentiment_analysis
+"What feeling dominates 'I am proud of the work, even if the launch barely got noticed'?",sentiment_analysis
+Which browsers are supported according to the Driftparcel help page?,faq_retrieval
+Draft a rejection email for a sales offer that doesn't fit our current needs.,email_drafting
+A concise summary of this contract passage: Service begins after installation. The initial term lasts six months. Either party may end the agreement with thirty days' written notice after that term.,summarization
+Can you remind me in six weeks to revisit the supplier shortlist?,reminder_creation
+Is 'Thank you for treating my question seriously' appreciative?,sentiment_analysis
+Help me email my colleague an apology for interrupting them during the planning meeting; just the draft.,email_drafting
+How much advance notice does our handbook require for planned leave?,faq_retrieval
+I want an apology email for a customer whose parcel went to the wrong depot.,email_drafting
+Read the sentiment of 'I feel heard for the first time in months' and prepare a thoughtful acknowledgment email.,compound_request
+Choose relevant tags from the supplied wording: Sign-language interpreters and step-free entrances will be available at the workshop.,keyword_extraction
+Pick a random color for my sketchbook cover.,out_of_scope
+What does the partnership knowledge base say about using our logo on a partner website?,faq_retrieval
+How frustrated does this reply feel: 'Still waiting. Still no update. Day nine.'?,sentiment_analysis
+Suggest a name for a fictional underwater city.,out_of_scope
+"Draft an email sharing the good news that our branch passed its inspection, with thanks to the people who prepared it.",email_drafting
+Would a reader perceive resentment in 'Of course I can cover the weekend. I always do.'?,sentiment_analysis
