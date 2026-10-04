@@ -19,6 +19,7 @@ Flow: Streamlit → FastAPI → intent router → deterministic tool or LangChai
 - **Reminders in v1:** Resolve task, due time, and timezone through the agent; clarify missing or ambiguous details. Store reminders in SQLite. A background worker checks due records and emails the user when due. Persist delivery state to avoid duplicate notifications on retries/restarts. Agree on sender/provider, recipient configuration, and retry behavior before implementing delivery.
 - **Memory:** Per-session `ChatMessageHistory` + `RunnableWithMessageHistory` preserve both direct and agent turns. Follow-ups such as “make that more formal” use prior context; ask when the reference is ambiguous. In-memory history resets on restart; reminders persist.
 - **API/UI:** `/api/v1/chat`, `/api/v1/classify`, `/api/v1/reminders`, and `/health`. Chat returns reply, predicted intent/confidence, selected route, tool trace, and timing. Streamlit displays chat beside actual tool names, arguments, observations, and latency; the trace explains execution, not private model reasoning.
+- **Development baseline:** Python 3.12.13 with a repository-local `.venv`. Direct FastAPI development dependencies are pinned in `requirements.txt`; add the remaining planned stack only with the implementation slice that uses it.
 - **Operations:** Structured JSON logs and Prometheus `/metrics` capture request/tool latency and failures without logging credentials or full sensitive messages. Docker Compose runs backend, Streamlit, and reminder worker with shared persistent reminder storage. Choose deployment after local behavior is verified.
 
 Exact dependency versions and available Groq models will be verified at implementation time. Audio/file inputs and production-scale memory are later work unless explicitly agreed.
@@ -31,6 +32,7 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [✅] Create the plan, brief change record, and root agent instructions.
 - [✅] Decide to use CSV with `text,label` fields for classifier training rather than JSON.
 - [✅] Generate and validate the 1,000-row, eight-label CSV; reviewed all rows, checked all 499,500 pairs for similarity, and documented the single replacement and review limitations.
+- [✅] Initialize a minimal FastAPI foundation with a pinned Python 3.12 development environment and verified health endpoint.
 - [⏳] Review the dataset/report with the user; agree on company-specific FAQ examples and an independent evaluation split before training.
 - [ ] Train/save the ML router; evaluate per-label accuracy and direct-route precision, including compound requests and reminders.
 - [ ] Implement deterministic sentiment, keyword, and FAQ tools in separate small changes; verify payload extraction and fallback behavior.
