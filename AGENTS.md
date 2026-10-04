@@ -14,6 +14,7 @@ An operations copilot using TF-IDF + Logistic Regression for intent routing, Lan
 - Take the slow approach throughout this project so the user understands the code. Prefer one small, explainable step at a time. If asked to implement too much at once, remind the user of this agreement and propose a smaller first slice.
 - Make each development change a logically scoped commit and PR with a clear purpose and relevant verification. Keep unrelated work separate; preserve existing user changes. Use logical job-based branch and PR names such as `fix/...` or `feature/...`, not `codex/...`. Agree on the slice before implementation and prepare its reviewable diff before publication.
 - Do not add `Co-authored-by`, ChatGPT, Codex, or any other non-user author attribution to commits, merge commits, PR descriptions, or PR details. Authorship should remain only the user's GitHub account.
+- Before opening or updating a PR, confirm the DCO check will pass for every commit. Use only the user's GitHub account details for any required `Signed-off-by` line.
 - State assumptions and ask about material uncertainties before implementing. Do not silently change scope or choose external services.
 - Write the simplest code that solves the agreed problem. Avoid speculative features, unnecessary abstractions, unrelated refactoring, and cosmetic changes outside the task.
 - Verify behavior appropriate to the change. Report what was checked and what remains unverified; never claim delivery, execution, or testing that did not happen.
