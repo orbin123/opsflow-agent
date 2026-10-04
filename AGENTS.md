@@ -1,6 +1,6 @@
 # OpsFlow-Agent
 
-An operations copilot using TF-IDF + Logistic Regression for intent routing, LangChain/Groq for conversational tool orchestration, FastAPI, Streamlit, and SQLite reminders.
+An operations copilot using TF-IDF + a calibrated linear SVM for intent routing, LangChain/Groq for conversational tool orchestration, FastAPI, Streamlit, and SQLite reminders.
 
 ## Read Before Working
 
