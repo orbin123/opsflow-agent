@@ -1,0 +1,237 @@
+{
+  "artifact_format_version": 1,
+  "created_on": "2026-10-04",
+  "dataset": {
+    "labels": [
+      "compound_request",
+      "email_drafting",
+      "faq_retrieval",
+      "keyword_extraction",
+      "out_of_scope",
+      "reminder_creation",
+      "sentiment_analysis",
+      "summarization"
+    ],
+    "path": "data/tasks_benchmark.csv",
+    "row_count": 1000,
+    "sha256": "6ef925721995fc38edbee2a95cdff45a463dabc2bf0773409dab187d8f4030a0"
+  },
+  "model_artifact": "intent_router_svm.joblib",
+  "model_sha256": "7407bb8ac6ca9b76cd3e75224f920c8e0da42cb55375561f745dcff5b8a2a44c",
+  "most_influential_terms": {
+    "compound_request": [
+      "and",
+      "also",
+      "summarize",
+      "summary",
+      "retrieve",
+      "draft",
+      "then",
+      "find",
+      "separately",
+      "separate"
+    ],
+    "email_drafting": [
+      "email",
+      "an",
+      "that",
+      "compose",
+      "prepare",
+      "write",
+      "we",
+      "your",
+      "wrong",
+      "without"
+    ],
+    "faq_retrieval": [
+      "policy",
+      "according",
+      "does",
+      "under",
+      "handbook",
+      "official",
+      "faq",
+      "say",
+      "our",
+      "guide"
+    ],
+    "keyword_extraction": [
+      "phrases",
+      "tags",
+      "this",
+      "keywords",
+      "topics",
+      "here",
+      "subjects",
+      "terms",
+      "content",
+      "concepts"
+    ],
+    "out_of_scope": [
+      "degrees",
+      "why",
+      "calculate",
+      "open",
+      "convert",
+      "database",
+      "image",
+      "approve",
+      "fictional",
+      "nearest"
+    ],
+    "reminder_creation": [
+      "reminder",
+      "remind",
+      "to",
+      "me",
+      "nudge",
+      "every",
+      "tomorrow",
+      "please",
+      "next",
+      "minutes"
+    ],
+    "sentiment_analysis": [
+      "attitude",
+      "sentiment",
+      "does",
+      "is",
+      "how",
+      "sound",
+      "emotional",
+      "assess",
+      "positive",
+      "or"
+    ],
+    "summarization": [
+      "recap",
+      "this",
+      "condense",
+      "because",
+      "the",
+      "short",
+      "summarize",
+      "brief",
+      "one",
+      "before"
+    ]
+  },
+  "pipeline": {
+    "best_parameters": {
+      "classifier__estimator__C": 1.0,
+      "tfidf__ngram_range": [
+        1,
+        1
+      ]
+    },
+    "calibration_folds": 5,
+    "classifier": "sigmoid-calibrated LinearSVC",
+    "cross_validated_macro_f1": 0.8360640199704308,
+    "features": "word TF-IDF"
+  },
+  "routing_threshold": {
+    "criteria": {
+      "maximum_critical_false_direct_count": 0,
+      "minimum_accepted_per_direct_label": 10,
+      "minimum_accepted_total": 30,
+      "minimum_direct_precision": 0.98
+    },
+    "development_metrics": {
+      "accepted_count": 168,
+      "accepted_faq_retrieval": 75,
+      "accepted_keyword_extraction": 46,
+      "accepted_sentiment_analysis": 47,
+      "agent_only_false_direct_count": 2,
+      "coverage": 0.21,
+      "critical_false_direct_count": 0,
+      "direct_precision": 0.9821428571428571,
+      "threshold": 0.71
+    },
+    "original_candidate": 0.85,
+    "selected": 0.71,
+    "selection_source": "development-set out-of-fold probabilities",
+    "test_metrics": {
+      "accepted_count": 47,
+      "accepted_faq_retrieval": 18,
+      "accepted_keyword_extraction": 14,
+      "accepted_sentiment_analysis": 15,
+      "agent_only_false_direct_count": 0,
+      "coverage": 0.235,
+      "critical_false_direct_count": 0,
+      "direct_precision": 1.0,
+      "threshold": 0.71
+    }
+  },
+  "split": {
+    "development_rows": 800,
+    "development_rows_per_label": 100,
+    "random_state": 20261004,
+    "strategy": "deterministic stratified 80/20 development/test",
+    "test_rows": 200,
+    "test_rows_per_label": 25
+  },
+  "test_metrics": {
+    "accuracy": 0.88,
+    "log_loss": 0.45493969813645435,
+    "macro_f1": 0.8812910997732426,
+    "multiclass_brier_score": 0.22259611529674458,
+    "per_label": {
+      "compound_request": {
+        "f1-score": 0.88,
+        "precision": 0.88,
+        "recall": 0.88,
+        "support": 25.0
+      },
+      "email_drafting": {
+        "f1-score": 0.9387755102040817,
+        "precision": 0.9583333333333334,
+        "recall": 0.92,
+        "support": 25.0
+      },
+      "faq_retrieval": {
+        "f1-score": 0.7777777777777778,
+        "precision": 0.7241379310344828,
+        "recall": 0.84,
+        "support": 25.0
+      },
+      "keyword_extraction": {
+        "f1-score": 0.9387755102040817,
+        "precision": 0.9583333333333334,
+        "recall": 0.92,
+        "support": 25.0
+      },
+      "out_of_scope": {
+        "f1-score": 0.76,
+        "precision": 0.76,
+        "recall": 0.76,
+        "support": 25.0
+      },
+      "reminder_creation": {
+        "f1-score": 0.96,
+        "precision": 0.96,
+        "recall": 0.96,
+        "support": 25.0
+      },
+      "sentiment_analysis": {
+        "f1-score": 0.875,
+        "precision": 0.9130434782608695,
+        "recall": 0.84,
+        "support": 25.0
+      },
+      "summarization": {
+        "f1-score": 0.92,
+        "precision": 0.92,
+        "recall": 0.92,
+        "support": 25.0
+      }
+    },
+    "top_label_ece": 0.1605699207631705,
+    "weighted_f1": 0.8812910997732426
+  },
+  "versions": {
+    "joblib": "1.6.0",
+    "pandas": "3.0.6",
+    "python": "3.12.13",
+    "scikit-learn": "1.9.1"
+  }
+}
