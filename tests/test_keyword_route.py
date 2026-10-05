@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import keyword_route
+from app.routes import keyword_route
 from app.tools.keywords import extract_keywords
 
 

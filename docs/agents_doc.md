@@ -14,4 +14,6 @@ Keep entries brief: date, completed change, verification, and any changed decisi
 
 - **2026-10-05:** Added local English `yake==0.7.3` keyword extraction returning up to five ranked one-to-three-word phrases with raw relevance scores, plus conservative quoted-payload extraction and an intent/confidence gate. Verified the installed API and Python 3.12 compatibility, relevant example phrases, empty/no-candidate inputs, repeatability without network connections, and fallback non-execution. All 105 tests, `pip check`, and `git diff --check` passed. Example tests are not a real-world quality benchmark; model/API/agent wiring remains pending. FAQ direction is fictional employee policies, with local JSON proposed for the next discussion.
 
+- **2026-10-05:** Moved keyword and sentiment execution-routing helpers into `app/routes/`, added the package description, and updated test imports and the architecture note. No routing behavior changed; all 105 existing tests and `git diff --check` passed.
+
 **Next:** Discuss the employee FAQ dataset and retrieval slice. Connect tools to the runtime router/agent in a later agreed step.
