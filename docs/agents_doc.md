@@ -16,4 +16,6 @@ Keep entries brief: date, completed change, verification, and any changed decisi
 
 - **2026-10-05:** Moved keyword and sentiment execution-routing helpers into `app/routes/`, added the package description, and updated test imports and the architecture note. No routing behavior changed; all 105 existing tests and `git diff --check` passed.
 
-**Next:** Discuss the employee FAQ dataset and retrieval slice. Connect tools to the runtime router/agent in a later agreed step.
+- **2026-10-05:** Added 25 fictional employee policies with 75 question phrasings in `data/company_faq.json` and local TF-IDF/cosine retrieval in `app/tools/faq.py`. Results return an exact stored answer, candidate questions, or no match, with a demo flag. Adjusted conservative development heuristics after initial checks exposed vague-query and weak-match issues; some valid paraphrases intentionally abstain. Verified all 208 tests, installed scikit-learn API compatibility, `pip check`, and `git diff --check`; no dependencies added. Tests cover dataset integrity, all stored phrasings, example paraphrases, ambiguity, unsupported questions, input validation, and offline repeatability across index reloads and working directories. No independent retrieval-quality evaluation or routing/API/agent wiring yet.
+
+**Next:** Discuss conservative FAQ routing, then connect tools to the runtime router/agent in a later agreed step.
