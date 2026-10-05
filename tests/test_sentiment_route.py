@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import sentiment_route
+from app.routes import sentiment_route
 from app.tools.sentiment import analyze_sentiment
 
 
