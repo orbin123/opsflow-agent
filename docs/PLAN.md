@@ -13,7 +13,7 @@ Agree on test scope before coding each slice. Keep coverage proportional to beha
 Flow: Streamlit → FastAPI → intent router → deterministic tool or LangChain agent → session history + execution trace → response.
 
 - **Dataset/router:** `data/tasks_benchmark.csv` contains 1,000 synthetic requests, exactly 125 per label: `sentiment_analysis`, `keyword_extraction`, `faq_retrieval`, `summarization`, `email_drafting`, `reminder_creation`, `compound_request`, and `out_of_scope`. The CSV has only `text,label` and one header. Eight separate label batches were generated using three reused sub-agents with user approval. Structure and cross-batch similarity were checked; `docs/dataset_validation_report.md` records methods, results, and one rejected/replaced template-like example. No labels were changed. The classifier receives only `text` and predicts `label`. `notebooks/train_evaluate_svm.ipynb` trains a word TF-IDF + sigmoid-calibrated `LinearSVC` against a deterministic stratified 80/20 development/test split and saves the evaluated pipeline under `artifacts/models/`. The selected unigram model achieved 0.8813 test macro F1. A 0.71 threshold selected from development-set out-of-fold predictions achieved 1.0 direct-route precision at 0.235 coverage on the untouched test set, with no reminder or compound request routed directly. These synthetic holdout results do not establish real-world performance or calibration. Route/tool metadata remains outside the CSV.
-- **Shared runtime:** `app/runtime.py` classifies a validated message once and dispatches sentiment, keyword, or FAQ execution through the existing conservative gates. Returns structured results, actual success/failure traces, and tool/total timings; unsupported intents and unsafe requests return `agent_required` without execution. The FAQ endpoint uses FAQ-only mode to preserve its contract. All 375 tests pass; controlled predictions verify dispatch and failures, and saved-model examples verify sentiment execution, FAQ outcomes, and keyword low-confidence fallback. No new dependencies, agent invocation, or session memory. See `docs/runtime.md`.
+- **Shared runtime:** `app/runtime.py` classifies a validated message once and dispatches sentiment, keyword or FAQ execution through conservative gates. Deferred requests invoke the stateless five-tool agent once with the original message, retaining its reply, status, failure reason and actual traces; direct failures stop without agent retry. Total timing includes classification and handoff. FAQ-only mode preserves the existing endpoint contract without invoking the agent. All 614 tests pass, including offline loop integration and saved-model examples. No session memory, reminder creation or email submission in this path. See `docs/runtime.md`.
 - **Code organization:** `app/routes/` contains execution-routing helpers (`keyword_route.py`, `sentiment_route.py`, and `faq_route.py`); `app/tools/` contains the underlying NLP tools. HTTP endpoint modules live separately in `app/api/`.
 - **Direct path:** Only clearly single-purpose, self-contained deterministic requests qualify: sentiment, keyword extraction, and FAQ lookup. Extract the payload before tool execution. For `get the sentiment for this text "I am sad"`, analyze `I am sad`, not the surrounding instruction. Uncertain argument extraction falls back to the agent.
 - **Agent path:** All reminder requests, compound requests, LLM-based summarization/email drafting, low-confidence requests, and context-dependent follow-ups use LangChain + ChatGroq. A reminder can retain the `reminder_creation` label while still requiring multiple execution steps; intent label and execution route are separate decisions.
@@ -158,8 +158,8 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [✅] Agree on and implement the due-time email worker with durable attempts, bounded definite-failure retries, exclusive recovery, and no automatic resubmission after accepted/unknown outcomes. All 572 tests pass; real SMTP/inbox behavior and deployment remain unverified.
 - [✅] Agree on the first bounded standalone LangChain agent-loop slice and proportional verification scope.
 - [✅] Implement and verify the standalone five-tool agent loop; all 608 tests pass, with actual traces, bounded execution and retained results on failure. Final synthetic live checks pass inspected behavior; model reliability/injection resistance remain limitations. See `docs/agent-loop.md`.
-- [⏳] Discuss the bounded runtime-to-agent handoff and verification scope before wiring execution.
-- [ ] Add session memory across both routes; verify follow-ups and session isolation.
+- [✅] Implement and verify the stateless runtime-to-agent handoff; all 614 tests pass, including direct/FAQ isolation, retained outcomes and total timing.
+- [⏳] Discuss session memory across both routes; agree on follow-ups, session isolation and verification before implementation.
 - [ ] Add FastAPI endpoints, structured logs, and metrics; verify request validation and reported failures.
 - [ ] Build the Streamlit chat/inspector; verify intent, route, outputs, and step timings against backend results.
 - [ ] Add Docker/Compose, persistent storage, and README; verify the complete complaint → policy → draft → notification → due reminder flow.
@@ -170,3 +170,30 @@ Update this file immediately when scope, architecture, order, or completion stat
 ## Agreed First Agent-Loop Slice
 
 User approved the standalone stateless five-tool loop on 2026-10-06. Expose sentiment, keywords, FAQ, summary and draft tools using existing ChatGroq APIs; defer routing integration, memory, reminder creation and sending. Validate inputs/calls/final replies locally, execute one tool at a time with prior observations, and stop on failure while preserving completed results. Limits: six orchestration calls, five tool attempts, soft 120-second elapsed budget; existing 30-second provider timeouts and zero retries. Trace actual arguments/results/failures/timings without reasoning or external tracing. Clarification and semantic dependencies remain model decisions. See `docs/agent-loop.md` for the agreed contract and tests. Implementation verification: all 608 tests (36 new), `pip check` and whitespace checks pass. Final live synthetic clarification, FAQ-to-draft and summary samples pass inspected behavior; earlier provider/prose/injection failures and the final embedded-command relevance limitation are documented. Application-rendered drafts retain fixed actions and demo qualification. General model reliability and injection resistance are unproven.
+
+## Agreed Runtime-to-Agent Handoff
+
+User approved this bounded slice on 2026-10-06. `execute_request(message)` keeps
+classification and conservative direct gates, then invokes `run_agent` once with
+the original validated message whenever routing defers. Direct errors stop without
+agent retry. `faq_only=True` preserves the FAQ endpoint contract and never invokes
+the agent. No model/dependency changes, memory, chat API/UI, reminder creation or
+email submission.
+
+Retain classification, confidence and routing `reason`. Carry agent status,
+`reply`, separate `agent_reason` and actual traces unchanged, including partial
+failures and successful observations. The existing `result` holds direct tool
+output only; agent structured outputs remain in traces. Total runtime timing
+includes classification, routing and agent execution. An unexpected agent exception
+returns a sanitized error with `agent_unavailable` and no invented observations;
+it cannot establish whether an unreturned tool ran. Normal agent failures retain
+the agent's existing trace and reason. Traces remain private data, not logs.
+
+Agreed tests cover exactly-once handoff, original-message preservation, no agent
+on direct success/failure or FAQ-only requests, clarification/error/partial-failure
+propagation, retained observations, total timing and an offline real-loop integration.
+Run the existing suite, dependency and whitespace checks before delivery.
+
+Verification: all 614 tests (six new), `pip check` and `git diff --check` pass.
+Offline integration uses the real agent loop and sentiment tool with a provider
+double. No new live Groq, SMTP/inbox, API/UI or deployment testing.

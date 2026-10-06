@@ -1,8 +1,8 @@
 # Standalone agent loop
 
 `app.agent.run_agent(message)` runs one stateless English request using LangChain
-ChatGroq local tool calling. It does not change `execute_request`, the FAQ API,
-or classifier gates. Session memory, HTTP/UI wiring, reminder scheduling and
+ChatGroq local tool calling. `execute_request` now invokes it when direct routing defers; the FAQ-only API
+and classifier gates retain their contracts. Session memory, HTTP/UI wiring, reminder scheduling and
 email submission are separate slices. No external tracing or source logging.
 
 ## Contract
