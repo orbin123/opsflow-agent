@@ -1,9 +1,10 @@
-"""Stateless deterministic execution; agent handoff does not invoke an agent."""
+"""Stateless direct execution and bounded agent handoff; FAQ-only mode abstains."""
 
 from dataclasses import dataclass
 from time import perf_counter
 from typing import Literal
 
+from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
 from app.routes.keyword_route import try_direct_keyword
@@ -31,20 +32,23 @@ class ToolTrace:
 
 @dataclass(frozen=True)
 class ExecutionResult:
-    status: Literal["completed", "agent_required", "error"]
+    status: Literal["completed", "agent_required", "needs_clarification", "partial_failure", "error"]
     predicted_intent: str
     confidence: float
     route: Literal["direct", "agent"]
     reason: str
     result: ToolResult | None
-    trace: list[ToolTrace]
+    trace: list[ToolTrace | AgentTrace]
     elapsed_ms: float
+    reply: str | None = None
+    agent_reason: str | None = None
 
 
 def execute_request(message: str, *, faq_only: bool = False) -> ExecutionResult:
     """Classify once and use existing extraction/confidence gates.
 
     The FAQ endpoint restricts execution to FAQ to preserve its public contract.
+    Other requests that defer invoke the stateless agent once with the original message.
     Callers supply a nonblank string of at most 10,000 characters.
     """
     if not isinstance(message, str):
@@ -85,5 +89,16 @@ def execute_request(message: str, *, faq_only: bool = False) -> ExecutionResult:
             status = "completed" if succeeded else "error"
             trace.append(ToolTrace(tool, arguments, "completed" if succeeded else "failed",
                                    result, decision.tool_elapsed_ms))
+    reply = None
+    agent_reason = None
+    if status == "agent_required" and not faq_only:
+        try:
+            agent = run_agent(message)
+        except Exception:
+            status = "error"
+            reply = "Agent unavailable. No execution results were returned."
+            agent_reason = "agent_unavailable"
+        else:
+            status, reply, agent_reason, trace = agent.status, agent.reply, agent.reason, agent.trace
     return ExecutionResult(status, intent, confidence, route, reason, result, trace,
-                           (perf_counter() - started) * 1000)
+                           (perf_counter() - started) * 1000, reply, agent_reason)
