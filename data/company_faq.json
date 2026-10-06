@@ -1,0 +1,257 @@
+{
+  "company": "OpsFlow Demo Company",
+  "is_demo": true,
+  "notice": "Fictional policies for demonstration only; not an actual employer handbook.",
+  "faqs": [
+    {
+      "policy_id": "LEAVE-01",
+      "category": "Leave",
+      "question": "How do I request annual leave?",
+      "alternate_phrasings": [
+        "How do I apply for vacation?",
+        "What is the process for booking paid time off?"
+      ],
+      "answer": "Submit an annual leave request in the HR portal at least five working days before your planned absence. Your manager must approve the request before you confirm travel. Check your available balance in the portal."
+    },
+    {
+      "policy_id": "LEAVE-02",
+      "category": "Leave",
+      "question": "How do I report sick leave?",
+      "alternate_phrasings": [
+        "What should I do if I am too ill to work?",
+        "How do I notify the company about a sick day?"
+      ],
+      "answer": "Notify your manager before your shift starts when possible, then record sick leave in the HR portal. If you cannot submit it yourself, ask HR for help. Do not post medical details in team channels."
+    },
+    {
+      "policy_id": "LEAVE-03",
+      "category": "Leave",
+      "question": "Where can I check my leave balance?",
+      "alternate_phrasings": [
+        "How many vacation days do I have left?",
+        "Where do I find my remaining paid time off?"
+      ],
+      "answer": "Open the Leave Balance section of the HR portal to view available and pending days. Contact HR if the balance appears incorrect before submitting another request."
+    },
+    {
+      "policy_id": "LEAVE-04",
+      "category": "Leave",
+      "question": "Where is the company holiday calendar?",
+      "alternate_phrasings": [
+        "Which public holidays does the office observe?",
+        "Where can I see the list of office holidays?"
+      ],
+      "answer": "Use the Holiday Calendar in the HR portal and select your assigned office location. Confirm coverage with your manager if your team operates on an office holiday."
+    },
+    {
+      "policy_id": "ATTENDANCE-01",
+      "category": "Attendance",
+      "question": "What are the standard working hours?",
+      "alternate_phrasings": [
+        "When does the workday start and finish?",
+        "What is the regular office schedule?"
+      ],
+      "answer": "The demo company works Monday through Friday, 9:00 AM to 6:00 PM in the assigned office timezone, including a one-hour lunch break. Any alternative schedule requires manager approval."
+    },
+    {
+      "policy_id": "ATTENDANCE-02",
+      "category": "Attendance",
+      "question": "What should I do if I will be late to work?",
+      "alternate_phrasings": [
+        "How do I report a late arrival?",
+        "Who should I notify if I am delayed for my shift?"
+      ],
+      "answer": "Notify your manager as soon as you expect a delay, provide an estimated arrival time, and update your attendance record in the HR portal after you arrive."
+    },
+    {
+      "policy_id": "ATTENDANCE-03",
+      "category": "Attendance",
+      "question": "How do I correct an attendance record?",
+      "alternate_phrasings": [
+        "How can I fix a missing clock in?",
+        "What if my timesheet has the wrong hours?"
+      ],
+      "answer": "Submit an attendance correction in the HR portal with the date, actual hours, and a brief explanation. Your manager reviews the correction before payroll processing."
+    },
+    {
+      "policy_id": "REMOTE-01",
+      "category": "Remote work",
+      "question": "What is the remote-work policy?",
+      "alternate_phrasings": [
+        "How can I work from home?",
+        "How do I request a remote working day?"
+      ],
+      "answer": "Request a work-from-home day through the HR portal and obtain manager approval in advance. Eligible roles may request up to two remote days per week. Team coverage and scheduled onsite activities take priority."
+    },
+    {
+      "policy_id": "REMOTE-02",
+      "category": "Remote work",
+      "question": "How do I get VPN access?",
+      "alternate_phrasings": [
+        "How can I connect to the company VPN?",
+        "Who approves remote network access?"
+      ],
+      "answer": "Open an IT access ticket with your role and business need. Your manager approves the request, and IT provides VPN setup instructions. Use a company-managed device and multi-factor authentication."
+    },
+    {
+      "policy_id": "PAYROLL-01",
+      "category": "Payroll",
+      "question": "When is salary paid?",
+      "alternate_phrasings": [
+        "What is the monthly payday?",
+        "When will my salary be deposited?"
+      ],
+      "answer": "Salary is paid on the last working day of each month. If you do not receive the payment, contact Payroll through the HR portal with the affected month."
+    },
+    {
+      "policy_id": "PAYROLL-02",
+      "category": "Payroll",
+      "question": "How do I report a salary discrepancy?",
+      "alternate_phrasings": [
+        "What should I do if my pay is incorrect?",
+        "Who can fix a payroll error?"
+      ],
+      "answer": "Create a Payroll query in the HR portal with the affected month and a description of the discrepancy. Attach the relevant payslip through the secure portal; do not share bank or salary details in public channels."
+    },
+    {
+      "policy_id": "PAYROLL-03",
+      "category": "Payroll",
+      "question": "Where can I download my payslip?",
+      "alternate_phrasings": [
+        "How do I get a salary slip?",
+        "Where are my monthly pay statements?"
+      ],
+      "answer": "Open Payroll, then Payslips in the HR portal. Select the month and download the statement. Contact Payroll if a statement is missing."
+    },
+    {
+      "policy_id": "PAYROLL-04",
+      "category": "Payroll",
+      "question": "How do I update my bank details?",
+      "alternate_phrasings": [
+        "How can I change my salary bank account?",
+        "Where do I update payroll banking information?"
+      ],
+      "answer": "Submit the change in the secure Payroll Profile section of the HR portal and complete the verification steps. Payroll will confirm the effective payment cycle. Never send account details in a general chat."
+    },
+    {
+      "policy_id": "EXPENSE-01",
+      "category": "Expenses",
+      "question": "How do I submit an expense reimbursement?",
+      "alternate_phrasings": [
+        "How can I claim business expenses?",
+        "Where do I upload receipts for repayment?"
+      ],
+      "answer": "Submit a claim in the expense portal within 30 calendar days of the purchase. Include itemized receipts, the business purpose, and the project code. Your manager reviews the claim before Finance processes it."
+    },
+    {
+      "policy_id": "EXPENSE-02",
+      "category": "Expenses",
+      "question": "How do I get approval for business travel?",
+      "alternate_phrasings": [
+        "Who approves a work trip?",
+        "What must I do before booking business travel?"
+      ],
+      "answer": "Submit a travel request with the purpose, dates, estimated costs, and project code. Obtain manager and Finance approval before booking flights or accommodation."
+    },
+    {
+      "policy_id": "EXPENSE-03",
+      "category": "Expenses",
+      "question": "When will an approved expense claim be paid?",
+      "alternate_phrasings": [
+        "How long does reimbursement take after approval?",
+        "When will Finance repay my approved expenses?"
+      ],
+      "answer": "Finance processes fully approved expense claims in the next weekly payment run. Check the claim status in the expense portal; contact Finance if it remains unpaid after two payment runs."
+    },
+    {
+      "policy_id": "IT-01",
+      "category": "IT support",
+      "question": "How do I reset my account password?",
+      "alternate_phrasings": [
+        "What should I do if I forgot my login password?",
+        "Where can I recover my company account password?"
+      ],
+      "answer": "Use the password reset option on the company sign-in page and complete identity verification. If you cannot complete verification, contact the IT helpdesk. Never share your password or verification codes."
+    },
+    {
+      "policy_id": "IT-02",
+      "category": "IT support",
+      "question": "How do I request a laptop or other equipment?",
+      "alternate_phrasings": [
+        "How can I get a replacement company laptop?",
+        "Where do I request a monitor or keyboard?"
+      ],
+      "answer": "Create an equipment request in the IT service portal with the item and business need. Your manager approves the request, and IT confirms availability and collection or delivery arrangements."
+    },
+    {
+      "policy_id": "IT-03",
+      "category": "IT support",
+      "question": "How do I report a technical problem?",
+      "alternate_phrasings": [
+        "Where can I open an IT support ticket?",
+        "Who helps when my work software is not working?"
+      ],
+      "answer": "Open a ticket in the IT service portal with the affected device or application, error message, and business impact. Attach screenshots only after removing sensitive information. Use the helpdesk phone channel if you cannot access the portal."
+    },
+    {
+      "policy_id": "SECURITY-01",
+      "category": "Security",
+      "question": "How do I report a suspicious email?",
+      "alternate_phrasings": [
+        "What should I do about a phishing message?",
+        "Where do I report a possible email scam?"
+      ],
+      "answer": "Use the Report Phishing option in the mail client or contact the Security team through the service portal. Do not click links or open attachments. If you already interacted with the message, tell Security immediately."
+    },
+    {
+      "policy_id": "SECURITY-02",
+      "category": "Security",
+      "question": "What should I do if a company device is lost?",
+      "alternate_phrasings": [
+        "How do I report a stolen work laptop?",
+        "Who should I contact about a missing company phone?"
+      ],
+      "answer": "Contact the IT helpdesk and Security immediately with the device type and last known location. Inform your manager. IT will coordinate access protection and the incident record."
+    },
+    {
+      "policy_id": "CONDUCT-01",
+      "category": "Conduct",
+      "question": "How do I report a workplace conduct concern?",
+      "alternate_phrasings": [
+        "Who can I tell about harassment or bullying?",
+        "How can I raise a concern about inappropriate behavior?"
+      ],
+      "answer": "Contact HR through the confidential employee concern form. You may bypass your manager if the concern involves them. The demo company prohibits retaliation for good-faith reports; HR explains the review process and handles information on a need-to-know basis."
+    },
+    {
+      "policy_id": "CONDUCT-02",
+      "category": "Conduct",
+      "question": "What is the office dress code?",
+      "alternate_phrasings": [
+        "What clothing is appropriate at work?",
+        "Can I wear casual clothes in the office?"
+      ],
+      "answer": "Wear clean, workplace-appropriate casual clothing. Follow any safety requirements for your work area and any dress expectations communicated for customer visits or formal events."
+    },
+    {
+      "policy_id": "ONBOARDING-01",
+      "category": "Onboarding",
+      "question": "What should I complete during my first week?",
+      "alternate_phrasings": [
+        "What are the new employee onboarding tasks?",
+        "Where do I find my joining checklist?"
+      ],
+      "answer": "Complete the onboarding checklist in the HR portal: verify your employee profile, attend orientation, finish security training, and confirm device access. Meet your manager to agree on initial responsibilities and required role-specific training."
+    },
+    {
+      "policy_id": "OFFBOARDING-01",
+      "category": "Offboarding",
+      "question": "How do I return company equipment when leaving?",
+      "alternate_phrasings": [
+        "What is the equipment return process during offboarding?",
+        "Where should I hand in my laptop on my last day?"
+      ],
+      "answer": "Follow the HR offboarding checklist and arrange an equipment handover with IT before your final working day. Return the laptop, accessories, and access badge, and obtain a receipt. Do not erase the device yourself; IT handles company data."
+    }
+  ]
+}
