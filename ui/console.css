@@ -1,0 +1,46 @@
+:root {
+  --of-canvas: #EEF1F2;
+  --of-surface: #FAFCFC;
+  --of-subtle: #DFE6E8;
+  --of-ink: #17292E;
+  --of-secondary: #4F666D;
+  --of-focus: #126479;
+  --of-border: #6B8087;
+  --of-action: #79D9ED;
+}
+.stApp { background: var(--of-canvas); color: var(--of-ink); }
+.stApp, .stApp p, .stApp input, .stApp textarea, .stApp pre {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  line-height: 24px;
+}
+.stApp h1 { font-family: "VT323", monospace; font-size: 40px; line-height: 44px; font-weight: 400; }
+.stApp h2, .stApp h3 { font-family: "VT323", monospace; font-size: 28px; line-height: 32px; font-weight: 400; }
+[data-testid="stCaptionContainer"] p { color: var(--of-secondary); font-size: 11px; line-height: 16px; }
+[data-testid="stCaptionContainer"] { opacity: 1; }
+[data-testid="stSidebar"] { background: var(--of-surface); border-right: 1px solid var(--of-border); }
+[data-testid="stMainBlockContainer"] { padding: 80px 48px 48px; max-width: 1440px; }
+[data-testid="stChatMessage"], [data-testid="stExpander"] {
+  background: var(--of-surface); border: 1px solid var(--of-border); border-radius: 0; padding: 16px;
+}
+[data-testid="stChatInput"], [data-baseweb="select"] > div {
+  background: var(--of-surface); border: 1px solid var(--of-border); border-radius: 0;
+}
+[data-testid="stChatInput"] textarea { min-height: 48px; }
+[data-testid="stExpander"] details { border: 0; border-radius: 0; }
+.stApp [role="combobox"] { border: 1px solid var(--of-border); border-radius: 0; min-height: 48px; }
+[data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"] {
+  background: var(--of-subtle); color: var(--of-ink); border-radius: 0;
+}
+.stApp button { min-height: 44px; border-radius: 0; }
+[data-testid="stChatInputSubmitButton"] { background: var(--of-action); color: var(--of-ink); }
+[data-testid="stChatInputSubmitButton"]:hover { background: #52CADE; }
+[data-testid="stChatInputSubmitButton"]:active { background: #33B7CF; }
+.stApp :is(button, input, textarea):focus-visible { outline: 2px solid var(--of-focus); outline-offset: 2px; }
+[data-testid="stAlert"] { border-radius: 0; }
+a { color: var(--of-focus); }
+@media (max-width: 767px) {
+  [data-testid="stMainBlockContainer"] { padding: 80px 16px 24px; }
+  [data-testid="stHorizontalBlock"] { flex-direction: column; }
+  [data-testid="stColumn"] { width: 100%; flex: 1 1 100%; min-width: 100%; }
+}

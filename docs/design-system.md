@@ -76,3 +76,14 @@ The Figma components define visual states. Product code still needs to implement
 For any frontend request, read this document and inspect the linked Figma page relevant to the requested feature. Reuse semantic color and geometry tokens and match the listed text styles and component states. Keep the design-system document and Figma file aligned when the user agrees to a design change. If a requirement conflicts with the existing system or needs a new reusable pattern, explain the specific choice before expanding the system.
 
 This file records a design specification; it does not mean the tokens or components have been implemented in the application. Confirm fonts, colors, sizing, and responsive behavior against the actual frontend stack as part of implementation.
+
+## Streamlit console adaptation
+
+On 2026-10-06 the connected Figma file exposed only **01 · Foundations**; Components
+and Console example were unavailable despite the earlier specification above.
+The user approved adapting Foundations and these documented rules into a Streamlit
+chat/inspector without expanding the Figma system. `ui/console.css` applies the
+palette, typography, square geometry, focus indicators and mobile panel stacking.
+VT323 and IBM Plex Mono Regular are bundled locally with their SIL licenses;
+monospace remains the fallback. Native JSON syntax coloring and framework icons
+remain Streamlit defaults. See [streamlit-console.md](streamlit-console.md).

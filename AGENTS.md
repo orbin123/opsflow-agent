@@ -2,6 +2,9 @@
 
 An operations copilot using TF-IDF + a calibrated linear SVM for intent routing, LangChain/Groq for conversational tool orchestration, FastAPI, Streamlit, and SQLite reminders.
 
+The local Streamlit chat/inspector runs with `streamlit run streamlit_app.py` and
+uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verification.
+
 ## Read Before Working
 
 - `docs/PLAN.md`: current scope, architecture, execution checklist, and pending decisions.
