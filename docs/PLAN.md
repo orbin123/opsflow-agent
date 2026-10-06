@@ -235,5 +235,4 @@ of model reference-resolution reliability from scripted responses.
 Verification: all 631 tests (17 new), `pip check` and whitespace checks pass.
 Two expected LangChain history-API deprecation warnings remain visible. Offline
 provider doubles exercise the actual loop and session wrapper; no live Groq/email,
-HTTP/UI or deployment verification was performed. The memory PR depends on the
-still-open runtime handoff PR #16 and initially targets its branch.
+HTTP/UI or deployment verification was performed. Runtime handoff PR #16 is merged; the session-memory PR now targets `main`.
