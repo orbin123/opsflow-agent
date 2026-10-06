@@ -25,7 +25,7 @@ Flow: Streamlit → FastAPI → intent router → deterministic tool or LangChai
 - **Email notifications in v1:** Send notifications to the configured user's own email address. Separate **Email draft** (recipient, subject, body) from **What you should do** (next steps). The user handles forwarding/sending the draft to its intended recipient. Add a delivery utility/tool with observable success/failure; generating a draft alone does not mean notification delivery succeeded.
 - **Reminders in v1:** Resolve task, due time, and timezone through the agent; clarify missing or ambiguous details. Store reminders in SQLite. A background worker checks due records and emails the user when due. Persist delivery state to avoid duplicate notifications on retries/restarts. Agree on sender/provider, recipient configuration, and retry behavior before implementing delivery.
 - **Memory:** `app/sessions.py` uses per-session `InMemoryChatMessageHistory` + `RunnableWithMessageHistory` to preserve user turns and structured execution records from both routes. Agent follow-ups receive prior context and are prompted to clarify ambiguous references; model correctness is not guaranteed. Turns/clearing serialize per session. History resets on restart and has no automatic eviction/truncation; reminders persist separately. Both history APIs are deprecated in pinned LangChain Core 1.6.6. See `docs/session-memory.md`.
-- **API/UI:** `/api/v1/chat`, `/api/v1/classify`, `/api/v1/reminders`, `/api/v1/faq`, and `/health`. The FAQ endpoint accepts a message and exposes a stateless routing/retrieval result; it does not implement chat history. Chat returns reply, predicted intent/confidence, selected route, tool trace, and timing. Streamlit displays chat beside actual tool names, arguments, observations, and latency; the trace explains execution, not private model reasoning.
+- **API/UI:** Implemented `/api/v1/chat`, `/api/v1/faq`, and `/health`; `/api/v1/classify` and `/api/v1/reminders` remain planned. The FAQ endpoint exposes a stateless routing/retrieval result. Chat accepts caller-owned session ID/message and returns session-aware structured results, nullable reply, predicted intent/confidence, route/reasons, actual traces and timing; errors/partial failures return 503. See `docs/chat-api.md`. Streamlit remains planned to display chat beside tool names, arguments, observations, and latency; traces explain execution, not private model reasoning.
 - **Development baseline:** Python 3.12.13 with a repository-local `.venv`. Direct FastAPI development dependencies are pinned in `requirements.txt`; add the remaining planned stack only with the implementation slice that uses it.
 - **Operations:** Structured JSON logs and Prometheus `/metrics` capture request/tool latency and failures without logging credentials or full sensitive messages. Docker Compose runs backend, Streamlit, and reminder worker with shared persistent reminder storage. Choose deployment after local behavior is verified.
 
@@ -160,7 +160,7 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [✅] Implement and verify the standalone five-tool agent loop; all 608 tests pass, with actual traces, bounded execution and retained results on failure. Final synthetic live checks pass inspected behavior; model reliability/injection resistance remain limitations. See `docs/agent-loop.md`.
 - [✅] Implement and verify the stateless runtime-to-agent handoff; all 614 tests pass, including direct/FAQ isolation, retained outcomes and total timing.
 - [✅] Implement and verify shared process-local session memory; all 631 tests pass, with context, isolation, clearing/concurrency and failure history checked offline.
-- [⏳] Discuss a bounded FastAPI session-chat endpoint slice before implementation; structured logs, metrics and remaining endpoints can follow separately.
+- [✅] Implement and verify bounded `POST /api/v1/chat` with validated caller-owned session IDs, existing session-runtime results and accurate failure responses; all 652 tests, dependency/whitespace checks and a local direct HTTP smoke pass. Structured logs, metrics and remaining endpoints follow separately.
 - [ ] Build the Streamlit chat/inspector; verify intent, route, outputs, and step timings against backend results.
 - [ ] Add Docker/Compose, persistent storage, and README; verify the complete complaint → policy → draft → notification → due reminder flow.
 - [ ] Discuss hosting, deploy the agreed setup, and verify persistence and email delivery there.
@@ -236,3 +236,32 @@ Verification: all 631 tests (17 new), `pip check` and whitespace checks pass.
 Two expected LangChain history-API deprecation warnings remain visible. Offline
 provider doubles exercise the actual loop and session wrapper; no live Groq/email,
 HTTP/UI or deployment verification was performed. Runtime handoff PR #16 is merged; the session-memory PR now targets `main`.
+
+## Agreed Session-Chat API Slice
+
+On 2026-10-06 the user requested planning and implementation of one bounded
+`POST /api/v1/chat` endpoint. Accept only exact nonblank `session_id` (at most
+128 characters) and `message` (at most 10,000 characters), preserving whitespace.
+Invoke `execute_session_request` once and return its existing execution fields
+plus the session ID. Preserve nullable direct replies, structured direct results,
+agent reasons and actual traces, including partial failures; do not invent prose
+or execution observations. Use a synchronous handler for the blocking runtime.
+
+HTTP 200 covers completed/clarification outcomes; 422 rejects invalid bodies
+before history or execution; 503 covers error/partial-failure outcomes with their
+execution payload, or sanitized `RuntimeUnavailable` detail. No automatic retries.
+Session identity remains caller-owned and unauthenticated for local single-process
+use; no durable/shared memory, new provider, clearing/history endpoint, reminder or
+email execution, UI, structured logs or metrics in this slice.
+
+Proportional tests cover direct-result and agent-trace JSON preservation, same-session
+follow-up context and isolation through HTTP, request type/blank/length/extra-field
+validation before execution, exact-limit preservation, clarification, sanitized
+runtime/direct/provider errors and retained partial observations. Use offline
+provider doubles and existing session concurrency coverage; run the full suite,
+`pip check`, whitespace checks and an offline live-server direct-request smoke check.
+
+Verification: all 652 tests (21 new), `pip check` and whitespace checks pass.
+A local Uvicorn HTTP request returned 200 with the real classifier/direct sentiment
+result; the server was stopped afterward. Existing two LangChain history-API
+deprecation warnings remain. No live Groq, SMTP/inbox, UI or deployment verification.
