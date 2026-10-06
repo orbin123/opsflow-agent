@@ -1,13 +1,11 @@
 """Stateless FAQ API; this does not invoke an agent or maintain chat history."""
 
-from time import perf_counter
 from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.intent_router import classify_request
-from app.routes.faq_route import try_direct_faq
+from app.runtime import RuntimeUnavailable, execute_request
 from app.tools.faq import FAQResult
 
 
@@ -47,26 +45,16 @@ class FAQResponse(BaseModel):
 
 @router.post("/api/v1/faq", response_model=FAQResponse)
 def answer_faq(body: FAQRequest, response: Response) -> FAQResponse:
-    started = perf_counter()
     try:
-        intent, confidence, threshold = classify_request(body.message)
-    except Exception:
-        raise HTTPException(status_code=503, detail="Intent classifier unavailable") from None
-    try:
-        decision = try_direct_faq(body.message, intent=intent, confidence=confidence, threshold=threshold)
-    except Exception:
-        raise HTTPException(status_code=503, detail="FAQ routing unavailable") from None
-
-    trace = []
-    status = "agent_required"
-    if decision.route == "direct":
-        succeeded = decision.faq is not None
-        status = "completed" if succeeded else "error"
-        if not succeeded:
-            response.status_code = 503
-        trace.append(FAQTrace(arguments={"question": decision.question},
-                              status="completed" if succeeded else "failed",
-                              result=decision.faq, elapsed_ms=decision.tool_elapsed_ms))
-    return FAQResponse(status=status, predicted_intent=intent, confidence=confidence,
-                       route=decision.route, reason=decision.reason, faq=decision.faq,
-                       trace=trace, elapsed_ms=(perf_counter() - started) * 1000)
+        execution = execute_request(body.message, faq_only=True)
+    except RuntimeUnavailable as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from None
+    if execution.status == "error":
+        response.status_code = 503
+    trace = [FAQTrace(tool=step.tool, arguments=step.arguments, status=step.status,
+                      result=step.result, elapsed_ms=step.elapsed_ms)
+             for step in execution.trace]
+    return FAQResponse(status=execution.status, predicted_intent=execution.predicted_intent,
+                       confidence=execution.confidence, route=execution.route,
+                       reason=execution.reason, faq=execution.result, trace=trace,
+                       elapsed_ms=execution.elapsed_ms)

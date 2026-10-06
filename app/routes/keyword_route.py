@@ -1,8 +1,9 @@
-"""Conservative keyword handoff; model loading and agent execution come later."""
+"""Conservative keyword execution routing; agent handoff is a decision only."""
 
 from dataclasses import dataclass
 import math
 import re
+from time import perf_counter
 from typing import Literal
 
 from app.tools.keywords import Keyword, extract_keywords
@@ -27,6 +28,7 @@ class KeywordRouteResult:
     reason: str
     text: str | None = None
     keywords: list[Keyword] | None = None
+    tool_elapsed_ms: float | None = None
 
 
 def extract_keyword_payload(request: str) -> str | None:
@@ -58,4 +60,12 @@ def try_direct_keyword(
     text = extract_keyword_payload(request)
     if text is None:
         return KeywordRouteResult("agent", "payload_not_unambiguous")
-    return KeywordRouteResult("direct", "safe_keyword_payload", text, extract_keywords(text))
+    started = perf_counter()
+    try:
+        result = extract_keywords(text)
+    except Exception:
+        # Exception text may contain sensitive payloads or configuration details.
+        return KeywordRouteResult("direct", "keyword_unavailable", text,
+                                  tool_elapsed_ms=(perf_counter() - started) * 1000)
+    return KeywordRouteResult("direct", "safe_keyword_payload", text, result,
+                              (perf_counter() - started) * 1000)

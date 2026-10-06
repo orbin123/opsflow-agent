@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 import pytest
 
-from app.api import faq as faq_api
+from app import runtime
 from app.main import app
 from app.routes import faq_route
 from app.tools.faq import FAQCandidate, FAQResult
@@ -66,7 +66,7 @@ def test_real_requests_requiring_agent_have_no_trace_or_execution(message, monke
 
 
 def test_server_prediction_gates_low_confidence(monkeypatch):
-    monkeypatch.setattr(faq_api, "classify_request", Mock(return_value=("faq_retrieval", 0.70, 0.71)))
+    monkeypatch.setattr(runtime, "classify_request", Mock(return_value=("faq_retrieval", 0.70, 0.71)))
     tool = Mock()
     monkeypatch.setattr(faq_route, "retrieve_faq", tool)
     data = client.post("/api/v1/faq", json={"message": "What is the remote-work policy?"}).json()
@@ -81,13 +81,13 @@ def test_server_prediction_gates_low_confidence(monkeypatch):
     {"message": "What is the leave policy?", "intent": "faq_retrieval"}])
 def test_invalid_input_does_not_classify(body, monkeypatch):
     classifier = Mock()
-    monkeypatch.setattr(faq_api, "classify_request", classifier)
+    monkeypatch.setattr(runtime, "classify_request", classifier)
     assert client.post("/api/v1/faq", json=body).status_code == 422
     classifier.assert_not_called()
 
 
 def test_classifier_failure_is_503_without_sensitive_details(monkeypatch):
-    monkeypatch.setattr(faq_api, "classify_request", Mock(side_effect=RuntimeError("private path and input")))
+    monkeypatch.setattr(runtime, "classify_request", Mock(side_effect=RuntimeError("private path and input")))
     tool = Mock()
     monkeypatch.setattr(faq_route, "retrieve_faq", tool)
     response = client.post("/api/v1/faq", json={"message": "What is the leave policy?"})
@@ -114,3 +114,25 @@ def test_openapi_documents_endpoint():
     schema = client.get("/openapi.json").json()
     assert "/api/v1/faq" in schema["paths"]
     assert "FAQResponse" in schema["components"]["schemas"]
+
+
+def test_non_faq_prediction_preserves_faq_only_endpoint(monkeypatch):
+    from app.routes import sentiment_route
+
+    monkeypatch.setattr(runtime, "classify_request", Mock(return_value=("sentiment_analysis", 1, 0.71)))
+    tool = Mock()
+    monkeypatch.setattr(sentiment_route, "analyze_sentiment", tool)
+    response = client.post("/api/v1/faq", json={"message": 'Sentiment: "sad"'})
+    data = response.json()
+    assert response.status_code == 200
+    assert data["status"] == "agent_required" and data["reason"] == "intent_not_faq"
+    assert data["faq"] is None and data["trace"] == []
+    tool.assert_not_called()
+
+
+def test_routing_unavailability_preserves_generic_503(monkeypatch):
+    monkeypatch.setattr(runtime, "classify_request", Mock(return_value=("faq_retrieval", 1, 0.71)))
+    monkeypatch.setattr(runtime, "try_direct_faq", Mock(side_effect=RuntimeError("private FAQ path")))
+    response = client.post("/api/v1/faq", json={"message": "What is the remote-work policy?"})
+    assert response.status_code == 503
+    assert response.json() == {"detail": "FAQ routing unavailable"}
