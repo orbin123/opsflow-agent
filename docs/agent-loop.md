@@ -1,13 +1,13 @@
 # Standalone agent loop
 
-`app.agent.run_agent(message)` runs one stateless English request using LangChain
+`app.agent.run_agent(message, history=None)` runs one English request using LangChain
 ChatGroq local tool calling. `execute_request` now invokes it when direct routing defers; the FAQ-only API
-and classifier gates retain their contracts. Session memory, HTTP/UI wiring, reminder scheduling and
-email submission are separate slices. No external tracing or source logging.
+and classifier gates retain their contracts. Session history is supplied by `app.sessions`; standalone calls remain stateless. HTTP/UI wiring, reminder scheduling and
+email submission remain separate slices. No external tracing or source logging.
 
 ## Contract
 
-Input is a nonblank string of at most 10,000 characters. Invalid input raises
+Input is a nonblank string of at most 10,000 characters. Optional history is a list of user/assistant messages, inserted after the system prompt and before the current message. System/tool messages supplied as history are rejected before model initialization. The loop never saves or mutates prior history; see [session-memory.md](session-memory.md). Invalid input raises
 TypeError/ValueError before configuration or provider initialization. Lazy
 repository-root `.env` loading does not override environment values. Configure
 `GROQ_API_KEY` and optionally `GROQ_AGENT_MODEL` (default
@@ -35,7 +35,7 @@ and JSON schemas. Calls execute sequentially; every completed observation is
 serialized into a ToolMessage linked to its call ID before the next model call.
 A FAQ result retains its demo flag, stored answer and ambiguity/no-match outcome.
 Application code renders successful drafts from their structured tool results,
-appends the fixed user actions, and qualifies any accompanying demo FAQ result;
+appends the fixed user actions, and qualifies any accompanying or historical demo FAQ result;
 the final model cannot rewrite these drafts or omit those sections. The prompt asks for clarification on missing source/recipient, unavailable
 capabilities, context-dependent references, and unclear policy results. It requires
 using the summary/draft tools and preserving draft/action separation.
