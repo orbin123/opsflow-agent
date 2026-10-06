@@ -8,6 +8,10 @@ An operations copilot using TF-IDF + a calibrated linear SVM for intent routing,
 - `docs/agents_doc.md`: brief record of completed changes and the next step.
 - `skills/karpathy-guidelines/SKILL.md`: follow the supplied Karpathy development guidelines. If missing, ask before development.
 
+## Frontend Design
+
+- Whenever a request involves frontend design or UI implementation, read and follow `docs/design-system.md`. Use its linked OpsFlow Figma file as the visual source of truth; keep implementation decisions consistent with its tokens, typography, layout, and component states. If the requested UI needs a design-system rule that is not documented, identify that gap and discuss it before expanding the system.
+
 ## Collaboration and Coding Rules
 
 - Suggest and discuss each implementation step before coding. Explain the problem, proposed change, inputs/outputs, and how we will verify it. Once the user agrees, complete that bounded step without repeatedly requesting permission.
@@ -18,6 +22,7 @@ An operations copilot using TF-IDF + a calibrated linear SVM for intent routing,
 - State assumptions and ask about material uncertainties before implementing. Do not silently change scope or choose external services.
 - Write the simplest code that solves the agreed problem. Avoid speculative features, unnecessary abstractions, unrelated refactoring, and cosmetic changes outside the task.
 - Verify behavior appropriate to the change. Report what was checked and what remains unverified; never claim delivery, execution, or testing that did not happen.
+- Keep tests proportional to the agreed slice and discuss the proposed test scope before coding. Cover core successful behavior, meaningful boundaries, realistic failures, and regressions; prioritize routing mistakes, incorrect payload extraction, side effects, and accurate failure reporting. Use representative cases for equivalent inputs and justify exhaustive cases when they protect a real contract. Avoid tests that merely mirror the implementation or repeat coverage without catching a distinct failure.
 - Immediately update `docs/PLAN.md` when decisions, scope, architecture, or status change. Add a brief completed-change entry to `docs/agents_doc.md`. Update this file too if project facts or working rules change. Include those updates in the same logical change.
 - Keep the plan and record concise and adaptable. Use ✅ only for verified completed work and ⏳ for the active discussion or step.
 

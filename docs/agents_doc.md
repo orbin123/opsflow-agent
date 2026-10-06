@@ -2,6 +2,10 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-06:** Added proportional testing guidance to `AGENTS.md` and the plan: discuss test scope before coding, prioritize meaningful behavior and risks, and avoid redundant coverage. Reviewed the documentation diff and checked whitespace; no application code or tests changed.
+
+- **2026-10-05:** Added `docs/design-system.md` as the project reference for the OpsFlow light-terminal Figma system and instructed future frontend design work in `AGENTS.md` to use it. Checked the document against the Figma file and captured palette, type, layout, tokens, component states, and usage guidance; no application code changed.
+
 - **2026-10-03:** Added `docs/PLAN.md`, `docs/agents_doc.md`, and root `AGENTS.md`. Confirmed v1 emails the user with separate draft/instructions sections; reminders always use agent orchestration and include due-time email delivery. Direct sentiment receives the extracted text. Reviewed documents for consistency with the agreed scope; no application code or runtime tests yet.
 - **2026-10-03:** Changed the planned classifier dataset from JSON to CSV with `text,label` columns. Increased the initial synthetic benchmark target from 120 to 1,000 rows, to be generated and reviewed in coordinated batches. The classifier will train on text and labels only; route/tool metadata remains outside the first training CSV.
 
