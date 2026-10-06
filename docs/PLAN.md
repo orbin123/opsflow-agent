@@ -156,7 +156,9 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [✅] Agree on Gmail/App Password and Asia/Kolkata settings; implement standalone draft-notification submission with separated sections, accurate accepted/failed/unknown results, and offline doubles. All 492 tests pass; live authentication/inbox arrival remain unverified.
 - [✅] Agree on and implement structured reminder timezone validation and SQLite persistence; verify creation-key deduplication, DST handling, concurrent creation, commit failures, and restart recovery. All 538 tests pass.
 - [✅] Agree on and implement the due-time email worker with durable attempts, bounded definite-failure retries, exclusive recovery, and no automatic resubmission after accepted/unknown outcomes. All 572 tests pass; real SMTP/inbox behavior and deployment remain unverified.
-- [⏳] Discuss the first bounded LangChain agent-loop slice, tool dependencies, execution limits, traces, and partial-failure behavior before coding.
+- [✅] Agree on the first bounded standalone LangChain agent-loop slice and proportional verification scope.
+- [✅] Implement and verify the standalone five-tool agent loop; all 608 tests pass, with actual traces, bounded execution and retained results on failure. Final synthetic live checks pass inspected behavior; model reliability/injection resistance remain limitations. See `docs/agent-loop.md`.
+- [⏳] Discuss the bounded runtime-to-agent handoff and verification scope before wiring execution.
 - [ ] Add session memory across both routes; verify follow-ups and session isolation.
 - [ ] Add FastAPI endpoints, structured logs, and metrics; verify request validation and reported failures.
 - [ ] Build the Streamlit chat/inspector; verify intent, route, outputs, and step timings against backend results.
@@ -164,3 +166,7 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [ ] Discuss hosting, deploy the agreed setup, and verify persistence and email delivery there.
 
 Update this file immediately when scope, architecture, order, or completion status changes. Record the brief reason in `docs/agents_doc.md`.
+
+## Agreed First Agent-Loop Slice
+
+User approved the standalone stateless five-tool loop on 2026-10-06. Expose sentiment, keywords, FAQ, summary and draft tools using existing ChatGroq APIs; defer routing integration, memory, reminder creation and sending. Validate inputs/calls/final replies locally, execute one tool at a time with prior observations, and stop on failure while preserving completed results. Limits: six orchestration calls, five tool attempts, soft 120-second elapsed budget; existing 30-second provider timeouts and zero retries. Trace actual arguments/results/failures/timings without reasoning or external tracing. Clarification and semantic dependencies remain model decisions. See `docs/agent-loop.md` for the agreed contract and tests. Implementation verification: all 608 tests (36 new), `pip check` and whitespace checks pass. Final live synthetic clarification, FAQ-to-draft and summary samples pass inspected behavior; earlier provider/prose/injection failures and the final embedded-command relevance limitation are documented. Application-rendered drafts retain fixed actions and demo qualification. General model reliability and injection resistance are unproven.
