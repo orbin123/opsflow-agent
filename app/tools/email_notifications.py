@@ -3,17 +3,20 @@
 import os
 import smtplib
 import ssl
+from datetime import datetime
 from email.headerregistry import Address
 from email.message import EmailMessage
 from email.utils import formatdate
 from pathlib import Path
 from typing import Literal
-from uuid import uuid4
+from uuid import UUID, uuid4
+from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 from app.tools.email_drafting import EmailDraftResult, _ACTION_INSTRUCTIONS
+from app.tools.reminders import ReminderRecord, _text
 
 
 class NotificationResult(BaseModel):
@@ -22,6 +25,7 @@ class NotificationResult(BaseModel):
     status: Literal["accepted", "failed", "unknown"]
     reason: Literal["configuration", "authentication", "rejected", "timeout", "provider_unavailable"] | None
     message_id: str
+    retryable: bool = False
 
 
 def _mailbox(value: str) -> str:
@@ -64,19 +68,7 @@ def send_draft_notification(draft: EmailDraftResult) -> NotificationResult:
             or tuple(draft.action_instructions) != _ACTION_INSTRUCTIONS):
         raise ValueError("Invalid notification draft")
 
-    message_id = f"<{uuid4()}@opsflow.local>"
-    try:
-        sender, recipient, password = _configuration()
-    except Exception:
-        return NotificationResult(status="failed", reason="configuration", message_id=message_id)
-
-    message = EmailMessage()
-    message["From"] = sender
-    message["To"] = recipient
-    message["Subject"] = "OpsFlow: email draft ready for review"
-    message["Message-ID"] = message_id
-    message["Date"] = formatdate(usegmt=True)
-    message.set_content(
+    body = (
         "Email draft\n"
         f"Intended recipient: {target}\n"
         f"Subject: {draft.email_draft.subject}\n\n"
@@ -84,9 +76,51 @@ def send_draft_notification(draft: EmailDraftResult) -> NotificationResult:
         "What you should do\n"
         + "\n".join(f"- {action}" for action in draft.action_instructions)
     )
+    return _submit_notification("OpsFlow: email draft ready for review", body, f"<{uuid4()}@opsflow.local>")
+
+
+def send_reminder_notification(reminder: ReminderRecord, attempt_id: str, *, now: datetime) -> NotificationResult:
+    """Submit an existing reminder using its already-persisted attempt ID."""
+    if not isinstance(reminder, ReminderRecord):
+        raise TypeError("Reminder must be a ReminderRecord")
+    _text(reminder.task, "Reminder task", 1000)
+    if (not isinstance(reminder.due_at, datetime) or reminder.due_at.tzinfo is None
+            or reminder.due_at.utcoffset() is None):
+        raise ValueError("Reminder due time must be timezone aware")
+    if not isinstance(now, datetime) or now.tzinfo is None or now.utcoffset() is None:
+        raise ValueError("Current instant must be timezone aware")
+    if now < reminder.due_at:
+        raise ValueError("Reminder is not due yet")
+    message_id = f"<{UUID(attempt_id)}@opsflow.local>"
+    reminder_id = str(UUID(reminder.reminder_id))
+    due = reminder.due_at.astimezone(ZoneInfo(reminder.timezone))
+    body = (
+        "Reminder\n\n"
+        f"Task: {reminder.task}\n"
+        f"Due: {due.isoformat()} [{reminder.timezone}]\n"
+        f"Reminder ID: {reminder_id}\n"
+    )
+    if now > reminder.due_at:
+        body += "\nThis reminder is being submitted after its original due time.\n"
+    return _submit_notification("OpsFlow: reminder due", body, message_id)
+
+
+def _submit_notification(subject: str, body: str, message_id: str) -> NotificationResult:
+    try:
+        sender, recipient, password = _configuration()
+    except Exception:
+        return NotificationResult(status="failed", reason="configuration", message_id=message_id)
+    message = EmailMessage()
+    message["From"] = sender
+    message["To"] = recipient
+    message["Subject"] = subject
+    message["Message-ID"] = message_id
+    message["Date"] = formatdate(usegmt=True)
+    message.set_content(body)
 
     smtp = None
     submitting = False
+    retryable = False
     try:
         smtp = smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30, context=ssl.create_default_context())
         smtp.login(sender, password)
@@ -101,8 +135,11 @@ def send_draft_notification(draft: EmailDraftResult) -> NotificationResult:
         status, reason = "failed", "rejected"
     except TimeoutError:
         status, reason = ("unknown" if submitting else "failed"), "timeout"
-    except Exception:
+        retryable = not submitting
+    except Exception as error:
         status, reason = ("unknown" if submitting else "failed"), "provider_unavailable"
+        retryable = (not submitting and isinstance(error, (OSError, smtplib.SMTPServerDisconnected))
+                     and not isinstance(error, ssl.SSLError))
     finally:
         # No QUIT acknowledgement is needed to preserve an already observed result.
         if smtp is not None:
@@ -110,4 +147,4 @@ def send_draft_notification(draft: EmailDraftResult) -> NotificationResult:
                 smtp.close()
             except Exception:
                 pass
-    return NotificationResult(status=status, reason=reason, message_id=message_id)
+    return NotificationResult(status=status, reason=reason, message_id=message_id, retryable=retryable)
