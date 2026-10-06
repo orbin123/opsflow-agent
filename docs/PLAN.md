@@ -110,7 +110,7 @@ The model generates only required `subject` and `body` fields with `additionalPr
 
 **Problem:** A saved reminder must survive restarts, become eligible at the correct instant, and report SMTP outcomes accurately. SQLite persistence and Gmail submission cannot form one atomic transaction: a crash after acceptance but before recording it leaves an uncertain outcome. The proposal prioritizes avoiding automatic duplicate submissions; uncertain reminders may require review rather than guaranteed delivery. Message-ID is a trace identifier, not provider deduplication.
 
-**Existing decisions:** Gmail/App Password transport, configured-user-only delivery, and `Asia/Kolkata` as the default are already agreed. Reminders always use the future agent. The user approved both slices and their verification on 2026-10-06. Both are verified locally; keep them as separately signed logical changes. PR #13 remains an open dependency, so the worker branch starts from `feature/reminder-persistence` and its PR initially targets that branch.
+**Existing decisions:** Gmail/App Password transport, configured-user-only delivery, and `Asia/Kolkata` as the default are already agreed. Reminders always use the future agent. The user approved both slices, their verification, and merging on 2026-10-06. Both are verified locally as separately signed logical changes. Persistence PR #13 is merged; worker PR #14 now targets `main`.
 
 ### Slice 1: Timezone validation and SQLite scheduling
 
