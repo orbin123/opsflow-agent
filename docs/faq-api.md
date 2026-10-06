@@ -1,6 +1,6 @@
 # FAQ API
 
-`POST /api/v1/faq` is a stateless endpoint for local demo policy retrieval. It does not invoke the agent or maintain session history. Run the API with `.venv/bin/python -m uvicorn app.main:app` and inspect the generated contract at `/docs`.
+`POST /api/v1/faq` is a stateless endpoint for local demo policy retrieval. It uses the shared deterministic runtime in FAQ-only mode and does not invoke the agent or maintain session history. Run the API with `.venv/bin/python -m uvicorn app.main:app` and inspect the generated contract at `/docs`.
 
 ```sh
 curl -X POST http://127.0.0.1:8000/api/v1/faq \

@@ -1,8 +1,9 @@
-"""Conservative sentiment handoff; model loading and agent execution come later."""
+"""Conservative sentiment execution routing; agent handoff is a decision only."""
 
 from dataclasses import dataclass
 import math
 import re
+from time import perf_counter
 from typing import Literal
 
 from app.tools.sentiment import SentimentResult, analyze_sentiment
@@ -26,6 +27,7 @@ class SentimentRouteResult:
     reason: str
     text: str | None = None
     sentiment: SentimentResult | None = None
+    tool_elapsed_ms: float | None = None
 
 
 def extract_sentiment_payload(request: str) -> str | None:
@@ -57,4 +59,12 @@ def try_direct_sentiment(
     text = extract_sentiment_payload(request)
     if text is None:
         return SentimentRouteResult("agent", "payload_not_unambiguous")
-    return SentimentRouteResult("direct", "safe_sentiment_payload", text, analyze_sentiment(text))
+    started = perf_counter()
+    try:
+        result = analyze_sentiment(text)
+    except Exception:
+        # Exception text may contain sensitive payloads or configuration details.
+        return SentimentRouteResult("direct", "sentiment_unavailable", text,
+                                  tool_elapsed_ms=(perf_counter() - started) * 1000)
+    return SentimentRouteResult("direct", "safe_sentiment_payload", text, result,
+                              (perf_counter() - started) * 1000)
