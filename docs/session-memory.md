@@ -12,7 +12,8 @@ clear_session_history("local-chat")
 The entry point returns the existing `ExecutionResult`. It validates a nonblank
 message of at most 10,000 characters and an exact, nonblank session ID of at most
 128 characters. Invalid input creates no history. Session IDs are caller-owned
-keys, not credentials; there is no public session endpoint or authorization layer.
+keys, not credentials; the local `/api/v1/chat` endpoint exposes turns without an
+authorization layer. See [chat-api.md](chat-api.md) for the HTTP contract.
 Different keys get separate histories. Existing `execute_request`, `run_agent`
 and the FAQ endpoint remain stateless unless history is explicitly supplied.
 
@@ -55,7 +56,7 @@ between workers/hosts or persisted to SQLite. This first slice has no automatic
 eviction, truncation or context-token budgeting; callers should explicitly clear
 histories when finished. Large histories can exhaust process memory or provider
 context, with provider failures reported through the existing agent contract.
-Reminder/email execution, HTTP/UI integration and production-scale memory remain
+Reminder/email execution, UI integration and production-scale memory remain
 separate work.
 
 Offline verification covers direct-to-agent context, draft revision and demo/action
