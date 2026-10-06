@@ -32,7 +32,7 @@ The intended recipient is body text only. Explicit `from_addr` and `to_addrs` bi
 
 ## Submission outcomes
 
-`NotificationResult` contains `status`, `reason`, and `message_id`:
+`NotificationResult` contains `status`, `reason`, `message_id`, and `retryable` (default false):
 
 | Status | Meaning |
 | --- | --- |
@@ -42,7 +42,9 @@ The intended recipient is body text only. Explicit `from_addr` and `to_addrs` bi
 
 Stable reasons are `configuration`, `authentication`, `rejected`, `timeout`, and `provider_unavailable`. Raw SMTP replies, addresses, content, and credentials are excluded from results. The submission phase begins immediately before `send_message`; transport errors within it are conservatively uncertain because exact server acceptance cannot be inferred. Definite SMTP rejection remains failed. Socket cleanup is best effort and cannot overwrite an observed outcome; closing avoids relying on QUIT acknowledgement.
 
-Each call makes at most one submission attempt. There are no automatic retries. Repeating a call creates a new Message-ID and may duplicate delivery; Message-ID does not provide deduplication. Durable attempt tracking, unknown-outcome reconciliation, provider idempotency, and reminder retry/restart recovery remain future work.
+`retryable` is true only for definite pre-submission transient timeouts/connection failures/disconnects. It is false for uncertain outcomes, configuration/authentication/rejection failures, TLS errors, and unexpected integration errors. This is metadata for the caller; the transport never retries itself.
+
+Each call makes at most one submission attempt. There are no automatic retries in this utility. Repeating a draft-notification call creates a new Message-ID and may duplicate delivery; Message-ID does not provide deduplication. The [reminder worker](reminders.md) now owns durable attempt tracking, bounded safe retries, and conservative crash recovery for reminders. `send_reminder_notification` uses that worker's persisted attempt UUID as Message-ID, validates that the reminder is due, and sends a fixed plain-text reminder to the configured user through the same transport. Draft-notification body/envelope behavior is unchanged. Manual reconciliation and provider idempotency remain outside the current slice.
 
 ## Verification
 
