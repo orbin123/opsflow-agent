@@ -41,6 +41,60 @@ Exact dependency versions and available Groq models will be verified at implemen
 - **Tests:** Offline provider doubles cover successful parsing/source isolation, short input/empty points, input boundaries and missing-key non-execution, representative provider failures, refusal/truncation/invalid-output rejection, intended settings, and sanitized errors. Re-run the existing suite, `pip check`, and whitespace checks. Separately inspect a few live synthetic examples (operations update, short note, embedded instructions) for fidelity and schema compliance; report limitations. No exact generated-wording assertions or live calls in automated tests.
 - **Verification/delivery:** Implemented on `feature/structured-summarization`; all 413 tests (38 new), `pip check`, and whitespace checks pass. Three live synthetic examples returned valid results and preserved inspected facts; embedded commands were quoted rather than followed, though one was selected as a key point. This is not a quality benchmark. Keep implementation/docs in one signed logical commit/PR and preserve existing user changes. Agent execution and session-aware chat remain pending.
 
+## Agreed Email-Drafting Slice — Verified
+
+**Problem and boundary:** Produce a useful email draft while keeping recipient-facing content separate from instructions to the user. Implement one standalone `draft_email(recipient, content, instructions="Write a concise, professional email.") -> EmailDraftResult` tool for the future agent. No sending, notification delivery, SMTP/provider selection, scheduling, persistence, agent loop, session memory, API, UI, or routing changes. Email drafting continues to require the agent in the existing runtime, irrespective of classifier confidence. The user agreed to the contract and proportional test scope on 2026-10-06; implementation is verified below.
+
+### Input contract
+
+| Field | Meaning | Validation |
+| --- | --- | --- |
+| `recipient` | User-supplied intended recipient: a name, role, or email address | Required nonblank string, at most 320 characters, no CR/LF |
+| `content` | Facts/source material to communicate; may include earlier tool results explicitly supplied by the caller | Required nonblank string, at most 10,000 characters |
+| `instructions` | User-authorized composition request: purpose, tone, or formatting | Nonblank string, at most 1,000 characters; concise/professional default when omitted |
+
+English input/output is a caller precondition. Validate types and bounds before initializing Groq; use `TypeError` for nonstrings and `ValueError` for blank/oversized or multiline recipient input. Do not silently truncate. Preserve supplied input strings in the serialized request and return the recipient unchanged. A name/role is valid because this tool composes rather than delivers; no email-address validation or inferred address.
+
+The future agent owns extracting these fields from the request and clarifying a missing recipient, unclear purpose, contradictory material facts, or ambiguous context before calling. This standalone slice does not implement that clarification flow. Treat source `content` as data: embedded commands must not override the composition request. `instructions` controls writing only and cannot authorize tool execution. Do not invent dates, policy terms, promises, attachments, addresses, or sender identity. Use visible placeholders for optional missing details (such as `[Your name]`) instead of invented values; the user reviews them before sending. Faithfulness and appropriate placeholders are prompt requirements/manual checks, not guarantees from schema validation.
+
+### Output contract and separation
+
+Return a locally validated result with no extra fields:
+
+```json
+{
+  "email_draft": {
+    "recipient": "Alex",
+    "subject": "Maintenance update",
+    "body": "Hi Alex,\n\nThe maintenance window is Friday from 6 to 7 PM IST.\n\nRegards,\n[Your name]"
+  },
+  "action_instructions": [
+    "Review the draft for accuracy and replace any placeholders.",
+    "Send or forward the reviewed draft to the intended recipient using your email client."
+  ]
+}
+```
+
+The model generates only required `subject` and `body` fields with `additionalProperties: false`. Validate a trimmed, nonblank, single-line subject of at most 200 characters and a trimmed, nonblank plain-text body of at most 4,000 characters; preserve internal newlines. Application code copies `recipient` from the validated input and supplies the two fixed action instructions above. This prevents the model from changing the recipient or inventing workflow steps. The body contains only recipient-facing prose; review/send instructions belong outside it. No HTML, CC/BCC, attachments, delivery status, confidence, or model reasoning. A returned draft never means an email was sent. Later notification delivery will email these two sections to the configured user and report delivery separately.
+
+### Groq settings and failures
+
+- Follow the existing summarization pattern without refactoring it or introducing a shared provider abstraction. Use the installed pinned ChatGroq/Groq dependencies; verify local API compatibility when implementing.
+- Reuse `GROQ_API_KEY`; propose optional `GROQ_EMAIL_MODEL`, default `openai/gpt-oss-20b`, with only `openai/gpt-oss-120b` as the supported override. Both have documented strict-schema support in [Groq's current documentation](https://console.groq.com/docs/structured-outputs); [LangChain documents ChatGroq](https://docs.langchain.com/oss/python/integrations/chat/groq). A separate setting lets email configuration vary without changing summarization.
+- Temperature 0, low reasoning effort, 2,048 completion tokens, 30-second timeout, zero automatic retries. Native JSON Schema with `strict: true`, followed by local Pydantic type/length validation. One nonstreaming call, no model tool execution. Lazy repository-root `.env` loading without overriding environment values; deterministic tools remain available without credentials. Disable external tracing; do not log source content, raw responses, credentials, or private reasoning.
+- Propose `EmailDraftingError.reason`: `configuration`, `authentication`, `rate_limit`, `timeout`, `provider_unavailable`, or `invalid_output`, consistent with summarization. Unsupported model/missing key and provider request/schema HTTP 400 map to configuration; connection/server/unexpected integration failures map to provider unavailability. Expose sanitized messages and suppress raw exception chaining.
+- Refusal, non-`stop` finish reason (including truncation), empty/nontext content, malformed JSON, missing/extra fields, wrong types, or output-bound violations fail without returning a draft. No silent repair, partial success, model fallback, or retry. Future orchestration records failure and actual timing; this tool does not claim a send or execute action instructions. Successful JSON cannot guarantee factual accuracy or fully prevent source-instruction leakage.
+
+### Proportional verification and delivery
+
+1. **Success and separation:** Offline provider doubles verify supplied fields reach their intended prompt sections, source wording/newlines survive serialization, default/custom writing instructions work, the recipient is copied unchanged, and fixed action instructions stay outside the generated subject/body. Include a short note and a name-based recipient; assert structure and behavior rather than exact generated wording.
+2. **Meaningful boundaries:** Representative wrong-type/blank inputs; exact-limit/over-limit checks for each distinct bounded field; multiline recipient/subject rejection; internal body-newline preservation; invalid input/missing key without provider execution. These protect the public contract rather than enumerate equivalent phrases.
+3. **Failures and configuration:** Parameterize the six stable error categories and distinct malformed/schema-invalid/refusal/truncation cases; verify sanitization, no returned draft, one call/no retries, intended strict-schema settings, and disabled tracing. Avoid repeating the summarization suite wholesale or testing unimplemented agent/email delivery behavior.
+4. **Regression and live inspection:** Run the existing suite, `pip check`, and `git diff --check`. Inspect three live synthetic drafts: a factual operations update, an explicit tone request with an optional missing sender, and source containing an embedded command. Review facts, uncertainty, recipient-facing prose, placeholders, and instruction separation. No live provider calls in automated tests; these samples are not a drafting-quality or injection-resistance benchmark.
+5. **Bounded implementation after agreement:** Add `app/tools/email_drafting.py`, `tests/test_email_drafting.py`, and `docs/email-drafting.md`; update this plan/change record. Use `feature/structured-email-drafting` and one logical commit/PR. Verify every commit's DCO sign-off with the user's account details before publication; add no other author attribution.
+
+**Verification/delivery:** Implemented on `feature/structured-email-drafting`; all 456 tests (43 new), `pip check`, and whitespace checks pass. Nine live synthetic requests were inspected across three prompt iterations. Earlier closure drafts invented a Monday reopening date; explicit grounding examples removed it in the final inspected set. Final operations/tone/embedded-command examples preserved inspected facts, used optional placeholders, and separated user actions. These checks do not establish broad factual fidelity or injection resistance; user review remains necessary. See `docs/email-drafting.md`. Delivery-provider and timezone choices belong to later slices.
+
 ## Execution Checklist
 
 Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each implementation item can be split into smaller commits/PRs.
@@ -59,9 +113,9 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [✅] Implement FAQ execution routing and `POST /api/v1/faq`: trusted saved classifier with artifact hash check and metadata threshold, stored-question/limited policy-question extraction, result/trace/timing, and explicit `agent_required` fallback. All 347 tests, dependency checks, and diff checks pass. See `docs/faq-api.md` for syntax and response/error contracts.
 - [✅] Implement the shared deterministic runtime with one classification, existing tool gates, structured results/traces/timings, and FAQ-only API compatibility; all 375 tests, dependency checks, and diff checks pass.
 - [✅] Agree on and implement the standalone structured summarization tool with Groq configuration, sanitized failures, and proportional verification; all 413 tests and three live synthetic checks pass. See `docs/summarization.md`. Agent execution and session-aware chat remain pending.
-- [⏳] Discuss the email-drafting slice: separate draft content/action instructions, input/output contract, Groq settings, failure behavior, and proportional tests before implementation.
-- [ ] Implement and verify LLM email drafting with structured outputs.
-- [ ] Agree on email/timezone settings; implement notification delivery with separated draft and instructions, testing success and failure without emailing real users in automated tests.
+- [✅] Agree on the standalone email-drafting contract, separated draft/actions, Groq settings, failures, and proportional test scope.
+- [✅] Implement and verify standalone structured email drafting; all 456 tests and final live synthetic examples pass inspected checks. See `docs/email-drafting.md` for fidelity limitations.
+- [⏳] Agree on email/timezone settings; implement notification delivery with separated draft and instructions, testing success and failure without emailing real users in automated tests.
 - [ ] Implement reminder persistence and due-time email worker; verify timezone handling, restart recovery, and duplicate prevention.
 - [ ] Build the LangChain agent loop with tool dependencies, bounded execution, accurate traces, and partial-failure handling.
 - [ ] Add session memory across both routes; verify follow-ups and session isolation.
