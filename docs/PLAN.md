@@ -6,6 +6,8 @@ Build **OpsFlow-Agent**, an explainable operations copilot combining classical M
 
 Develop slowly, one discussed and reviewable change at a time. The original three-day sprint is an ordering guide, not a deadline.
 
+Agree on test scope before coding each slice. Keep coverage proportional to behavior and risk, use representative equivalent inputs, and justify exhaustive cases that protect a real contract.
+
 ## Architecture & Context
 
 Flow: Streamlit → FastAPI → intent router → deterministic tool or LangChain agent → session history + execution trace → response.
