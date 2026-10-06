@@ -30,7 +30,7 @@ Tool exceptions produce `error`, a null result, a tool-specific unavailable reas
 
 `execute_request(message, faq_only=True)` serves the existing `/api/v1/faq` endpoint. It classifies once but permits only FAQ execution, preserving the endpoint's response fields, reasons, and HTTP status behavior. Fallback in this mode still produces `agent_required`, null result and no trace. No agent runs. A sentiment prediction sent to that endpoint cannot execute sentiment. See [faq-api.md](faq-api.md) for its public contract.
 
-This slice has no chat endpoint, session memory or direct-route reply composition. Saved-model checks demonstrate sentiment execution, FAQ retrieval outcomes, and keyword low-confidence fallback. Controlled predictions verify keyword dispatch; these checks do not establish real-world routing quality or increase the saved model's direct coverage.
+This entry point does not store history. The separate `app.sessions.execute_session_request(session_id, message)` wrapper saves both routes and supplies optional prior conversation to the agent; see [session-memory.md](session-memory.md). No chat endpoint or direct-route reply composition is added. Saved-model checks demonstrate sentiment execution, FAQ retrieval outcomes, and keyword low-confidence fallback. Controlled predictions verify keyword dispatch; these checks do not establish real-world routing quality or increase the saved model's direct coverage.
 
 Verification on 2026-10-06: all 614 tests, `pip check` and whitespace checks pass.
 Handoff tests cover original input, exactly-once execution, direct/FAQ isolation,

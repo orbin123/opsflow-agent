@@ -13,7 +13,7 @@ Agree on test scope before coding each slice. Keep coverage proportional to beha
 Flow: Streamlit → FastAPI → intent router → deterministic tool or LangChain agent → session history + execution trace → response.
 
 - **Dataset/router:** `data/tasks_benchmark.csv` contains 1,000 synthetic requests, exactly 125 per label: `sentiment_analysis`, `keyword_extraction`, `faq_retrieval`, `summarization`, `email_drafting`, `reminder_creation`, `compound_request`, and `out_of_scope`. The CSV has only `text,label` and one header. Eight separate label batches were generated using three reused sub-agents with user approval. Structure and cross-batch similarity were checked; `docs/dataset_validation_report.md` records methods, results, and one rejected/replaced template-like example. No labels were changed. The classifier receives only `text` and predicts `label`. `notebooks/train_evaluate_svm.ipynb` trains a word TF-IDF + sigmoid-calibrated `LinearSVC` against a deterministic stratified 80/20 development/test split and saves the evaluated pipeline under `artifacts/models/`. The selected unigram model achieved 0.8813 test macro F1. A 0.71 threshold selected from development-set out-of-fold predictions achieved 1.0 direct-route precision at 0.235 coverage on the untouched test set, with no reminder or compound request routed directly. These synthetic holdout results do not establish real-world performance or calibration. Route/tool metadata remains outside the CSV.
-- **Shared runtime:** `app/runtime.py` classifies a validated message once and dispatches sentiment, keyword or FAQ execution through conservative gates. Deferred requests invoke the stateless five-tool agent once with the original message, retaining its reply, status, failure reason and actual traces; direct failures stop without agent retry. Total timing includes classification and handoff. FAQ-only mode preserves the existing endpoint contract without invoking the agent. All 614 tests pass, including offline loop integration and saved-model examples. No session memory, reminder creation or email submission in this path. See `docs/runtime.md`.
+- **Shared runtime:** `app/runtime.py` classifies a validated message once and dispatches sentiment, keyword or FAQ execution through conservative gates. Deferred requests invoke the stateless five-tool agent once with the original message, retaining its reply, status, failure reason and actual traces; direct failures stop without agent retry. Total timing includes classification and handoff. FAQ-only mode preserves the existing endpoint contract without invoking the agent. The separate `app/sessions.py` entry point adds shared process-local conversation history across both routes and explicit clearing. All 631 tests pass, including offline history/loop integration, isolation and failure checks. No reminder creation or email submission in this path. See `docs/runtime.md`.
 - **Code organization:** `app/routes/` contains execution-routing helpers (`keyword_route.py`, `sentiment_route.py`, and `faq_route.py`); `app/tools/` contains the underlying NLP tools. HTTP endpoint modules live separately in `app/api/`.
 - **Direct path:** Only clearly single-purpose, self-contained deterministic requests qualify: sentiment, keyword extraction, and FAQ lookup. Extract the payload before tool execution. For `get the sentiment for this text "I am sad"`, analyze `I am sad`, not the surrounding instruction. Uncertain argument extraction falls back to the agent.
 - **Agent path:** All reminder requests, compound requests, LLM-based summarization/email drafting, low-confidence requests, and context-dependent follow-ups use LangChain + ChatGroq. A reminder can retain the `reminder_creation` label while still requiring multiple execution steps; intent label and execution route are separate decisions.
@@ -24,7 +24,7 @@ Flow: Streamlit → FastAPI → intent router → deterministic tool or LangChai
 - **Verified FAQ slice:** 25 fictional employee FAQs in `data/company_faq.json`, explicitly labeled demo policies, with policy IDs, categories, questions, alternate phrasings, and stored answers. `app/tools/faq.py` retrieves with local TF-IDF/cosine similarity using the existing scikit-learn dependency. Return an exact stored answer for a clear match, candidate questions for ambiguity, or `no_match`. Scores are lexical similarity, not probabilities. All 208 tests pass, covering all 75 stored phrasings, example paraphrases, unrelated/ambiguous questions, empty inputs, and offline repeatability. Matching uses the best phrasing score per policy, a 0.60 answer threshold, a 0.12 lead over the next policy, a 0.40 candidate threshold, and 60% query vocabulary coverage. These heuristics were adjusted using development examples, not independently calibrated. Lexical matching can miss valid paraphrases or misinterpret shared words; it does not establish policy applicability. Restart the process after JSON edits to reload the cached index. FAQ routing/API integration is implemented below; shared chat/agent integration remains pending.
 - **Email notifications in v1:** Send notifications to the configured user's own email address. Separate **Email draft** (recipient, subject, body) from **What you should do** (next steps). The user handles forwarding/sending the draft to its intended recipient. Add a delivery utility/tool with observable success/failure; generating a draft alone does not mean notification delivery succeeded.
 - **Reminders in v1:** Resolve task, due time, and timezone through the agent; clarify missing or ambiguous details. Store reminders in SQLite. A background worker checks due records and emails the user when due. Persist delivery state to avoid duplicate notifications on retries/restarts. Agree on sender/provider, recipient configuration, and retry behavior before implementing delivery.
-- **Memory:** Per-session `ChatMessageHistory` + `RunnableWithMessageHistory` preserve both direct and agent turns. Follow-ups such as “make that more formal” use prior context; ask when the reference is ambiguous. In-memory history resets on restart; reminders persist.
+- **Memory:** `app/sessions.py` uses per-session `InMemoryChatMessageHistory` + `RunnableWithMessageHistory` to preserve user turns and structured execution records from both routes. Agent follow-ups receive prior context and are prompted to clarify ambiguous references; model correctness is not guaranteed. Turns/clearing serialize per session. History resets on restart and has no automatic eviction/truncation; reminders persist separately. Both history APIs are deprecated in pinned LangChain Core 1.6.6. See `docs/session-memory.md`.
 - **API/UI:** `/api/v1/chat`, `/api/v1/classify`, `/api/v1/reminders`, `/api/v1/faq`, and `/health`. The FAQ endpoint accepts a message and exposes a stateless routing/retrieval result; it does not implement chat history. Chat returns reply, predicted intent/confidence, selected route, tool trace, and timing. Streamlit displays chat beside actual tool names, arguments, observations, and latency; the trace explains execution, not private model reasoning.
 - **Development baseline:** Python 3.12.13 with a repository-local `.venv`. Direct FastAPI development dependencies are pinned in `requirements.txt`; add the remaining planned stack only with the implementation slice that uses it.
 - **Operations:** Structured JSON logs and Prometheus `/metrics` capture request/tool latency and failures without logging credentials or full sensitive messages. Docker Compose runs backend, Streamlit, and reminder worker with shared persistent reminder storage. Choose deployment after local behavior is verified.
@@ -159,8 +159,8 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [✅] Agree on the first bounded standalone LangChain agent-loop slice and proportional verification scope.
 - [✅] Implement and verify the standalone five-tool agent loop; all 608 tests pass, with actual traces, bounded execution and retained results on failure. Final synthetic live checks pass inspected behavior; model reliability/injection resistance remain limitations. See `docs/agent-loop.md`.
 - [✅] Implement and verify the stateless runtime-to-agent handoff; all 614 tests pass, including direct/FAQ isolation, retained outcomes and total timing.
-- [⏳] Discuss session memory across both routes; agree on follow-ups, session isolation and verification before implementation.
-- [ ] Add FastAPI endpoints, structured logs, and metrics; verify request validation and reported failures.
+- [✅] Implement and verify shared process-local session memory; all 631 tests pass, with context, isolation, clearing/concurrency and failure history checked offline.
+- [⏳] Discuss a bounded FastAPI session-chat endpoint slice before implementation; structured logs, metrics and remaining endpoints can follow separately.
 - [ ] Build the Streamlit chat/inspector; verify intent, route, outputs, and step timings against backend results.
 - [ ] Add Docker/Compose, persistent storage, and README; verify the complete complaint → policy → draft → notification → due reminder flow.
 - [ ] Discuss hosting, deploy the agreed setup, and verify persistence and email delivery there.
@@ -197,3 +197,43 @@ Run the existing suite, dependency and whitespace checks before delivery.
 Verification: all 614 tests (six new), `pip check` and `git diff --check` pass.
 Offline integration uses the real agent loop and sentiment tool with a provider
 double. No new live Groq, SMTP/inbox, API/UI or deployment testing.
+
+## Agreed Session-Memory Slice
+
+User approved a separate `execute_session_request(session_id, message)` entry point
+on 2026-10-06, plus explicit `clear_session_history(session_id)`. Keep stateless
+runtime/agent calls and the FAQ-only API available. In one process, a per-session
+lock serializes complete turns and clearing; different sessions can run independently.
+Callers own session identity/authorization. Session IDs are exact nonblank strings
+up to 128 characters. Validate message input before creating history.
+
+Use installed LangChain Core 1.6.6 `InMemoryChatMessageHistory` and
+`RunnableWithMessageHistory` without adding dependencies. Both APIs are deprecated
+in this pinned version for removal in 2.0; adopting LangGraph is a future scope decision.
+Save each user message and an application-generated assistant JSON execution record
+with reply, status and actual structured outcomes. Failed/partial results remain
+failures. Sanitized classifier/routing failures are remembered and still raise
+`RuntimeUnavailable` to the caller. Invalid input creates no turn. Supply prior
+user/assistant messages only to the agent; self-contained direct gates remain unchanged.
+Historical demo-policy observations qualify subsequent rendered drafts conservatively,
+even if an unrelated draft is requested later in that session.
+
+Disable external tracing around the entire history runnable; never store provider
+reasoning/raw orchestration messages. Memory is process-local and resets on restart;
+there is no disk persistence, automatic eviction/truncation, token budget or public
+history API in this slice. Explicit clearing releases message contents while keeping
+the lock to avoid clear/execution races. Long histories can exhaust memory/provider
+context; provider errors retain accurate outcomes without silent history truncation.
+HTTP/UI, reminder creation and email execution remain separate slices.
+
+Agreed proportional checks: direct-to-agent context, draft revision with fixed actions
+and demo qualification, clarification answers, ambiguous references, session isolation,
+clearing/concurrency, stateless/FAQ regression and accurate failure history. Use offline
+provider doubles, then run the full suite, dependency and whitespace checks. No claim
+of model reference-resolution reliability from scripted responses.
+
+Verification: all 631 tests (17 new), `pip check` and whitespace checks pass.
+Two expected LangChain history-API deprecation warnings remain visible. Offline
+provider doubles exercise the actual loop and session wrapper; no live Groq/email,
+HTTP/UI or deployment verification was performed. The memory PR depends on the
+still-open runtime handoff PR #16 and initially targets its branch.

@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from time import perf_counter
 from typing import Literal
 
+from langchain_core.messages import AIMessage, HumanMessage
+
 from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
@@ -44,11 +46,13 @@ class ExecutionResult:
     agent_reason: str | None = None
 
 
-def execute_request(message: str, *, faq_only: bool = False) -> ExecutionResult:
+def execute_request(message: str, *, faq_only: bool = False,
+                    history: list[HumanMessage | AIMessage] | None = None) -> ExecutionResult:
     """Classify once and use existing extraction/confidence gates.
 
     The FAQ endpoint restricts execution to FAQ to preserve its public contract.
     Other requests that defer invoke the stateless agent once with the original message.
+    Optional prior conversation is supplied by the session entry point, never stored here.
     Callers supply a nonblank string of at most 10,000 characters.
     """
     if not isinstance(message, str):
@@ -93,7 +97,7 @@ def execute_request(message: str, *, faq_only: bool = False) -> ExecutionResult:
     agent_reason = None
     if status == "agent_required" and not faq_only:
         try:
-            agent = run_agent(message)
+            agent = run_agent(message) if history is None else run_agent(message, history=history)
         except Exception:
             status = "error"
             reply = "Agent unavailable. No execution results were returned."
