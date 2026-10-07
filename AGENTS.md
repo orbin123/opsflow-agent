@@ -9,6 +9,10 @@ The natural-language sentiment workflow is documented in `docs/sentiment-workflo
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
 route, with existing chat HTTP status rules and retained workflow/tool records.
 
+The standalone natural-language keyword workflow is documented in
+`docs/keyword-workflow.md`. REWORK step 3a does not connect it to chat; keyword
+chat integration and FAQ changes require separate discussion/agreement.
+
 ## Read Before Working
 
 - `REWORK.md`: active implementation agenda until its rework steps and completion criteria are verified.

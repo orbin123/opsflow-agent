@@ -11,10 +11,14 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Discuss REWORK step 3, natural-English keyword and FAQ requests. Inline
+**Next:** ⏳ Discuss keyword chat integration after verified standalone step 3a.
+FAQ remains a separate later discussion. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
 and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
-within their recorded limits; later implementation is not authorized.
+within their recorded limits; standalone step 3a is also verified offline.
+Later integration/implementation is not authorized.
+
+- **2026-10-07:** Completed approved REWORK step 3a, standalone natural-English keyword workflow: strict LLM source extraction → unchanged YAKE once → bounded LLM reply. Retains verbatim source, ranked phrases/raw scores, actual stage timings, clarification/handoff, sanitized failures, and factual presentation fallback including empty results. All 763 tests (42 new), `pip check`, and whitespace checks pass; installed adapter exercised with fake SDK transport and Groq schema compatibility checked. Added `docs/keyword-workflow.md`; user-authored DCO-signed PR #24 on `feature/keyword-language-workflow`. No live language-quality evaluation, dependencies, classifier/threshold, runtime/API/UI/history, pure tool/agent registry, FAQ, email, or deployment changes. Keyword chat integration and FAQ require separate discussion.
 
 - **2026-10-07:** User authorized merging both sentiment slices. Merged standalone PR #22 and retargeted integration PR #23 to `main` for its authorized merge. Updated dependency/delivery records; user-only authorship and DCO verified. Application/tests remain identical to the tested step 2b commit, so existing 721-test evidence remains applicable. Documentation whitespace checked; no new runtime tests, provider calls, or later-step implementation.
 

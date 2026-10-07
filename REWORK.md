@@ -6,8 +6,10 @@ use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
-Remaining rework steps are pending.
-**Next discussion:** ⏳ Step 3, natural-English keyword and FAQ requests.
+Standalone step 3a is implemented and verified offline; remaining integration
+and rework steps are pending.
+**Next discussion:** ⏳ Keyword chat integration after standalone step 3a.
+FAQ remains a separate later discussion.
 
 ## Intended User Experience
 
@@ -301,6 +303,57 @@ its routing revision are now approved as recorded below.
 - **Verify:** Representative natural phrasing, missing source, unrelated/ambiguous
   policies, compound/contextual fallbacks, and existing quoted-form regressions.
   Do not imply lexical similarity or keyword relevance is a confidence probability.
+
+#### Step 3a contract — 2026-10-07
+
+- [x] Implement and verify the standalone keyword workflow with offline doubles.
+
+- **Agreement:** User approved the first keyword-only PR after discussion of the
+  sentiment pattern. Implement the standalone workflow first; discuss FAQ later.
+  Keyword chat integration needs a separate agreement.
+- **Input → output:** One nonblank English request, at most 10,000 characters,
+  enters `run_keyword_workflow(request)`: strict LLM source extraction → unchanged
+  `extract_keywords(text)` YAKE tool exactly once → grounded LLM reply. Retain the
+  original request, verbatim contiguous source, ranked phrases/raw scores, outcome,
+  and actual attempted-stage statuses/timings. Quotes and colons are optional.
+- **Boundaries/failures:** Missing/ambiguous source clarifies; contextual, compound,
+  or unsupported requests return an agent-handoff decision without invoking it.
+  Validate extraction locally before running YAKE. Embedded source commands are
+  data. Extraction/tool failure stops later stages; presentation failure retains
+  the successful result, including an empty list, with a factual fallback. No
+  retries, generated keywords, reranking, or confidence-percentage claims.
+- **Provider:** Reuse the installed Groq/LangChain approach with strict schemas,
+  bounded calls, lazy configuration, and external tracing disabled. No new service,
+  dependencies, classifier/threshold changes, runtime/API/UI/history wiring,
+  generalized workflow framework, FAQ changes, or email/reminder side effects.
+- **Proportional verification:** Offline provider doubles cover unquoted/quoted
+  success, full multiline/negation source preservation, missing/ambiguous source,
+  contextual/compound abstention, embedded commands, invalid/non-verbatim output,
+  provider/tool failures, and retained-result presentation failures. Assert exact
+  tool input/count and actual result transport; cover empty keyword results.
+  Exercise the installed adapter with fake SDK transport and reuse existing YAKE
+  tests. No live provider quality check is authorized in this slice; schema and
+  substring checks cannot prove source completeness or prose fidelity.
+
+#### Step 3a outcome — 2026-10-07
+
+- Implemented `app/keyword_workflow.py` with strict structured source extraction,
+  verbatim/status validation, one unchanged YAKE call, and bounded structured reply.
+  Preserves the original request, exact source, ranked phrases/raw scores, outcomes,
+  and actual attempted-stage timings. Clarification/handoff never run YAKE.
+  Presentation failure retains results, including an empty list, with a factual
+  fallback and explicit `partial_failure`; no automatic retries or agent invocation.
+- Verified all 763 tests (42 new), `pip check`, and documentation/code whitespace.
+  Fake SDK transport exercises the installed LangChain strict-schema adapter;
+  checked Groq's strict-schema support for the existing allowed models. No new
+  dependencies. Existing LangChain history deprecation warnings remain.
+- Limits: no live Groq or language-quality/injection-resistance evaluation; schema
+  and substring checks cannot prove complete extraction or faithful presentation.
+  No classifier/threshold, runtime/API/UI/history, pure tool/agent registry, FAQ,
+  SMTP, or deployment changes. See `docs/keyword-workflow.md` for the contract.
+- Delivery: one user-authored DCO-signed change on
+  `feature/keyword-language-workflow`, published as keyword-only PR #24.
+  Keyword chat integration needs separate agreement; FAQ discussion is deferred.
 
 ### 4. Verify conversational summarization and drafting
 
