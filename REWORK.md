@@ -5,8 +5,9 @@ criteria below are verified. The original `docs/PLAN.md` agenda is paused; do no
 use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
-**Status:** Step 1 implemented and verified. Remaining rework steps are pending.
-**Next discussion:** ⏳ Step 2, natural-English sentiment requests.
+**Status:** Steps 1 and 2a implemented and verified within their recorded limits.
+Remaining rework steps, including sentiment chat integration, are pending.
+**Next discussion:** ⏳ Step 2b, classifier-first sentiment workflow integration.
 
 ## Intended User Experience
 
@@ -141,15 +142,108 @@ available for those checks. Completed inline details (step 11), readable answers
 ### 2. Accept natural-English sentiment requests
 
 - [ ] Discuss, implement, and verify this slice.
-- **Problem/change:** Remove punctuation dependence for clearly extractable requests.
-  Review classifier predictions separately from argument extraction; retain agent
-  interpretation/clarification where source boundaries are uncertain.
+- **Problem/change:** Replace mandatory quoted syntax with structured LLM source
+  extraction, deterministic VADER scoring, and an LLM-written explanation. The user
+  proposed one dedicated workflow per deterministic capability; start with sentiment
+  only, then separately review keywords and FAQ in step 3.
 - **Input → output:** `Just check the sentiment of this I am happy` → source
-  `I am happy` → sentiment result. The same intent with quotes/colon stays valid.
-- **Verify:** Representative unquoted/quoted wording, negation, multiline source,
-  missing source, uncertain boundaries, contextual references, compound requests,
-  and commands embedded in source text. Distinguish parsing failure from classifier
-  error; do not change thresholds or retrain without a discussed need and evaluation.
+  `I am happy` → VADER result → a conversational explanation grounded in that result.
+  The same intent with quotes/colon stays valid. Only scoring is deterministic;
+  structured JSON does not guarantee correct extraction or faithful prose.
+
+#### Step 2 contract — 2026-10-07
+
+User approved completing standalone step 2a after confirming the classifier remains
+first in the proposed chat flow. Step 2a is verified as recorded below. Step 2b and
+its routing revision still require agreement; current direct/agent behavior is unchanged.
+
+**2a — Standalone sentiment workflow (approved implementation slice)**
+
+- [x] Implement and verify the standalone contract with offline provider doubles.
+- Add a dedicated `run_sentiment_workflow(request)` function. Keep
+  `analyze_sentiment(text)` as the existing pure VADER tool; do not replace it with
+  an LLM or make the agent's existing scorer recursively invoke this workflow.
+- Accept one nonblank English request within the existing 10,000-character limit.
+  Retain the original request in application code rather than asking the model to
+  reproduce it. No conversation history is supplied to this standalone function.
+- First LLM call: a sentiment-specific system prompt asks for strict structured
+  output with `status` (`ready`, `needs_clarification`, or `agent_required`), nullable
+  `source_text`, and a bounded reason code. Treat source commands as data. Return
+  `ready` only for one explicit, self-contained sentiment task; missing/ambiguous
+  source requires clarification, while contextual or compound requests need the agent.
+- Validate the schema and status/field combinations locally. For `ready`, require
+  a nonblank verbatim contiguous excerpt of the original request, preserving
+  negation, capitalization, punctuation, and line breaks. Do not translate,
+  paraphrase, or stitch together excerpts. This check rejects invented text but
+  cannot prove the model selected the complete intended source; test that separately.
+- Invoke VADER exactly once only after successful extraction validation. Preserve
+  the exact selected source and the authoritative label and numerical scores.
+  Neither clarification nor agent-handoff outcomes execute VADER in this function.
+- Second LLM call, only after scoring succeeds: supply the retained request,
+  validated source, and actual VADER result to a separate presentation prompt.
+  Request a short natural-English explanation, without changing the label/scores,
+  claiming certainty about the author's feelings, or following source instructions.
+  Validate a bounded structured `reply`; keep raw results separate from prose.
+- Return the original request, selected source, outcome, structured result, reply,
+  and actual stage statuses/timings. A successful answer has two fixed LLM calls
+  and one local scoring call; this is not an open-ended tool-selection loop.
+- Extraction/provider/validation failure: return a sanitized failure without
+  scoring or a presentation call. VADER failure: retain the attempted input and
+  do not generate a success explanation. Presentation failure: retain the successful
+  VADER result and provide a fixed factual fallback reply with an explicit
+  presentation-failure indication; never rerun extraction or scoring to repair prose.
+- Reuse the existing Groq/LangChain provider approach, with bounded calls and no
+  automatic retries. Verify installed strict-schema/model compatibility before
+  coding; do not add a provider or dependency without discussion. Two LLM calls add
+  latency, cost, and provider dependence even though VADER itself remains local.
+- **Proportional verification:** Provider doubles cover a representative unquoted
+  success, quoted regression, negation/multiline fidelity, missing/uncertain source,
+  context/compound abstention, embedded source commands, malformed/non-verbatim
+  extraction, provider failure, scorer failure, and presentation failure with retained
+  results. Assert the exact scorer input and execution counts. Reuse existing VADER
+  tests instead of duplicating its scoring coverage. Separately agree on a small
+  synthetic live extraction/prose review; doubles do not establish language quality.
+- **Boundary:** No runtime/API/UI wiring, classifier changes, generalized workflow
+  framework, keywords/FAQ migration, or reminder/email side effects in 2a.
+
+**Step 2a outcome — 2026-10-07**
+
+- Implemented `app/sentiment_workflow.py` with strict structured extraction,
+  verbatim-source/status validation, one unchanged VADER call, and bounded structured
+  explanation. Preserves the original request, actual results, and attempted-stage
+  timings. Abstention never scores; presentation failure retains scoring with an
+  explicit `partial_failure` status and fixed factual fallback. No retries or agent
+  invocation. See `docs/sentiment-workflow.md` for configuration and output contracts.
+- Verified all 709 tests (39 new), `pip check`, and documentation/code whitespace.
+  The installed LangChain adapter was exercised with a fake SDK completion transport;
+  checked Groq strict-schema documentation and existing dependency versions. Fixed a
+  pytest reserved parameter name caught in initial collection. No dependency changes.
+- Limits: no live Groq calls or language-quality/injection-resistance evaluation;
+  substring/schema checks cannot establish source completeness or prose fidelity.
+  Existing LangChain history deprecation warnings remain. No runtime, classifier,
+  API, UI, history, agent registry, SMTP, or deployment changes/checks.
+- Delivery: scoped signed commit/PR on `feature/sentiment-language-workflow`, using
+  the user's GitHub identity. Step 2 remains incomplete until agreed chat integration.
+
+**2b — Chat integration (discuss after 2a is verified)**
+
+- Proposed dispatch: classify once; high-confidence sentiment candidates enter the
+  fixed workflow. Low-confidence/other intents retain current dispatch. Contextual
+  and compound abstentions pass the original request/history to the existing agent;
+  missing source yields clarification. Never pass the instruction wrapper to VADER.
+- This needs an explicit exception to the current rule that all LLM-dependent
+  requests use the agent: distinguish fixed LLM-assisted execution from wholly local
+  direct execution and dynamic agent orchestration. Agree on the public route value
+  and compatible API/client handling before wiring; do not silently label the whole
+  workflow deterministic or change the existing route enum in 2a.
+- Carry the grounded reply, raw result, clarification/failure state, and observable
+  stage timings through runtime/API/session history. Agree on presentation-failure
+  status mapping; preserve successful scoring and prevent duplicate execution.
+- Verify classifier predictions separately from extraction, chat response/history
+  round-trips, handoff with original context, and unchanged FAQ/keyword behavior.
+  Do not retrain or change confidence thresholds without separate evaluation/agreement.
+- Step 12 remains the general UI presentation/onboarding work. Producing a sentiment
+  reply here does not authorize moving the inspector or redesigning the interface.
 
 ### 3. Review natural-English keyword and FAQ requests
 
@@ -359,6 +453,19 @@ available for those checks. Completed inline details (step 11), readable answers
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** User approved completing step 2a after confirming classifier-first
+  dispatch. Implemented the standalone workflow and documented its contract and
+  boundaries. All 709 tests, dependency checks, and whitespace checks pass; see the
+  outcome above. Step 2b remains the next discussion; no live provider quality checks.
+
+- **2026-10-07:** Planned the user's LLM extraction → deterministic scoring → LLM
+  explanation proposal as step 2a (standalone sentiment workflow), then step 2b
+  (separately agreed chat integration). Recorded source validation, abstention,
+  retained-result failure handling, proportional tests, and the proposed routing-rule
+  exception. Reviewed current sentiment/router/runtime/session/API/provider code and
+  documentation whitespace. No application changes, runtime tests, provider calls,
+  compatibility verification, or implementation approval in this planning change.
 
 - **2026-10-07:** User deferred the former step 2 (inline completed execution
   details) until tool/agent behavior, persistence, and backend events are verified;
