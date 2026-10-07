@@ -6,9 +6,10 @@ use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
-Keyword steps 3a/3b are implemented and verified offline; FAQ and remaining
-rework steps are pending.
-**Next discussion:** ⏳ Step 3 FAQ review. Keyword workflow, chat integration,
+Keyword steps 3a/3b and standalone FAQ step 3c are implemented and verified offline;
+FAQ chat integration and remaining rework steps are pending.
+**Next discussion:** ⏳ Step 3d FAQ chat integration. Standalone step 3c is
+implemented and verified offline as recorded below. Keyword workflow, chat integration,
 and presentation correction are in PR #24; the user authorized its merge.
 
 ## Intended User Experience
@@ -442,6 +443,94 @@ its routing revision are now approved as recorded below.
 - **Delivery:** One additional user-authored DCO-signed presentation correction
   commit in PR #24. FAQ remains deferred; general step-12 presentation is separate.
 
+#### Step 3 FAQ architecture discussion — 2026-10-07
+
+- **Direction:** The user's classifier → FAQ TF-IDF ranking → stored answer by
+  ID → Groq GPT-OSS presentation diagram is feasible for the current 25 fictional
+  policies/75 phrasings. Reuse the local tool/data; rank distinct policy IDs rather
+  than treating alternate phrasings as competing answers.
+- **Separate decisions:** Intent-classifier TF-IDF and FAQ TF-IDF are different
+  fitted spaces. Transform the question with the FAQ vectorizer. Classifier
+  probability and cosine similarity are different quantities; similarity is not
+  an answer-confidence probability. Preserve existing retrieval heuristics until
+  separately agreed evaluation supports tuning.
+- **Answer coverage:** A matched policy may not answer every question qualifier.
+  Preserve the complete question and exact policy; the presenter should acknowledge
+  missing facts and retain conditions/limits. The approved step 3c choice below is
+  grounded explanation with retained exact answer. Schema/substring checks cannot
+  guarantee complete extraction or faithful prose.
+- **Inspection evidence:** Seven read-only local probes exposed coverage/routing
+  limits. Retrieval alone matched `Can contractors work from home?` at 1.0 despite
+  absent eligibility information; classifier probability was 0.377 against 0.71,
+  so this was not a direct chat execution. `Could you explain how I can work from
+  home?` matched retrieval at 1.0 but classified `out_of_scope` at 0.578. These are
+  examples, not an independent benchmark or authorization to retrain.
+- **Alternatives/sequencing:** Start with existing lexical retrieval; discuss added
+  phrasings, embeddings/hybrid retrieval, or reranking only if held-out review shows
+  a meaningful gap. Better matching still needs answer-coverage review. Standalone
+  step 3c precedes separately agreed step 3d classifier-first chat integration;
+  preserve the FAQ-only endpoint unless explicitly revised.
+- **Primary references checked:** [scikit-learn TF-IDF](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html),
+  [cosine similarity](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html),
+  and [Groq structured outputs](https://console.groq.com/docs/structured-outputs).
+  Groq documents strict-schema support for existing GPT-OSS model choices.
+
+#### Step 3c contract — 2026-10-07
+
+- [x] Implement and verify the standalone FAQ contract with offline provider doubles.
+- **Agreement:** User approved proceeding with the proposed first standalone
+  slice. Use a grounded LLM explanation, retaining the exact stored policy answer.
+  The architecture discussion above records the proposal; this contract is the
+  approved implementation boundary. Step 3d chat integration requires separate
+  agreement.
+- **Input/output:** `run_faq_workflow(request)` accepts one nonblank English
+  request up to 10,000 characters. Strict LLM extraction selects a complete
+  verbatim contiguous question or returns clarification/agent-required. Preserve
+  all qualifiers; never normalize the question into a different question.
+- **Execution:** For a valid question call unchanged `retrieve_faq` once.
+  Ambiguous/no-match returns fixed clarification without presentation. A match
+  enters one bounded structured LLM presentation call with original request,
+  question, and actual result. The presenter may return clarification when the
+  policy does not cover a material detail; the raw matched result remains intact.
+- **Outcomes/records:** Preserve request/question, exact FAQ result, reply, bounded
+  reasons, attempted-stage statuses/timings, and total duration. Extraction/retrieval
+  failure stops. Presentation failure retains retrieval and returns `partial_failure`
+  with an explicitly qualified exact-policy fallback. No retries or agent invocation.
+- **Verification:** Offline provider doubles cover natural/quoted fidelity and
+  qualifiers, missing/ambiguous/contextual/compound abstention, matched/ambiguous/
+  no-match counts, embedded commands, malformed/non-verbatim output, sanitized
+  provider/tool failure, retained coverage-clarification and fallback, plus installed
+  strict-schema serialization. Reuse local retrieval tests. No live language-quality
+  check is authorized in this slice; schema checks/doubles cannot prove grounding.
+- **Boundaries:** Reuse current dependencies/Groq models and the pure FAQ tool.
+  No classifier/threshold/index tuning, runtime/API/UI/history/agent-registry
+  wiring, side effects, generalized workflow framework, or later rework work.
+
+#### Step 3c outcome — 2026-10-07
+
+- Implemented `app/faq_workflow.py`: strict verbatim question extraction →
+  unchanged `retrieve_faq` once → bounded grounded presentation for matched
+  results only. Preserves full questions, exact answers/IDs/candidates, separate
+  prose, actual stages/timings, and sanitized outcomes. Missing/contextual/compound
+  extraction abstains; ambiguous/no-match retrieval clarifies without presentation.
+  Presenter-reported missing details clarify while retaining a raw matched result.
+  Presentation failure retains retrieval with a qualified exact-answer fallback;
+  no retries, repeated lookup, or agent invocation. Added `docs/faq-workflow.md`.
+- Verified all 833 tests (47 new), including existing retrieval/routing/API/chat/
+  agent/UI regressions, plus `pip check` and whitespace checks. Offline doubles
+  cover question fidelity/qualifiers, abstention, exact call counts, result transport,
+  missing-detail clarification, failures, and fallback. Fake SDK completion
+  transport verifies installed strict-schema serialization for both GPT-OSS models.
+  Corrected initial new-test assertions for JSON tuple-to-list serialization;
+  application payload/retained result behavior was unchanged by that correction.
+- Limits: no live Groq extraction/grounding review or general injection-resistance
+  guarantee; schema/substring checks cannot prove semantic completeness/fidelity.
+  Existing LangChain history deprecation warnings remain. No dependencies,
+  classifier/threshold/index, runtime/API/UI/history, pure-tool/agent-registry,
+  side effects, or later rework changes. Step 3d requires separate discussion.
+- Delivery: one user-authored DCO-signed change on `feature/faq-language-workflow`;
+  PR preparation follows the verified diff. Merge is not part of this slice.
+
 ### 4. Verify conversational summarization and drafting
 
 - [ ] Discuss, implement fixes if needed, and verify this slice.
@@ -637,6 +726,25 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** Completed approved standalone FAQ step 3c with retained exact
+  policies, grounded presentation/coverage clarification, and bounded failure
+  handling. All 833 tests (47 new), dependency and whitespace checks pass; installed
+  adapter exercised offline. No live quality review or chat integration; step 3d
+  is the next discussion.
+
+- **2026-10-07:** User approved the proposed first FAQ slice, recorded as step 3c:
+  standalone question extraction → existing retrieval → grounded explanation with
+  retained exact policy, offline verification, and explicit abstention/failure
+  handling. Chat integration and live language-quality review remain separate.
+
+- **2026-10-07:** Reviewed the user's FAQ architecture diagram against the existing
+  local retriever, classifier, routing gate, and agent contracts. Recorded the
+  unapproved step-3 FAQ proposal above and split standalone/integration delivery.
+  Seven local read-only probes exposed lexical coverage and classifier limitations;
+  checked primary scikit-learn/Groq documentation. Presentation choice and final
+  contract were open at that review and then resolved for step 3c. The review
+  changed no application code and made no live provider calls.
 
 - **2026-10-07:** User authorized merging PR #24, including standalone keywords,
   classifier-first chat integration, and the introduction/score-table correction.

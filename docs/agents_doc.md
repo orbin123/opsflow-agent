@@ -11,12 +11,39 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 3 FAQ review; keyword workflow, chat integration, and presentation
+**Next:** ⏳ Discuss step 3d FAQ chat integration; standalone step 3c is implemented
+and verified offline, with grounded explanation and retained exact policy.
+Keyword workflow, chat integration, and presentation
 correction are in PR #24, with user-authorized merge. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
 and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
 within their recorded limits; keyword steps 3a/3b are also verified offline.
 Later implementation awaits discussion.
+
+- **2026-10-07:** Completed approved step 3c standalone FAQ workflow: strict
+  question extraction → unchanged local retrieval once → grounded matched-policy
+  explanation, retaining exact answers and actual stages/timings. Ambiguous/no-match
+  skips presentation; missing policy details may clarify with matched result intact;
+  failed presentation uses a qualified exact-answer fallback without retry. All 833
+  tests (47 new), `pip check`, and whitespace checks pass. Fake SDK transport checks
+  both supported models; corrected new-test JSON tuple/list expectations. Added
+  `docs/faq-workflow.md`. No live language-quality/injection evaluation, dependencies,
+  classifier/index, runtime/API/UI/history/agent-registry, or side effects changed.
+  One user-authored DCO-signed change; step 3d integration remains separate.
+
+- **2026-10-07:** User approved the proposed first FAQ slice: standalone structured
+  question extraction, unchanged local retrieval, and grounded presentation retaining
+  exact policies. Recorded the step 3c input/outcome/failure and offline-verification
+  contract before implementation; no chat integration or live quality check approved.
+
+- **2026-10-07:** Reviewed the user's FAQ diagram and recorded a discussion-only
+  proposal in `REWORK.md`: reuse local TF-IDF/ID lookup, preserve ambiguity/no-match,
+  distinguish similarity from confidence and answer coverage, retain exact policies,
+  and split standalone workflow from chat integration. Seven local read-only probes
+  exposed unsupported qualifiers and classifier gating limitations; checked primary
+  scikit-learn/Groq docs. Prose/source presentation choice was open at that review
+  and subsequently resolved by the approved step 3c contract.
+  No application code, automated suite, live provider, or side-effect execution.
 
 - **2026-10-07:** User authorized merging keyword PR #24. Verified the tested application head, clean mergeability, user-only authorship, all DCO sign-offs, and passing DCO. Documentation-only delivery record; application/tests remain identical to the verified 786-test head. FAQ stays the next discussion; no new runtime/provider/email checks or later implementation.
 
