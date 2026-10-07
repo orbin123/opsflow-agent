@@ -7,12 +7,9 @@ from app.agent import AgentResult, AgentTrace
 from app.routes import faq_route, keyword_route, sentiment_route
 from app.tools.faq import retrieve_faq
 from app.tools.keywords import extract_keywords
-from app.tools.sentiment import analyze_sentiment
 
 
 CASES = [
-    ("sentiment_analysis", 'Analyze the sentiment of "  I am sad  "', "analyze_sentiment",
-     sentiment_route, analyze_sentiment, {"text": "  I am sad  "}),
     ("keyword_extraction", 'Extract keywords from "Customer support improves retention"', "extract_keywords",
      keyword_route, extract_keywords, {"text": "Customer support improves retention"}),
     ("faq_retrieval", 'FAQ: "What is the remote-work policy?"', "retrieve_faq",
@@ -21,7 +18,7 @@ CASES = [
 
 
 @pytest.fixture(autouse=True)
-def agent_double(monkeypatch):
+def agent_double(monkeypatch, sentiment_provider):
     agent = Mock(return_value=AgentResult("needs_clarification", "Please provide details.", None, [], 0))
     monkeypatch.setattr(runtime, "run_agent", agent)
     return agent
@@ -54,7 +51,6 @@ def test_dispatch_classifies_once_and_traces_exact_payload(intent, message, tool
     ("email_drafting", "Draft an email", 1, "intent_requires_agent"),
     ("out_of_scope", "Hello", 1, "intent_requires_agent"),
     ("sentiment_analysis", 'Sentiment: "sad"', 0.70, "low_confidence"),
-    ("sentiment_analysis", "Analyze sentiment of the previous message", 1, "payload_not_unambiguous"),
     ("keyword_extraction", 'Keywords: "sad" and email me', 1, "payload_not_unambiguous"),
     ("faq_retrieval", "What about that policy?", 1, "question_not_unambiguous"),
 ])
@@ -141,9 +137,11 @@ def test_invalid_runtime_input_does_not_classify(message, monkeypatch, agent_dou
     agent_double.assert_not_called()
 
 
-def test_saved_classifier_sentiment_execution():
+def test_saved_classifier_sentiment_execution(sentiment_provider):
+    model = sentiment_provider("I am sad")
     result = runtime.execute_request('Analyze the sentiment of "I am sad"')
     assert result.status == "completed" and result.result.label == "negative"
+    assert result.route == "llm_assisted" and model.invoke.call_count == 2
     assert result.trace[0].arguments == {"text": "I am sad"}
 
 

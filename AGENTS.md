@@ -5,9 +5,9 @@ An operations copilot using TF-IDF + a calibrated linear SVM for intent routing,
 The local Streamlit chat/inspector runs with `streamlit run streamlit_app.py` and
 uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verification.
 
-The standalone natural-language sentiment workflow is documented in
-`docs/sentiment-workflow.md`. It is not connected to chat yet; classifier-first
-chat integration is a separate REWORK step 2b decision.
+The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
+Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
+route, with existing chat HTTP status rules and retained workflow/tool records.
 
 ## Read Before Working
 
@@ -44,7 +44,7 @@ chat integration is a separate REWORK step 2b decision.
 ## Project Boundaries
 
 - Direct execution requires a high-confidence, single-purpose deterministic request with safely extracted arguments. Sentiment analyzes the supplied text, not the instruction wrapper.
-- Reminder requests always go through the agent, regardless of classifier confidence. Compound, uncertain, LLM-dependent, or context-dependent requests also use the agent.
+- Reminder requests always go through the agent, regardless of classifier confidence. Compound, uncertain, LLM-dependent, or context-dependent requests also use the agent, except the approved fixed sentiment workflow: high-confidence sentiment enters `llm_assisted` extraction/scoring/explanation, with missing/ambiguous source clarifying and contextual/compound extraction abstention handing off to the agent.
 - Version one includes emails to the configured user with separate draft content and action instructions, plus scheduled reminder emails. External-recipient email sending is a separate scope decision.
 - A stored reminder requires a due-time delivery worker; a draft or scheduled record must not be reported as a sent email. Track side effects and failures accurately and prevent duplicate delivery.
 - The local reminder worker uses a Unix file lock beside the canonical SQLite path. Use cooperating workers on one local filesystem; network storage, multiple hosts, hard-link aliases, and deleting/replacing an active lock file are unsupported. SMTP acceptance does not prove inbox arrival. Unfinished/unknown attempts never retry automatically; only definite transient pre-submission failures use the persisted three-attempt budget.

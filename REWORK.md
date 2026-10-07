@@ -5,9 +5,9 @@ criteria below are verified. The original `docs/PLAN.md` agenda is paused; do no
 use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
-**Status:** Steps 1 and 2a implemented and verified within their recorded limits.
-Remaining rework steps, including sentiment chat integration, are pending.
-**Next discussion:** ⏳ Step 2b, classifier-first sentiment workflow integration.
+**Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
+Remaining rework steps are pending.
+**Next discussion:** ⏳ Step 3, natural-English keyword and FAQ requests.
 
 ## Intended User Experience
 
@@ -79,7 +79,8 @@ Preserve these contracts throughout the rework:
 
 - Direct execution needs a high-confidence, single-purpose request and reliable
   argument extraction. Ambiguous, contextual, compound, and LLM-dependent requests
-  use the agent; missing material information requires clarification.
+  use the agent, except the approved fixed high-confidence sentiment workflow,
+  reported as `llm_assisted`. Missing material information requires clarification.
 - Sentiment analyzes the complete source statement, including negation and
   punctuation, rather than an isolated emotional word or instruction wrapper.
 - Activity shows observable events and short factual explanations of routing.
@@ -141,7 +142,7 @@ available for those checks. Completed inline details (step 11), readable answers
 
 ### 2. Accept natural-English sentiment requests
 
-- [ ] Discuss, implement, and verify this slice.
+- [x] Discuss, implement, and verify this slice with offline language-stage doubles.
 - **Problem/change:** Replace mandatory quoted syntax with structured LLM source
   extraction, deterministic VADER scoring, and an LLM-written explanation. The user
   proposed one dedicated workflow per deterministic capability; start with sentiment
@@ -155,7 +156,7 @@ available for those checks. Completed inline details (step 11), readable answers
 
 User approved completing standalone step 2a after confirming the classifier remains
 first in the proposed chat flow. Step 2a is verified as recorded below. Step 2b and
-its routing revision still require agreement; current direct/agent behavior is unchanged.
+its routing revision are now approved as recorded below.
 
 **2a — Standalone sentiment workflow (approved implementation slice)**
 
@@ -222,28 +223,71 @@ its routing revision still require agreement; current direct/agent behavior is u
   substring/schema checks cannot establish source completeness or prose fidelity.
   Existing LangChain history deprecation warnings remain. No runtime, classifier,
   API, UI, history, agent registry, SMTP, or deployment changes/checks.
-- Delivery: scoped signed commit/PR on `feature/sentiment-language-workflow`, using
-  the user's GitHub identity. Step 2 remains incomplete until agreed chat integration.
+- Delivery: user-authored DCO-signed PR #22 merged into `main` on 2026-10-07.
+  At 2a delivery, chat integration was still pending.
 
-**2b — Chat integration (discuss after 2a is verified)**
+**2b — Chat integration (approved implementation slice)**
 
-- Proposed dispatch: classify once; high-confidence sentiment candidates enter the
+- **Agreement:** User requested step 2b and selected `llm_assisted` with the existing
+  status rules: completed/clarification HTTP 200; extraction/scoring failure and
+  retained-result presentation partial failure HTTP 503. Classifier stays first.
+- **Implementation contract:** Add `workflow_trace` for actual attempted-stage
+  statuses/reasons/timings, preserve VADER tool inputs/results in `trace`, and retain
+  both records in process-local history. Agent handoff retains the extraction stage
+  and supplies the unchanged request/history once. The existing inspector displays
+  workflow stages using its current native expander pattern. No interface redesign.
+- **Verification:** Offline provider doubles for successful unquoted/quoted requests,
+  classifier gating, clarification, contextual/compound handoff, failures, retained
+  partial results, API/client/history preservation, and UI rerender non-execution.
+  Inspect saved-classifier predictions separately. Existing FAQ/keyword/agent checks
+  cover regression behavior; no live provider quality checks in this slice.
+
+- Dispatch: classify once; high-confidence sentiment candidates enter the
   fixed workflow. Low-confidence/other intents retain current dispatch. Contextual
   and compound abstentions pass the original request/history to the existing agent;
   missing source yields clarification. Never pass the instruction wrapper to VADER.
-- This needs an explicit exception to the current rule that all LLM-dependent
-  requests use the agent: distinguish fixed LLM-assisted execution from wholly local
-  direct execution and dynamic agent orchestration. Agree on the public route value
-  and compatible API/client handling before wiring; do not silently label the whole
-  workflow deterministic or change the existing route enum in 2a.
+- Approved exception to the previous all-LLM-dependent-requests-use-agent rule:
+  high-confidence sentiment uses fixed `llm_assisted` execution; `direct` retains
+  wholly local execution and `agent` denotes dynamic orchestration. Update the chat
+  API/client together; the FAQ-only endpoint retains its existing route contract.
 - Carry the grounded reply, raw result, clarification/failure state, and observable
-  stage timings through runtime/API/session history. Agree on presentation-failure
-  status mapping; preserve successful scoring and prevent duplicate execution.
+  stage timings through runtime/API/session history. Presentation failure maps to
+  `partial_failure`; preserve successful scoring and prevent duplicate execution.
 - Verify classifier predictions separately from extraction, chat response/history
   round-trips, handoff with original context, and unchanged FAQ/keyword behavior.
   Do not retrain or change confidence thresholds without separate evaluation/agreement.
 - Step 12 remains the general UI presentation/onboarding work. Producing a sentiment
   reply here does not authorize moving the inspector or redesigning the interface.
+
+**Step 2b outcome — 2026-10-07**
+
+- Connected the fixed sentiment workflow behind unchanged intent/confidence gating
+  in `app/runtime.py`. The chat API/client accepts `llm_assisted` and preserves
+  the reply/result/tool trace plus actual `workflow_trace` stages. Existing session
+  serialization saves these fields automatically. Contextual/compound abstention
+  retains extraction details and hands the original request/history to the agent
+  once. Missing/ambiguous source clarifies; failures never rerun successful scoring.
+- Kept the agreed HTTP 200/503 semantics, including retained-result presentation
+  partial failure. Added an inspector expander using the existing native pattern;
+  stage timings are backend values. The agent registry still invokes pure VADER.
+  FAQ-only scope and keyword/agent contracts remain covered by existing checks.
+- Verified all 721 tests (15 new, with existing sentiment checks migrated to the
+  new route), `pip check`, and whitespace checks. Fixed a new test's mutable mock
+  message capture by snapshotting each invocation. Provider doubles cover
+  classifier-first order, threshold/invalid-confidence gates, exact source/one
+  scoring call, clarification/follow-up, original-context handoff, extraction and
+  scorer failure, retained partial outcomes, OpenAPI/client/history, and UI rerenders.
+- Separately inspected saved-classifier predictions: the unquoted happy example
+  predicts sentiment at 0.904 against 0.71, missing-source/contextual examples also
+  predict sentiment, and a combined sentiment/summary example predicts compound.
+  This is example inspection, not a new classifier evaluation or live quality test.
+- Limits: no live Groq, SMTP, deployment, or new browser-layout verification. Figma
+  inspection was rate-limited; reused the documented approved adaptation with no
+  CSS/token/layout change. Existing LangChain history warnings remain. No new
+  dependencies, threshold/model training, persistence, or subsequent-step work.
+- Delivery: user-authored DCO-signed PR #23 on `feature/sentiment-chat-workflow`
+  now targets `main` after dependency PR #22 merged. The user authorized merging
+  both slices; existing 721-test evidence applies to the unchanged application diff.
 
 ### 3. Review natural-English keyword and FAQ requests
 
@@ -453,6 +497,18 @@ its routing revision still require agreement; current direct/agent behavior is u
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** User authorized merging both sentiment slices. Merged standalone
+  PR #22, retargeted integration PR #23 to `main`, and updated dependency/delivery
+  records before its authorized merge. Verified user-only authorship, DCO sign-offs,
+  passing DCO checks, and unchanged application/test files against the tested 2b
+  commit. Documentation-only delivery update; no new runtime tests or provider calls.
+
+- **2026-10-07:** User requested step 2b and selected the `llm_assisted` API route
+  with existing status rules. Completed classifier-first chat wiring, retained
+  workflow/tool/history records, and inspector compatibility. All 721 tests,
+  dependency checks, and whitespace checks pass within the limits above. Step 3
+  is the next discussion; later implementation remains unapproved.
 
 - **2026-10-07:** User approved completing step 2a after confirming classifier-first
   dispatch. Implemented the standalone workflow and documented its contract and

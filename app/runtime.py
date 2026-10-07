@@ -1,6 +1,7 @@
-"""Stateless direct execution and bounded agent handoff; FAQ-only mode abstains."""
+"""Classifier-first direct/LLM-assisted execution and bounded agent handoff."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+import math
 from time import perf_counter
 from typing import Literal
 
@@ -10,7 +11,7 @@ from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
 from app.routes.keyword_route import try_direct_keyword
-from app.routes.sentiment_route import try_direct_sentiment
+from app.sentiment_workflow import SentimentStage, run_sentiment_workflow
 from app.tools.faq import FAQResult
 from app.tools.keywords import Keyword
 from app.tools.sentiment import SentimentResult
@@ -37,18 +38,19 @@ class ExecutionResult:
     status: Literal["completed", "agent_required", "needs_clarification", "partial_failure", "error"]
     predicted_intent: str
     confidence: float
-    route: Literal["direct", "agent"]
+    route: Literal["direct", "llm_assisted", "agent"]
     reason: str
     result: ToolResult | None
     trace: list[ToolTrace | AgentTrace]
     elapsed_ms: float
     reply: str | None = None
     agent_reason: str | None = None
+    workflow_trace: list[SentimentStage] = field(default_factory=list)
 
 
 def execute_request(message: str, *, faq_only: bool = False,
                     history: list[HumanMessage | AIMessage] | None = None) -> ExecutionResult:
-    """Classify once and use existing extraction/confidence gates.
+    """Classify once; high-confidence sentiment enters its fixed LLM workflow.
 
     The FAQ endpoint restricts execution to FAQ to preserve its public contract.
     Other requests that defer invoke the stateless agent once with the original message.
@@ -67,6 +69,9 @@ def execute_request(message: str, *, faq_only: bool = False,
 
     result = None
     trace = []
+    workflow_trace = []
+    status = "agent_required"
+    reply = None
     route = "agent"
     reason = "intent_not_faq" if faq_only else "intent_requires_agent"
     try:
@@ -74,8 +79,23 @@ def execute_request(message: str, *, faq_only: bool = False,
             decision = try_direct_faq(message, intent=intent, confidence=confidence, threshold=threshold)
             tool, arguments, result = "retrieve_faq", {"question": decision.question}, decision.faq
         elif intent == "sentiment_analysis":
-            decision = try_direct_sentiment(message, intent=intent, confidence=confidence, threshold=threshold)
-            tool, arguments, result = "analyze_sentiment", {"text": decision.text}, decision.sentiment
+            decision = None
+            if not math.isfinite(threshold) or not 0 < threshold <= 1:
+                raise ValueError("Invalid routing threshold")
+            if not math.isfinite(confidence) or not 0 <= confidence <= 1:
+                reason = "invalid_confidence"
+            elif confidence < threshold:
+                reason = "low_confidence"
+            else:
+                workflow = run_sentiment_workflow(message)
+                status, reason, result, reply = (workflow.status, workflow.reason,
+                                                 workflow.result, workflow.reply)
+                route = "agent" if status == "agent_required" else "llm_assisted"
+                workflow_trace = workflow.trace
+                for stage in workflow_trace:
+                    if stage.stage == "analyze_sentiment":
+                        trace.append(ToolTrace("analyze_sentiment", {"text": workflow.source_text},
+                                               stage.status, result, stage.elapsed_ms))
         elif intent == "keyword_extraction":
             decision = try_direct_keyword(message, intent=intent, confidence=confidence, threshold=threshold)
             tool, arguments, result = "extract_keywords", {"text": decision.text}, decision.keywords
@@ -85,7 +105,6 @@ def execute_request(message: str, *, faq_only: bool = False,
         detail = "FAQ routing unavailable" if faq_only else "Execution routing unavailable"
         raise RuntimeUnavailable(detail) from None
 
-    status = "agent_required"
     if decision is not None:
         route, reason = decision.route, decision.reason
         if route == "direct":
@@ -93,7 +112,6 @@ def execute_request(message: str, *, faq_only: bool = False,
             status = "completed" if succeeded else "error"
             trace.append(ToolTrace(tool, arguments, "completed" if succeeded else "failed",
                                    result, decision.tool_elapsed_ms))
-    reply = None
     agent_reason = None
     if status == "agent_required" and not faq_only:
         try:
@@ -105,4 +123,4 @@ def execute_request(message: str, *, faq_only: bool = False,
         else:
             status, reply, agent_reason, trace = agent.status, agent.reply, agent.reason, agent.trace
     return ExecutionResult(status, intent, confidence, route, reason, result, trace,
-                           (perf_counter() - started) * 1000, reply, agent_reason)
+                           (perf_counter() - started) * 1000, reply, agent_reason, workflow_trace)

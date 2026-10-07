@@ -25,8 +25,14 @@ their actual statuses and successful observations. Sanitized classifier/routing
 exceptions are saved as error records and still raise `RuntimeUnavailable` to the
 caller. Invalid inputs are not conversational turns.
 
-Prior user/assistant messages are passed to the agent only when direct gates
-defer; a self-contained direct request does not initialize Groq. History is data,
+LLM-assisted sentiment also retains its reply, VADER input/result, and
+`workflow_trace` stage records, including clarification, extraction failures,
+and presentation partial failures. The agent can receive those outcomes on a
+follow-up. Reading/replaying the stored record never runs extraction or scoring.
+
+Prior user/assistant messages are passed to the agent when routing/extraction
+defers. Wholly local direct requests do not initialize Groq; the fixed sentiment
+workflow uses Groq without prior history, then passes history on agent handoff. History is data,
 not new system instructions. The agent prompt asks it to resolve follow-ups using
 supplied facts, clarify missing/ambiguous references and respect failed outcomes.
 These are model decisions, not guaranteed by memory transport or schema checks.

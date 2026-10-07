@@ -1,10 +1,10 @@
 # Standalone natural-language sentiment workflow
 
-`app.sentiment_workflow.run_sentiment_workflow(request)` implements REWORK step 2a:
-a fixed LLM extraction → VADER scoring → LLM explanation sequence. It is not yet
-connected to chat, the intent classifier, the agent registry, or session history.
-The existing application still classifies requests first and uses its current routes.
-Step 2b will separately integrate this workflow behind that classifier.
+`app.sentiment_workflow.run_sentiment_workflow(request)` implements the fixed
+LLM extraction → VADER scoring → LLM explanation sequence. REWORK step 2b connects
+it to chat behind the intent classifier: high-confidence sentiment uses the
+`llm_assisted` route. The pure VADER tool remains in the agent registry; an agent
+sentiment tool call does not recursively enter this two-LLM workflow.
 
 ## Input and execution
 
@@ -54,8 +54,13 @@ with its name, status, sanitized reason, and elapsed time. Extraction failures
 retain no unvalidated source. Scoring failures retain the validated source.
 Presentation failures never trigger rescoring or automatic retries.
 
-These statuses belong to the standalone function. Mapping them into the chat
-HTTP response and choosing an LLM-assisted route value are step 2b decisions.
+In chat, `completed` and `needs_clarification` return HTTP 200; `error` and
+`partial_failure` return HTTP 503 with retained outcomes. `agent_required` invokes
+the existing agent once with the original request/history. Extraction/scoring
+failures stop; explanation failure returns the fixed fallback without repair.
+`workflow_trace` carries actual stage records alongside the actual VADER tool trace.
+The same scoring duration appears in both records for one scoring call.
+See [chat-api.md](chat-api.md) for the full response contract.
 
 ## Configuration and limits
 

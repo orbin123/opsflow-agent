@@ -108,6 +108,13 @@ with inspector_column:
                 st.text(f"Agent outcome reason: {execution['agent_reason']}")
             st.text(f"Backend elapsed: {execution['elapsed_ms']} ms")
             st.caption("Includes session waiting/history; excludes HTTP transport. Confidence is the classifier score.")
+            if execution.get("workflow_trace"):
+                with st.expander("Sentiment workflow stages", expanded=True):
+                    for stage in execution["workflow_trace"]:
+                        st.text(f"{stage['stage']} · {stage['status']}\n"
+                                f"Stage elapsed: {stage['elapsed_ms']} ms")
+                        if stage["reason"] is not None:
+                            st.text(f"Stage reason: {stage['reason']}")
             if not execution["trace"]:
                 st.caption("No tool executions reported.")
             for number, step in enumerate(execution["trace"], 1):

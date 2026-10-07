@@ -42,17 +42,18 @@ def records(session_id):
 
 
 @pytest.fixture(autouse=True)
-def isolated_runtime(monkeypatch):
+def isolated_runtime(monkeypatch, sentiment_provider):
     monkeypatch.setattr(sessions, "_sessions", {})
     monkeypatch.setattr(runtime, "classify_request", lambda message:
                         ("sentiment_analysis" if message.startswith("Sentiment:") else "email_drafting", 1, 0.71))
     monkeypatch.setattr(agent, "_create_model", lambda: pytest.fail("Unexpected provider initialization"))
 
 
-def test_direct_result_available_to_agent_followup(monkeypatch):
+def test_sentiment_result_available_to_agent_followup(monkeypatch, sentiment_provider):
+    sentiment_provider("I am happy")
     source = 'Sentiment: "I am happy"'
     first = sessions.execute_session_request("one", source)
-    assert first.route == "direct"
+    assert first.route == "llm_assisted"
     seen = install_model(monkeypatch, [final()])
     followup = "Draft an email to Alex about that result"
     second = sessions.execute_session_request("one", followup)
@@ -61,6 +62,8 @@ def test_direct_result_available_to_agent_followup(monkeypatch):
     previous = json.loads(seen[0][2].content)
     assert previous["trace"][0]["result"]["label"] == "positive"
     assert previous["trace"][0]["arguments"] == {"text": "I am happy"}
+    assert previous["reply"] == first.reply
+    assert previous["workflow_trace"][0]["stage"] == "extract_source"
     assert seen[0][-1].content == followup
     assert len(sessions._sessions["one"].history.messages) == 4
     assert second.elapsed_ms >= sum(step.elapsed_ms for step in second.trace)
@@ -110,7 +113,8 @@ def test_clarification_answer_and_ambiguous_reference_have_context(monkeypatch):
     assert len(records("one")) == 3
 
 
-def test_sessions_isolated_clear_and_stateless_calls_do_not_share(monkeypatch):
+def test_sessions_isolated_clear_and_stateless_calls_do_not_share(monkeypatch, sentiment_provider):
+    sentiment_provider("private source")
     sessions.execute_session_request("one", 'Sentiment: "private source"')
     seen = install_model(monkeypatch, [final("needs_clarification", "What source?"), final(), final()])
     sessions.execute_session_request("two", "Draft about that")
@@ -154,15 +158,16 @@ def test_runtime_exception_remembered_and_reraised_sanitized(monkeypatch):
     assert json.loads(seen[0][-2].content) == saved
 
 
-def test_direct_tool_failure_remembered_without_agent_execution(monkeypatch):
-    from app.routes import sentiment_route
+def test_sentiment_tool_failure_remembered_without_agent_execution(monkeypatch, sentiment_provider):
+    from app import sentiment_workflow
 
-    monkeypatch.setattr(sentiment_route, "analyze_sentiment", Mock(side_effect=RuntimeError("private source")))
+    sentiment_provider("I am sad")
+    monkeypatch.setattr(sentiment_workflow, "analyze_sentiment", Mock(side_effect=RuntimeError("private source")))
     failed = sessions.execute_session_request("one", 'Sentiment: "I am sad"')
-    assert failed.status == "error" and failed.route == "direct"
+    assert failed.status == "error" and failed.route == "llm_assisted"
     saved = records("one")[0]
     assert saved["trace"][0]["status"] == "failed" and saved["trace"][0]["result"] is None
-    assert saved["reply"] is None and "private source" not in json.dumps(saved)
+    assert saved["reply"] == failed.reply and "private source" not in json.dumps(saved)
 
 
 def test_exact_limits_preserve_session_key_and_message(monkeypatch):

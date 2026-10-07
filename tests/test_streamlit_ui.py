@@ -25,11 +25,11 @@ class Response(io.BytesIO):
 def execution(session_id="one", status="completed"):
     return dict(session_id=session_id, status=status, predicted_intent="email_drafting",
                 confidence=0.52, route="agent", reason="intent_requires_agent", result=None,
-                trace=[], elapsed_ms=12.3456789, reply="Draft only", agent_reason=None)
+                trace=[], elapsed_ms=12.3456789, reply="Draft only", agent_reason=None, workflow_trace=[])
 
 
 @pytest.fixture(autouse=True)
-def offline_sessions(monkeypatch):
+def offline_sessions(monkeypatch, sentiment_provider):
     monkeypatch.setattr(sessions, "_sessions", {})
     monkeypatch.setattr(agent, "_create_model", lambda: pytest.fail("Unexpected provider initialization"))
 
@@ -107,14 +107,16 @@ def connect_api(monkeypatch):
     return recorded
 
 
-def test_ui_real_direct_result_and_inspector_match_backend_without_resubmit(monkeypatch):
+def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monkeypatch, sentiment_provider):
+    model = sentiment_provider("I am happy", "VADER classified this text as positive.")
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     assert not ui.exception
-    ui.chat_input[0].set_value('Sentiment: "I am happy"').run()
+    ui.chat_input[0].set_value("Just check the sentiment of this I am happy").run()
     assert not ui.exception
     data = recorded[0][1]
     assert data["result"]["label"] == "positive"
+    assert data["route"] == "llm_assisted" and model.invoke.call_count == 2
     assert ui.session_state["turns"][0]["execution"] == data
     displayed_json = [json.loads(element.value) for element in ui.json]
     assert data["result"] in displayed_json
@@ -123,9 +125,13 @@ def test_ui_real_direct_result_and_inspector_match_backend_without_resubmit(monk
     for value in (data["predicted_intent"], str(data["confidence"]), data["route"], data["reason"],
                   str(data["elapsed_ms"]), str(data["trace"][0]["elapsed_ms"])):
         assert value in text
+    assert data["reply"] in text
+    for stage in data["workflow_trace"]:
+        assert stage["stage"] in text and str(stage["elapsed_ms"]) in text
     assert ui.chat_input[0].proto.submit_mode == ui.chat_input[0].proto.SUBMIT_MODE_DISABLE
     ui.run()
     assert len(recorded) == 1
+    assert model.invoke.call_count == 2
     assert ui.session_state["pending"] is False
 
 
@@ -174,6 +180,42 @@ def test_ui_partial_failure_retains_successful_step(monkeypatch):
     assert ui.session_state["turns"][0]["execution"] == data
     assert "Execution: partial_failure" in [element.value for element in ui.error]
     assert data["trace"][0]["result"] in [json.loads(element.value) for element in ui.json]
+    assert "private credentials" not in str(ui)
+
+
+def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_without_retry(monkeypatch, sentiment_provider):
+    model = sentiment_provider("I am happy")
+    extraction = AIMessage(content=json.dumps({"status": "ready", "source_text": "I am happy", "reason": "explicit_source"}),
+                           response_metadata={"finish_reason": "stop"})
+    model.invoke.side_effect = [extraction, RuntimeError("private credentials")]
+    client = TestClient(app)
+    sent = []
+
+    def send(request, **kwargs):
+        result = client.post("/api/v1/chat", json=json.loads(request.data))
+        sent.append(result.json())
+        assert result.status_code == 503
+        raise HTTPError("http://localhost", 503, "unavailable", {}, Response(result.json()))
+
+    monkeypatch.setattr(ui_client, "urlopen", send)
+    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui.chat_input[0].set_value("Just check the sentiment of this I am happy").run()
+    assert not ui.exception
+    data = sent[0]
+    assert data["route"] == "llm_assisted" and data["status"] == "partial_failure"
+    assert data["reason"] == "presentation_failed" and data["result"]["label"] == "positive"
+    assert data["trace"][0]["status"] == "completed"
+    assert data["workflow_trace"][-1]["status"] == "failed"
+    assert ui.session_state["turns"][0]["execution"] == data
+    assert data["result"] in [json.loads(element.value) for element in ui.json]
+    assert data["reply"] in [element.value for element in ui.text]
+    session_id = data["session_id"]
+    saved = json.loads(sessions._sessions[session_id].history.messages[-1].content)
+    assert saved["result"] == data["result"] and saved["reply"] == data["reply"]
+    assert saved["workflow_trace"] == data["workflow_trace"]
+    ui.run()
+    assert not ui.exception and len(sent) == 1 and model.invoke.call_count == 2
+    assert len(sessions._sessions[session_id].history.messages) == 2
     assert "private credentials" not in str(ui)
 
 

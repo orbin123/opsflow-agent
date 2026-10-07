@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.agent import AgentTrace
 from app.runtime import RuntimeUnavailable, ToolResult, ToolTrace
 from app.sessions import execute_session_request
+from app.sentiment_workflow import SentimentStage
 
 
 router = APIRouter()
@@ -31,13 +32,14 @@ class ChatResponse(BaseModel):
     status: Literal["completed", "agent_required", "needs_clarification", "partial_failure", "error"]
     predicted_intent: str
     confidence: float
-    route: Literal["direct", "agent"]
+    route: Literal["direct", "llm_assisted", "agent"]
     reason: str
     result: ToolResult | None
     trace: list[ToolTrace | AgentTrace]
     elapsed_ms: float
     reply: str | None
     agent_reason: str | None
+    workflow_trace: list[SentimentStage] = Field(default_factory=list)
 
 
 @router.post("/api/v1/chat", response_model=ChatResponse, responses={
