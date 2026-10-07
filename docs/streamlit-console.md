@@ -43,6 +43,11 @@ bounded agent's provider calls time to finish. There are no automatic retries;
 transport errors may leave an unknown backend outcome. Submitted turns remain
 visible with that warning. Resubmitting manually executes another turn.
 
+LLM-assisted keywords show the backend introduction followed by a native Phrase/Score
+table in YAKE order. Scores display to five decimal places; API/history and the
+inspector retain full precision. Raw keyword JSON appears only in the inspector.
+A caption explains lower-score relevance; empty results show their reply without
+an empty table. Presentation failure still displays the retained keyword table.
 Direct responses display structured JSON. LLM-assisted sentiment shows the backend
 explanation or factual fallback as plain text and retains the raw VADER result.
 Agent responses display the backend's
@@ -61,11 +66,12 @@ responses without rounding or recomputation. Total backend time includes session
 waiting/history and excludes HTTP transport; it need not equal the sum of steps.
 No classification/provider substep timings or private reasoning are invented.
 
-When present, the sentiment workflow stages expander shows backend-reported
-extraction, scoring, and explanation statuses/reasons/timings, including extraction
-before agent handoff. VADER's scoring duration also appears in the tool trace;
+When present, the sentiment or keyword workflow stages expander shows backend-reported
+extraction, local-tool, and presentation statuses/reasons/timings, including extraction
+before agent handoff. The VADER/YAKE duration also appears in the tool trace;
 these are two records of the same call. The client accepts `llm_assisted` and
-retains stage records for both HTTP 200 and HTTP 503 outcomes.
+retains stage records for both HTTP 200 and HTTP 503 outcomes. The expander labels
+source extraction/presentation as LLM stages and VADER/YAKE as local tool stages.
 
 HTTP 503 execution payloads retain observations and failed steps. Runtime-detail,
 HTTP rejection, connection, invalid-response and wrong-session failures display

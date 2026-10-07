@@ -11,10 +11,20 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Discuss REWORK step 3, natural-English keyword and FAQ requests. Inline
+**Next:** ⏳ Step 3 FAQ review; keyword workflow, chat integration, and presentation
+correction are in PR #24, with user-authorized merge. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
 and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
-within their recorded limits; later implementation is not authorized.
+within their recorded limits; keyword steps 3a/3b are also verified offline.
+Later implementation awaits discussion.
+
+- **2026-10-07:** User authorized merging keyword PR #24. Verified the tested application head, clean mergeability, user-only authorship, all DCO sign-offs, and passing DCO. Documentation-only delivery record; application/tests remain identical to the verified 786-test head. FAQ stays the next discussion; no new runtime/provider/email checks or later implementation.
+
+- **2026-10-07:** Corrected keyword presentation from user feedback within PR #24: the LLM introduces the result, while the application renders an ordered Phrase/Score table from actual YAKE results. Scores display to five decimal places; full-precision JSON stays in API/history/inspector. Fallback/empty replies remain factual without repeating phrases; retained results still render on presentation failure. All 786 tests pass (two new UI boundaries and updated success/failure checks), with `pip check` and whitespace checks. Installed native table/number-format APIs checked; literal cells, precision/order, inspector-only JSON, empty results, and non-executing rerenders verified offline. No live LLM or browser-layout checks, dependencies, routing/tool/agent/FAQ changes, or new CSS/Figma work. Additional user-authored DCO-signed correction commit; FAQ remains the next discussion.
+
+- **2026-10-07:** Completed approved step 3b in existing PR #24 at the user's request. High-confidence keywords now use `llm_assisted` extraction → YAKE → presentation; API/client/history retain readable reply/raw results, exact tool input, and actual workflow stages. Inspector labels LLM/local stages using its existing expander. Clarification, original-history handoff, HTTP 200/503 failures, empty/retained results, and no-retry behavior match sentiment. The 784-test suite passes (21 new integration/UI checks), with all 21 UI checks repeated after the final label change; `pip check` and whitespace checks pass. Saved-classifier examples inspected separately. No live Groq/SMTP, dependencies, thresholds/training, agent presentation, FAQ, CSS/layout, or deployment changes; Figma inspection was rate-limited. Additional user-authored DCO-signed integration commit; FAQ is the next discussion.
+
+- **2026-10-07:** Completed approved REWORK step 3a, standalone natural-English keyword workflow: strict LLM source extraction → unchanged YAKE once → bounded LLM reply. Retains verbatim source, ranked phrases/raw scores, actual stage timings, clarification/handoff, sanitized failures, and factual presentation fallback including empty results. All 763 tests (42 new), `pip check`, and whitespace checks pass; installed adapter exercised with fake SDK transport and Groq schema compatibility checked. Added `docs/keyword-workflow.md`; user-authored DCO-signed PR #24 on `feature/keyword-language-workflow`. No live language-quality evaluation, dependencies, classifier/threshold, runtime/API/UI/history, pure tool/agent registry, FAQ, email, or deployment changes. Keyword chat integration and FAQ require separate discussion.
 
 - **2026-10-07:** User authorized merging both sentiment slices. Merged standalone PR #22 and retargeted integration PR #23 to `main` for its authorized merge. Updated dependency/delivery records; user-only authorship and DCO verified. Application/tests remain identical to the tested step 2b commit, so existing 721-test evidence remains applicable. Documentation whitespace checked; no new runtime tests, provider calls, or later-step implementation.
 

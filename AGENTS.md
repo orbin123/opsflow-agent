@@ -9,6 +9,12 @@ The natural-language sentiment workflow is documented in `docs/sentiment-workflo
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
 route, with existing chat HTTP status rules and retained workflow/tool records.
 
+The natural-language keyword workflow is documented in `docs/keyword-workflow.md`.
+Approved REWORK step 3b connects it behind the classifier using `llm_assisted`,
+with the same HTTP status and retained-record contracts as sentiment. FAQ remains
+a separate discussion. Keyword assistant turns show a brief introduction and a
+native phrase/score table; full-precision raw results remain in the inspector.
+
 ## Read Before Working
 
 - `REWORK.md`: active implementation agenda until its rework steps and completion criteria are verified.
@@ -44,7 +50,7 @@ route, with existing chat HTTP status rules and retained workflow/tool records.
 ## Project Boundaries
 
 - Direct execution requires a high-confidence, single-purpose deterministic request with safely extracted arguments. Sentiment analyzes the supplied text, not the instruction wrapper.
-- Reminder requests always go through the agent, regardless of classifier confidence. Compound, uncertain, LLM-dependent, or context-dependent requests also use the agent, except the approved fixed sentiment workflow: high-confidence sentiment enters `llm_assisted` extraction/scoring/explanation, with missing/ambiguous source clarifying and contextual/compound extraction abstention handing off to the agent.
+- Reminder requests always go through the agent, regardless of classifier confidence. Compound, uncertain, LLM-dependent, or context-dependent requests also use the agent, except the approved fixed sentiment/keyword workflows: high-confidence sentiment or keywords enter `llm_assisted` extraction/local tool/presentation, with missing/ambiguous source clarifying and contextual/compound extraction abstention handing off to the agent.
 - Version one includes emails to the configured user with separate draft content and action instructions, plus scheduled reminder emails. External-recipient email sending is a separate scope decision.
 - A stored reminder requires a due-time delivery worker; a draft or scheduled record must not be reported as a sent email. Track side effects and failures accurately and prevent duplicate delivery.
 - The local reminder worker uses a Unix file lock beside the canonical SQLite path. Use cooperating workers on one local filesystem; network storage, multiple hosts, hard-link aliases, and deleting/replacing an active lock file are unsupported. SMTP acceptance does not prove inbox arrival. Unfinished/unknown attempts never retry automatically; only definite transient pre-submission failures use the persisted three-attempt budget.

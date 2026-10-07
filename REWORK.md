@@ -6,8 +6,10 @@ use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
-Remaining rework steps are pending.
-**Next discussion:** ⏳ Step 3, natural-English keyword and FAQ requests.
+Keyword steps 3a/3b are implemented and verified offline; FAQ and remaining
+rework steps are pending.
+**Next discussion:** ⏳ Step 3 FAQ review. Keyword workflow, chat integration,
+and presentation correction are in PR #24; the user authorized its merge.
 
 ## Intended User Experience
 
@@ -79,7 +81,7 @@ Preserve these contracts throughout the rework:
 
 - Direct execution needs a high-confidence, single-purpose request and reliable
   argument extraction. Ambiguous, contextual, compound, and LLM-dependent requests
-  use the agent, except the approved fixed high-confidence sentiment workflow,
+  use the agent, except the approved fixed high-confidence sentiment/keyword workflows,
   reported as `llm_assisted`. Missing material information requires clarification.
 - Sentiment analyzes the complete source statement, including negation and
   punctuation, rather than an isolated emotional word or instruction wrapper.
@@ -302,6 +304,144 @@ its routing revision are now approved as recorded below.
   policies, compound/contextual fallbacks, and existing quoted-form regressions.
   Do not imply lexical similarity or keyword relevance is a confidence probability.
 
+#### Step 3a contract — 2026-10-07
+
+- [x] Implement and verify the standalone keyword workflow with offline doubles.
+
+- **Agreement:** User approved the first keyword-only PR after discussion of the
+  sentiment pattern. Implement the standalone workflow first; discuss FAQ later.
+  Keyword chat integration needs a separate agreement.
+- **Input → output:** One nonblank English request, at most 10,000 characters,
+  enters `run_keyword_workflow(request)`: strict LLM source extraction → unchanged
+  `extract_keywords(text)` YAKE tool exactly once → grounded LLM reply. Retain the
+  original request, verbatim contiguous source, ranked phrases/raw scores, outcome,
+  and actual attempted-stage statuses/timings. Quotes and colons are optional.
+- **Boundaries/failures:** Missing/ambiguous source clarifies; contextual, compound,
+  or unsupported requests return an agent-handoff decision without invoking it.
+  Validate extraction locally before running YAKE. Embedded source commands are
+  data. Extraction/tool failure stops later stages; presentation failure retains
+  the successful result, including an empty list, with a factual fallback. No
+  retries, generated keywords, reranking, or confidence-percentage claims.
+- **Provider:** Reuse the installed Groq/LangChain approach with strict schemas,
+  bounded calls, lazy configuration, and external tracing disabled. No new service,
+  dependencies, classifier/threshold changes, runtime/API/UI/history wiring,
+  generalized workflow framework, FAQ changes, or email/reminder side effects.
+- **Proportional verification:** Offline provider doubles cover unquoted/quoted
+  success, full multiline/negation source preservation, missing/ambiguous source,
+  contextual/compound abstention, embedded commands, invalid/non-verbatim output,
+  provider/tool failures, and retained-result presentation failures. Assert exact
+  tool input/count and actual result transport; cover empty keyword results.
+  Exercise the installed adapter with fake SDK transport and reuse existing YAKE
+  tests. No live provider quality check is authorized in this slice; schema and
+  substring checks cannot prove source completeness or prose fidelity.
+
+#### Step 3a outcome — 2026-10-07
+
+- Implemented `app/keyword_workflow.py` with strict structured source extraction,
+  verbatim/status validation, one unchanged YAKE call, and bounded structured reply.
+  Preserves the original request, exact source, ranked phrases/raw scores, outcomes,
+  and actual attempted-stage timings. Clarification/handoff never run YAKE.
+  Presentation failure retains results, including an empty list, with a factual
+  fallback and explicit `partial_failure`; no automatic retries or agent invocation.
+- Verified all 763 tests (42 new), `pip check`, and documentation/code whitespace.
+  Fake SDK transport exercises the installed LangChain strict-schema adapter;
+  checked Groq's strict-schema support for the existing allowed models. No new
+  dependencies. Existing LangChain history deprecation warnings remain.
+- Limits: no live Groq or language-quality/injection-resistance evaluation; schema
+  and substring checks cannot prove complete extraction or faithful presentation.
+  No classifier/threshold, runtime/API/UI/history, pure tool/agent registry, FAQ,
+  SMTP, or deployment changes. See `docs/keyword-workflow.md` for the contract.
+- Delivery: one user-authored DCO-signed change on
+  `feature/keyword-language-workflow`, published as keyword-only PR #24.
+  At standalone delivery, keyword chat integration still needed agreement;
+  approved step 3b below is now included in the same PR. FAQ remains deferred.
+
+#### Step 3b contract — 2026-10-07
+
+- [x] Implement and verify keyword chat integration with offline provider doubles.
+
+- **Agreement:** User approved connecting keywords to chat with the sentiment
+  contract and explicitly requested committing this slice in existing PR #24.
+  PR #24 now includes both the standalone workflow and chat integration.
+- **Dispatch/output:** Classify once; high-confidence keyword requests enter the
+  fixed `llm_assisted` extraction → YAKE → presentation workflow, including quoted
+  requests. Preserve the reply, raw ordered phrases/scores, exact tool input,
+  tool trace, and actual `workflow_trace` through API/client/session history.
+  Reuse the inspector's native expander for keyword stages without UI redesign.
+- **Status/failure:** Completed/clarification HTTP 200; extraction/tool failure or
+  retained-result presentation partial failure HTTP 503. No repair/retries.
+  Missing/ambiguous source clarifies without YAKE; contextual/compound/unsupported
+  abstention hands original request/history to the agent once and retains extraction
+  details. Low-confidence/other intents retain agent behavior; FAQ stays unchanged.
+- **Proportional verification:** Offline doubles cover classifier-first gating,
+  unquoted/quoted success, missing source, contextual/compound handoff, extraction
+  and tool failures, retained presentation failures/empty results, API/client/history,
+  and UI reply/stage rendering without resubmission. Check saved-model predictions
+  separately, including the supplied Langchain example. Reuse standalone/tool tests.
+  No live LLM, classifier training/threshold changes, provider/dependency changes,
+  generalized framework, agent presentation changes, streaming, or FAQ work.
+
+#### Step 3b outcome — 2026-10-07
+
+- Connected keywords behind unchanged classifier/confidence gating using the same
+  fixed workflow dispatch as sentiment. API/client/session history preserve the
+  reply, ordered raw result, exact tool trace, and keyword `workflow_trace` stages.
+  The inspector reuses its native expander and identifies LLM versus local stages.
+  Assistant turns show readable replies alongside the existing raw JSON display.
+- Preserved HTTP 200/503 rules, missing-source clarification, original-request/history
+  agent handoff, retained extraction details, and successful/empty results on reply
+  failure. No retries or duplicate tool calls. Agent registry still uses pure YAKE;
+  low-confidence/other-intent behavior and FAQ-only scope remain unchanged.
+- Verified the 784-test suite (21 new integration/UI checks, 42 standalone checks
+  from 3a); all 21 UI checks also pass after the final stage-label adjustment.
+  `pip check` and whitespace checks pass. Offline checks cover gating, exact
+  source/counts, abstention/follow-up, API/OpenAPI/client/history, failures/empty
+  results, and UI replies/stages/non-executing rerenders. Existing warnings remain.
+- Separately inspected saved-classifier examples: quoted Langchain request predicts
+  keywords at 0.7853 and the unquoted server example at 0.8271 against 0.71; the
+  original paragraph plus 'above text' predicts sentiment at 0.3336 and stays with
+  the agent. These are example checks, not a classifier quality evaluation.
+- Limits: no live Groq/language quality, SMTP, deployment, or browser-layout checks;
+  no dependencies, model training/threshold changes, generalized framework, agent
+  presentation changes, or FAQ work. Figma inspection was rate-limited; reused the
+  documented approved adaptation with no CSS/token/layout changes.
+- Delivery: additional user-authored DCO-signed integration commit in existing
+  PR #24, whose title/description now cover standalone workflow plus chat wiring.
+  FAQ remains the next discussion; later implementation is not authorized.
+
+#### Step 3b presentation correction — 2026-10-07
+
+- **User correction/contract:** The LLM phrase list followed by raw JSON repeats
+  the result. User requested a human introduction and an intuitive phrase/score
+  table. Correct keyword presentation in the same PR: the LLM supplies a brief
+  introduction; the application renders actual YAKE phrases/scores once in a native
+  table, preserving rank. Display scores to five decimal places while retaining
+  full precision in API/history/inspector. Explain that lower scores mean greater
+  relevance, not confidence. Keep raw JSON in the inspector, not the main answer.
+- **Failure/boundary:** Retained results still render on presentation failure, with
+  a short factual fallback introduction; empty results state that no candidates
+  were found and do not render an empty table. Keyword-only presentation correction;
+  no routing, YAKE, agent, FAQ, dependencies, or general step-12 UI redesign.
+- **Verification:** Update the existing workflow fallback/UI checks and add targeted
+  empty-result and literal-cell checks. Verify ordered actual phrases/raw scores,
+  readable intro, table formatting, inspector precision, partial failures, and
+  non-executing rerenders. Provider doubles verify transport/contract, not live prose.
+  Use supported native Streamlit table APIs and the existing design adaptation.
+- **Outcome:** Updated the LLM prompt to request an introduction instead of a
+  repeated phrase list. The keyword assistant turn now renders ordered raw YAKE
+  results in a literal-text Phrase/Score dataframe with five-decimal display; raw
+  JSON remains in the inspector. Retained-result fallback reports count/empty state
+  without duplicating phrases. No result precision, route, or execution changes.
+- **Verified:** All 786 tests (two new UI boundaries, existing success/failure
+  checks updated), `pip check`, and whitespace checks pass. Tests cover table
+  order/raw precision/format, inspector-only JSON, introduction transport, retained
+  partial results, empty results, literal cells, and non-executing rerenders.
+  Installed Streamlit dataframe/NumberColumn APIs checked locally. No live LLM or
+  browser-layout verification; existing LangChain history warnings remain. The
+  documented native design adaptation is retained without new CSS/Figma changes.
+- **Delivery:** One additional user-authored DCO-signed presentation correction
+  commit in PR #24. FAQ remains deferred; general step-12 presentation is separate.
+
 ### 4. Verify conversational summarization and drafting
 
 - [ ] Discuss, implement fixes if needed, and verify this slice.
@@ -497,6 +637,13 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** User authorized merging PR #24, including standalone keywords,
+  classifier-first chat integration, and the introduction/score-table correction.
+  Verified the tested application head, clean mergeability, user-only authorship,
+  all commit DCO sign-offs, and passing DCO. This delivery-record update changes
+  documentation only; existing 786-test evidence applies to unchanged code/tests.
+  FAQ remains the next discussion; no further implementation is authorized.
 
 - **2026-10-07:** User authorized merging both sentiment slices. Merged standalone
   PR #22, retargeted integration PR #23 to `main`, and updated dependency/delivery

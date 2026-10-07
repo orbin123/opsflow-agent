@@ -34,9 +34,19 @@ def show_execution(execution: dict) -> None:
     if execution["reply"] is not None:
         st.text(execution["reply"])
     if execution["result"] is not None:
-        if isinstance(execution["result"], dict) and execution["result"].get("is_demo"):
-            st.caption("Fictional demo policy — verify your actual company policy.")
-        st.json(execution["result"], expanded=True)
+        if execution["predicted_intent"] == "keyword_extraction" and execution["route"] == "llm_assisted":
+            if execution["result"]:
+                st.dataframe(
+                    [{"Phrase": item["phrase"], "Score": item["score"]} for item in execution["result"]],
+                    hide_index=True, height="content",
+                    column_config={"Score": st.column_config.NumberColumn(format="%.5f")},
+                    alt="Extracted keyword phrases and YAKE relevance scores in ranked order",
+                )
+                st.caption("Lower scores indicate greater relevance; scores are not confidence probabilities.")
+        else:
+            if isinstance(execution["result"], dict) and execution["result"].get("is_demo"):
+                st.caption("Fictional demo policy — verify your actual company policy.")
+            st.json(execution["result"], expanded=True)
 
 
 st.html(f"<style>{console_styles()}</style>")
@@ -109,8 +119,11 @@ with inspector_column:
             st.text(f"Backend elapsed: {execution['elapsed_ms']} ms")
             st.caption("Includes session waiting/history; excludes HTTP transport. Confidence is the classifier score.")
             if execution.get("workflow_trace"):
-                with st.expander("Sentiment workflow stages", expanded=True):
+                capability = "Keyword" if execution["predicted_intent"] == "keyword_extraction" else "Sentiment"
+                with st.expander(f"{capability} workflow stages", expanded=True):
                     for stage in execution["workflow_trace"]:
+                        st.caption("LLM stage" if stage["stage"] in {"extract_source", "explain_result"}
+                                   else "Local tool stage")
                         st.text(f"{stage['stage']} · {stage['status']}\n"
                                 f"Stage elapsed: {stage['elapsed_ms']} ms")
                         if stage["reason"] is not None:

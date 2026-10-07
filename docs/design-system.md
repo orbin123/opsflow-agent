@@ -87,3 +87,11 @@ palette, typography, square geometry, focus indicators and mobile panel stacking
 VT323 and IBM Plex Mono Regular are bundled locally with their SIL licenses;
 monospace remains the fallback. Native JSON syntax coloring and framework icons
 remain Streamlit defaults. See [streamlit-console.md](streamlit-console.md).
+
+On 2026-10-07, the user requested an intuitive keyword phrase/score table instead of
+repeating phrases and raw JSON. The keyword assistant turn uses a native read-only
+Streamlit dataframe with Phrase/Score columns, hidden index, literal-text phrases,
+and five-decimal score display. Keep YAKE order, the existing font/palette/layout,
+and a brief lower-score relevance caption. Raw full-precision JSON stays in the
+inspector. This is a keyword presentation correction; no new CSS or Figma component
+is introduced, and the general answer/inline-activity redesign remains deferred.

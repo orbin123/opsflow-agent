@@ -1,4 +1,4 @@
-"""Explicit provider doubles for classifier-first sentiment integration checks."""
+"""Explicit provider doubles for classifier-first workflow integration checks."""
 
 import json
 from unittest.mock import Mock
@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from langchain_core.messages import AIMessage
 import pytest
 
-from app import sentiment_workflow
+from app import sentiment_workflow, keyword_workflow
 
 
 @pytest.fixture
@@ -24,6 +24,26 @@ def sentiment_provider(monkeypatch):
             ]
         ]
         monkeypatch.setattr(sentiment_workflow, "_create_model", lambda *args: model)
+        return model
+
+    return install
+
+
+@pytest.fixture
+def keyword_provider(monkeypatch):
+    monkeypatch.setattr(keyword_workflow, "_create_model",
+                        lambda *args: pytest.fail("Unexpected keyword provider initialization"))
+
+    def install(source, reply="Here are the keywords extracted from your text and their scores."):
+        model = Mock()
+        model.invoke.side_effect = [
+            AIMessage(content=json.dumps(payload), response_metadata={"finish_reason": "stop"})
+            for payload in [
+                {"status": "ready", "source_text": source, "reason": "explicit_source"},
+                {"reply": reply},
+            ]
+        ]
+        monkeypatch.setattr(keyword_workflow, "_create_model", lambda *args: model)
         return model
 
     return install
