@@ -11,10 +11,15 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Discuss REWORK step 2, natural-English sentiment requests. Inline
+**Next:** ⏳ Discuss REWORK step 2b, classifier-first chat integration for the verified
+standalone sentiment workflow. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
 and backend-event verification. Step 1 is implemented and verified; later steps
-are not authorized.
+are not authorized beyond completed step 2a.
+
+- **2026-10-07:** Implemented approved REWORK step 2a: standalone strict LLM source extraction → unchanged VADER → bounded LLM explanation, with verbatim validation, clarification/handoff abstention, sanitized failures, actual stage timings, and a retained-result fallback when presentation fails. All 709 tests (39 new), `pip check`, and whitespace checks pass; installed LangChain serialization verified with fake SDK transport. Fixed an initial pytest reserved parameter name. Added `docs/sentiment-workflow.md` and recorded the standalone boundary in `AGENTS.md`. No live Groq/language-quality checks, dependencies, classifier/runtime/API/UI/history wiring, or email execution; existing LangChain warnings remain. Prepared as one signed change on `feature/sentiment-language-workflow`; step 2b needs separate agreement.
+
+- **2026-10-07:** Recorded the user's proposed natural-language scaffold in `REWORK.md`: one sentiment workflow with structured source extraction, unchanged VADER scoring, grounded explanation, validation/abstention, retained-result failure handling, and proportional tests. Proposed a standalone first slice, then chat integration with explicit LLM-assisted routing semantics. Inspected current code and checked documentation whitespace; implementation and routing changes await agreement. No application code, runtime tests, live provider calls, or dependency/model compatibility checks.
 
 - **2026-10-07:** Reordered `REWORK.md` at the user's request: inline completed execution details now follow backend behavior/persistence/events as step 11; their dependent readable-answer presentation is step 12, followed by live activity in step 13. Updated numbering, dependencies, and next discussion to natural-English sentiment. Reviewed sequence/references and whitespace. Documentation only, edited on `main`; after review the user authorized a signed commit and direct push without a new PR. No runtime tests.
 

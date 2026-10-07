@@ -5,6 +5,10 @@ An operations copilot using TF-IDF + a calibrated linear SVM for intent routing,
 The local Streamlit chat/inspector runs with `streamlit run streamlit_app.py` and
 uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verification.
 
+The standalone natural-language sentiment workflow is documented in
+`docs/sentiment-workflow.md`. It is not connected to chat yet; classifier-first
+chat integration is a separate REWORK step 2b decision.
+
 ## Read Before Working
 
 - `REWORK.md`: active implementation agenda until its rework steps and completion criteria are verified.
