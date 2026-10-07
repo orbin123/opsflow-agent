@@ -9,7 +9,7 @@ after the recorded rework handover.
 Keyword steps 3a/3b are implemented and verified offline; FAQ and remaining
 rework steps are pending.
 **Next discussion:** ⏳ Step 3 FAQ review. Keyword workflow, chat integration,
-and presentation correction are in PR #24.
+and presentation correction are in PR #24; the user authorized its merge.
 
 ## Intended User Experience
 
@@ -637,6 +637,13 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** User authorized merging PR #24, including standalone keywords,
+  classifier-first chat integration, and the introduction/score-table correction.
+  Verified the tested application head, clean mergeability, user-only authorship,
+  all commit DCO sign-offs, and passing DCO. This delivery-record update changes
+  documentation only; existing 786-test evidence applies to unchanged code/tests.
+  FAQ remains the next discussion; no further implementation is authorized.
 
 - **2026-10-07:** User authorized merging both sentiment slices. Merged standalone
   PR #22, retargeted integration PR #23 to `main`, and updated dependency/delivery
