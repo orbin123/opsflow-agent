@@ -11,9 +11,10 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** Discuss REWORK step 1: remove user-facing Deploy controls, the redundant
-console caption, and technical Workspace metadata. No rework implementation has
-started.
+**Next:** ⏳ Discuss REWORK step 2, moving completed execution details into each
+assistant turn. Step 1 is implemented and verified; later steps are not authorized.
+
+- **2026-10-07:** Implemented approved REWORK step 1: Streamlit viewer toolbar mode removes Deploy/developer actions; removed redundant header/session/history copy and retained concise draft/reminder limitations. All 18 existing UI checks, `pip check`, and whitespace checks pass. Local browser verification covered a real direct sentiment request, 1440/390 px layouts, menu/keyboard/sidebar/focus behavior, and delayed HTTP-fixture loading/failure recovery with one submission. Temporary fixture services were stopped. Existing LangChain warnings remain; Figma contents were rate-limited, so the documented approved adaptation was retained. No new tests, backend/dependency changes, live provider/email, or deployment verification.
 
 - **2026-10-07:** Created `REWORK.md` from the frontend discussion, including independent persistent chats, natural-English requests, inline collapsible execution activity, one-agent multi-step workflows, and in-app usage documentation. Updated `AGENTS.md` and the original plan's pause notice to make rework the active agenda until verified completion. Reviewed discussion coverage, sequencing, local links, and documentation whitespace; no application code, runtime tests, provider calls, or email execution changed.
 

@@ -45,16 +45,12 @@ if "session_id" not in st.session_state:
     st.session_state.turns = []
     st.session_state.pending = False
 
-st.caption("OPSFLOW / OPERATIONS CONSOLE")
 st.title(">_ OpsFlow")
 st.caption("Analyze communications, find demo policies, summarize text, and compose email drafts.")
 
 with st.sidebar:
     st.subheader("Workspace")
-    st.caption("LOCAL SESSION")
-    st.text(st.session_state.session_id)
-    st.caption("History lasts for this browser session and backend process.")
-    st.caption("Drafts require review and sending in your email client. Reminder creation and email delivery are not connected to chat yet.")
+    st.caption("Email drafts need your review and sending. Chat cannot schedule reminders or send email.")
 
 chat_column, inspector_column = st.columns([2, 1], gap="large")
 with chat_column:

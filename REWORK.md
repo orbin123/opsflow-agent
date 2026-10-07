@@ -5,8 +5,8 @@ criteria below are verified. The original `docs/PLAN.md` agenda is paused; do no
 use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
-**Status:** Planning document created; application rework has not started.
-**Next discussion:** Step 1, interface cleanup and its visual verification.
+**Status:** Step 1 implemented and verified. Remaining rework steps are pending.
+**Next discussion:** ⏳ Step 2, completed execution details within each chat turn.
 
 ## Intended User Experience
 
@@ -97,7 +97,7 @@ Preserve these contracts throughout the rework:
 
 ### 1. Remove developer chrome and redundant metadata
 
-- [ ] Discuss, implement, and verify this slice.
+- [x] Discuss, implement, and verify this slice.
 - **Problem/change:** Remove Deploy and its user-facing flow using supported
   Streamlit configuration where possible; remove the console caption and Workspace
   session ID/local-storage/backend explanations. Keep useful capability limitations
@@ -107,6 +107,31 @@ Preserve these contracts throughout the rework:
 - **Verify:** Inspect desktop/mobile and the deployment menu entry; check chat input,
   sidebar accessibility, and useful loading controls still work. No new behavior
   tests for simple text removal unless an existing check needs updating.
+
+#### Step 1 agreed contract and outcome — 2026-10-07
+
+- **Agreement:** User approved header/Workspace cleanup and proportional existing
+  UI/browser checks. Keep the OpsFlow identity, capability subtitle, internal
+  session continuity, native header controls, and concise draft/reminder limitations.
+- **Implemented:** `[client] toolbarMode = "viewer"` hides Deploy, rerun, and
+  clear-cache developer actions using installed Streamlit 1.65.0 configuration.
+  Removed the redundant console caption and visible session/history explanation;
+  Workspace now states that drafts need review/sending and chat cannot schedule
+  reminders or send email. Updated `docs/streamlit-console.md`.
+- **Verified:** All 18 existing `tests/test_streamlit_ui.py` checks, `pip check`,
+  and `git diff --check` pass. A real local sentiment request completed via the
+  direct route. Browser checks at 1440 px and 390 px confirmed cleaned header and
+  sidebar, Deploy absent from toolbar/menu, mobile panel stacking, no horizontal
+  overflow, keyboard sidebar open/close, and the input's visible 2 px focus outline.
+  An isolated delayed local HTTP fixture confirmed Running/Stop feedback, the
+  spinner, disabled submission during work, and input recovery after HTTP 503;
+  its logs recorded one request. Temporary fixture services were stopped.
+- **Limits/design:** No new tests, CSS, dependencies, backend behavior, live
+  provider, SMTP, or deployment changes/checks. Existing LangChain deprecation
+  warnings remain. Figma lists Foundations only; further inspection was rate-limited.
+  Used the documented approved adaptation without adding a new design pattern.
+- **Delivery:** One scoped commit/PR on `fix/rework-interface-cleanup`, with
+  user-only authorship and DCO sign-off. Later rework steps need separate agreement.
 
 ### 2. Move completed execution details into each chat turn
 
@@ -300,7 +325,7 @@ Preserve these contracts throughout the rework:
 
 ## Completion Criteria
 
-- [ ] Deploy and the redundant console caption are absent from the user interface;
+- [x] Deploy and the redundant console caption are absent from the user interface;
   Workspace contains no visible session ID, storage path, or backend configuration.
 - [ ] New chat, a list of independent sessions, selection, continuation, refresh,
   and application-restart restoration work without mixing context or rerunning turns.
@@ -320,6 +345,10 @@ Preserve these contracts throughout the rework:
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** User approved step 1. Implemented and verified the interface
+  cleanup with 18 existing UI checks and local desktop/mobile/direct/pending/failure
+  browser checks; see the recorded outcome above. Step 2 remains discussion only.
 
 - **2026-10-07:** User clarified that sections are individual chat sessions, and
   multiple tasks require a multi-step process with one agent. Agreed chats should
