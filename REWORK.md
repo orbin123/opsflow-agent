@@ -6,7 +6,7 @@ use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
 **Status:** Step 1 implemented and verified. Remaining rework steps are pending.
-**Next discussion:** ⏳ Step 2, completed execution details within each chat turn.
+**Next discussion:** ⏳ Step 2, natural-English sentiment requests.
 
 ## Intended User Experience
 
@@ -95,6 +95,11 @@ Preserve these contracts throughout the rework:
 
 ## Ordered Implementation Steps
 
+Tool/routing and one-agent behavior are verified first, followed by durable
+history, chat APIs/navigation, and backend events. The existing inspector stays
+available for those checks. Completed inline details (step 11), readable answers
+(step 12), and live activity (step 13) then use the verified backend contracts.
+
 ### 1. Remove developer chrome and redundant metadata
 
 - [x] Discuss, implement, and verify this slice.
@@ -133,33 +138,7 @@ Preserve these contracts throughout the rework:
 - **Delivery:** One scoped commit/PR on `fix/rework-interface-cleanup`, with
   user-only authorship and DCO sign-off. Later rework steps need separate agreement.
 
-### 2. Move completed execution details into each chat turn
-
-- [ ] Discuss, implement, and verify this slice.
-- **Problem/change:** Remove the right-hand inspector and turn selector. Put the
-  existing completed classification, confidence, route/reason, timings, and tool
-  traces in a collapsed activity panel within each assistant response. Make individual
-  tool sections expandable and associate them with their original turn.
-- **Input → output:** Existing final chat response → readable conversation with
-  optional per-turn execution details. Live streaming comes in steps 12–13.
-- **Verify:** Direct, agent, no-tool, clarification, error, and partial-failure
-  displays retain actual backend fields; old turns show their own details.
-  Inspect collapsed/expanded layout, keyboard use, and mobile reading width.
-
-### 3. Present readable answers and onboarding
-
-- [ ] Discuss, implement, and verify this slice.
-- **Problem/change:** Render sentiment labels, keyword lists, FAQ answers/candidates,
-  summaries, and email drafts as readable content. Keep raw structured detail in
-  activity panels. Replace the syntax-heavy welcome example with natural-English
-  examples; do not promise input behavior before subsequent steps verify it.
-- **Input → output:** Existing structured results/statuses → useful answers with
-  clear clarification, failure, demo-policy, and draft/action distinctions.
-- **Verify:** Representative outputs from each existing capability and absent/null
-  results; no duplicated draft content or fabricated success. Use controlled data
-  for display checks; generated wording should not be an exact test requirement.
-
-### 4. Accept natural-English sentiment requests
+### 2. Accept natural-English sentiment requests
 
 - [ ] Discuss, implement, and verify this slice.
 - **Problem/change:** Remove punctuation dependence for clearly extractable requests.
@@ -172,7 +151,7 @@ Preserve these contracts throughout the rework:
   and commands embedded in source text. Distinguish parsing failure from classifier
   error; do not change thresholds or retrain without a discussed need and evaluation.
 
-### 5. Review natural-English keyword and FAQ requests
+### 3. Review natural-English keyword and FAQ requests
 
 - [ ] Discuss, implement, and verify this slice; split by capability if needed.
 - **Problem/change:** Apply the source-boundary approach to keyword extraction and
@@ -185,7 +164,7 @@ Preserve these contracts throughout the rework:
   policies, compound/contextual fallbacks, and existing quoted-form regressions.
   Do not imply lexical similarity or keyword relevance is a confidence probability.
 
-### 6. Verify conversational summarization and drafting
+### 4. Verify conversational summarization and drafting
 
 - [ ] Discuss, implement fixes if needed, and verify this slice.
 - **Problem/change:** Audit source extraction, writing instructions, and follow-up
@@ -197,7 +176,7 @@ Preserve these contracts throughout the rework:
   preservation, demo-policy qualification, and unavailable sending/reminder requests.
   Use provider doubles in tests; agree separately on any limited live quality checks.
 
-### 7. Verify one-agent multi-step requests
+### 5. Verify one-agent multi-step requests
 
 - [ ] Discuss, implement fixes if needed, and verify this slice.
 - **Problem/change:** One agent identifies multiple requested operations, passes
@@ -211,7 +190,7 @@ Preserve these contracts throughout the rework:
   Discuss whether limits need adjustment; do not promise unlimited work or silently
   drop tasks. Explain unfinished work without claiming it completed.
 
-### 8. Agree on persistent-chat and navigation contracts
+### 6. Agree on persistent-chat and navigation contracts
 
 - [ ] Discuss and record the contract before storage/UI implementation.
 - **Problem/change:** Define what a saved chat contains and how users recover it.
@@ -227,9 +206,9 @@ Preserve these contracts throughout the rework:
   existing direct/agent history semantics, failure retention, and no repeat execution.
   Renaming/deleting/searching chats are optional future scope, not prerequisites.
 
-### 9. Implement durable chat history and runtime restoration
+### 7. Implement durable chat history and runtime restoration
 
-- [ ] Discuss, implement, and verify this slice after step 8.
+- [ ] Discuss, implement, and verify this slice after step 6.
 - **Problem/change:** Store chat metadata, messages, execution records, and finalized
   outcomes durably. Reconstruct the context consumed by the existing agent from saved
   direct/agent outcomes without appending turns twice or changing reminder behavior.
@@ -239,12 +218,12 @@ Preserve these contracts throughout the rework:
   failed/partial turns, write failures, ordering, and existing same-session serialization.
   Prevent silent memory/disk divergence and disclose known persistence failure.
 
-### 10. Expose chat creation, listing, and retrieval
+### 8. Expose chat creation, listing, and retrieval
 
-- [ ] Discuss, implement, and verify this slice after step 9.
+- [ ] Discuss, implement, and verify this slice after step 7.
 - **Problem/change:** Add only the backend contracts needed for New chat, a chat list,
   and loading saved turns; adapt the HTTP client. Apply the ownership decision from
-  step 8. Reading history must not execute tools or submit provider calls.
+  step 6. Reading history must not execute tools or submit provider calls.
 - **Input → output:** Create/list/load requests → stable internal chat IDs, titles,
   ordered saved messages, outcomes, and activity detail.
 - **Verify:** Empty list, create/list/load round-trip, unknown chat, restart recovery,
@@ -252,9 +231,9 @@ Preserve these contracts throughout the rework:
   Preserve existing chat submission and FAQ contracts unless an agreed change requires
   an explicit compatibility update.
 
-### 11. Build Workspace chat navigation and restoration
+### 9. Build Workspace chat navigation and restoration
 
-- [ ] Discuss, implement, and verify this slice after step 10.
+- [ ] Discuss, implement, and verify this slice after step 8.
 - **Problem/change:** Add New chat and a selectable titled chat list. Restore messages
   and activity on selection and refresh; keep technical IDs/configuration invisible.
   Ensure active selection and pending work follow the agreed switching policy.
@@ -264,9 +243,10 @@ Preserve these contracts throughout the rework:
   and restore saved results without resubmission. Check long titles, empty history,
   retrieval failure, keyboard navigation, and mobile sidebar behavior.
 
-### 12. Stream actual backend execution events
+### 10. Stream actual backend execution events
 
-- [ ] Discuss event contract/transport first, then implement and verify this slice.
+- [ ] Discuss event contract/transport first, then implement and verify this slice
+  after steps 7–8.
 - **Problem/change:** Emit ordered classification/routing and tool-start/tool-finish
   events during execution, followed by the actual final outcome. Discuss a compatible
   HTTP event-stream approach; do not choose a new external service.
@@ -280,9 +260,43 @@ Preserve these contracts throughout the rework:
   Reconnect/restoration must not replay execution; unknown outcomes never automatically
   retry. Keep events consistent with the persisted final results.
 
+### 11. Move completed execution details into each chat turn
+
+- [ ] Discuss, implement, and verify this slice after steps 2–10.
+- **Sequencing:** First verify the tool/routing and one-agent multi-step behavior,
+  saved/restored outcomes, and backend execution-event contract. Keep the existing
+  inspector available through steps 2–10 so those checks do not depend on this UI
+  migration. Build inline details against the resulting contracts, then recheck
+  representative outcomes in the new presentation.
+- **Problem/change:** Remove the right-hand inspector and turn selector. Put the
+  verified completed classification, confidence, route/reason, timings, and tool
+  traces in a collapsed activity panel within each assistant response. Make individual
+  tool sections expandable and associate them with their original turn.
+- **Input → output:** Final and restored chat responses → conversation with optional
+  per-turn execution details. Backend events are verified in step 10; live UI
+  updates follow in step 13, and readable answer presentation follows in step 12.
+- **Verify:** Direct, agent, no-tool, clarification, error, and partial-failure
+  displays retain actual backend fields; old turns show their own details.
+  Inspect collapsed/expanded layout, keyboard use, and mobile reading width.
+
+### 12. Present readable answers and onboarding
+
+- [ ] Discuss, implement, and verify this slice after step 11.
+- **Problem/change:** Render sentiment labels, keyword lists, FAQ answers/candidates,
+  summaries, and email drafts as readable content. Keep raw structured detail in
+  activity panels. Replace the syntax-heavy welcome example with natural-English
+  examples based on behavior verified in steps 2–5; do not promise unsupported input.
+  This presentation step follows inline activity so raw details have their intended
+  location and verified backend output shapes guide the answer rendering.
+- **Input → output:** Existing structured results/statuses → useful answers with
+  clear clarification, failure, demo-policy, and draft/action distinctions.
+- **Verify:** Representative outputs from each existing capability and absent/null
+  results; no duplicated draft content or fabricated success. Use controlled data
+  for display checks; generated wording should not be an exact test requirement.
+
 ### 13. Connect live events to collapsible chat activity
 
-- [ ] Discuss, implement, and verify this slice after steps 11–12.
+- [ ] Discuss, implement, and verify this slice after steps 9–12.
 - **Problem/change:** Replace the generic wait with compact in-chat progress. Update
   classification, route, and expandable tool steps as events arrive; leave the
   final answer readable outside the collapsed detail.
@@ -346,9 +360,20 @@ Preserve these contracts throughout the rework:
 
 ## Decision and Verification Record
 
+- **2026-10-07:** User deferred the former step 2 (inline completed execution
+  details) until tool/agent behavior, persistence, and backend events are verified;
+  it is now step 11. Moved its dependent readable-answer step to step 12, before
+  live activity in step 13. Renumbered the intervening steps and dependencies;
+  the next discussion is natural-English sentiment (step 2). This order change
+  does not authorize implementing those slices or expand reminder/email scope.
+  User initially requested an uncommitted edit directly on `main`, then authorized
+  a signed commit and direct push to `main` without a new PR after review.
+  Reviewed sequence/dependency references and
+  documentation whitespace; no application changes or runtime tests.
+
 - **2026-10-07:** User approved step 1. Implemented and verified the interface
   cleanup with 18 existing UI checks and local desktop/mobile/direct/pending/failure
-  browser checks; see the recorded outcome above. Step 2 remains discussion only.
+  browser checks; see the recorded outcome above. Later slices remain discussion only.
 
 - **2026-10-07:** User clarified that sections are individual chat sessions, and
   multiple tasks require a multi-step process with one agent. Agreed chats should
