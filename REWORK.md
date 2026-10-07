@@ -223,8 +223,8 @@ its routing revision are now approved as recorded below.
   substring/schema checks cannot establish source completeness or prose fidelity.
   Existing LangChain history deprecation warnings remain. No runtime, classifier,
   API, UI, history, agent registry, SMTP, or deployment changes/checks.
-- Delivery: scoped signed commit/PR on `feature/sentiment-language-workflow`, using
-  the user's GitHub identity. At 2a delivery, chat integration was still pending.
+- Delivery: user-authored DCO-signed PR #22 merged into `main` on 2026-10-07.
+  At 2a delivery, chat integration was still pending.
 
 **2b — Chat integration (approved implementation slice)**
 
@@ -285,8 +285,9 @@ its routing revision are now approved as recorded below.
   inspection was rate-limited; reused the documented approved adaptation with no
   CSS/token/layout change. Existing LangChain history warnings remain. No new
   dependencies, threshold/model training, persistence, or subsequent-step work.
-- Delivery: one user-authored DCO-signed step 2b commit/PR on
-  `feature/sentiment-chat-workflow`, stacked on the open step 2a PR #22.
+- Delivery: user-authored DCO-signed PR #23 on `feature/sentiment-chat-workflow`
+  now targets `main` after dependency PR #22 merged. The user authorized merging
+  both slices; existing 721-test evidence applies to the unchanged application diff.
 
 ### 3. Review natural-English keyword and FAQ requests
 
@@ -496,6 +497,12 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** User authorized merging both sentiment slices. Merged standalone
+  PR #22, retargeted integration PR #23 to `main`, and updated dependency/delivery
+  records before its authorized merge. Verified user-only authorship, DCO sign-offs,
+  passing DCO checks, and unchanged application/test files against the tested 2b
+  commit. Documentation-only delivery update; no new runtime tests or provider calls.
 
 - **2026-10-07:** User requested step 2b and selected the `llm_assisted` API route
   with existing status rules. Completed classifier-first chat wiring, retained
