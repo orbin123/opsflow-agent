@@ -61,11 +61,12 @@ responses without rounding or recomputation. Total backend time includes session
 waiting/history and excludes HTTP transport; it need not equal the sum of steps.
 No classification/provider substep timings or private reasoning are invented.
 
-When present, the sentiment workflow stages expander shows backend-reported
-extraction, scoring, and explanation statuses/reasons/timings, including extraction
-before agent handoff. VADER's scoring duration also appears in the tool trace;
+When present, the sentiment or keyword workflow stages expander shows backend-reported
+extraction, local-tool, and presentation statuses/reasons/timings, including extraction
+before agent handoff. The VADER/YAKE duration also appears in the tool trace;
 these are two records of the same call. The client accepts `llm_assisted` and
-retains stage records for both HTTP 200 and HTTP 503 outcomes.
+retains stage records for both HTTP 200 and HTTP 503 outcomes. The expander labels
+source extraction/presentation as LLM stages and VADER/YAKE as local tool stages.
 
 HTTP 503 execution payloads retain observations and failed steps. Runtime-detail,
 HTTP rejection, connection, invalid-response and wrong-session failures display

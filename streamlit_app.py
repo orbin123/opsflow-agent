@@ -109,8 +109,11 @@ with inspector_column:
             st.text(f"Backend elapsed: {execution['elapsed_ms']} ms")
             st.caption("Includes session waiting/history; excludes HTTP transport. Confidence is the classifier score.")
             if execution.get("workflow_trace"):
-                with st.expander("Sentiment workflow stages", expanded=True):
+                capability = "Keyword" if execution["predicted_intent"] == "keyword_extraction" else "Sentiment"
+                with st.expander(f"{capability} workflow stages", expanded=True):
                     for stage in execution["workflow_trace"]:
+                        st.caption("LLM stage" if stage["stage"] in {"extract_source", "explain_result"}
+                                   else "Local tool stage")
                         st.text(f"{stage['stage']} · {stage['status']}\n"
                                 f"Stage elapsed: {stage['elapsed_ms']} ms")
                         if stage["reason"] is not None:

@@ -10,7 +10,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
-from app.routes.keyword_route import try_direct_keyword
+from app.keyword_workflow import KeywordStage, run_keyword_workflow
 from app.sentiment_workflow import SentimentStage, run_sentiment_workflow
 from app.tools.faq import FAQResult
 from app.tools.keywords import Keyword
@@ -45,12 +45,12 @@ class ExecutionResult:
     elapsed_ms: float
     reply: str | None = None
     agent_reason: str | None = None
-    workflow_trace: list[SentimentStage] = field(default_factory=list)
+    workflow_trace: list[SentimentStage | KeywordStage] = field(default_factory=list)
 
 
 def execute_request(message: str, *, faq_only: bool = False,
                     history: list[HumanMessage | AIMessage] | None = None) -> ExecutionResult:
-    """Classify once; high-confidence sentiment enters its fixed LLM workflow.
+    """Classify once; high-confidence sentiment/keywords enter their fixed workflows.
 
     The FAQ endpoint restricts execution to FAQ to preserve its public contract.
     Other requests that defer invoke the stateless agent once with the original message.
@@ -78,7 +78,7 @@ def execute_request(message: str, *, faq_only: bool = False,
         if faq_only or intent == "faq_retrieval":
             decision = try_direct_faq(message, intent=intent, confidence=confidence, threshold=threshold)
             tool, arguments, result = "retrieve_faq", {"question": decision.question}, decision.faq
-        elif intent == "sentiment_analysis":
+        elif intent in {"sentiment_analysis", "keyword_extraction"}:
             decision = None
             if not math.isfinite(threshold) or not 0 < threshold <= 1:
                 raise ValueError("Invalid routing threshold")
@@ -87,18 +87,18 @@ def execute_request(message: str, *, faq_only: bool = False,
             elif confidence < threshold:
                 reason = "low_confidence"
             else:
-                workflow = run_sentiment_workflow(message)
+                workflow_fn = (run_sentiment_workflow if intent == "sentiment_analysis"
+                               else run_keyword_workflow)
+                workflow = workflow_fn(message)
                 status, reason, result, reply = (workflow.status, workflow.reason,
                                                  workflow.result, workflow.reply)
                 route = "agent" if status == "agent_required" else "llm_assisted"
                 workflow_trace = workflow.trace
+                tool = "analyze_sentiment" if intent == "sentiment_analysis" else "extract_keywords"
                 for stage in workflow_trace:
-                    if stage.stage == "analyze_sentiment":
-                        trace.append(ToolTrace("analyze_sentiment", {"text": workflow.source_text},
+                    if stage.stage == tool:
+                        trace.append(ToolTrace(tool, {"text": workflow.source_text},
                                                stage.status, result, stage.elapsed_ms))
-        elif intent == "keyword_extraction":
-            decision = try_direct_keyword(message, intent=intent, confidence=confidence, threshold=threshold)
-            tool, arguments, result = "extract_keywords", {"text": decision.text}, decision.keywords
         else:
             decision = None
     except Exception:
