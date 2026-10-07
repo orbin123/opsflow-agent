@@ -43,7 +43,9 @@ bounded agent's provider calls time to finish. There are no automatic retries;
 transport errors may leave an unknown backend outcome. Submitted turns remain
 visible with that warning. Resubmitting manually executes another turn.
 
-Direct responses display structured JSON. Agent responses display the backend's
+Direct responses display structured JSON. LLM-assisted sentiment shows the backend
+explanation or factual fallback as plain text and retains the raw VADER result.
+Agent responses display the backend's
 application-rendered reply as plain text, retaining separate email draft/actions;
 supplied text cannot inject HTML or load Markdown images. Demo FAQ results are
 explicitly qualified. Execution status stays visible: a completed draft is not a
@@ -58,6 +60,12 @@ reason when present and elapsed milliseconds. Values come from validated backend
 responses without rounding or recomputation. Total backend time includes session
 waiting/history and excludes HTTP transport; it need not equal the sum of steps.
 No classification/provider substep timings or private reasoning are invented.
+
+When present, the sentiment workflow stages expander shows backend-reported
+extraction, scoring, and explanation statuses/reasons/timings, including extraction
+before agent handoff. VADER's scoring duration also appears in the tool trace;
+these are two records of the same call. The client accepts `llm_assisted` and
+retains stage records for both HTTP 200 and HTTP 503 outcomes.
 
 HTTP 503 execution payloads retain observations and failed steps. Runtime-detail,
 HTTP rejection, connection, invalid-response and wrong-session failures display
@@ -101,3 +109,10 @@ fixture confirmed Running/Stop feedback, the spinner, disabled submission, and
 input recovery after a controlled HTTP 503, with exactly one request logged.
 Temporary fixture services were stopped. No new tests, live provider/email calls,
 or deployment checks were added; existing LangChain deprecation warnings remain.
+
+REWORK step 2b verification (2026-10-07): all 721 tests, `pip check`, and whitespace
+checks pass. AppTest verifies a real saved-classifier/API/client path with scripted
+sentiment language stages and local VADER scoring, including plain-text reply,
+exact workflow timings, retained HTTP 503 results/history, and rerender non-execution.
+Figma inspection was rate-limited; the existing native expander adaptation was
+retained. No CSS/layout change, live Groq, or new browser-layout checks.

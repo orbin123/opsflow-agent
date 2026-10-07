@@ -5,10 +5,9 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 import pytest
 
-from app import agent, runtime, sessions
+from app import agent, runtime, sessions, sentiment_workflow
 from app.api import chat
 from app.main import app
-from app.routes import sentiment_route
 from app.tools.email_drafting import EmailDraft, EmailDraftResult, _ACTION_INSTRUCTIONS
 
 
@@ -16,7 +15,7 @@ client = TestClient(app)
 
 
 @pytest.fixture(autouse=True)
-def isolated_sessions(monkeypatch):
+def isolated_sessions(monkeypatch, sentiment_provider):
     monkeypatch.setattr(sessions, "_sessions", {})
     monkeypatch.setattr(agent, "_create_model", lambda: pytest.fail("Unexpected provider initialization"))
 
@@ -45,21 +44,24 @@ def install_model(monkeypatch, responses):
     return seen
 
 
-def test_real_direct_request_serializes_result_and_trace():
+def test_sentiment_request_serializes_workflow_result_and_trace(sentiment_provider):
+    sentiment_provider("I am happy", "VADER classified this text as positive.")
     response = post('Sentiment: "I am happy"')
     assert response.status_code == 200
     data = response.json()
     assert data["session_id"] == "one"
-    assert data["status"] == "completed" and data["route"] == "direct"
+    assert data["status"] == "completed" and data["route"] == "llm_assisted"
     assert data["predicted_intent"] == "sentiment_analysis" and data["confidence"] >= 0.71
-    assert data["reply"] is None and data["agent_reason"] is None
+    assert data["reply"] == "VADER classified this text as positive." and data["agent_reason"] is None
+    assert [stage["stage"] for stage in data["workflow_trace"]] == ["extract_source", "analyze_sentiment", "explain_result"]
     assert data["result"]["label"] == "positive"
     assert data["trace"][0]["result"] == data["result"]
     assert data["trace"][0]["arguments"] == {"text": "I am happy"}
     assert data["elapsed_ms"] >= data["trace"][0]["elapsed_ms"] >= 0
 
 
-def test_http_followup_receives_history_and_other_session_isolated(monkeypatch):
+def test_http_followup_receives_history_and_other_session_isolated(monkeypatch, sentiment_provider):
+    sentiment_provider("I am happy")
     monkeypatch.setattr(runtime, "classify_request", lambda message:
                         ("sentiment_analysis" if message.startswith("Sentiment:") else "email_drafting", 1, 0.71))
     post('Sentiment: "I am happy"')
@@ -131,9 +133,10 @@ def test_runtime_failure_sanitized_and_remembered(monkeypatch):
     assert saved["status"] == "error" and saved["trace"] == []
 
 
-def test_direct_failure_503_with_failed_trace_without_agent(monkeypatch):
+def test_sentiment_failure_503_with_failed_trace_without_agent(monkeypatch, sentiment_provider):
+    sentiment_provider("I am sad")
     monkeypatch.setattr(runtime, "classify_request", lambda _: ("sentiment_analysis", 1, 0.71))
-    monkeypatch.setattr(sentiment_route, "analyze_sentiment", Mock(side_effect=RuntimeError("private source")))
+    monkeypatch.setattr(sentiment_workflow, "analyze_sentiment", Mock(side_effect=RuntimeError("private source")))
     response = post('Sentiment: "I am sad"')
     assert response.status_code == 503
     data = response.json()
@@ -173,3 +176,6 @@ def test_openapi_describes_request_and_response():
     assert "503" in endpoint["responses"]
     assert schema["components"]["schemas"]["ChatRequest"]["additionalProperties"] is False
     assert "trace" in schema["components"]["schemas"]["ChatResponse"]["properties"]
+    response_fields = schema["components"]["schemas"]["ChatResponse"]["properties"]
+    assert "llm_assisted" in response_fields["route"]["enum"]
+    assert "workflow_trace" in response_fields

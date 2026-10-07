@@ -11,11 +11,12 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Discuss REWORK step 2b, classifier-first chat integration for the verified
-standalone sentiment workflow. Inline
+**Next:** ⏳ Discuss REWORK step 3, natural-English keyword and FAQ requests. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
-and backend-event verification. Step 1 is implemented and verified; later steps
-are not authorized beyond completed step 2a.
+and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
+within their recorded limits; later implementation is not authorized.
+
+- **2026-10-07:** Completed approved REWORK step 2b using the user's chosen `llm_assisted` route and existing HTTP status rules. Classifier-first sentiment now uses the fixed workflow; clarification/failures stop appropriately and contextual/compound abstention hands the original request/history to the agent once. API/client/history retain actual tool results, replies, and `workflow_trace`; the inspector reuses its native expander pattern. All 721 tests (15 new, existing sentiment checks migrated), `pip check`, and whitespace checks pass. A new mock-history test needed invocation snapshots. Saved-classifier examples inspected separately; no retraining/threshold/dependency change, live Groq/SMTP, or browser-layout/deployment checks. Figma remained rate-limited; documented design adaptation retained. Step 2b is a separate signed change on `feature/sentiment-chat-workflow`, stacked on open PR #22; step 3 awaits discussion.
 
 - **2026-10-07:** Implemented approved REWORK step 2a: standalone strict LLM source extraction → unchanged VADER → bounded LLM explanation, with verbatim validation, clarification/handoff abstention, sanitized failures, actual stage timings, and a retained-result fallback when presentation fails. All 709 tests (39 new), `pip check`, and whitespace checks pass; installed LangChain serialization verified with fake SDK transport. Fixed an initial pytest reserved parameter name. Added `docs/sentiment-workflow.md` and recorded the standalone boundary in `AGENTS.md`. No live Groq/language-quality checks, dependencies, classifier/runtime/API/UI/history wiring, or email execution; existing LangChain warnings remain. Prepared as one signed change on `feature/sentiment-language-workflow`; step 2b needs separate agreement.
 

@@ -7,7 +7,7 @@ The generated request/response schema is available at `/docs`.
 ```sh
 curl -X POST http://127.0.0.1:8000/api/v1/chat \
   -H 'Content-Type: application/json' \
-  -d '{"session_id":"local-chat","message":"Sentiment: \"I am happy\""}'
+  -d '{"session_id":"local-chat","message":"Just check the sentiment of this I am happy"}'
 ```
 
 Only `session_id` and `message` are accepted. Both must be nonblank strings;
@@ -24,12 +24,19 @@ The response includes the echoed `session_id` and the existing execution fields:
   runtime's `agent_required` status (retained in the schema; normal chat handoff
   executes the agent instead of returning this intermediate status).
 - `predicted_intent`, `confidence`, `route`, `reason`: classification and routing.
-- `reply`: the agent's application-rendered reply; null for direct tools.
-- `result`: structured direct-tool output; null for the agent route.
+  Route is `direct` for local FAQ/keyword execution, `llm_assisted` for the fixed
+  sentiment workflow, or `agent` for dynamic orchestration.
+- `reply`: the sentiment workflow's explanation/fallback/clarification or the
+  agent's application-rendered reply; null for wholly local direct tools.
+- `result`: structured direct or LLM-assisted tool output; null for the agent route.
 - `agent_reason`: the separate agent outcome reason, when present.
 - `trace`: actual tool names, arguments, results, completion/failure states,
   timings, and agent-step reasons when applicable. Nested draft content and fixed
   user actions are retained. No private model reasoning is returned.
+- `workflow_trace`: ordered attempted sentiment stages, each with `stage`, `status`,
+  sanitized `reason`, and `elapsed_ms`. Empty when no workflow ran. Includes
+  extraction on an eventual agent handoff. The scoring duration also appears in
+  the VADER tool trace: it describes the same single scoring call, not another run.
 - `elapsed_ms`: session execution time, including lock waiting and history
   processing; excludes HTTP transport, thread-pool scheduling and serialization.
 
@@ -41,6 +48,20 @@ observations and failed steps; classifier/routing unavailability instead returns
 sanitized `{"detail":"..."}`. Failures remain in history through the existing
 session wrapper. There are no automatic endpoint retries or request deduplication;
 resubmitting a turn runs it again and appends another turn.
+
+The classifier runs once before any LLM invocation. A sentiment prediction at or
+above the saved threshold enters the fixed source-extraction → VADER → explanation
+workflow, including quoted requests. Missing/ambiguous source returns clarification
+without scoring. Contextual/compound/unsupported extraction abstention invokes the
+agent once with the unchanged request and prior history. Lower-confidence sentiment
+goes straight to the agent through the existing confidence gate.
+
+Extraction/scoring failure stops without agent fallback. Explanation failure returns
+HTTP 503 with `status=partial_failure`, `reason=presentation_failed`, the successful
+VADER `result`/tool trace, a fixed factual `reply`, and the failed explanation stage.
+No endpoint/provider retry or rescoring occurs. Older clients that restrict routes
+to `direct`/`agent` must accept `llm_assisted`; the bundled client validates the
+updated schema. `workflow_trace` defaults to empty when absent in an older response.
 
 Session IDs are caller-owned keys, not authentication or authorization. This
 endpoint is intended for the existing trusted local use; callers sharing an ID
@@ -58,5 +79,10 @@ it does not establish general model quality or reference-resolution reliability.
 
 Verified on 2026-10-06: all 652 tests (21 new), `pip check` and whitespace checks
 pass. A local Uvicorn request exercised the real classifier and direct sentiment
-tool over HTTP with a 200 response. Existing two LangChain history-API deprecation
+tool over HTTP with a 200 response before sentiment workflow integration. Existing two LangChain history-API deprecation
 warnings remain. No live Groq, SMTP/inbox, UI or deployment checks were performed.
+
+REWORK step 2b verification on 2026-10-07: all 721 tests, dependency and whitespace
+checks pass. TestClient and AppTest checks cover the classifier-first workflow,
+clarification/handoff, retained HTTP 503 outcomes, client schema, saved history,
+and non-executing rerenders with provider doubles. No live Groq quality checks.
