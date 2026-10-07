@@ -22,6 +22,13 @@ neither service supplies authentication. Use a single backend process so history
 remains coherent. Streamlit's environment setting is separate from backend `.env`
 loading. The console only calls `POST /api/v1/chat`; it does not run tools itself.
 
+The project sets `client.toolbarMode = "viewer"` using supported Streamlit
+configuration. Deploy, rerun, and clear-cache developer actions are absent from
+the toolbar/menu; viewer options and runtime Running/Stop feedback remain.
+Workspace hides technical session/history details and retains a concise notice
+about draft review/sending and unavailable reminder/email execution. Session IDs
+remain internal. Configuration can be overridden by environment or CLI settings.
+
 ## Conversation and results
 
 A random session ID is created once per Streamlit browser session and reused for
@@ -84,3 +91,13 @@ Desktop (1440 px) and mobile (390 px) checks confirm panel placement, visible fo
 font rendering, caption contrast and no mobile horizontal overflow.
 Agent verification uses offline doubles. No live Groq, SMTP/inbox or deployment
 verification is claimed.
+
+REWORK step 1 verification (2026-10-07): all 18 existing UI checks, `pip check`,
+and whitespace checks pass. A real local direct sentiment request completed.
+Browser inspection at 1440 px and 390 px confirmed removed developer/session
+copy, no Deploy in toolbar/menu, keyboard sidebar open/close, visible input focus,
+mobile panel stacking, and no horizontal overflow. An isolated delayed local HTTP
+fixture confirmed Running/Stop feedback, the spinner, disabled submission, and
+input recovery after a controlled HTTP 503, with exactly one request logged.
+Temporary fixture services were stopped. No new tests, live provider/email calls,
+or deployment checks were added; existing LangChain deprecation warnings remain.
