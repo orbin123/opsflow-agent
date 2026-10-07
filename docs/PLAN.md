@@ -1,5 +1,14 @@
 # Project Implementation Plan
 
+## Paused for Rework — 2026-10-07
+
+The user paused this agenda until the [rework plan](../REWORK.md) is complete.
+Do not use this plan or `agenda.txt` to select or order work during rework.
+Use `REWORK.md` for active scope, decisions, sequencing, and verification;
+the content below remains a historical record of the original project plan.
+After all rework completion criteria are verified, reconcile this plan with the
+implemented changes, record the handover, and resume its remaining work.
+
 ## Objective
 
 Build **OpsFlow-Agent**, an explainable operations copilot combining classical ML routing with LangChain tool calling. It should analyze communications, summarize text, retrieve company policies, extract keywords/action items, draft emails, and create reminders with email notifications to the user.
@@ -166,7 +175,9 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [ ] Add Docker/Compose, persistent storage, and README; verify the complete complaint → policy → draft → notification → due reminder flow.
 - [ ] Discuss hosting, deploy the agreed setup, and verify persistence and email delivery there.
 
-Update this file immediately when scope, architecture, order, or completion status changes. Record the brief reason in `docs/agents_doc.md`.
+While this agenda is paused, update `REWORK.md` for active scope, architecture,
+order, and completion status. Record the brief reason in `docs/agents_doc.md`.
+Resume updates to this checklist after the recorded rework handover.
 
 ## Agreed First Agent-Loop Slice
 
