@@ -34,6 +34,12 @@ limits. Tool implementation validation remains in place. The model sees descript
 and JSON schemas. Calls execute sequentially; every completed observation is
 serialized into a ToolMessage linked to its call ID before the next model call.
 A FAQ result retains its demo flag, stored answer and ambiguity/no-match outcome.
+The prompt directs self-contained policy questions to FAQ lookup without asking
+for a recipient or department; recipient clarification applies to requested email
+drafts. Independent questions do not inherit unrelated drafting intent from history.
+For matched policies, the prompt requires preserving conditions and acknowledging
+material details absent from the answer, including unspecified group eligibility.
+These are language instructions, not an enforced semantic validator.
 Application code renders successful drafts from their structured tool results,
 appends the fixed user actions, and qualifies any accompanying or historical demo FAQ result;
 the final model cannot rewrite these drafts or omit those sections. The prompt asks for clarification on missing source/recipient, unavailable

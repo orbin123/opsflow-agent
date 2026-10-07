@@ -2,9 +2,10 @@
 
 `app.faq_workflow.run_faq_workflow(request)` implements REWORK step 3c:
 structured question extraction → unchanged local TF-IDF retrieval → grounded
-LLM explanation. It is standalone: it does not classify, invoke the agent,
-store history, or connect to chat or the FAQ-only endpoint. Those entry points
-and the agent's pure `retrieve_faq` tool retain their existing behavior.
+LLM explanation. The function remains standalone: it does not classify, invoke
+the agent, or store history. Approved step 3d connects it behind chat's existing
+classifier/confidence gate using `llm_assisted`. The FAQ-only endpoint and the
+agent's pure `retrieve_faq` tool retain their existing local behavior.
 
 ## Input and execution
 
@@ -87,7 +88,38 @@ result and returns `partial_failure`/`presentation_failed`. Its fixed reply says
 that the explanation is unavailable, identifies the retrieved policy as fictional,
 warns that it may not resolve every detail, and appends the exact answer unchanged.
 No retries, re-extraction, duplicate lookup, or fallback agent call occur.
-No HTTP status mapping is added in this standalone slice.
+Chat maps these outcomes to the existing HTTP status contract below.
+
+## App chat integration
+
+The runtime classifies once. FAQ predictions at or above the saved threshold use
+this fixed workflow, including ordinary phrasing and quoted forms. Lower-confidence
+or other-intent requests retain existing agent routing; the threshold is unchanged.
+Missing/ambiguous question clarifies without lookup. Contextual/compound/unsupported
+extraction abstention hands the unchanged request and prior history to the agent
+once, retaining the extraction stage. Errors and partial failures stop without
+agent fallback or repeated execution.
+
+Completed and clarification outcomes return HTTP 200. Extraction/retrieval errors
+and retained-result presentation partial failure return HTTP 503. API/client/
+process-local history retain reply, raw result, exact question in the tool arguments,
+and actual tool/workflow traces. The lookup duration in both traces describes the
+same single call. Assistant turns show the readable reply and demo qualification;
+the inspector retains exact policy JSON and a **FAQ workflow stages** expander.
+Question extraction/presentation are labeled LLM stages, retrieval a local stage.
+Rerendering does not submit another request.
+
+For a high-confidence sample, try `Please answer this FAQ: What is the remote-work
+policy?` in app chat. The saved classifier predicts FAQ at about 0.881 against
+0.71. `Please answer this FAQ: Can contractors work from home?` predicts FAQ at
+about 0.669 and uses the existing agent. Its prompt now limits recipient questions
+to requested email drafts, treats independent policy questions separately from
+prior drafting context, and requires acknowledging absent eligibility/details.
+This is a prompt requirement, not a guaranteed factual validator. The agent still
+uses the pure retriever; it does not recursively invoke this workflow.
+
+The separate `POST /api/v1/faq` keeps its existing direct/agent-required schema and
+local syntax/confidence gating, with no new LLM presentation or session history.
 
 ## Configuration and limits
 
@@ -122,7 +154,10 @@ failures, and qualified exact-answer fallback. Installed LangChain serialization
 is exercised using a fake Groq SDK completion transport for both supported models.
 Existing retrieval tests continue to cover the dataset and lexical behavior.
 These checks do not establish live extraction/grounding quality or general
-injection resistance; no live provider call is part of step 3c verification.
+injection resistance; no live provider call was part of step 3c verification.
+Step 3d additionally checks classifier gating, original-context handoff, status/
+history/API/client preservation, low-confidence pure-agent lookup, and non-executing
+UI rerenders. Its limited synthetic live HTTP review is recorded in `REWORK.md`.
 
 Compatibility reference: [Groq structured outputs](https://console.groq.com/docs/structured-outputs).
 Current Groq/LangChain/Pydantic/scikit-learn dependencies are reused unchanged.

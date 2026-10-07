@@ -15,12 +15,15 @@ with the same HTTP status and retained-record contracts as sentiment. Keyword
 assistant turns show a brief introduction and a native phrase/score table;
 full-precision raw results remain in the inspector.
 
-The standalone natural-language FAQ workflow is documented in `docs/faq-workflow.md`.
+The natural-language FAQ workflow is documented in `docs/faq-workflow.md`.
 Approved REWORK step 3c extracts a complete question, calls unchanged local retrieval,
 and explains only matched fictional policies while retaining exact answers. Ambiguous/
 no-match results clarify without presentation; missing policy details may also clarify.
-FAQ chat integration remains a separate step 3d discussion; current runtime, FAQ-only
-endpoint, and agent tool behavior are unchanged.
+Approved REWORK step 3d connects high-confidence FAQ chat requests using `llm_assisted`,
+with the same HTTP status/history/trace rules. Replies stay readable; exact policy JSON
+remains in the inspector. Lower-confidence requests use the agent and its pure FAQ tool.
+Policy answers do not need recipients; ask for those only for requested email drafts.
+The FAQ-only endpoint keeps its existing wholly local contract.
 
 ## Read Before Working
 
@@ -57,7 +60,7 @@ endpoint, and agent tool behavior are unchanged.
 ## Project Boundaries
 
 - Direct execution requires a high-confidence, single-purpose deterministic request with safely extracted arguments. Sentiment analyzes the supplied text, not the instruction wrapper.
-- Reminder requests always go through the agent, regardless of classifier confidence. Compound, uncertain, LLM-dependent, or context-dependent requests also use the agent, except the approved fixed sentiment/keyword workflows: high-confidence sentiment or keywords enter `llm_assisted` extraction/local tool/presentation, with missing/ambiguous source clarifying and contextual/compound extraction abstention handing off to the agent.
+- Reminder requests always go through the agent, regardless of classifier confidence. Compound, uncertain, LLM-dependent, or context-dependent requests also use the agent, except the approved fixed sentiment/keyword/FAQ workflows: high-confidence predictions enter `llm_assisted` extraction/local tool/presentation, with missing/ambiguous input clarifying and contextual/compound extraction abstention handing off to the agent. FAQ similarity does not prove every question detail is covered; retain the exact policy and acknowledge missing facts.
 - Version one includes emails to the configured user with separate draft content and action instructions, plus scheduled reminder emails. External-recipient email sending is a separate scope decision.
 - A stored reminder requires a due-time delivery worker; a draft or scheduled record must not be reported as a sent email. Track side effects and failures accurately and prevent duplicate delivery.
 - The local reminder worker uses a Unix file lock beside the canonical SQLite path. Use cooperating workers on one local filesystem; network storage, multiple hosts, hard-link aliases, and deleting/replacing an active lock file are unsupported. SMTP acceptance does not prove inbox arrival. Unfinished/unknown attempts never retry automatically; only definite transient pre-submission failures use the persisted three-attempt budget.

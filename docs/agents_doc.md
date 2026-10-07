@@ -11,14 +11,34 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Discuss step 3d FAQ chat integration; standalone step 3c is implemented
-and verified offline, with grounded explanation and retained exact policy.
-Keyword workflow, chat integration, and presentation
-correction are in PR #24, with user-authorized merge. Inline
+**Next:** ⏳ Step 4 conversational summarization/drafting review. FAQ steps 3c/3d
+are implemented and verified within recorded offline/limited live bounds; integration
+is stacked on open standalone PR #25. Keyword workflow/integration/presentation
+are merged in PR #24. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
 and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
 within their recorded limits; keyword steps 3a/3b are also verified offline.
 Later implementation awaits discussion.
+
+- **2026-10-07:** Completed approved step 3d: high-confidence FAQ chat uses fixed
+  `llm_assisted`, retaining reply/exact policy/question and actual tool/workflow
+  stages through API/client/history. Native reply/FAQ stage inspector avoids main
+  JSON duplication and rerun execution. Clarification, original-context handoff,
+  HTTP 200/503 and no-retry contracts are retained. Corrected agent policy/draft
+  recipient instructions; an initial live eligibility error prompted an explicit
+  grounding example. Final fresh/post-draft contractor samples clarified correctly;
+  high-confidence workflow and missing-recipient draft samples also passed review.
+  All 855 tests (22 new), dependency and whitespace checks pass. Figma rate-limited;
+  existing native adaptation retained. No dependencies, classifier/index/FAQ-only
+  contracts, side effects, or later work changed. Live samples do not establish
+  general model fidelity. One user-authored DCO-signed integration change stacked
+  on open PR #25; step 4 is next.
+
+- **2026-10-07:** User requested attaching the FAQ workflow to app chat after an
+  irrelevant recipient clarification. Recorded approved step 3d: classifier-first
+  high-confidence workflow, preserved low-confidence agent routing, bounded FAQ
+  agent-prompt correction, HTTP/history/traces, native presentation, offline checks,
+  and a small synthetic live HTTP review. Standalone PR #25 is its dependency.
 
 - **2026-10-07:** Completed approved step 3c standalone FAQ workflow: strict
   question extraction → unchanged local retrieval once → grounded matched-policy

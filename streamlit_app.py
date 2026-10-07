@@ -43,6 +43,9 @@ def show_execution(execution: dict) -> None:
                     alt="Extracted keyword phrases and YAKE relevance scores in ranked order",
                 )
                 st.caption("Lower scores indicate greater relevance; scores are not confidence probabilities.")
+        elif execution["predicted_intent"] == "faq_retrieval" and execution["route"] == "llm_assisted":
+            if execution["result"].get("is_demo"):
+                st.caption("Fictional demo policy — verify your actual company policy.")
         else:
             if isinstance(execution["result"], dict) and execution["result"].get("is_demo"):
                 st.caption("Fictional demo policy — verify your actual company policy.")
@@ -119,10 +122,11 @@ with inspector_column:
             st.text(f"Backend elapsed: {execution['elapsed_ms']} ms")
             st.caption("Includes session waiting/history; excludes HTTP transport. Confidence is the classifier score.")
             if execution.get("workflow_trace"):
-                capability = "Keyword" if execution["predicted_intent"] == "keyword_extraction" else "Sentiment"
+                capability = {"keyword_extraction": "Keyword", "faq_retrieval": "FAQ",
+                              "sentiment_analysis": "Sentiment"}[execution["predicted_intent"]]
                 with st.expander(f"{capability} workflow stages", expanded=True):
                     for stage in execution["workflow_trace"]:
-                        st.caption("LLM stage" if stage["stage"] in {"extract_source", "explain_result"}
+                        st.caption("LLM stage" if stage["stage"] in {"extract_source", "extract_question", "explain_result"}
                                    else "Local tool stage")
                         st.text(f"{stage['stage']} · {stage['status']}\n"
                                 f"Stage elapsed: {stage['elapsed_ms']} ms")

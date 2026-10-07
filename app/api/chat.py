@@ -10,6 +10,7 @@ from app.runtime import RuntimeUnavailable, ToolResult, ToolTrace
 from app.sessions import execute_session_request
 from app.sentiment_workflow import SentimentStage
 from app.keyword_workflow import KeywordStage
+from app.faq_workflow import FAQStage
 
 
 router = APIRouter()
@@ -40,7 +41,7 @@ class ChatResponse(BaseModel):
     elapsed_ms: float
     reply: str | None
     agent_reason: str | None
-    workflow_trace: list[SentimentStage | KeywordStage] = Field(default_factory=list)
+    workflow_trace: list[SentimentStage | KeywordStage | FAQStage] = Field(default_factory=list)
 
 
 @router.post("/api/v1/chat", response_model=ChatResponse, responses={

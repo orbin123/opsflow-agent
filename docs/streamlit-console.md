@@ -66,12 +66,19 @@ responses without rounding or recomputation. Total backend time includes session
 waiting/history and excludes HTTP transport; it need not equal the sum of steps.
 No classification/provider substep timings or private reasoning are invented.
 
-When present, the sentiment or keyword workflow stages expander shows backend-reported
+When present, the sentiment, keyword, or FAQ workflow stages expander shows backend-reported
 extraction, local-tool, and presentation statuses/reasons/timings, including extraction
-before agent handoff. The VADER/YAKE duration also appears in the tool trace;
+before agent handoff. The VADER/YAKE/FAQ duration also appears in the tool trace;
 these are two records of the same call. The client accepts `llm_assisted` and
 retains stage records for both HTTP 200 and HTTP 503 outcomes. The expander labels
-source extraction/presentation as LLM stages and VADER/YAKE as local tool stages.
+source/question extraction and presentation as LLM stages and VADER/YAKE/FAQ as local tool stages.
+FAQ workflow assistant turns show the readable reply and demo qualification; exact
+policy/candidate JSON stays in the inspector, including retained presentation failures.
+
+REWORK step 3d AppTest checks cover matched FAQ replies, no-match clarification,
+retained presentation failures, exact stage labels/timings, HTTP/client/history
+preservation, inspector-only policy JSON, and non-executing rerenders. Existing
+Streamlit design/layout is retained; no new browser-layout verification in this slice.
 
 HTTP 503 execution payloads retain observations and failed steps. Runtime-detail,
 HTTP rejection, connection, invalid-response and wrong-session failures display

@@ -69,13 +69,14 @@ def test_sentiment_result_available_to_agent_followup(monkeypatch, sentiment_pro
     assert second.elapsed_ms >= sum(step.elapsed_ms for step in second.trace)
 
 
-def test_draft_revision_uses_prior_result_and_retains_actions_and_demo(monkeypatch):
+def test_draft_revision_uses_prior_result_and_retains_actions_and_demo(monkeypatch, faq_provider):
     from app.tools.faq import FAQResult
 
     monkeypatch.setattr(runtime, "classify_request", lambda message: ("faq_retrieval", 1, 0.71)
                         if message.startswith("FAQ:") else ("email_drafting", 1, 0.71))
-    from app.routes import faq_route
-    monkeypatch.setattr(faq_route, "retrieve_faq", lambda question:
+    from app import faq_workflow
+    faq_provider("What is the leave policy?")
+    monkeypatch.setattr(faq_workflow, "retrieve_faq", lambda question:
                         FAQResult("matched", answer="Leave needs approval", is_demo=True))
     sessions.execute_session_request("one", 'FAQ: "What is the leave policy?"')
     drafts = []

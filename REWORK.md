@@ -6,11 +6,11 @@ use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
-Keyword steps 3a/3b and standalone FAQ step 3c are implemented and verified offline;
-FAQ chat integration and remaining rework steps are pending.
-**Next discussion:** ⏳ Step 3d FAQ chat integration. Standalone step 3c is
-implemented and verified offline as recorded below. Keyword workflow, chat integration,
-and presentation correction are in PR #24; the user authorized its merge.
+Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
+recorded offline and limited live-review bounds. Remaining rework steps are pending.
+**Next discussion:** ⏳ Step 4 conversational summarization/drafting review.
+FAQ chat integration is on `feature/faq-chat-workflow`, stacked on open standalone
+PR #25. Keyword workflow/integration/presentation are merged in PR #24.
 
 ## Intended User Experience
 
@@ -82,7 +82,7 @@ Preserve these contracts throughout the rework:
 
 - Direct execution needs a high-confidence, single-purpose request and reliable
   argument extraction. Ambiguous, contextual, compound, and LLM-dependent requests
-  use the agent, except the approved fixed high-confidence sentiment/keyword workflows,
+  use the agent, except the approved fixed high-confidence sentiment/keyword/FAQ workflows,
   reported as `llm_assisted`. Missing material information requires clarification.
 - Sentiment analyzes the complete source statement, including negation and
   punctuation, rather than an isolated emotional word or instruction wrapper.
@@ -294,7 +294,7 @@ its routing revision are now approved as recorded below.
 
 ### 3. Review natural-English keyword and FAQ requests
 
-- [ ] Discuss, implement, and verify this slice; split by capability if needed.
+- [x] Discuss, implement, and verify bounded keyword/FAQ slices as recorded below.
 - **Problem/change:** Apply the source-boundary approach to keyword extraction and
   audit ordinary FAQ questions. Expand only demonstrated gaps while preserving
   ambiguity/no-match handling and exact stored policy answers.
@@ -531,6 +531,77 @@ its routing revision are now approved as recorded below.
 - Delivery: one user-authored DCO-signed change on `feature/faq-language-workflow`;
   PR preparation follows the verified diff. Merge is not part of this slice.
 
+#### Step 3d contract — 2026-10-07
+
+- [x] Implement and verify chat integration and the bounded FAQ clarification correction.
+- **Agreement:** User requested connecting the FAQ workflow to app chat after
+  reporting an irrelevant recipient clarification. High-confidence FAQ chat
+  requests use fixed `llm_assisted` extraction/retrieval/presentation. Retain the
+  classifier/0.71 threshold and FAQ-only endpoint contract. The reported contractor
+  prompt scores 0.669 and therefore continues through the existing agent.
+- **Bounded correction:** Clarify the agent prompt: self-contained policy questions
+  require FAQ lookup, not a recipient/department; recipient clarification applies
+  to requested email drafting. Current independent questions supersede unrelated
+  prior drafting context. Retain the pure agent FAQ tool and require acknowledgement
+  of material question details absent from its exact stored answer. Prompt changes
+  cannot guarantee model compliance or grounding.
+- **Records/status:** API/client/history retain the grounded reply, exact FAQ
+  result/question, one tool execution, and actual workflow stages/timings. Clarification
+  and completed outcomes remain HTTP 200; errors/retained partial failures use 503.
+  Contextual/compound extraction abstention hands original request/history to the
+  agent once while retaining extraction stages. Failures do not retry or hand off.
+- **UI:** Reuse native assistant text and existing inspector expanders. Show FAQ
+  stage names and LLM/local labels; retain exact policy JSON in the inspector rather
+  than repeating it below the generated FAQ reply. No CSS/layout/token changes or
+  general step-12 redesign. Figma inspection remains limited by server rate limits;
+  use the existing documented native adaptation.
+- **Verification:** Offline doubles cover gates, exact calls, clarification and
+  handoff, failure/status/result retention, API/client/history, prior-context FAQ
+  fallback and draft regressions, and UI rerender non-execution. A small synthetic
+  live HTTP review will inspect the actual high-confidence and reported low-confidence
+  FAQ responses using the existing local app/provider; no email/send/reminder side
+  effects. Preserve existing checks for FAQ-only, sentiment/keyword, and agent tools.
+- **Delivery/boundary:** One scoped user-authored DCO-signed integration commit/PR
+  on `feature/faq-chat-workflow`, stacked on open standalone PR #25. No retraining,
+  retrieval tuning, new dependency/provider, generalized framework, persistence,
+  streaming, other endpoint changes, or later rework work.
+
+#### Step 3d outcome — 2026-10-07
+
+- Connected high-confidence FAQ chat requests to the existing fixed workflow as
+  `llm_assisted`. API/client/history preserve readable reply, raw FAQ result,
+  question/tool observation, and actual workflow stages/timings. Clarification
+  and handoff, HTTP 200/503, retained partial results, and no-retry behavior match
+  the agreed contract. Inspector labels FAQ extraction/presentation as LLM stages
+  and retrieval as local; exact policy JSON stays in the inspector. FAQ-only scope,
+  classifier threshold, pure tool/index, and agent registry are unchanged.
+- Corrected agent instructions to distinguish policy explanations from requested
+  email drafts and respect independent questions after drafting context. Added
+  an explicit coverage/eligibility example after the first live check incorrectly
+  inferred contractor eligibility despite performing the correct FAQ lookup.
+  Final inspected fresh-session and post-draft samples both returned appropriate
+  `needs_clarification`, preserving conditions and acknowledging unspecified
+  contractor eligibility. The post-draft missing-recipient sample clarified with
+  no tool execution; the subsequent policy question looked up the FAQ once.
+- Verified all 855 tests (22 new), `pip check`, and whitespace checks. Offline
+  coverage includes gates, original-context handoff, actual execution counts,
+  status/history/API/client preservation, retained failures, low-confidence pure
+  agent lookup, and non-executing native UI rerenders. Checked installed Streamlit
+  display APIs. The running local backend reloaded changes and exposed FAQ stages;
+  a synthetic natural-policy HTTP request completed with `llm_assisted`, two LLM
+  stages, one lookup, and inspected faithful conditions. Five synthetic live chat
+  turns total covered that match, the initial eligibility failure, missing-recipient
+  clarification, and the two final corrected contractor samples.
+- Limits: small inspected live samples and doubles do not establish general
+  extraction/prose/abstention quality or injection resistance. Existing LangChain
+  deprecations remain. Figma inspection was rate-limited; reused the documented
+  native adaptation with no CSS/layout/token changes or new browser-layout review.
+  No dependency/provider, training/threshold, retrieval tuning, side effects,
+  persistence/streaming, other endpoints, or later rework work changed.
+- Delivery: one user-authored DCO-signed integration change on
+  `feature/faq-chat-workflow`, stacked on open standalone PR #25. Neither PR's
+  merge is authorized by this implementation request. Step 4 is the next discussion.
+
 ### 4. Verify conversational summarization and drafting
 
 - [ ] Discuss, implement fixes if needed, and verify this slice.
@@ -726,6 +797,13 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-07:** Completed approved FAQ chat step 3d and bounded agent-policy
+  clarification correction. All 855 tests (22 new), dependency and whitespace
+  checks pass. Limited live HTTP review confirmed workflow routing and corrected
+  fresh/post-draft contractor clarifications after an initial eligibility error.
+  Recorded that model-quality limitation; preserved classifier/FAQ-only contracts.
+  Step 3 is complete within recorded bounds; step 4 requires separate discussion.
 
 - **2026-10-07:** Completed approved standalone FAQ step 3c with retained exact
   policies, grounded presentation/coverage clarification, and bounded failure
