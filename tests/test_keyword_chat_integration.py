@@ -233,7 +233,7 @@ def test_http_failures_preserve_actual_tool_result_and_history(monkeypatch, keyw
         assert data["result"] is None and len(data["workflow_trace"]) == 2
     else:
         assert data["result"] is not None and len(data["workflow_trace"]) == 3
-        assert "explanation is unavailable" in data["reply"]
+        assert "introduction is unavailable" in data["reply"]
         if source == "!!!":
             assert data["result"] == [] and "no keyword candidates" in data["reply"]
     saved = json.loads(sessions._sessions["one"].history.messages[-1].content)

@@ -43,6 +43,11 @@ bounded agent's provider calls time to finish. There are no automatic retries;
 transport errors may leave an unknown backend outcome. Submitted turns remain
 visible with that warning. Resubmitting manually executes another turn.
 
+LLM-assisted keywords show the backend introduction followed by a native Phrase/Score
+table in YAKE order. Scores display to five decimal places; API/history and the
+inspector retain full precision. Raw keyword JSON appears only in the inspector.
+A caption explains lower-score relevance; empty results show their reply without
+an empty table. Presentation failure still displays the retained keyword table.
 Direct responses display structured JSON. LLM-assisted sentiment shows the backend
 explanation or factual fallback as plain text and retains the raw VADER result.
 Agent responses display the backend's

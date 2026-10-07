@@ -34,7 +34,7 @@ def keyword_provider(monkeypatch):
     monkeypatch.setattr(keyword_workflow, "_create_model",
                         lambda *args: pytest.fail("Unexpected keyword provider initialization"))
 
-    def install(source, reply="YAKE extracted the returned keyword phrases."):
+    def install(source, reply="Here are the keywords extracted from your text and their scores."):
         model = Mock()
         model.invoke.side_effect = [
             AIMessage(content=json.dumps(payload), response_metadata={"finish_reason": "stop"})

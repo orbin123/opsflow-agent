@@ -12,7 +12,8 @@ route, with existing chat HTTP status rules and retained workflow/tool records.
 The natural-language keyword workflow is documented in `docs/keyword-workflow.md`.
 Approved REWORK step 3b connects it behind the classifier using `llm_assisted`,
 with the same HTTP status and retained-record contracts as sentiment. FAQ remains
-a separate discussion.
+a separate discussion. Keyword assistant turns show a brief introduction and a
+native phrase/score table; full-precision raw results remain in the inspector.
 
 ## Read Before Working
 

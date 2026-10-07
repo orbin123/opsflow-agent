@@ -8,7 +8,8 @@ after the recorded rework handover.
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
 Keyword steps 3a/3b are implemented and verified offline; FAQ and remaining
 rework steps are pending.
-**Next discussion:** ⏳ Step 3 FAQ review. Keyword steps 3a/3b are in PR #24.
+**Next discussion:** ⏳ Step 3 FAQ review. Keyword workflow, chat integration,
+and presentation correction are in PR #24.
 
 ## Intended User Experience
 
@@ -407,6 +408,39 @@ its routing revision are now approved as recorded below.
 - Delivery: additional user-authored DCO-signed integration commit in existing
   PR #24, whose title/description now cover standalone workflow plus chat wiring.
   FAQ remains the next discussion; later implementation is not authorized.
+
+#### Step 3b presentation correction — 2026-10-07
+
+- **User correction/contract:** The LLM phrase list followed by raw JSON repeats
+  the result. User requested a human introduction and an intuitive phrase/score
+  table. Correct keyword presentation in the same PR: the LLM supplies a brief
+  introduction; the application renders actual YAKE phrases/scores once in a native
+  table, preserving rank. Display scores to five decimal places while retaining
+  full precision in API/history/inspector. Explain that lower scores mean greater
+  relevance, not confidence. Keep raw JSON in the inspector, not the main answer.
+- **Failure/boundary:** Retained results still render on presentation failure, with
+  a short factual fallback introduction; empty results state that no candidates
+  were found and do not render an empty table. Keyword-only presentation correction;
+  no routing, YAKE, agent, FAQ, dependencies, or general step-12 UI redesign.
+- **Verification:** Update the existing workflow fallback/UI checks and add targeted
+  empty-result and literal-cell checks. Verify ordered actual phrases/raw scores,
+  readable intro, table formatting, inspector precision, partial failures, and
+  non-executing rerenders. Provider doubles verify transport/contract, not live prose.
+  Use supported native Streamlit table APIs and the existing design adaptation.
+- **Outcome:** Updated the LLM prompt to request an introduction instead of a
+  repeated phrase list. The keyword assistant turn now renders ordered raw YAKE
+  results in a literal-text Phrase/Score dataframe with five-decimal display; raw
+  JSON remains in the inspector. Retained-result fallback reports count/empty state
+  without duplicating phrases. No result precision, route, or execution changes.
+- **Verified:** All 786 tests (two new UI boundaries, existing success/failure
+  checks updated), `pip check`, and whitespace checks pass. Tests cover table
+  order/raw precision/format, inspector-only JSON, introduction transport, retained
+  partial results, empty results, literal cells, and non-executing rerenders.
+  Installed Streamlit dataframe/NumberColumn APIs checked locally. No live LLM or
+  browser-layout verification; existing LangChain history warnings remain. The
+  documented native design adaptation is retained without new CSS/Figma changes.
+- **Delivery:** One additional user-authored DCO-signed presentation correction
+  commit in PR #24. FAQ remains deferred; general step-12 presentation is separate.
 
 ### 4. Verify conversational summarization and drafting
 

@@ -257,7 +257,7 @@ def test_ui_source_is_plain_text_not_executable_markup(monkeypatch):
 
 
 def test_ui_keyword_workflow_and_inspector_match_backend_without_resubmit(monkeypatch, keyword_provider):
-    model = keyword_provider("The server failed after the deployment", "YAKE keywords include server failed.")
+    model = keyword_provider("The server failed after the deployment", "Here are the keywords extracted from your text and their scores.")
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     assert not ui.exception
@@ -271,7 +271,14 @@ def test_ui_keyword_workflow_and_inspector_match_backend_without_resubmit(monkey
     assert data["route"] == "llm_assisted" and model.invoke.call_count == 2
     assert ui.session_state["turns"][0]["execution"] == data
     displayed_json = [json.loads(element.value) for element in ui.json]
-    assert data["result"] in displayed_json
+    assert displayed_json.count(data["result"]) == 1  # Inspector only.
+    assert len(ui.dataframe) == 1
+    table = ui.dataframe[0]
+    assert table.value.to_dict("records") == [
+        {"Phrase": item["phrase"], "Score": item["score"]} for item in data["result"]
+    ]
+    assert json.loads(table.proto.columns)["Score"]["type_config"]["format"] == "%.5f"
+    assert "not confidence probabilities" in "\n".join(element.value for element in ui.caption)
     assert data["trace"][0]["arguments"] in displayed_json
     text = "\n".join(element.value for element in ui.text)
     for value in (data["predicted_intent"], str(data["confidence"]), data["route"], data["reason"],
@@ -311,7 +318,11 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
     assert data["trace"][0]["status"] == "completed"
     assert data["workflow_trace"][-1]["status"] == "failed"
     assert ui.session_state["turns"][0]["execution"] == data
-    assert data["result"] in [json.loads(element.value) for element in ui.json]
+    assert [json.loads(element.value) for element in ui.json].count(data["result"]) == 1
+    assert ui.dataframe[0].value.to_dict("records") == [
+        {"Phrase": item["phrase"], "Score": item["score"]} for item in data["result"]
+    ]
+    assert "introduction is unavailable" in data["reply"]
     assert data["reply"] in [element.value for element in ui.text]
     session_id = data["session_id"]
     saved = json.loads(sessions._sessions[session_id].history.messages[-1].content)
@@ -321,3 +332,40 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
     assert not ui.exception and len(sent) == 1 and model.invoke.call_count == 2
     assert len(sessions._sessions[session_id].history.messages) == 2
     assert "private credentials" not in str(ui)
+
+
+def test_ui_keyword_empty_result_has_reply_without_empty_table(monkeypatch, keyword_provider):
+    source = "!!!"
+    model = keyword_provider(source, "No keyword candidates were found in the supplied text.")
+    monkeypatch.setattr(runtime, "classify_request", lambda _: ("keyword_extraction", 1, 0.71))
+    recorded = connect_api(monkeypatch)
+    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui.chat_input[0].set_value("Find keywords: !!!").run()
+    assert not ui.exception
+    data = recorded[0][1]
+    assert data["status"] == "completed" and data["result"] == []
+    assert data["reply"] in [element.value for element in ui.text]
+    assert not ui.dataframe
+    assert [json.loads(element.value) for element in ui.json].count([]) == 1
+    ui.run()
+    assert len(recorded) == 1 and model.invoke.call_count == 2
+
+
+def test_ui_keyword_table_keeps_phrases_as_literal_text(monkeypatch):
+    phrase = "![remote](https://example.com/image) <script>private()</script>"
+    scores = [{"phrase": phrase, "score": 0.0123456789}]
+
+    def send(url, session_id, message):
+        data = execution(session_id)
+        data.update(predicted_intent="keyword_extraction", route="llm_assisted",
+                    result=scores, reply="Here are the extracted keywords and their scores.")
+        return data
+
+    monkeypatch.setattr(ui_client, "submit_chat", send)
+    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui.chat_input[0].set_value("Find keywords from supplied source").run()
+    assert not ui.exception
+    table = ui.dataframe[0]
+    assert table.value.to_dict("records") == [{"Phrase": phrase, "Score": 0.0123456789}]
+    assert "Phrase" not in json.loads(table.proto.columns)  # Default plain-text cells.
+    assert not ui.get("imgs") and not ui.get("iframe")

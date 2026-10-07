@@ -39,9 +39,11 @@ Quotes, colons, and command prefixes are optional.
    and raw relevance scores. Lower scores mean greater relevance, not confidence.
    A nonblank source with no candidates returns an empty list successfully.
 3. The presentation prompt receives the original request, selected source, and
-   actual ordered result. It asks for a short reply preserving every returned phrase
-   and its order, without inventing keywords or converting scores to confidence.
-   Raw tool results remain authoritative and separate from generated prose.
+   actual ordered result. It asks for a short, human introduction to the keyword
+   phrases and scores without repeating a list or generating a table. The application
+   renders the table from authoritative raw results; the LLM does not reproduce its
+   cells. Empty results receive a no-candidates reply. The LLM may briefly explain
+   ranking, without inventing keywords or converting scores to confidence.
 
 Neither LLM stage binds tools. Source commands are treated as data. The workflow
 never invokes the agent or performs extra operations on abstention.
@@ -64,8 +66,9 @@ Traces contain only attempted `extract_source`, `extract_keywords`, and
 
 Extraction failure retains no unvalidated source. Tool failure retains the
 validated attempted input. Presentation failure retains the ranked phrases/scores;
-its fallback lists those phrases in order, or states that no candidates were found,
-and explicitly says the conversational explanation is unavailable. No retries,
+its fallback states the number of extracted phrases, or that no candidates were
+found, and explicitly says the conversational introduction is unavailable. The
+application still displays retained nonempty results in the table. No retries,
 re-extraction, or duplicate YAKE calls occur to repair presentation.
 
 In chat, completed/clarification outcomes return HTTP 200. Extraction/tool errors
@@ -80,7 +83,12 @@ API/client/process-local history preserve reply/result, the actual YAKE tool tra
 and `workflow_trace`. YAKE's duration appears in both traces for the same single
 call. The existing inspector shows a **Keyword workflow stages** expander with
 actual statuses/reasons/timings and LLM/local labels; readable replies appear in the assistant turn.
-Raw keyword results remain visible as JSON under the existing rendering contract.
+The main answer shows the LLM introduction followed by a native read-only table
+with **Phrase** and **Score** columns, no index, and scores displayed to five decimal
+places. Original ranking and raw precision are preserved in API/history/inspector;
+raw JSON is shown only in the inspector for this workflow. A fixed caption explains
+that lower scores mean greater relevance, not confidence. Empty results do not render
+an empty table. Phrase cells are plain text, not interpreted Markdown or HTML.
 See [chat-api.md](chat-api.md) for response fields and history limitations.
 
 ## Configuration and limits
@@ -100,8 +108,9 @@ See [chat-api.md](chat-api.md) for response fields and history limitations.
   Request/source/results are sent to Groq; these are private chat data.
 - YAKE is the local deterministic stage. Schema/substring checks cannot prove the
   LLM selected the complete intended source. Reply schema checks cannot prove
-  phrase fidelity, ordering, factual accuracy, or resistance to embedded commands.
-  The presentation prompt requests these behaviors; it does not enforce semantics.
+  introduction accuracy or resistance to embedded commands. The presentation prompt
+  requests appropriate prose; it does not enforce semantics. Table cells and order
+  come directly from actual results and do not depend on generated prose.
   Temperature zero does not guarantee identical LLM outputs.
 
 ## Verification

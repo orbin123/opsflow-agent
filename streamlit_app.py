@@ -34,9 +34,19 @@ def show_execution(execution: dict) -> None:
     if execution["reply"] is not None:
         st.text(execution["reply"])
     if execution["result"] is not None:
-        if isinstance(execution["result"], dict) and execution["result"].get("is_demo"):
-            st.caption("Fictional demo policy — verify your actual company policy.")
-        st.json(execution["result"], expanded=True)
+        if execution["predicted_intent"] == "keyword_extraction" and execution["route"] == "llm_assisted":
+            if execution["result"]:
+                st.dataframe(
+                    [{"Phrase": item["phrase"], "Score": item["score"]} for item in execution["result"]],
+                    hide_index=True, height="content",
+                    column_config={"Score": st.column_config.NumberColumn(format="%.5f")},
+                    alt="Extracted keyword phrases and YAKE relevance scores in ranked order",
+                )
+                st.caption("Lower scores indicate greater relevance; scores are not confidence probabilities.")
+        else:
+            if isinstance(execution["result"], dict) and execution["result"].get("is_demo"):
+                st.caption("Fictional demo policy — verify your actual company policy.")
+            st.json(execution["result"], expanded=True)
 
 
 st.html(f"<style>{console_styles()}</style>")

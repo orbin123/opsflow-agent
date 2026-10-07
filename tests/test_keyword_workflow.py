@@ -175,9 +175,8 @@ def test_presentation_failure_preserves_result_and_supplies_factual_fallback(mon
     assert (result.status, result.reason) == ("partial_failure", "presentation_failed")
     assert result.source_text == "happy"
     assert result.result is not None
-    assert all(keyword.phrase in result.reply for keyword in result.result)
-    assert "YAKE keywords, in ranked order:" in result.reply
-    assert "explanation is unavailable" in result.reply
+    assert f"YAKE extracted {len(result.result)} keyword phrases." in result.reply
+    assert "introduction is unavailable" in result.reply
     assert result.trace[-1].status == "failed"
     extractor.assert_called_once_with("happy")
     assert model.invoke.call_count == 2
@@ -281,8 +280,8 @@ def test_ranked_phrases_and_raw_scores_survive_presentation_failure(monkeypatch)
     result = workflow.run_keyword_workflow("Find keywords: The server failed.")
     assert result.status == "partial_failure"
     assert result.result == keywords
-    assert result.reply == ("YAKE keywords, in ranked order: server failed; server. "
-                            "The conversational explanation is unavailable.")
+    assert result.reply == ("YAKE extracted 2 keyword phrases. "
+                            "The conversational introduction is unavailable.")
     assert json.loads(model.invoke.call_args_list[1].args[0][1][1])["result"] == [
         {"phrase": "server failed", "score": 0.01}, {"phrase": "server", "score": 0.2},
     ]
