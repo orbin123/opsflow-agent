@@ -2,6 +2,23 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+## Active Agenda — Rework First
+
+From 2026-10-07 until all completion criteria in [REWORK.md](../REWORK.md) are
+verified, the original `docs/PLAN.md` agenda is halted. Do not use that plan or
+`agenda.txt` to decide the next work. Discuss and complete one bounded rework
+step at a time, updating `REWORK.md` and this record in the same logical change.
+Only after rework completion, reconcile the original plan, record the handover,
+and continue its remaining work. Earlier next-step notes below are historical.
+
+**Next:** Discuss REWORK step 1: remove user-facing Deploy controls, the redundant
+console caption, and technical Workspace metadata. No rework implementation has
+started.
+
+- **2026-10-07:** Created `REWORK.md` from the frontend discussion, including independent persistent chats, natural-English requests, inline collapsible execution activity, one-agent multi-step workflows, and in-app usage documentation. Updated `AGENTS.md` and the original plan's pause notice to make rework the active agenda until verified completion. Reviewed discussion coverage, sequencing, local links, and documentation whitespace; no application code, runtime tests, provider calls, or email execution changed.
+
+## Earlier Change Record
+
 - **2026-10-06:** Added proportional testing guidance to `AGENTS.md` and the plan: discuss test scope before coding, prioritize meaningful behavior and risks, and avoid redundant coverage. Reviewed the documentation diff and checked whitespace; no application code or tests changed.
 
 - **2026-10-05:** Added `docs/design-system.md` as the project reference for the OpsFlow light-terminal Figma system and instructed future frontend design work in `AGENTS.md` to use it. Checked the document against the Figma file and captured palette, type, layout, tokens, component states, and usage guidance; no application code changed.
@@ -48,7 +65,7 @@ Keep entries brief: date, completed change, verification, and any changed decisi
 
 - **2026-10-06:** User authorized merging both reminder slices. Merged persistence PR #13 and retargeted worker PR #14 to `main`; updated dependency notes and checked documentation whitespace. Existing 572-test verification remains applicable; no application behavior changed or real email sent.
 
-**Next:** Discuss one bounded remaining-endpoint, observability or reminder/email chat-integration slice before deployment. Worker deployment and real SMTP/inbox testing remain unverified.
+**Historical next step (superseded by rework):** Discuss one bounded remaining-endpoint, observability or reminder/email chat-integration slice before deployment. Worker deployment and real SMTP/inbox testing remain unverified.
 
 - **2026-10-06:** Implemented the approved standalone five-tool ChatGroq loop with strict local arguments/final validation, sequential observations, six orchestration calls/five tools/soft 120-second budget, sanitized failures and retained structured results. Application renders drafts with fixed actions and demo qualification. Pinned the already-installed directly imported LangChain Core 1.6.6. All 608 tests (36 new), pip check and whitespace checks pass. Final synthetic live clarification, FAQ-to-draft and summary samples passed inspected behavior; earlier invented JSON-tool calls/source-command leakage and final summary relevance limitations remain documented, without establishing general reliability/injection resistance. No runtime/API/memory wiring, reminder creation or email submission.
 

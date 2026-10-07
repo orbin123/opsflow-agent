@@ -7,9 +7,17 @@ uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verif
 
 ## Read Before Working
 
-- `docs/PLAN.md`: current scope, architecture, execution checklist, and pending decisions.
+- `REWORK.md`: active implementation agenda until its rework steps and completion criteria are verified.
 - `docs/agents_doc.md`: brief record of completed changes and the next step.
 - `skills/karpathy-guidelines/SKILL.md`: follow the supplied Karpathy development guidelines. If missing, ask before development.
+
+## Active Agenda — Rework First
+
+- As agreed on 2026-10-07, pause the original `docs/PLAN.md` agenda until `REWORK.md` is complete. Do not consult the original plan or an `agenda.txt` file to decide, order, or add work during the rework.
+- Choose the next bounded step from `REWORK.md`, discuss its contract and proportional verification with the user, then implement the agreed slice. Creating the rework plan does not authorize implementing all its steps at once.
+- Use current code and feature documentation to understand existing behavior; the paused plan is historical context only and cannot expand rework scope. Existing collaboration, design, routing, and side-effect rules still apply.
+- Track rework decisions, status, and verification in `REWORK.md` and `docs/agents_doc.md`. Keep the pause notice in `docs/PLAN.md`; its original checklist remains paused.
+- Only after all rework completion criteria are verified, record the handover in these files, reconcile the original plan with the resulting implementation, and resume `docs/PLAN.md` for remaining project work.
 
 ## Frontend Design
 
@@ -26,7 +34,7 @@ uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verif
 - Write the simplest code that solves the agreed problem. Avoid speculative features, unnecessary abstractions, unrelated refactoring, and cosmetic changes outside the task.
 - Verify behavior appropriate to the change. Report what was checked and what remains unverified; never claim delivery, execution, or testing that did not happen.
 - Keep tests proportional to the agreed slice and discuss the proposed test scope before coding. Cover core successful behavior, meaningful boundaries, realistic failures, and regressions; prioritize routing mistakes, incorrect payload extraction, side effects, and accurate failure reporting. Use representative cases for equivalent inputs and justify exhaustive cases when they protect a real contract. Avoid tests that merely mirror the implementation or repeat coverage without catching a distinct failure.
-- Immediately update `docs/PLAN.md` when decisions, scope, architecture, or status change. Add a brief completed-change entry to `docs/agents_doc.md`. Update this file too if project facts or working rules change. Include those updates in the same logical change.
+- Immediately update the active plan when decisions, scope, architecture, or status change: `REWORK.md` during rework, then `docs/PLAN.md` after the recorded handover. Add a brief completed-change entry to `docs/agents_doc.md`. Update this file too if project facts or working rules change. Include those updates in the same logical change.
 - Keep the plan and record concise and adaptable. Use ✅ only for verified completed work and ⏳ for the active discussion or step.
 
 ## Project Boundaries
