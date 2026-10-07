@@ -16,3 +16,4 @@ groq==0.37.1
 pydantic==2.13.5
 python-dotenv==1.2.4
 langsmith==0.14.4
+streamlit==1.65.0
