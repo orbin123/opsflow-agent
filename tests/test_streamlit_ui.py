@@ -11,6 +11,7 @@ from streamlit.testing.v1 import AppTest
 
 from app import agent, runtime, sessions, ui_client
 from app.main import app
+from app.tools.summarization import SummaryResult
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "streamlit_app.py"
@@ -551,6 +552,85 @@ def test_restored_sentiment_answer_keeps_scores_in_activity_without_execution(mo
             activity = ui.get_by_key('details_saved-sentiment')
             assert result in [json.loads(item.value) for item in activity.json]
     assert not recorded and execute.call_count == 0
+
+
+@pytest.mark.parametrize('points', [['Resolved **outage**; <review> before release.'], []])
+def test_single_summary_submission_shows_saved_content_once(monkeypatch, points):
+    recorded = connect_api(monkeypatch)
+    monkeypatch.setattr(runtime, 'classify_request', lambda _: ('summarization', 1, 0.71))
+    result = {'summary': 'The outage is resolved.\n[Next step](literal): review the release.',
+              'key_points': points}
+    summarize = Mock(return_value=SummaryResult(**result))
+    schema, _, description = agent._TOOLS['summarize_text']
+    monkeypatch.setitem(agent._TOOLS, 'summarize_text', (schema, summarize, description))
+    model = Mock()
+    model.invoke.side_effect = [
+        AIMessage(content='', tool_calls=[{'name': 'summarize_text',
+                  'args': {'text': 'The outage is resolved. Review the release.'}, 'id': 'summary1'}],
+                  response_metadata={'finish_reason': 'tool_calls'}),
+        AIMessage(content=json.dumps({'status': 'completed', 'reply': 'A generated summary reply.'}),
+                  response_metadata={'finish_reason': 'stop'}),
+    ]
+    monkeypatch.setattr(agent, '_create_model', lambda: model)
+    ui = AppTest.from_file(str(SCRIPT)).run()
+    send_message(ui, 'Summarize this: The outage is resolved. Review the release.')
+    for _ in range(2):
+        assert not ui.exception
+        answer = ui.chat_message[1]
+        assert [item.value for item in answer.text] == [result['summary'], *['• ' + p for p in points]]
+        assert ('Key points' in [item.value for item in answer.caption]) == bool(points)
+        assert not answer.json and not answer.markdown
+        assert result in [json.loads(item.value) for item in ui.get_by_key('details_' + recorded[0][1]['turn_id']).json]
+        ui.run()
+    assert len(recorded) == 1 and model.invoke.call_count == 2
+    summarize.assert_called_once_with(text='The outage is resolved. Review the release.')
+    assert recorded[0][1]['reply'] == 'A generated summary reply.'
+
+
+@pytest.mark.parametrize('scenario', ['summary', 'clarification', 'error', 'partial_failure',
+                                      'missing_result', 'missing_points', 'compound', 'draft'])
+def test_restored_summary_and_fallback_answers_never_execute(monkeypatch, scenario):
+    recorded = connect_api(monkeypatch)
+    execute = Mock(side_effect=AssertionError('Restoration must not execute'))
+    monkeypatch.setattr(sessions, 'execute_request', execute)
+    chat = sessions.create_chat()['session_id']
+    status = {'clarification': 'needs_clarification', 'error': 'error',
+              'partial_failure': 'partial_failure'}.get(scenario, 'completed')
+    data = execution(chat, status)
+    result = {'summary': 'Saved summary.\nSecond line.', 'key_points': ['Saved point.']}
+    data['trace'] = [dict(tool='summarize_text', arguments={'text': 'Saved source'},
+                          result=result, status='completed', reason=None, elapsed_ms=1.23456789)]
+    if scenario == 'missing_result':
+        data['trace'][0]['result'] = None
+    elif scenario == 'missing_points':
+        data['trace'][0]['result'] = {'summary': 'Legacy summary.'}
+    elif scenario == 'compound':
+        data['trace'].append(dict(tool='analyze_sentiment', arguments={'text': 'Happy'},
+                                  result={'label': 'positive'}, status='completed', reason=None, elapsed_ms=2))
+    elif scenario == 'draft':
+        data['trace'][0]['tool'] = 'draft_email'
+        data['trace'][0]['result'] = {'email_draft': {'recipient': 'Alex', 'subject': 'Saved',
+                                                   'body': 'Saved draft.'},
+                                     'action_instructions': ['Review before sending.']}
+    store = sessions._get_store()
+    store.begin(chat, 'Saved request', 'saved-summary')
+    store.finish('saved-summary', execution={k: v for k, v in data.items() if k != 'session_id'})
+    sessions.close_chat_store()
+    ui = AppTest.from_file(str(SCRIPT))
+    ui.query_params['chat'] = chat
+    for _ in range(2):
+        ui.run()
+        assert not ui.exception
+        answer = ui.chat_message[1]
+        assert [item.value for item in answer.text] == (
+            [result['summary'], '• Saved point.'] if scenario == 'summary' else [data['reply']])
+        assert not answer.json
+        activity = ui.get_by_key('details_saved-summary')
+        for step in data['trace']:
+            if step['result'] is not None:
+                assert step['result'] in [json.loads(item.value) for item in activity.json]
+    assert not recorded
+    execute.assert_not_called()
 
 
 def test_empty_chat_welcome_uses_natural_english_without_execution(monkeypatch):

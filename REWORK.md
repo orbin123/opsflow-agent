@@ -19,9 +19,11 @@ both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implement
 and verified within the recorded offline/scripted-browser limits; step 11 completed
 inline details and step 13 live formation are implemented and verified within the
 recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is implemented
-and verified within the recorded limits; step 12b and steps 14 onward remain pending.
+and verified within the recorded limits; step 12b's single-summary slice is implemented
+and verified below. Remaining step 12b presentation and steps 14 onward are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 12b remaining answer presentation discussion. User approved
+**Next:** ⏳ User review of step 12b's single-summary slice, then discussion of
+remaining answer presentation. User approved
 merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #36.
 Step 11 is merged in PR #34.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
@@ -1182,6 +1184,43 @@ does not authorize those features or change the ordered rework implementation st
   deprecation remains. Scoped DCO-signed change on
   `feature/readable-sentiment-onboarding`, stacked on the unmerged step 13 branch;
   merge awaits user review. Step 12b needs separate agreement.
+
+#### Step 12b single-summary slice — 2026-10-08
+
+- **Agreement:** User approved this slice on 2026-10-08. Other remaining
+  presentations need later agreement.
+- **Contract:** For a completed agent turn with exactly one successful tool
+  record, `summarize_text`, show its saved `summary` and `key_points` once with
+  native literal text and fixed section labels, replacing the generic reply
+  display in this narrow case. Omit empty key points; never parse reply prose.
+  Keep exact raw fields in Activity.
+- **Boundaries:** Retain existing replies for clarification, error, partial
+  failure, missing results, compound/multiple-tool turns and drafts. No execution,
+  prompts, routing, API/storage, CSS or dependency changes.
+- **Verification:** Controlled summary/empty-points/multiline outputs and fallback
+  states; no duplicates, exact Activity records and non-executing restoration/
+  rerenders. Reuse capability/compound/draft regressions. Confirm installed native
+  text APIs and Figma availability before coding; propose retaining documented
+  typography/layout. After automated checks, verify submission/refresh at desktop
+  and mobile sizes in the inline browser with scripted providers; leave the app
+  open for user review before merge.
+- **Implemented/verified:** Saved summary/key-point text replaces only the generic
+  reply for the agreed completed single-summary case. Missing/legacy output shapes
+  retain the reply. All 1,001 tests pass (10 new UI submission/restoration/fallback
+  cases); `pip check` and whitespace checks pass. Initial test-double failure was
+  corrected to return the tool's actual validated model type. Native text APIs
+  verified against installed Streamlit 1.65.0; no dependency changes.
+- **Browser:** Inline app on 8507/backend 8019 verifies multiline literal content,
+  one answer, exact JSON in Activity, empty key points, refresh restoration and
+  1440/390 px layouts without mobile horizontal overflow. Two submitted turns
+  produce exactly two summary calls after refreshes/Activity expansion. Scripted
+  agent and summary providers; real classifier, tool validation, HTTP/SSE and
+  SQLite. No new live-provider quality or email checks. Existing LangChain history
+  deprecation remains; Figma is still rate-limited, so documented native styling
+  is retained. Screenshots `/tmp/opsflow-step12b-desktop.png` and
+  `/tmp/opsflow-step12b-mobile.png`. Review app stays open; merge awaits user
+  confirmation. Scoped user-authored DCO-signed change on
+  `feature/readable-single-summary`.
 
 ### 13. Connect live events to collapsible chat activity
 
