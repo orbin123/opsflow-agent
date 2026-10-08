@@ -22,6 +22,10 @@ step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
 
+- **2026-10-08:** User corrected alignment to right user prompt and left Activity/
+  assistant answer, retaining vertical sequencing and live formation request.
+  Apply to step 11 PR #34 before the separate step 13 stream hookup.
+
 - **2026-10-08:** Corrected step 11 layout from the user's sketch: vertically
   sequential left prompt, centered Activity, then right answer, each capped at
   560 px with native alignment and mobile shrinking. Supersedes the initial

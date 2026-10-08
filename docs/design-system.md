@@ -113,8 +113,8 @@ remain; live Activity and Docs patterns belong to later steps.
 ## Completed inline activity adaptation
 
 On 2026-10-08 the user clarified the step 11 layout with a sketch: a vertical
-sequence of prompt aligned left, collapsed Activity below at center, and answer
-below at right. Use native aligned containers capped at 560 px, shrinking to the
+sequence of prompt aligned right, collapsed Activity below at left, and answer
+below at left. Use native aligned containers capped at 560 px, shrinking to the
 available width on mobile. The main area uses the 1440 px desktop reference;
 mobile expanders retain 8 px padding. Reuse existing surface, outline, typography
 and spacing tokens. Native summary controls retain the 2 px focus indicator.

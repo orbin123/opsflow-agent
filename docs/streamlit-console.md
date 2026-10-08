@@ -131,7 +131,7 @@ Streamlit 1.65.0 is pinned and its native chat/AppTest APIs were checked against
 and [AppTest documentation](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest).
 Python 3.12.13 and the installed backend dependencies remain compatible.
 The light terminal palette, type scale and square controls are adapted to Streamlit.
-Each turn is a vertical sequence: left prompt, centered Activity, then right answer.
+Each turn is a vertical sequence: right prompt, left Activity, then left answer.
 Native containers cap each panel at 560 px inside the 1440 px main reference area
 and shrink to available width on mobile. Native Streamlit JSON
 syntax coloring/icons remain framework defaults. CSS uses Streamlit test IDs and

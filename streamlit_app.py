@@ -241,15 +241,15 @@ with conversation:
         st.info('Start with: Sentiment: "I am happy"')
     for turn in st.session_state.turns:
         with st.container(key="turn_" + turn["turn_id"]):
-            with st.container(horizontal_alignment="left"):
+            with st.container(horizontal_alignment="right"):
                 with st.container(width=560, key="prompt_" + turn["turn_id"]):
                     with st.chat_message("user"):
                         st.text(turn["message"])
             if turn["execution"] is not None:
-                with st.container(horizontal_alignment="center"):
+                with st.container(horizontal_alignment="left"):
                     with st.container(width=560, key="details_" + turn["turn_id"]):
                         show_activity(turn["execution"])
-            with st.container(horizontal_alignment="right"):
+            with st.container(horizontal_alignment="left"):
                 with st.container(width=560, key="answer_" + turn["turn_id"]):
                     with st.chat_message("assistant"):
                         if turn["execution"] is not None:
@@ -257,11 +257,11 @@ with conversation:
                         else:
                             st.error(turn["error"])
     if st.session_state.queued is not None:
-        with st.container(horizontal_alignment="left"):
+        with st.container(horizontal_alignment="right"):
             with st.container(width=560):
                 with st.chat_message("user"):
                     st.text(st.session_state.queued["message"])
-        with st.container(horizontal_alignment="center"):
+        with st.container(horizontal_alignment="left"):
             with st.container(width=560):
                 st.caption("Running request…")
 

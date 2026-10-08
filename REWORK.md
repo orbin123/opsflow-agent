@@ -1100,8 +1100,8 @@ does not authorize those features or change the ordered rework implementation st
 
 #### Step 11 sequential layout revision — 2026-10-08
 
-- User clarified with a sketch: a vertical sequence with prompt left, Activity
-  below at center, and answer below at right. This supersedes the intermediate
+- User clarified vertical sequencing with a sketch, then corrected alignment:
+  prompt right, Activity below at left, then answer below at left. This supersedes the intermediate
   three-column interpretation and initial under-answer placement.
 - Use native aligned containers capped at 560 px, shrinking on narrow viewports;
   the main area uses the existing 1440 px desktop reference. Keep turn association,
@@ -1110,7 +1110,10 @@ does not authorize those features or change the ordered rework implementation st
   containers, then browser vertical order/alignment, keyboard, mobile and refresh.
 - Verified the layout correction with 49 UI/navigation checks and inline desktop
   1440 px/mobile 390 px order/alignment/no-overflow checks. Screenshot
-  `/tmp/opsflow-sequential-layout.png`. Correction belongs to PR #34. The user also
+  `/tmp/opsflow-sequential-layout.png`. The latest right-prompt/left-activity/left-answer
+  alignment passes 49 UI/navigation checks and inline 1440 px positioning checks;
+  screenshot `/tmp/opsflow-sequential-final-alignment.png`. Correction belongs
+  to PR #34. The user also
   requested live sequential formation: take step 13 next, before step 12, as a
   separate stream-client/UI slice using actual step 10 events and saved terminal
   outcomes. No fabricated reasoning/token streaming or execution retry.
