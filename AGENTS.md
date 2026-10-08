@@ -11,9 +11,16 @@ route, with existing chat HTTP status rules and retained workflow/tool records.
 
 The natural-language keyword workflow is documented in `docs/keyword-workflow.md`.
 Approved REWORK step 3b connects it behind the classifier using `llm_assisted`,
-with the same HTTP status and retained-record contracts as sentiment. FAQ remains
-a separate discussion. Keyword assistant turns show a brief introduction and a
-native phrase/score table; full-precision raw results remain in the inspector.
+with the same HTTP status and retained-record contracts as sentiment. Keyword
+assistant turns show a brief introduction and a native phrase/score table;
+full-precision raw results remain in the inspector.
+
+The standalone natural-language FAQ workflow is documented in `docs/faq-workflow.md`.
+Approved REWORK step 3c extracts a complete question, calls unchanged local retrieval,
+and explains only matched fictional policies while retaining exact answers. Ambiguous/
+no-match results clarify without presentation; missing policy details may also clarify.
+FAQ chat integration remains a separate step 3d discussion; current runtime, FAQ-only
+endpoint, and agent tool behavior are unchanged.
 
 ## Read Before Working
 
