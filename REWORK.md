@@ -9,11 +9,10 @@ after the recorded rework handover.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Step 4 is implemented and verified
 with offline/scripted-browser checks and merged in PR #27 after user approval.
-Step 5 is verified within the offline/scripted-browser limits below; independent
-user review is pending. Remaining rework steps are pending.
+Step 5 is verified within the offline/scripted-browser limits below; user approved
+merging PR #28 on 2026-10-08. Remaining rework steps are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Active:** ⏳ Step 5 independent user review before merge.
-**Next discussion:** Step 6 persistent-chat and navigation contracts.
+**Next discussion:** ⏳ Step 6 persistent-chat and navigation contracts.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -735,7 +734,7 @@ does not authorize those features or change the ordered rework implementation st
   semantic extraction, dependency choice, exhaustive task coverage, or prose fidelity.
   No live Groq, SMTP/inbox, reminder, or deployment checks. Existing LangChain
   deprecations remain. Review app stays open on port 8503 for independent user review;
-  merge requires confirmation. Step 4 PR #27 is already merged; original plan remains
+  user approved merging PR #28 on 2026-10-08. Step 4 PR #27 is already merged; original plan remains
   paused. Step 6 needs separate discussion.
 
 ### 6. Agree on persistent-chat and navigation contracts

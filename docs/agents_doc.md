@@ -11,10 +11,15 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Active:** ⏳ Step 5 independent user review before merge. Step 4 merged in
-PR #27; step 5 is verified within the recorded offline/scripted-browser limits.
-Next discussion is step 6 persistent-chat/navigation contracts. Original plan stays
-paused; later implementation awaits discussion.
+**Next:** ⏳ Step 6 persistent-chat/navigation contracts. Step 4 merged in PR #27;
+step 5 is verified within the recorded offline/scripted-browser limits, and user
+approved merging PR #28 on 2026-10-08. Original plan stays paused; later
+implementation awaits discussion.
+
+- **2026-10-08:** User approved merging step 5 PR #28 after the browser review.
+  Verified the current head, user-only authorship/sign-off, passing DCO, and clean
+  mergeability. Existing 877-test and scripted-browser verification remains
+  applicable; no application changes or new live provider/side-effect checks.
 
 - **2026-10-08:** Completed step 5 one-agent multi-step audit. Explicit prompt
   guidance covers dependency order and bounded work. Draft replies now retain
