@@ -19,10 +19,11 @@ both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implement
 and verified within the recorded offline/scripted-browser limits; step 11 completed
 inline details and step 13 live formation are implemented and verified within the
 recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is implemented
-and verified within the recorded limits; step 12b's single-summary slice is implemented
-and verified below. Remaining step 12b presentation and steps 14 onward are pending.
+and verified within the recorded limits; step 12b's single-summary and single-draft
+slices are implemented and verified below. Remaining step 12b presentation and
+steps 14 onward are pending. Single-draft merge awaits user review.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Remaining step 12b answer-presentation discussion. User approved
+**Next:** ⏳ Step 12b single-draft review; then remaining answer-presentation discussion. User approved
 merging Workspace PR #38 and single-summary dependency PR #37 on 2026-10-08;
 PR #37 is merged and #38 now targets `main`. User approved
 merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #36.
@@ -1274,6 +1275,44 @@ does not authorize those features or change the ordered rework implementation st
   `/tmp/opsflow-step12b-mobile.png`. Review app stays open; user approved the merge
   and PR #37 is merged. Scoped user-authored DCO-signed change on
   `feature/readable-single-summary`.
+
+#### Step 12b single-draft slice — 2026-10-08
+
+- **Agreement:** User approved readable single-email drafts. Remaining capability
+  and multi-tool presentations require separate agreement.
+- **Contract:** A completed agent turn with exactly one successful `draft_email`
+  record shows saved recipient, subject, multiline literal body and separate saved
+  action instructions once, replacing the assembled reply. Exact JSON stays in
+  Activity. Preserve fictional-policy qualification using current/prior saved
+  demo-policy markers, matching the agent's existing history qualification.
+- **Fallback/boundaries:** Keep existing replies for clarification, errors,
+  partial failures, multiple tools, and missing/malformed saved fields. UI only;
+  no sending, prompt/routing, API/storage, CSS or dependency changes.
+- **Verification:** Controlled submission and restoration, literal multiline
+  content, separate actions, contextual demo qualification, fallback states and
+  no duplicate execution on rerender/refresh. Run existing regressions, then
+  desktop/mobile inline-browser submission/refresh with scripted providers.
+  Leave the app open for independent review before merge. Installed Streamlit
+  native text APIs checked; Figma remains rate-limited, so retain documented styling.
+- **Implemented/verified:** Saved draft fields and actions replace the reply only
+  for the agreed completed single-tool case. Qualification uses saved history;
+  no prose parsing or backend changes. All 1,037 tests pass (15 new), covering
+  literal submission/rerender, contextual qualification, future/other-chat isolation,
+  restoration after store closure, failures/compound turns and malformed legacy
+  fields. Existing draft fallback assertion updated for the approved presentation.
+  `pip check` and whitespace checks pass; no dependency changes.
+- **Browser:** Inline app on 8508/backend 8020 confirms one literal multiline
+  draft, separate actions, exact Activity JSON, refresh restoration, contextual
+  demo qualification and missing-recipient clarification. Desktop 1440 px/mobile
+  390 px review shows wrapped content without horizontal overflow. Two submitted
+  drafts produce exactly two drafting calls after refresh/Activity/navigation;
+  the policy workflow produces two scripted language calls. Review app stays open.
+  Screenshots `/tmp/opsflow-single-draft-desktop.png` and
+  `/tmp/opsflow-single-draft-mobile.png`. Scripted providers with real classifier,
+  tool validation, local FAQ, HTTP/SSE and SQLite; no live-provider quality,
+  semantic contextual drafting, SMTP/inbox or deployment checks. Existing LangChain
+  history deprecation remains. Scoped branch `feature/readable-single-draft`;
+  merge awaits independent user review.
 
 ### 13. Connect live events to collapsible chat activity
 

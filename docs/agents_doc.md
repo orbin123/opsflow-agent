@@ -11,7 +11,7 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Remaining step 12b answer-presentation discussion. User approved
+**Next:** ⏳ Step 12b single-draft review; then remaining answer-presentation discussion. User approved
 merging Workspace PR #38 and summary dependency PR #37 on 2026-10-08;
 PR #37 is merged and #38 now targets `main`. User approved
 merging step 12a PR #35 on 2026-10-08; step 13 is merged in dependency PR #36.
@@ -24,6 +24,18 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Implemented approved step 12b single-draft presentation: saved
+  recipient/subject/literal multiline body shown once, separate saved actions,
+  raw JSON in Activity and preserved contextual demo qualification. Failure,
+  clarification, compound and malformed-result replies retain their presentation.
+  All 1,037 tests (15 new), dependency and whitespace checks pass. Inline review
+  on 8508/backend 8020 verifies desktop/mobile wrapping, submission/refresh,
+  Activity JSON, qualification and clarification; two submitted drafts remain two
+  drafting calls after inspection/restoration. Scripted providers; no live model
+  quality, semantic contextual drafting or email checks. Figma remains rate-limited;
+  native styling retained and existing LangChain deprecation remains. Review app
+  stays open; branch `feature/readable-single-draft` awaits user review before merge.
 
 - **2026-10-08:** User approved merging Workspace PR #38 and summary dependency
   PR #37 after inline review. Verified current heads, user-only authorship/sign-offs

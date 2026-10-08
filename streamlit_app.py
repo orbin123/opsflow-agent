@@ -28,7 +28,7 @@ def console_styles() -> str:
     return css
 
 
-def show_execution(execution: dict) -> None:
+def show_execution(execution: dict, demo_policy: bool = False) -> None:
     status = execution["status"]
     if status in {"error", "partial_failure"}:
         st.error(f"Execution: {status}")
@@ -37,6 +37,7 @@ def show_execution(execution: dict) -> None:
     elif status != "needs_clarification":
         st.caption(f"Execution: {status}")
     summary = None
+    draft = None
     if status == "completed" and execution["route"] == "agent" and len(execution["trace"]) == 1:
         step = execution["trace"][0]
         if step["tool"] == "summarize_text" and step["status"] == "completed":
@@ -45,6 +46,17 @@ def show_execution(execution: dict) -> None:
                     and result["summary"].strip() and isinstance(result.get("key_points"), list)
                     and all(isinstance(point, str) for point in result["key_points"])):
                 summary = result
+        elif step["tool"] == "draft_email" and step["status"] == "completed":
+            result = step["result"]
+            if isinstance(result, dict):
+                content = result.get("email_draft")
+                actions = result.get("action_instructions")
+                if (isinstance(content, dict)
+                        and all(isinstance(content.get(field), str) and content[field].strip()
+                                for field in ("recipient", "subject", "body"))
+                        and isinstance(actions, list) and actions
+                        and all(isinstance(action, str) and action.strip() for action in actions)):
+                    draft = result
     if summary is not None:
         st.caption("Summary")
         st.text(summary["summary"])
@@ -52,6 +64,16 @@ def show_execution(execution: dict) -> None:
             st.caption("Key points")
             for point in summary["key_points"]:
                 st.text("• " + point)
+    elif draft is not None:
+        if demo_policy:
+            st.text("Policy information below is fictional demo policy.")
+        st.caption("Email draft")
+        st.text("Intended recipient: " + draft["email_draft"]["recipient"])
+        st.text("Subject: " + draft["email_draft"]["subject"])
+        st.text(draft["email_draft"]["body"])
+        st.caption("What you should do")
+        for action in draft["action_instructions"]:
+            st.text("• " + action)
     elif execution["reply"] is not None:
         st.text(execution["reply"])
     if execution["result"] is not None:
@@ -338,6 +360,7 @@ with conversation:
                 "• Just check the sentiment of this I am happy\n\n"
                 "• Find keywords in this The server failed after the deployment\n\n"
                 "• What is the remote work policy? (fictional demo policies)")
+    demo_policy = False
     for turn in st.session_state.turns:
         with st.container(key="turn_" + turn["turn_id"]):
             with st.container(horizontal_alignment="right"):
@@ -352,9 +375,10 @@ with conversation:
                 with st.container(width=560, key="answer_" + turn["turn_id"]):
                     with st.chat_message("assistant"):
                         if turn["execution"] is not None:
-                            show_execution(turn["execution"])
+                            show_execution(turn["execution"], demo_policy or turn.get("demo_policy", False))
                         else:
                             st.error(turn["error"])
+        demo_policy = demo_policy or turn.get("demo_policy", False)
     if st.session_state.queued is not None:
         with st.container(horizontal_alignment="right"):
             with st.container(width=560):
