@@ -20,7 +20,10 @@ class ChatClientError(Exception):
         self.outcome = outcome
 
 
-def submit_chat(base_url: str, session_id: str, message: str, *, turn_id: str | None = None) -> dict:
+def submit_chat(base_url: str, session_id: str, message: str, *, turn_id: str | None = None, on_event=None) -> dict:
+    if on_event is not None:
+        from app.ui_stream import submit_stream
+        return submit_stream(base_url, session_id, message, turn_id, on_event)
     body = ChatRequest(session_id=session_id, message=message, turn_id=turn_id)
     request = Request(base_url.rstrip("/") + "/api/v1/chat",
                       data=body.model_dump_json(exclude_none=True).encode("utf-8"),

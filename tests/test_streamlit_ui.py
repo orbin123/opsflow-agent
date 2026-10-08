@@ -16,6 +16,13 @@ from app.main import app
 SCRIPT = Path(__file__).resolve().parents[1] / "streamlit_app.py"
 
 
+class StreamResponse(io.BytesIO):
+    def __init__(self, text):
+        super().__init__(text.encode())
+        self.status = 200
+        self.headers = {"Content-Type": "text/event-stream"}
+
+
 class Response(io.BytesIO):
     def __init__(self, payload, status=200):
         super().__init__(json.dumps(payload).encode())
@@ -100,6 +107,15 @@ def connect_api(monkeypatch):
     def send(request, **kwargs):
         body = json.loads(request.data) if request.data else None
         response = client.request(request.method, request.full_url, json=body)
+        if request.full_url.endswith("/api/v1/chat/stream"):
+            events = [json.loads(line[6:]) for line in response.text.splitlines() if line.startswith("data: ")]
+            final_event = events[-1]
+            if final_event["event"] == "final":
+                recorded.append((body, {"session_id": body["session_id"], "turn_id": body["turn_id"],
+                                       **final_event["execution"]}))
+            else:
+                recorded.append((body, final_event))
+            return StreamResponse(response.text)
         if request.full_url.endswith("/api/v1/chat"):
             recorded.append((body, response.json()))
         return Response(response.json(), response.status_code)
@@ -240,24 +256,11 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
     extraction = AIMessage(content=json.dumps({"status": "ready", "source_text": "I am happy", "reason": "explicit_source"}),
                            response_metadata={"finish_reason": "stop"})
     model.invoke.side_effect = [extraction, RuntimeError("private credentials")]
-    client = TestClient(app)
-    sent = []
-
-    def send(request, **kwargs):
-        if not request.full_url.endswith("/api/v1/chat"):
-            result = client.request(request.method, request.full_url,
-                                    json=json.loads(request.data) if request.data else None)
-            return Response(result.json(), result.status_code)
-        result = client.post("/api/v1/chat", json=json.loads(request.data))
-        sent.append(result.json())
-        assert result.status_code == 503
-        raise HTTPError("http://localhost", 503, "unavailable", {}, Response(result.json()))
-
-    monkeypatch.setattr(ui_client, "urlopen", send)
+    sent_pairs = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     send_message(ui, "Just check the sentiment of this I am happy")
     assert not ui.exception
-    data = sent[0]
+    data = sent_pairs[0][1]
     assert data["route"] == "llm_assisted" and data["status"] == "partial_failure"
     assert data["reason"] == "presentation_failed" and data["result"]["label"] == "positive"
     assert data["trace"][0]["status"] == "completed"
@@ -270,7 +273,7 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
     assert saved["result"] == data["result"] and saved["reply"] == data["reply"]
     assert saved["workflow_trace"] == data["workflow_trace"]
     ui.run()
-    assert not ui.exception and len(sent) == 1 and model.invoke.call_count == 2
+    assert not ui.exception and len(sent_pairs) == 1 and model.invoke.call_count == 2
     assert len(sessions._sessions[session_id].history.messages) == 2
     assert "private credentials" not in str(ui)
 
@@ -306,7 +309,7 @@ def test_ui_input_bounds_before_submission(monkeypatch, message):
 
 
 def test_ui_source_is_plain_text_not_executable_markup(monkeypatch):
-    def send(url, session_id, message, *, turn_id):
+    def send(url, session_id, message, *, turn_id, on_event=None):
         data = execution(session_id)
         data["reply"] = '<script>private()</script> ![remote](https://example.com/image)'
         store = sessions._get_store()
@@ -367,24 +370,11 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
     extraction = AIMessage(content=json.dumps({"status": "ready", "source_text": "The server failed after the deployment", "reason": "explicit_source"}),
                            response_metadata={"finish_reason": "stop"})
     model.invoke.side_effect = [extraction, RuntimeError("private credentials")]
-    client = TestClient(app)
-    sent = []
-
-    def send(request, **kwargs):
-        if not request.full_url.endswith("/api/v1/chat"):
-            result = client.request(request.method, request.full_url,
-                                    json=json.loads(request.data) if request.data else None)
-            return Response(result.json(), result.status_code)
-        result = client.post("/api/v1/chat", json=json.loads(request.data))
-        sent.append(result.json())
-        assert result.status_code == 503
-        raise HTTPError("http://localhost", 503, "unavailable", {}, Response(result.json()))
-
-    monkeypatch.setattr(ui_client, "urlopen", send)
+    sent_pairs = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     send_message(ui, "Find keywords in this The server failed after the deployment")
     assert not ui.exception
-    data = sent[0]
+    data = sent_pairs[0][1]
     assert data["route"] == "llm_assisted" and data["status"] == "partial_failure"
     assert data["reason"] == "presentation_failed" and bool(data["result"])
     assert data["trace"][0]["status"] == "completed"
@@ -401,7 +391,7 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
     assert saved["result"] == data["result"] and saved["reply"] == data["reply"]
     assert saved["workflow_trace"] == data["workflow_trace"]
     ui.run()
-    assert not ui.exception and len(sent) == 1 and model.invoke.call_count == 2
+    assert not ui.exception and len(sent_pairs) == 1 and model.invoke.call_count == 2
     assert len(sessions._sessions[session_id].history.messages) == 2
     assert "private credentials" not in str(ui)
 
@@ -427,7 +417,7 @@ def test_ui_keyword_table_keeps_phrases_as_literal_text(monkeypatch):
     phrase = "![remote](https://example.com/image) <script>private()</script>"
     scores = [{"phrase": phrase, "score": 0.0123456789}]
 
-    def send(url, session_id, message, *, turn_id):
+    def send(url, session_id, message, *, turn_id, on_event=None):
         data = execution(session_id)
         data.update(predicted_intent="keyword_extraction", route="llm_assisted",
                     result=scores, reply="Here are the extracted keywords and their scores.")

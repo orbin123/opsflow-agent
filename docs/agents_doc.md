@@ -11,8 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 13 live sequential activity, requested before step 12; step 11 awaits user
-review before merge.
+**Next:** ⏳ Step 12 readable answers/onboarding discussion; steps 11 and 13
+await user review before merge.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
@@ -21,6 +21,21 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Implemented user-requested step 13 before step 12: one consumed
+  SSE submission shows a right prompt, left live Activity, then left saved answer.
+  Strict identity/sequence/step/final validation, sanitized failures and read-only
+  recovery prevent automatic resubmission; interrupted UI reruns recover by GET.
+  Live header stays stable to preserve expansion, with actual observable stages.
+  Full 983-test suite and final 73 focused checks pass (24 added stream/recovery
+  cases overall), plus dependencies/whitespace. Inline 8506/backend 8018 review
+  confirms workflow and three-tool live progress before answer, refresh/recovery,
+  exactly one POST per turn, retained-result partial failure, keyboard focus and
+  1440/390 px layout without overflow. Providers/compound gate are scripted;
+  VADER/YAKE/FAQ/HTTP/SQLite are real. App stays open; merge awaits user review.
+  No live provider/email, backend/schema, event journal, token streaming or
+  dependencies/deployment changes. Existing history deprecation remains. Screenshots
+  `/tmp/opsflow-step13-live-final.png`, `/tmp/opsflow-step13-mobile.png`.
 
 - **2026-10-08:** User corrected alignment to right user prompt and left Activity/
   assistant answer, retaining vertical sequencing and live formation request.

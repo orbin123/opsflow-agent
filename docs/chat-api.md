@@ -217,6 +217,8 @@ An in-flight duplicate waits on the existing per-chat lock and then returns the
 saved outcome; an unsaved/interrupted marker conflicts. Conflicting content/chat
 also conflicts. Identity protection applies while turn records are retained.
 
-Streamlit continues to use the existing nonstreaming endpoint and separate
-inspector. Step 11 moves completed details inline; step 13 consumes live activity.
+Streamlit step 13 submits once through this stream, displays actual transient
+activity, and restores authoritative outcomes through GET. Step 11 places saved
+details between the right prompt and left answer in a vertical sequence. The
+nonstreaming endpoint remains available to other callers.
 No new external service, dependency, email/reminder execution or UI redesign.
