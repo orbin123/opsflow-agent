@@ -101,7 +101,6 @@ def test_exact_input_bound_and_clarification(monkeypatch):
     (call(args={"text": "ok", "extra": True}), "invalid_tool_arguments"),
     (call(args={"text": "x" * 10001}), "invalid_tool_arguments"),
     (call("draft_email", {"recipient": "Alex\nB", "content": "note"}), "invalid_tool_arguments"),
-    (call("draft_email", {"content": "note"}), "invalid_tool_arguments"),
     (call(ident=""), "invalid_tool_call"),
     (AIMessage(content="not JSON", response_metadata={"finish_reason": "stop"}), "invalid_output"),
     (AIMessage(content='{"status":"completed","reply":" "}', response_metadata={"finish_reason": "stop"}), "invalid_output"),

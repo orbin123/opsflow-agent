@@ -281,7 +281,28 @@ def run_agent(message: str, *, history: list[HumanMessage | AIMessage] | None = 
             schema, tool, _ = _TOOLS[name]
             try:
                 arguments = schema.model_validate(call.get("args")).model_dump()
-            except ValidationError:
+            except ValidationError as error:
+                # Missing user inputs are a conversation turn, not a tool failure.
+                questions = {
+                    "summarize_text": {"text": "What text would you like me to summarize?"},
+                    "draft_email": {
+                        "recipient": "Who should I draft this email for?",
+                        "content": "What facts or message should the email include?",
+                    },
+                }.get(name, {})
+                missing = []
+                for detail in error.errors():
+                    field = detail["loc"][0] if len(detail["loc"]) == 1 else None
+                    value = detail.get("input")
+                    if field not in questions or not (
+                        detail["type"] == "missing"
+                        or detail["type"] in {"string_too_short", "value_error"}
+                        and isinstance(value, str) and not value.strip()
+                    ):
+                        return fail("invalid_tool_arguments")
+                    missing.append(questions[field])
+                if missing:
+                    return finish("needs_clarification", " ".join(missing))
                 return fail("invalid_tool_arguments")
             if len(trace) >= 5:
                 return fail("tool_limit")

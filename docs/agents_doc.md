@@ -11,14 +11,23 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 4 conversational summarization/drafting review. FAQ steps 3c/3d
-are implemented and verified within recorded offline/limited live bounds. Standalone
-PR #25 is merged; integration PR #26 targets `main` and is approved for merge.
-Keyword workflow/integration/presentation are merged in PR #24. Inline
-completed details are deferred to step 11, after tool/agent behavior, persistence,
-and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
-within their recorded limits; keyword steps 3a/3b are also verified offline.
-Later implementation awaits discussion.
+**Active:** ⏳ Step 4 independent user review before merge. Next discussion is
+step 5 one-agent multi-step verification. Steps 1–4 are verified within their
+recorded limits; live model quality for step 4 remains unverified. FAQ PRs #25/#26
+and workflow package organization are merged. The original plan stays paused;
+later implementation awaits discussion.
+
+- **2026-10-08:** Completed step 4's agreed conversational writing audit. Missing/
+  blank required summary source or draft recipient/content now asks a question
+  without tool execution; malformed arguments/provider failures remain errors.
+  Chat clarification replies have no technical warning banner; status remains in
+  the inspector. All 870 tests (16 added scripted checks), `pip check`, and whitespace
+  checks pass. Inline browser verified clarification answers, completed draft with
+  separate actions, and contextual summary against a temporary scripted backend.
+  Review app remains open on port 8502; user confirmation is required before merge.
+  No live provider/email/reminder/deployment checks; semantic quality remains
+  unverified. Recorded settings/Reminders/Email-page ideas for future discussion,
+  with side-effect integration kept outside rework. No dependencies changed.
 
 - **2026-10-08:** Moved sentiment, keyword, and FAQ workflow modules into
   `app/workflows/` and updated imports/documentation references. This keeps the
