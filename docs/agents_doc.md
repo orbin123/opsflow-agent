@@ -11,7 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 8 catalogue APIs, after step 7 review/merge confirmation.
+**Next:** ⏳ Step 8 catalogue APIs. User approved merging step 7 PR #30 and its
+contract dependency PR #29 after browser review; PR #29 is merged and #30 targets `main`.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
 recorded and reviewed in [persistent-chat-contract.md](persistent-chat-contract.md).
@@ -19,6 +20,12 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** User approved merging step 7 PR #30 and contract dependency #29.
+  Verified both current heads, user-only authorship/sign-offs, passing DCO, and
+  clean mergeability. Merged #29 and retargeted #30 to `main`. Existing 902-test
+  and scripted-browser verification remains applicable; this approval record adds
+  no application behavior or new live-provider/email checks.
 
 - **2026-10-08:** Implemented approved step 7 durable chat history/restoration in
   separate versioned SQLite storage. Commit-before-execution/final acknowledgement,

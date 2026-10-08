@@ -12,10 +12,11 @@ with offline/scripted-browser checks and merged in PR #27 after user approval.
 Step 5 is verified within the offline/scripted-browser limits below; user approved
 merging PR #28 on 2026-10-08. Step 6's persistence/navigation contract is
 recorded and reviewed. Step 7 storage/restoration is implemented and verified within
-the offline/scripted-browser limits below; review/merge confirmation remains pending.
+the offline/scripted-browser limits below; user approved merging PR #30 and its
+step 6 dependency PR #29. PR #29 is merged; PR #30 now targets `main`.
 Steps 8 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next discussion:** ⏳ Step 8 chat creation/listing/retrieval APIs, after step 7 review.
+**Next discussion:** ⏳ Step 8 chat creation/listing/retrieval APIs.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -791,8 +792,8 @@ does not authorize those features or change the ordered rework implementation st
   function. Catalogue HTTP APIs and sidebar changes stay in steps 8–9. Verify
   fresh-process recovery, isolation/follow-ups, retained failures, duplicate IDs,
   failed writes, and serialization with offline doubles, followed by inline-browser
-  chat review. Implemented and verified within the bounds below; user review/merge
-  confirmation remains pending.
+  chat review. Implemented and verified within the bounds below; user approved
+  merging PR #30 and its dependency PR #29 after the browser review.
 - **Problem/change:** Store chat metadata, messages, execution records, and finalized
   outcomes durably. Reconstruct the context consumed by the existing agent from saved
   direct/agent outcomes without appending turns twice or changing reminder behavior.
@@ -839,7 +840,8 @@ does not authorize those features or change the ordered rework implementation st
   storage, Linux/Windows, or deployment verification. No new dependencies, reminder
   changes, automatic migration of old process-local memory, or browser refresh
   restoration. Commit/PR is separate from the step 6 contract dependency PR #29.
-  Wait for user review confirmation before merge or any direct push to `main`.
+  User approved merging both PRs on 2026-10-08. PR #29 is merged; PR #30 now
+  targets `main`, with existing verification still applicable.
 
 ### 8. Expose chat creation, listing, and retrieval
 
