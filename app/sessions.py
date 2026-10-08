@@ -1,86 +1,162 @@
-"""Process-local conversation history; callers own session identity and authorization."""
+"""Durable conversation history for one trusted local backend process."""
 
 import json
 from dataclasses import asdict, dataclass, field, replace
 from threading import Lock
 from time import perf_counter
+from uuid import uuid4
 
 from langchain_core.chat_history import InMemoryChatMessageHistory
-from langchain_core.messages import AIMessage
-from langchain_core.runnables import RunnableLambda
-from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_core.messages import AIMessage, HumanMessage
 from langsmith import tracing_context
+from pydantic import TypeAdapter, ValidationError
 
+from app.agent import AgentTrace
+from app.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict, database_path
 from app.runtime import ExecutionResult, RuntimeUnavailable, execute_request
 
 
 @dataclass
 class _Session:
+    # A display/testing snapshot only; SQLite supplies context for every request.
     history: InMemoryChatMessageHistory = field(default_factory=InMemoryChatMessageHistory)
     lock: Lock = field(default_factory=Lock)
 
 
 _sessions: dict[str, _Session] = {}
 _registry_lock = Lock()
+_store: ChatStore | None = None
+
+
+def _text(value: str, name: str, limit: int) -> None:
+    if not isinstance(value, str):
+        raise TypeError(f"{name} must be a string")
+    if not value.strip() or len(value) > limit:
+        raise ValueError(f"{name} must be nonblank and at most {limit:,} characters")
 
 
 def _get_session(session_id: str) -> _Session:
-    if not isinstance(session_id, str):
-        raise TypeError("Session ID must be a string")
-    if not session_id.strip() or len(session_id) > 128:
-        raise ValueError("Session ID must be nonblank and at most 128 characters")
+    _text(session_id, "Session ID", 128)
     with _registry_lock:
         if session_id not in _sessions:
             _sessions[session_id] = _Session()
         return _sessions[session_id]
 
 
-def _execute_turn(inputs: dict) -> dict:
+def _get_store() -> ChatStore:
+    global _store
+    with _registry_lock:
+        path = database_path()
+        if _store is None:
+            _store = ChatStore(path)
+        elif _store.path != path:
+            raise ChatPersistenceError("Restart the backend before changing chat storage.")
+        return _store
+
+
+def close_chat_store() -> None:
+    """Release ownership on graceful backend shutdown, after active requests finish."""
+    global _store
+    with _registry_lock:
+        if _store is not None:
+            _store.close()
+            _store = None
+
+
+def _execution(record: dict) -> ExecutionResult:
     try:
-        execution = execute_request(inputs["message"], history=inputs["history"])
-    except RuntimeUnavailable as error:
-        # Preserve the failed turn, then re-raise the existing contract to the caller.
-        detail = str(error)
-        return {"error": detail, "saved": AIMessage(content=json.dumps({
-            "status": "error", "reply": detail, "reason": "runtime_unavailable", "trace": [],
-        }))}
-    demo_policy = any(step.tool == "retrieve_faq" and step.status == "completed"
-                      and (step.result.get("is_demo") if isinstance(step.result, dict)
-                           else getattr(step.result, "is_demo", False)) for step in execution.trace)
-    return {"execution": execution, "saved": AIMessage(content=json.dumps(asdict(execution)),
-            additional_kwargs={"opsflow_demo_policy": bool(demo_policy)})}
+        execution = TypeAdapter(ExecutionResult).validate_python(record)
+        # Preserve reasons when the shared tool/agent trace union overlaps.
+        trace = [TypeAdapter(AgentTrace).validate_python(step) if "reason" in step else decoded
+                 for step, decoded in zip(record["trace"], execution.trace)]
+        return replace(execution, trace=trace)
+    except (ValidationError, KeyError, TypeError, ValueError):
+        raise ChatPersistenceError("Saved chat outcomes could not be restored.") from None
 
 
-_conversation = RunnableWithMessageHistory(
-    RunnableLambda(_execute_turn),
-    lambda session_id: _get_session(session_id).history,
-    input_messages_key="message", history_messages_key="history", output_messages_key="saved",
-)
+def _assistant(turn: dict) -> AIMessage:
+    if turn["execution"] is not None:
+        _execution(turn["execution"])
+        record = turn["execution"]
+    else:
+        record = {"status": "error", "reply": turn["failure_reply"],
+                  "reason": turn["failure_reason"], "trace": []}
+    return AIMessage(content=json.dumps(record),
+                     additional_kwargs={"opsflow_demo_policy": turn["demo_policy"]})
 
 
-def execute_session_request(session_id: str, message: str) -> ExecutionResult:
-    """Execute and remember a turn; serialize execution and clearing within one session.
+def _restore(turns: list[dict]) -> list[HumanMessage | AIMessage]:
+    return [message for turn in turns if turn["state"] != "running"
+            for message in (HumanMessage(content=turn["message"]), _assistant(turn))]
 
-    No automatic eviction/truncation, disk persistence, public endpoint or authentication.
-    Total elapsed time includes lock waiting and history processing. History contains
-    private source and result data; external tracing is disabled for the whole runnable.
+
+def execute_session_request(session_id: str, message: str, *, turn_id: str | None = None) -> ExecutionResult:
+    """Commit a turn once, restore its context, execute, then persist its outcome.
+
+    Optional turn IDs provide duplicate protection for Python callers; HTTP wiring
+    follows in step 8. No automatic execution retries or history truncation.
     """
-    if not isinstance(message, str):
-        raise TypeError("Message must be a string")
-    if not message.strip() or len(message) > 10000:
-        raise ValueError("Message must be nonblank and at most 10,000 characters")
+    _text(message, "Message", 10000)
+    _text(session_id, "Session ID", 128)
+    if turn_id is not None:
+        _text(turn_id, "Turn ID", 128)
+    else:
+        turn_id = uuid4().hex
     started = perf_counter()
     session = _get_session(session_id)
     with session.lock, tracing_context(enabled=False):
-        output = _conversation.invoke({"message": message},
-                                      config={"configurable": {"session_id": session_id}})
-        if "error" in output:
-            raise RuntimeUnavailable(output["error"]) from None
-        return replace(output["execution"], elapsed_ms=(perf_counter() - started) * 1000)
+        store = _get_store()
+        prior = store.turns(session_id)
+        history = _restore(prior)
+        session.history.messages = history
+        existing = store.begin(session_id, message, turn_id)
+        if existing is not None:
+            if existing["state"] != "finished":
+                raise ChatTurnConflict("This turn has unfinished or unknown completion. No execution was repeated.")
+            if existing["execution"] is None:
+                raise RuntimeUnavailable(existing["failure_reply"])
+            return _execution(existing["execution"])
+
+        failure_reply = None
+        try:
+            execution = execute_request(message, history=history)
+        except RuntimeUnavailable as error:
+            execution = None
+            failure_reply = str(error)
+        except Exception:
+            # Unobserved completion cannot be invented or automatically repeated.
+            raise ChatPersistenceError(
+                "The turn stopped before its outcome was saved. Completion is unknown; no automatic retry.",
+                outcome="unsaved") from None
+        if execution is not None:
+            # Freeze the same timing for response and storage. Final SQLite commit
+            # duration is excluded, as are HTTP transport and rendering.
+            execution = replace(execution, elapsed_ms=(perf_counter() - started) * 1000)
+            record = asdict(execution)
+            demo_policy = any(step.tool == "retrieve_faq" and step.status == "completed"
+                and (step.result.get("is_demo") if isinstance(step.result, dict)
+                     else getattr(step.result, "is_demo", False)) for step in execution.trace)
+        else:
+            record, demo_policy = None, False
+        try:
+            store.finish(turn_id, execution=record, demo_policy=bool(demo_policy),
+                         failure_reply=failure_reply,
+                         failure_reason="runtime_unavailable" if failure_reply is not None else None)
+        except ChatPersistenceError:
+            raise ChatPersistenceError(
+                "The turn ran, but its outcome was not saved. Completion is unknown after reload; no automatic retry.",
+                outcome="unsaved") from None
+        saved = {"execution": record, "demo_policy": bool(demo_policy),
+                 "failure_reply": failure_reply, "failure_reason": "runtime_unavailable"}
+        session.history.messages = [*history, HumanMessage(content=message), _assistant(saved)]
+        if execution is None:
+            raise RuntimeUnavailable(failure_reply) from None
+        return execution
 
 
 def clear_session_history(session_id: str) -> None:
-    """Clear source/reply/result history after any active turn; retain the session lock."""
+    """Clear durable turns after active execution; keep metadata and session lock."""
     session = _get_session(session_id)
-    with session.lock:
+    with session.lock, tracing_context(enabled=False):
+        _get_store().clear(session_id)
         session.history.clear()

@@ -9,6 +9,17 @@ import pytest
 from app.workflows import sentiment_workflow, keyword_workflow, faq_workflow
 
 
+@pytest.fixture(autouse=True)
+def isolated_chat_database(tmp_path, monkeypatch):
+    from app import sessions
+
+    monkeypatch.setenv("OPSFLOW_CHATS_DB", str(tmp_path / "chats.sqlite3"))
+    monkeypatch.setattr(sessions, "_store", None)
+    monkeypatch.setattr(sessions, "_sessions", {})
+    yield
+    sessions.close_chat_store()
+
+
 @pytest.fixture
 def sentiment_provider(monkeypatch):
     monkeypatch.setattr(sentiment_workflow, "_create_model",

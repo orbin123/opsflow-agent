@@ -1,4 +1,4 @@
-# Process-local session memory
+# Durable local session memory
 
 ```python
 from app.sessions import execute_session_request, clear_session_history
@@ -17,7 +17,7 @@ authorization layer. See [chat-api.md](chat-api.md) for the HTTP contract.
 Different keys get separate histories. Existing `execute_request`, `run_agent`
 and the FAQ endpoint remain stateless unless history is explicitly supplied.
 
-Each turn saves its user message and an application-generated assistant JSON
+Each turn durably saves its user message and an application-generated assistant JSON
 record containing reply, classification, route, status, reasons and actual
 structured tool outcomes. Direct tools therefore contribute context even though
 their `reply` is null. Agent clarification, errors and partial failures preserve
@@ -45,25 +45,31 @@ One lock per session covers the entire turn, including execution and history
 updates. Clearing waits for an active turn, then clears all message contents.
 The session entry/lock remains to avoid races with waiting callers; a subsequent
 turn starts with empty history. Different sessions can execute concurrently.
-Total elapsed time returned to the caller includes waiting for the session lock
-and history handling. The stored execution record contains the inner runtime
-timing rather than that outer duration.
+Total elapsed time returned to the caller includes waiting for the session lock,
+history restoration, initial persistence, and execution. The stored execution
+record uses the same duration; final save transaction and HTTP transport are excluded.
 
-Memory uses the already-pinned LangChain Core 1.6.6 `InMemoryChatMessageHistory`
-and `RunnableWithMessageHistory`. Both are deprecated in that installed version
-for removal in 2.0. No dependencies were changed; a framework migration is a
-future decision. External tracing is disabled around the entire history runnable.
+Memory uses the already-pinned LangChain Core 1.6.6 message types and an
+`InMemoryChatMessageHistory` snapshot. SQLite supplies authoritative context on
+each call; `RunnableWithMessageHistory` was removed to control commit ordering
+and prevent premature in-memory appends. The snapshot class is deprecated for
+removal in 2.0. No dependencies changed. External tracing is disabled around
+session restoration, execution, and saving.
 Records contain private source/results and must not be logged wholesale. No raw
 orchestration responses, reasoning tokens or intermediate model/tool-message
 transcripts are retained across turns.
 
-History is local to one Python process and lost on restart. It is not shared
-between workers/hosts or persisted to SQLite. This first slice has no automatic
-eviction, truncation or context-token budgeting; callers should explicitly clear
-histories when finished. Large histories can exhaust process memory or provider
-context, with provider failures reported through the existing agent contract.
-Reminder/email execution, UI integration and production-scale memory remain
-separate work.
+History survives backend restart in a separate local SQLite database. One backend
+owns it exclusively; workers/hosts cannot share live execution. Startup recovery
+on first store use marks unfinished turns interrupted with unknown completion and
+never retries them. Initial/final save failures stop execution/continuation as
+appropriate, without silent memory/disk divergence. There is no automatic eviction,
+truncation, or context budgeting. Large histories can exhaust process memory or
+provider context, reported through the existing agent contract.
+See [chat-persistence.md](chat-persistence.md) for storage/lock configuration,
+duplicate protection for Python turn IDs, durable clearing, and failure contracts.
+Reminder/email execution, catalogue APIs, browser navigation, and production-scale
+memory remain separate work.
 
 Offline verification covers direct-to-agent context, draft revision and demo/action
 preservation, clarification answers, ambiguous-reference responses, session
@@ -71,6 +77,6 @@ isolation, clearing, same-session serialization, independent sessions, private
 tracing isolation, failure records and rejection before history creation. Provider
 doubles verify message/result flow; they do not establish model reliability.
 
-Verification on 2026-10-06: all 631 tests (17 new), `pip check` and whitespace
+Historical verification on 2026-10-06: all 631 tests (17 new), `pip check` and whitespace
 checks pass. Two expected history-API deprecation warnings remain visible.
 No live provider, SMTP/inbox, HTTP/UI or deployment tests were performed.
