@@ -22,6 +22,10 @@ class ChatPersistenceError(Exception):
 class ChatTurnConflict(Exception):
     """A turn ID was reused inconsistently or unfinished work blocks execution."""
 
+    def __init__(self, message: str, *, state: str | None = None):
+        super().__init__(message)
+        self.state = state
+
 
 _ROOT = Path(__file__).resolve().parents[1]
 _SCHEMA = (
@@ -122,6 +126,31 @@ class ChatStore:
         with self._connection() as connection:
             return [_record(row) for row in connection.execute(
                 "SELECT * FROM chat_turns WHERE session_id=? ORDER BY sequence", (session_id,))]
+
+    def create_chat(self, session_id: str) -> dict:
+        with self._connection(write=True) as connection:
+            now = _now()
+            connection.execute("""INSERT INTO chats
+                (session_id, title, created_at, updated_at) VALUES (?, 'New chat', ?, ?)""",
+                               (session_id, now, now))
+            return dict(session_id=session_id, title="New chat", created_at=now, updated_at=now)
+
+    def list_chats(self) -> list[dict]:
+        with self._connection() as connection:
+            return [dict(row) for row in connection.execute("""SELECT
+                session_id, title, created_at, updated_at FROM chats
+                ORDER BY updated_at DESC, session_id ASC""")]
+
+    def get_chat(self, session_id: str) -> dict | None:
+        with self._connection() as connection:
+            # Metadata and turns must describe the same snapshot during execution.
+            connection.execute("BEGIN")
+            row = connection.execute("""SELECT session_id, title, created_at, updated_at
+                FROM chats WHERE session_id=?""", (session_id,)).fetchone()
+            if row is None:
+                return None
+            return {**dict(row), "turns": [_record(turn) for turn in connection.execute(
+                "SELECT * FROM chat_turns WHERE session_id=? ORDER BY sequence", (session_id,))]}
 
     def begin(self, session_id: str, message: str, turn_id: str) -> dict | None:
         """Commit the execution marker, or return an identical existing turn."""

@@ -122,7 +122,7 @@ def test_exact_limits_and_whitespace_preserved_and_execute_once(monkeypatch):
     session_id, message = " " + "s" * 126 + " ", " " + "m" * 9998 + " "
     response = post(message, session_id)
     assert response.status_code == 200 and response.json()["session_id"] == session_id
-    execute.assert_called_once_with(session_id, message)
+    execute.assert_called_once_with(session_id, message, turn_id=response.json()["turn_id"])
 
 
 def test_runtime_failure_sanitized_and_remembered(monkeypatch):

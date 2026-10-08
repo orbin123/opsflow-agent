@@ -10,7 +10,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/chat \
   -d '{"session_id":"local-chat","message":"Just check the sentiment of this I am happy"}'
 ```
 
-Only `session_id` and `message` are accepted. Both must be nonblank strings;
+`session_id`, `message`, and optional `turn_id` are accepted. Both must be nonblank strings;
 their limits are 128 and 10,000 characters respectively. Input is preserved
 exactly, including surrounding whitespace. Clients cannot set intent, confidence,
 route or history. Reuse the exact same session ID for follow-ups; a different ID
@@ -18,7 +18,8 @@ starts a separate conversation. The handler calls the session entry point once
 in FastAPI's worker thread pool because the runtime blocks during tool/provider
 calls. Existing per-session locks serialize turns.
 
-The response includes the echoed `session_id` and the existing execution fields:
+The response includes the echoed `session_id`, accepted `turn_id` (generated when omitted),
+and the existing execution fields:
 
 - `status`: `completed`, `needs_clarification`, `partial_failure`, `error`, or the
   runtime's `agent_required` status (retained in the schema; normal chat handoff
@@ -48,8 +49,13 @@ HTTP 422 rejects invalid bodies before execution/history creation. HTTP 503 retu
 the execution payload for `error` or `partial_failure`, retaining successful
 observations and failed steps; classifier/routing unavailability instead returns
 sanitized `{"detail":"..."}`. Failures remain in history through the existing
-session wrapper. There are no automatic endpoint retries or request deduplication;
-resubmitting a turn runs it again and appends another turn.
+session wrapper. There are no automatic endpoint retries. A supplied nonblank `turn_id` (up to
+128 characters) replays an identical saved chat/message submission without execution,
+including after restart. Conflicting content/chat or running/interrupted IDs return
+HTTP 409 with `detail.code="chat_turn_conflict"`, nullable `state`, and sanitized
+`message`. Finished failures replay with their original 503 semantics. Without an ID,
+each POST generates a new one and executes a new turn; explicit null also omits identity.
+Duplicate protection applies only while saved records are retained.
 
 The classifier runs once before any LLM invocation. A sentiment, keyword, or FAQ
 prediction at or above the saved threshold enters its fixed extraction → local tool →
@@ -73,7 +79,7 @@ share conversation context. History and traces contain private supplied text and
 results. History is stored in a separate local SQLite database and restored on backend
 restart. One backend holds exclusive store ownership; multiple Uvicorn workers/hosts
 cannot share execution. There is no automatic eviction/truncation or HTTP
-clearing/history API; application callers can use `clear_session_history`.
+clearing API; application callers can use `clear_session_history`.
 See [session-memory.md](session-memory.md) for memory and model limitations.
 
 REWORK step 7 storage failures return HTTP 503 with a sanitized object in `detail`:
@@ -82,12 +88,11 @@ The former means no new execution occurred; the latter means execution started b
 the outcome was not saved. An unfinished/unsaved turn blocks subsequent execution
 in that chat with HTTP 409. A fresh backend conservatively marks unfinished work
 interrupted; it never repeats it. Python turn-ID deduplication is implemented,
-but HTTP still accepts only the existing two fields. Catalogue APIs and HTTP IDs
-are step 8. See [chat-persistence.md](chat-persistence.md).
+and step 8 exposes the same replay contract over HTTP. See [chat-persistence.md](chat-persistence.md).
 
 The existing five-tool agent can compose drafts but does not create reminders or
 submit email. The FAQ endpoint remains stateless and FAQ-only. Structured logging,
-metrics, authentication, other endpoints and UI are separate slices. This slice
+metrics, authentication, other endpoints and Workspace navigation are separate slices. This slice
 adds no dependency or provider changes. Verification uses offline provider doubles;
 it does not establish general model quality or reference-resolution reliability.
 
@@ -111,3 +116,32 @@ whitespace checks pass. FAQ workflow/API/client/history and rerender contracts a
 covered offline. A limited synthetic live HTTP review confirmed the fixed FAQ path
 and final fresh/post-draft contractor clarifications after an initial agent eligibility
 error and prompt correction. These samples do not establish general model grounding.
+
+## Chat catalogue — REWORK step 8
+
+- `POST /api/v1/chats` with `{}` returns HTTP 201 and metadata: `session_id`,
+  `title="New chat"`, UTC `created_at` and `updated_at`. Extra fields are rejected.
+- `GET /api/v1/chats` returns a metadata list, ordered by descending `updated_at`
+  then ascending ID. Empty storage returns `[]`. No pagination in this local slice.
+- `GET /api/v1/chats/{session_id}` returns metadata and `turns` in increasing
+  sequence order. URL-encode caller-owned IDs. Unknown chats return HTTP 404;
+  invalid IDs return 422. Unknown reads never create records.
+
+Turns retain `turn_id`, `session_id`, `sequence`, exact `message`, `started_at`,
+nullable `finished_at`, lifecycle `state`, nullable `execution`, nullable
+`failure_reply`/`failure_reason`, and trusted `demo_policy`. Execution contains
+all original outcomes/results/tool and workflow activity and timings. Running or
+interrupted records do not invent completed results. Runtime failure records can
+be finished with a sanitized failure and no execution payload.
+
+Metadata and turns are read from one SQLite snapshot. Reads do not wait for a
+chat's execution lock, alter update times, classify, invoke providers/tools, or
+submit messages. Initial store ownership still performs step 7's conservative
+interrupted recovery. Read/write storage errors return the existing sanitized
+503 persistence envelope; corrupt execution records fail rather than appear empty.
+The catalogue is shared across local browser tabs, under the existing one-user,
+one-backend boundary; IDs remain identifiers, not authorization.
+
+The HTTP client exposes `create_chat`, `list_chats`, `get_chat`, and optional
+`submit_chat(..., turn_id=...)`. It validates records/identity and reports safe
+errors without retries. Workspace controls and refresh restoration remain step 9.
