@@ -12,6 +12,7 @@ from streamlit.testing.v1 import AppTest
 from app import agent, runtime, sessions, ui_client
 from app.main import app
 from app.tools.summarization import SummaryResult
+from app.tools.email_drafting import EmailDraftResult, _ACTION_INSTRUCTIONS
 
 
 SCRIPT = Path(__file__).resolve().parents[1] / "streamlit_app.py"
@@ -623,7 +624,9 @@ def test_restored_summary_and_fallback_answers_never_execute(monkeypatch, scenar
         assert not ui.exception
         answer = ui.chat_message[1]
         assert [item.value for item in answer.text] == (
-            [result['summary'], '• Saved point.'] if scenario == 'summary' else [data['reply']])
+            [result['summary'], '• Saved point.'] if scenario == 'summary' else
+            ['Intended recipient: Alex', 'Subject: Saved', 'Saved draft.', '• Review before sending.']
+            if scenario == 'draft' else [data['reply']])
         assert not answer.json
         activity = ui.get_by_key('details_saved-summary')
         for step in data['trace']:
@@ -631,6 +634,132 @@ def test_restored_summary_and_fallback_answers_never_execute(monkeypatch, scenar
                 assert step['result'] in [json.loads(item.value) for item in activity.json]
     assert not recorded
     execute.assert_not_called()
+
+
+@pytest.mark.parametrize('demo_history', [False, True])
+def test_single_draft_submission_shows_literal_saved_fields_once(monkeypatch, demo_history):
+    recorded = connect_api(monkeypatch)
+    monkeypatch.setattr(runtime, 'classify_request', lambda _: ('email_drafting', 1, 0.71))
+    chat = sessions.create_chat()['session_id']
+    if demo_history:
+        store = sessions._get_store()
+        store.begin(chat, 'What is the policy?', 'policy-turn')
+        store.finish('policy-turn', execution=execution(chat), demo_policy=True)
+    result = {'email_draft': {'recipient': 'Alex [team](literal)', 'subject': 'Resolved **outage**',
+                             'body': 'Hi Alex,\n\nThe outage is resolved.\n<Review> before release.'},
+              'action_instructions': list(_ACTION_INSTRUCTIONS)}
+    draft = Mock(return_value=EmailDraftResult(**result))
+    schema, _, description = agent._TOOLS['draft_email']
+    monkeypatch.setitem(agent._TOOLS, 'draft_email', (schema, draft, description))
+    model = Mock()
+    model.invoke.side_effect = [
+        AIMessage(content='', tool_calls=[{'name': 'draft_email',
+                  'args': {'recipient': result['email_draft']['recipient'], 'content': 'The outage is resolved.'},
+                  'id': 'draft1'}], response_metadata={'finish_reason': 'tool_calls'}),
+        final(reply='Generated reply'),
+    ]
+    monkeypatch.setattr(agent, '_create_model', lambda: model)
+    ui = AppTest.from_file(str(SCRIPT))
+    ui.query_params['chat'] = chat
+    ui.run()
+    send_message(ui, 'Draft an email to Alex saying the outage is resolved.')
+    expected = (['Policy information below is fictional demo policy.'] if demo_history else []) + [
+        'Intended recipient: ' + result['email_draft']['recipient'],
+        'Subject: ' + result['email_draft']['subject'], result['email_draft']['body'],
+        *['• ' + action for action in _ACTION_INSTRUCTIONS]]
+    for _ in range(2):
+        assert not ui.exception
+        answer = ui.chat_message[-1]
+        assert [item.value for item in answer.text] == expected
+        assert 'Email draft' in [item.value for item in answer.caption]
+        assert 'What you should do' in [item.value for item in answer.caption]
+        assert not answer.json and not answer.markdown
+        activity = ui.get_by_key('details_' + recorded[0][1]['turn_id'])
+        assert result in [json.loads(item.value) for item in activity.json]
+        ui.run()
+    assert len(recorded) == 1 and model.invoke.call_count == 2 and draft.call_count == 1
+    assert result['email_draft']['body'] in recorded[0][1]['reply']
+    assert ('fictional demo policy' in recorded[0][1]['reply']) == demo_history
+
+
+@pytest.mark.parametrize('scenario', ['clarification', 'error', 'partial_failure', 'compound',
+                                      'failed_tool', 'missing_result', 'missing_body',
+                                      'invalid_recipient', 'missing_actions', 'empty_actions', 'invalid_action'])
+def test_restored_draft_fallback_preserves_reply_and_never_executes(monkeypatch, scenario):
+    recorded = connect_api(monkeypatch)
+    execute = Mock(side_effect=AssertionError('Restoration must not execute'))
+    monkeypatch.setattr(sessions, 'execute_request', execute)
+    chat = sessions.create_chat()['session_id']
+    data = execution(chat, {'clarification': 'needs_clarification', 'error': 'error',
+                           'partial_failure': 'partial_failure'}.get(scenario, 'completed'))
+    result = {'email_draft': {'recipient': 'Alex', 'subject': 'Saved', 'body': 'Saved body.'},
+              'action_instructions': ['Review before sending.']}
+    data['trace'] = [dict(tool='draft_email', arguments={'recipient': 'Alex', 'content': 'Saved body.'},
+                          result=result, status='completed', reason=None, elapsed_ms=1)]
+    if scenario == 'compound':
+        data['trace'].append(dict(tool='summarize_text', arguments={'text': 'Saved body.'},
+                                  result={'summary': 'Saved summary.', 'key_points': []},
+                                  status='completed', reason=None, elapsed_ms=2))
+    elif scenario == 'failed_tool':
+        data['trace'][0].update(status='failed', result=None, reason='provider_unavailable')
+    elif scenario == 'missing_result':
+        data['trace'][0]['result'] = None
+    elif scenario == 'missing_body':
+        del result['email_draft']['body']
+    elif scenario == 'invalid_recipient':
+        result['email_draft']['recipient'] = 17
+    elif scenario == 'missing_actions':
+        del result['action_instructions']
+    elif scenario == 'empty_actions':
+        result['action_instructions'] = []
+    elif scenario == 'invalid_action':
+        result['action_instructions'] = [None]
+    store = sessions._get_store()
+    store.begin(chat, 'Saved request', 'saved-draft')
+    store.finish('saved-draft', execution={k: v for k, v in data.items() if k != 'session_id'})
+    sessions.close_chat_store()
+    ui = AppTest.from_file(str(SCRIPT))
+    ui.query_params['chat'] = chat
+    for _ in range(2):
+        ui.run()
+        assert not ui.exception
+        answer = ui.chat_message[1]
+        assert [item.value for item in answer.text] == [data['reply']]
+        assert 'Email draft' not in [item.value for item in answer.caption]
+        assert not answer.json
+        activity = ui.get_by_key('details_saved-draft')
+        for step in data['trace']:
+            assert step['result'] in [json.loads(item.value) for item in activity.json]
+    assert not recorded
+    execute.assert_not_called()
+
+
+@pytest.mark.parametrize('policy_location', ['later_turn', 'other_chat'])
+def test_draft_qualification_does_not_leak_from_future_or_other_chat(monkeypatch, policy_location):
+    recorded = connect_api(monkeypatch)
+    chat = sessions.create_chat()['session_id']
+    data = execution(chat)
+    data['trace'] = [dict(tool='draft_email', arguments={'recipient': 'Alex', 'content': 'Resolved.'},
+                          result={'email_draft': {'recipient': 'Alex', 'subject': 'Resolved', 'body': 'Resolved.'},
+                                  'action_instructions': ['Review before sending.']},
+                          status='completed', reason=None, elapsed_ms=1)]
+    store = sessions._get_store()
+    store.begin(chat, 'Draft an email', 'earlier-draft')
+    store.finish('earlier-draft', execution={k: v for k, v in data.items() if k != 'session_id'})
+    policy_chat = chat if policy_location == 'later_turn' else sessions.create_chat()['session_id']
+    store.begin(policy_chat, 'Policy question', 'demo-policy')
+    policy = execution(policy_chat)
+    store.finish('demo-policy', execution={k: v for k, v in policy.items() if k != 'session_id'},
+                 demo_policy=True)
+    sessions.close_chat_store()
+    ui = AppTest.from_file(str(SCRIPT))
+    ui.query_params['chat'] = chat
+    ui.run()
+    assert not ui.exception
+    answer = ui.get_by_key('answer_earlier-draft')
+    assert [item.value for item in answer.text] == [
+        'Intended recipient: Alex', 'Subject: Resolved', 'Resolved.', '• Review before sending.']
+    assert not recorded
 
 
 def test_empty_chat_welcome_uses_natural_english_without_execution(monkeypatch):

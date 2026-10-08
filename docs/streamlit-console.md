@@ -52,8 +52,14 @@ failure notice; clarification or failure without a score displays no sentiment l
 Completed agent turns containing exactly one successful summary tool call display
 the saved summary and key points once as literal text. Empty key points omit their
 section. Exact tool JSON remains in Activity; the saved assistant reply is unchanged.
-Clarification, failure, missing results, compound turns and drafts retain their
-existing reply presentation.
+Completed agent turns containing exactly one successful email-drafting tool call
+display the saved recipient, subject and literal multiline body once under Email
+draft, followed by separate saved action instructions under What you should do.
+Current/prior saved demo-policy markers preserve the agent's fictional-policy
+qualification. These are drafts for review and manual sending; chat sends no email.
+Exact draft JSON remains in Activity and the saved reply is unchanged. Clarification,
+failure, missing/malformed results and compound turns retain their existing reply
+presentation.
 
 Workspace lists saved chats by recent update time. New chat creates a durable empty
 chat; the first Send from an empty workspace creates one before submitting. Merely
