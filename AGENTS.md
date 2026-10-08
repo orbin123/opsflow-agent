@@ -34,6 +34,9 @@ Live progress is transient; final/restored details use saved records.
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
 route, with existing chat HTTP status rules and retained workflow/tool records.
+Approved REWORK step 12a shows direct/fixed-workflow sentiment labels beneath the
+existing reply, keeps exact scores/JSON in Activity, and offers natural-English
+welcome examples. Remaining answer presentation stays a separately agreed slice.
 
 The natural-language keyword workflow is documented in `docs/keyword-workflow.md`.
 Approved REWORK step 3b connects it behind the classifier using `llm_assisted`,

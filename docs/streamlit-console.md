@@ -32,6 +32,13 @@ remain internal. Configuration can be overridden by environment or CLI settings.
 
 ## Conversation and results
 
+Empty chats offer natural-English sentiment, keyword and fictional demo-policy
+examples; quotes or command prefixes are not required. For direct and fixed-workflow
+sentiment outcomes, the assistant displays the existing explanation when available
+and a labelled sentiment result. Exact numerical scores and raw JSON remain in
+Activity. A retained score still displays if its explanation failed, alongside the
+failure notice; clarification or failure without a score displays no sentiment label.
+
 Workspace lists saved chats by recent update time. New chat creates a durable empty
 chat; the first Send from an empty workspace creates one before submitting. Merely
 opening/refreshing the app creates nothing. Titles are literal first-message text,
@@ -78,8 +85,9 @@ table in YAKE order. Scores display to five decimal places; API/history and the
 activity panels retain full precision. Raw keyword JSON appears only in Activity.
 A caption explains lower-score relevance; empty results show their reply without
 an empty table. Presentation failure still displays the retained keyword table.
-Direct responses display structured JSON. LLM-assisted sentiment shows the backend
-explanation or factual fallback as plain text and retains the raw VADER result.
+Direct sentiment shows its label; LLM-assisted sentiment shows the backend
+explanation or factual fallback followed by its label. Raw VADER results remain
+in Activity. Other direct responses retain their existing structured display.
 Agent responses display the backend's
 application-rendered reply as plain text, retaining separate email draft/actions;
 supplied text cannot inject HTML or load Markdown images. Demo FAQ results are

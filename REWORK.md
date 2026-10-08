@@ -18,10 +18,11 @@ and verified within the offline/scripted-browser limits below. User approved mer
 both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implemented
 and verified within the recorded offline/scripted-browser limits; step 11 completed
 inline details and step 13 live formation are implemented and verified within the
-recorded offline/scripted-browser limits. Step 12 and steps 14 onward remain pending.
+recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is implemented
+and verified within the recorded limits; step 12b and steps 14 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 12 readable answers/onboarding discussion; steps 11 and 13
-await user review before merge.
+**Next:** ⏳ Step 12b remaining answer presentation discussion; steps 12a and 13
+await user review before merge. Step 11 is merged in PR #34.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -1122,6 +1123,14 @@ does not authorize those features or change the ordered rework implementation st
 ### 12. Present readable answers and onboarding
 
 - [ ] Discuss, implement, and verify this slice after step 11.
+- **12a approved — 2026-10-08:** Readable sentiment label beneath the existing
+  grounded reply; exact scores/raw JSON remain in Activity. Preserve clarification,
+  failure and retained-result presentation-failure behavior. Replace the quoted
+  welcome syntax with previously verified natural-English sentiment, keyword and
+  fictional FAQ examples. UI-only; keep execution/storage/layout unchanged.
+  Verify representative success/clarification/failure/null results, non-executing
+  restoration/rerenders and keyword/FAQ regressions, then desktop/mobile inline
+  browser review. Remaining answer presentation requires a separate step 12b agreement.
 - **Problem/change:** Render sentiment labels, keyword lists, FAQ answers/candidates,
   summaries, and email drafts as readable content. Keep raw structured detail in
   activity panels. Replace the syntax-heavy welcome example with natural-English
@@ -1133,6 +1142,33 @@ does not authorize those features or change the ordered rework implementation st
 - **Verify:** Representative outputs from each existing capability and absent/null
   results; no duplicated draft content or fabricated success. Use controlled data
   for display checks; generated wording should not be an exact test requirement.
+
+#### Step 12a outcome — 2026-10-08
+
+- **Implemented:** Direct/fixed-workflow sentiment answers show the saved label
+  beneath the existing reply when available; exact scores/raw JSON stay in Activity.
+  Retained scoring remains visible with the existing presentation-failure notice;
+  absent/null results and clarification do not invent a label. Welcome examples use
+  the previously verified natural-English sentiment/keyword/fictional FAQ requests.
+  No backend, execution, storage, layout or other answer-presentation changes.
+- **Verified:** All 991 tests pass, including six new restoration/onboarding cases
+  and strengthened existing success/partial-failure assertions. Covers direct negative,
+  fixed neutral, clarification, error and null results; exact saved scores remain
+  in Activity, with no execution on restoration/rerender. Existing keyword/FAQ/agent
+  regressions pass. `pip check` and whitespace checks pass; installed Streamlit 1.65.0
+  text/info APIs checked without dependency changes.
+- **Browser:** Existing inline review on 8506/backend 8018 confirms restored and
+  newly submitted sentiment explanation/label, saved VADER scores in expanded
+  Activity, refresh restoration, natural-English welcome, and 1440/390 px layouts.
+  Mobile answer/welcome wrap without horizontal overflow. App remains open for
+  independent review. Screenshots `/tmp/opsflow-step12a-desktop.jpg`,
+  `/tmp/opsflow-step12a-mobile.jpg`, `/tmp/opsflow-step12a-welcome-mobile.jpg`.
+- **Limits/delivery:** Scripted language stages with real classifier/VADER/HTTP/
+  SQLite; no new live-provider quality or email checks. Figma is still rate-limited;
+  existing documented native text styling retained. Existing LangChain history
+  deprecation remains. Scoped DCO-signed change on
+  `feature/readable-sentiment-onboarding`, stacked on the unmerged step 13 branch;
+  merge awaits user review. Step 12b needs separate agreement.
 
 ### 13. Connect live events to collapsible chat activity
 
