@@ -157,7 +157,9 @@ def test_ui_faq_reply_and_inspector_preserve_outcome_without_resubmit(monkeypatc
     assistant = ui.chat_message[1]
     assert data["reply"] in [element.value for element in assistant.text]
     assert len(assistant.json) == 0
-    assert "Fictional demo policy" in "\n".join(element.value for element in assistant.caption)
+    assert "Fictional demo policy — verify your actual company policy." not in [
+        element.value for element in ui.caption
+    ]
     assert data["result"] in [json.loads(element.value) for element in ui.json]
     text = "\n".join(element.value for element in ui.text)
     for stage in data["workflow_trace"]:

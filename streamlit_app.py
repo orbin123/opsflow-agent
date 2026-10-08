@@ -43,12 +43,7 @@ def show_execution(execution: dict) -> None:
                     alt="Extracted keyword phrases and YAKE relevance scores in ranked order",
                 )
                 st.caption("Lower scores indicate greater relevance; scores are not confidence probabilities.")
-        elif execution["predicted_intent"] == "faq_retrieval" and execution["route"] == "llm_assisted":
-            if execution["result"].get("is_demo"):
-                st.caption("Fictional demo policy — verify your actual company policy.")
-        else:
-            if isinstance(execution["result"], dict) and execution["result"].get("is_demo"):
-                st.caption("Fictional demo policy — verify your actual company policy.")
+        elif not (execution["predicted_intent"] == "faq_retrieval" and execution["route"] == "llm_assisted"):
             st.json(execution["result"], expanded=True)
 
 

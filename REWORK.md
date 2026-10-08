@@ -602,6 +602,21 @@ its routing revision are now approved as recorded below.
   `feature/faq-chat-workflow`, stacked on open standalone PR #25. Neither PR's
   merge is authorized by this implementation request. Step 4 is the next discussion.
 
+#### Step 3d caption correction — 2026-10-08
+
+- **Agreement:** User requested removing the fixed `Fictional demo policy — verify
+  your actual company policy.` caption from the chat display. Remove both render
+  locations; retain underlying JSON data, demo metadata, model replies, inspector
+  records, and all routing/execution behavior.
+- **Verification scope:** Update the existing FAQ UI assertion and run the current
+  UI checks plus whitespace validation. No new tests or live provider calls are
+  needed for this small text removal. Include in the existing FAQ integration PR #26
+  as one user-authored DCO-signed presentation correction.
+- **Outcome:** Removed both fixed caption render locations. All 26 existing
+  Streamlit/UI checks and whitespace checks pass; the updated assertion verifies
+  caption absence while retaining reply/inspector data and non-executing rerenders.
+  No new tests, dependencies, backend/provider behavior, or live calls changed.
+
 ### 4. Verify conversational summarization and drafting
 
 - [ ] Discuss, implement fixes if needed, and verify this slice.
@@ -797,6 +812,12 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-08:** User requested removing the fixed demo-policy verification
+  caption. Removed both chat render locations and updated existing FAQ UI coverage
+  and documentation. All 26 current UI checks and whitespace checks pass; underlying
+  data/model replies/inspector records are unchanged. Scoped signed correction in
+  existing integration PR #26; no later rework implementation.
 
 - **2026-10-07:** Completed approved FAQ chat step 3d and bounded agent-policy
   clarification correction. All 855 tests (22 new), dependency and whitespace

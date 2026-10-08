@@ -104,8 +104,9 @@ Completed and clarification outcomes return HTTP 200. Extraction/retrieval error
 and retained-result presentation partial failure return HTTP 503. API/client/
 process-local history retain reply, raw result, exact question in the tool arguments,
 and actual tool/workflow traces. The lookup duration in both traces describes the
-same single call. Assistant turns show the readable reply and demo qualification;
-the inspector retains exact policy JSON and a **FAQ workflow stages** expander.
+same single call. Assistant turns show the readable reply without a separate
+demo-policy warning caption. The inspector retains exact policy JSON/demo metadata
+and a **FAQ workflow stages** expander.
 Question extraction/presentation are labeled LLM stages, retrieval a local stage.
 Rerendering does not submit another request.
 

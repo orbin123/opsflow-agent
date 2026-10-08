@@ -20,6 +20,13 @@ and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verifi
 within their recorded limits; keyword steps 3a/3b are also verified offline.
 Later implementation awaits discussion.
 
+- **2026-10-08:** Removed the fixed `Fictional demo policy — verify your actual
+  company policy.` chat caption at the user's request. Existing data, generated
+  replies, and inspector records remain intact. Updated the existing FAQ UI
+  assertion and usage docs; all 26 current UI checks and whitespace checks pass.
+  No new tests, dependencies, backend/provider behavior, or live calls. One scoped
+  user-authored DCO-signed correction in PR #26.
+
 - **2026-10-07:** Completed approved step 3d: high-confidence FAQ chat uses fixed
   `llm_assisted`, retaining reply/exact policy/question and actual tool/workflow
   stages through API/client/history. Native reply/FAQ stage inspector avoids main

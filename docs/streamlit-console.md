@@ -72,8 +72,9 @@ before agent handoff. The VADER/YAKE/FAQ duration also appears in the tool trace
 these are two records of the same call. The client accepts `llm_assisted` and
 retains stage records for both HTTP 200 and HTTP 503 outcomes. The expander labels
 source/question extraction and presentation as LLM stages and VADER/YAKE/FAQ as local tool stages.
-FAQ workflow assistant turns show the readable reply and demo qualification; exact
-policy/candidate JSON stays in the inspector, including retained presentation failures.
+FAQ workflow assistant turns show the readable reply without a separate demo-policy
+warning caption. Exact policy/candidate JSON and demo metadata stay in the inspector,
+including retained presentation failures.
 
 REWORK step 3d AppTest checks cover matched FAQ replies, no-match clarification,
 retained presentation failures, exact stage labels/timings, HTTP/client/history
