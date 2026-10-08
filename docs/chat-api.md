@@ -39,7 +39,8 @@ The response includes the echoed `session_id` and the existing execution fields:
   extraction on an eventual agent handoff. Local-tool duration also appears in
   the VADER/YAKE/FAQ tool trace: both records describe the same single tool call.
 - `elapsed_ms`: session execution time, including lock waiting and history
-  processing; excludes HTTP transport, thread-pool scheduling and serialization.
+  restoration/initial persistence; excludes the final save transaction,
+  HTTP transport, thread-pool scheduling and serialization.
 
 HTTP 200 covers successful execution and clarification. Inspect `status` and
 structured results: 200 does not mean a policy was matched or any email was sent.
@@ -69,10 +70,20 @@ updated schema. `workflow_trace` defaults to empty when absent in an older respo
 Session IDs are caller-owned keys, not authentication or authorization. This
 endpoint is intended for the existing trusted local use; callers sharing an ID
 share conversation context. History and traces contain private supplied text and
-results. Memory lives in one process, resets on restart and is not shared across
-multiple Uvicorn workers/hosts. There is no automatic eviction/truncation or HTTP
+results. History is stored in a separate local SQLite database and restored on backend
+restart. One backend holds exclusive store ownership; multiple Uvicorn workers/hosts
+cannot share execution. There is no automatic eviction/truncation or HTTP
 clearing/history API; application callers can use `clear_session_history`.
 See [session-memory.md](session-memory.md) for memory and model limitations.
+
+REWORK step 7 storage failures return HTTP 503 with a sanitized object in `detail`:
+`code="chat_persistence"`, `outcome="not_started"` or `"unsaved"`, and `message`.
+The former means no new execution occurred; the latter means execution started but
+the outcome was not saved. An unfinished/unsaved turn blocks subsequent execution
+in that chat with HTTP 409. A fresh backend conservatively marks unfinished work
+interrupted; it never repeats it. Python turn-ID deduplication is implemented,
+but HTTP still accepts only the existing two fields. Catalogue APIs and HTTP IDs
+are step 8. See [chat-persistence.md](chat-persistence.md).
 
 The existing five-tool agent can compose drafts but does not create reminders or
 submit email. The FAQ endpoint remains stateless and FAQ-only. Structured logging,

@@ -33,7 +33,8 @@ remain internal. Configuration can be overridden by environment or CLI settings.
 
 A random session ID is created once per Streamlit browser session and reused for
 follow-ups. UI turns survive script reruns; refreshing/disconnecting can start a
-new session, while backend history resets on process restart. No durable UI history,
+new session. Backend history now survives restart in SQLite when the same session
+ID is reused. No durable UI history,
 clear/history endpoint or automatic eviction is added. See [chat-api.md](chat-api.md).
 
 Messages are preserved exactly and checked for nonblank text and the API's 10,000
@@ -65,7 +66,8 @@ routing reason, agent outcome reason, status, and backend elapsed milliseconds.
 Each actual tool step shows its name, arguments, observation, completion/failure,
 reason when present and elapsed milliseconds. Values come from validated backend
 responses without rounding or recomputation. Total backend time includes session
-waiting/history and excludes HTTP transport; it need not equal the sum of steps.
+waiting/history restoration and initial persistence, excluding the final save
+transaction and HTTP transport; it need not equal the sum of steps.
 No classification/provider substep timings or private reasoning are invented.
 
 When present, the sentiment, keyword, or FAQ workflow stages expander shows backend-reported

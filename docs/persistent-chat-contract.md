@@ -2,8 +2,9 @@
 
 REWORK step 6, recorded 2026-10-08. The user selected **one local user** and
 **disabled navigation while a turn runs**. This document defines the target for
-steps 7–9 and the restoration constraints for steps 10–14. It does not describe
-implemented persistence or endpoints. Each implementation slice still needs its
+steps 7–9 and the restoration constraints for steps 10–14. Step 7 now implements
+the storage/session portion; see [chat-persistence.md](chat-persistence.md).
+Catalogue endpoints and navigation remain proposed. Each implementation slice needs its
 own discussion and proportional verification.
 
 ## Ownership and storage
@@ -52,9 +53,13 @@ exists; do not invent classification, route, results, or duration.
 
 Persist the timing returned by the session entry point, including lock/history
 handling, as the public turn elapsed value. Preserve individual backend stage/tool
-timings unchanged; transport/render time is not execution time. Existing history
-currently stores inner runtime timing, so step 7 must explicitly resolve this
+timings unchanged; transport/render time is not execution time. At step 6, history
+stored inner runtime timing, so step 7 needed to explicitly resolve this
 difference rather than silently presenting two conflicting totals.
+
+Step 7 resolution: freeze one elapsed value before the final save and return/save
+that exact value. It includes restoration and the initial commit, and excludes
+the final save transaction. No restoration timing is substituted for saved execution.
 
 No expiry, automatic deletion, history truncation, or LLM summarization is added.
 Restore all finalized user/assistant pairs in order using the existing assistant
@@ -199,7 +204,7 @@ Step 6 review compared this specification with `app/sessions.py`, `app/api/chat.
 | Switching during execution/other browser tab | Disabled ordinary navigation, backend serialization and correct turn association; steps 7–9. |
 | Long title/keyboard/mobile/activity expansion | Accessible existing tokens and read-only display; steps 9, 11, 13. |
 
-This is documentation review, not runtime or browser evidence. No dependency,
+Step 6's evidence is documentation review, not runtime or browser evidence. No dependency,
 provider, SMTP, reminder, deployment, framework, routing, or context-limit changes
 were made. Step 7 is the next bounded discussion; this document does not authorize
 implementing every later slice.

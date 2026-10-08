@@ -11,9 +11,11 @@ recorded offline and limited live-review bounds. Step 4 is implemented and verif
 with offline/scripted-browser checks and merged in PR #27 after user approval.
 Step 5 is verified within the offline/scripted-browser limits below; user approved
 merging PR #28 on 2026-10-08. Step 6's persistence/navigation contract is
-recorded and reviewed; implementation in steps 7 onward remains pending.
+recorded and reviewed. Step 7 storage/restoration is implemented and verified within
+the offline/scripted-browser limits below; review/merge confirmation remains pending.
+Steps 8 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next discussion:** ⏳ Step 7 durable chat history and runtime restoration.
+**Next discussion:** ⏳ Step 8 chat creation/listing/retrieval APIs, after step 7 review.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -782,7 +784,15 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 7. Implement durable chat history and runtime restoration
 
-- [ ] Discuss, implement, and verify this slice after step 6.
+- [x] Discuss, implement, and verify this slice after step 6.
+- **Approved slice — 2026-10-08:** User approved durable SQLite chat/turn records,
+  context restoration, interrupted recovery, submission-ID duplicate protection,
+  explicit write failures, and durable behavior of the existing Python clearing
+  function. Catalogue HTTP APIs and sidebar changes stay in steps 8–9. Verify
+  fresh-process recovery, isolation/follow-ups, retained failures, duplicate IDs,
+  failed writes, and serialization with offline doubles, followed by inline-browser
+  chat review. Implemented and verified within the bounds below; user review/merge
+  confirmation remains pending.
 - **Problem/change:** Store chat metadata, messages, execution records, and finalized
   outcomes durably. Reconstruct the context consumed by the existing agent from saved
   direct/agent outcomes without appending turns twice or changing reminder behavior.
@@ -791,6 +801,45 @@ does not authorize those features or change the ordered rework implementation st
 - **Verify:** Fresh-process restoration, direct-to-agent follow-ups, independent chats,
   failed/partial turns, write failures, ordering, and existing same-session serialization.
   Prevent silent memory/disk divergence and disclose known persistence failure.
+
+#### Step 7 outcome — 2026-10-08
+
+- **Implemented:** Versioned `chats`/`chat_turns` in a separate local SQLite file,
+  exact ordered user/outcome records, full trace/stage/result/demo-marker retention,
+  and reconstruction of authoritative agent context on each request. Existing
+  Python clearing is durable, retains metadata/sequence allocation, and rejects
+  unfinished work. See [docs/chat-persistence.md](docs/chat-persistence.md).
+- **Execution/recovery:** Commit the initial running marker before execution and
+  the final outcome before acknowledgement. Failed initial commit prevents work;
+  failed final commit returns an explicit unsaved HTTP 503 and blocks continuation.
+  Unexpected execution failures remain unknown without raw error exposure. Exclusive
+  Unix chat-store ownership prevents a second backend recovering live work; startup
+  on first store use marks abandoned markers interrupted without retries.
+- **Compatibility:** Optional Python `turn_id` replays identical saved submissions;
+  changed content/chat and unfinished IDs conflict. Existing HTTP input and status
+  rules remain; catalogue APIs/HTTP IDs/UI navigation stay in steps 8–9. Removed
+  the history runnable's automatic append to control commit order; retained the
+  pinned message types and snapshot class. One existing deprecation warning remains.
+  Response and stored elapsed time are identical, excluding the final save commit.
+- **Verified:** All 902 tests (25 new), `pip check`, and documentation/code whitespace
+  checks pass. Temporary-file/scripted-provider checks cover fresh-process context,
+  abrupt exit/interruption, second-process exclusion, ID replay/conflict/concurrency,
+  retained statuses/traces/demo markers, commit rollback/read corruption, clearing,
+  unsupported schemas, and safe HTTP/client failures. Existing tests cover real
+  local tools, isolation, serialized follow-ups, draft actions, and non-executing UI.
+- **Browser:** Inline app on 8504/backend 8014 uses scripted sentiment/agent providers
+  with the real classifier, VADER, runtime, API/client, and storage. A completed
+  sentiment survived backend restart and reached the next agent turn; rerender did
+  not append turns. A temporary database trigger forced final-save failure, producing
+  the explicit unsaved warning and retaining the running marker. The trigger was
+  removed before restart/recovery; the marker became interrupted and one explicit
+  new turn continued with restored context. Four records remained (three finished,
+  one interrupted), with no repeat execution. Review app is left open for review.
+- **Limits/delivery:** No live provider quality, SMTP/inbox, hosted/multi-host/network
+  storage, Linux/Windows, or deployment verification. No new dependencies, reminder
+  changes, automatic migration of old process-local memory, or browser refresh
+  restoration. Commit/PR is separate from the step 6 contract dependency PR #29.
+  Wait for user review confirmation before merge or any direct push to `main`.
 
 ### 8. Expose chat creation, listing, and retrieval
 

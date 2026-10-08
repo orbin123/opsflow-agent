@@ -31,6 +31,11 @@ def submit_chat(base_url: str, session_id: str, message: str) -> dict:
                 raise ChatClientError(f"Backend rejected the request (HTTP {status}). No automatic retry.")
             data = json.loads(response.read())
         if status == 503 and isinstance(data, dict) and "detail" in data:
+            detail = data["detail"]
+            if isinstance(detail, dict) and detail.get("code") == "chat_persistence":
+                if detail.get("outcome") == "unsaved":
+                    raise ChatClientError("The turn ran, but its outcome was not saved. No automatic retry.")
+                raise ChatClientError("Chat history could not be saved or restored. No new turn was executed.")
             raise ChatClientError("Backend unavailable. No execution results were returned.")
         execution = ChatResponse.model_validate(data)
         if execution.session_id != session_id:

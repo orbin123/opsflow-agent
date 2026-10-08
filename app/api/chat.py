@@ -1,4 +1,4 @@
-"""Session-aware chat for local, single-process use; session IDs are caller-owned."""
+"""Durable chat for local, single-process use; session IDs are caller-owned."""
 
 from typing import Literal
 
@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.agent import AgentTrace
 from app.runtime import RuntimeUnavailable, ToolResult, ToolTrace
 from app.sessions import execute_session_request
+from app.chat_store import ChatPersistenceError, ChatTurnConflict
 from app.workflows.sentiment_workflow import SentimentStage
 from app.workflows.keyword_workflow import KeywordStage
 from app.workflows.faq_workflow import FAQStage
@@ -52,6 +53,12 @@ def chat(body: ChatRequest, response: Response) -> ChatResponse:
         execution = execute_session_request(body.session_id, body.message)
     except RuntimeUnavailable as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from None
+    except ChatPersistenceError as exc:
+        raise HTTPException(status_code=503, detail={
+            "code": "chat_persistence", "outcome": exc.outcome, "message": str(exc),
+        }) from None
+    except ChatTurnConflict as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from None
     if execution.status in {"error", "partial_failure"}:
         response.status_code = 503
     return ChatResponse(session_id=body.session_id, **vars(execution))

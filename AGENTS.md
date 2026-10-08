@@ -5,6 +5,12 @@ An operations copilot using TF-IDF + a calibrated linear SVM for intent routing,
 The local Streamlit chat/inspector runs with `streamlit run streamlit_app.py` and
 uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verification.
 
+Approved REWORK step 7 stores chat history in separate local SQLite storage and
+restores context without reexecution. See `docs/chat-persistence.md` for the
+single-backend Unix-lock boundary, interrupted recovery, and explicit unsaved
+failures. Python turn IDs prevent duplicates while records are retained; HTTP
+catalogue/turn-ID support and browser navigation remain steps 8–9.
+
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
 route, with existing chat HTTP status rules and retained workflow/tool records.
