@@ -21,8 +21,9 @@ inline details and step 13 live formation are implemented and verified within th
 recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is implemented
 and verified within the recorded limits; step 12b and steps 14 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 12b remaining answer presentation discussion; steps 12a and 13
-await user review before merge. Step 11 is merged in PR #34.
+**Next:** ⏳ Step 12b remaining answer presentation discussion. User approved
+merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #36.
+Step 11 is merged in PR #34.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -1145,6 +1146,10 @@ does not authorize those features or change the ordered rework implementation st
 
 #### Step 12a outcome — 2026-10-08
 
+- **Delivery approval:** User approved merging PR #35 on 2026-10-08. Verified
+  user-only authorship, matching DCO sign-offs and passing DCO for every commit.
+  Merged its verified step 13 dependency as PR #36 and retargeted #35 to `main`.
+  This delivery record changes no application behavior; prior checks remain applicable.
 - **User-requested cleanup:** Remove the sidebar draft/reminder/email limitation
   caption. Capability boundaries and draft action instructions remain unchanged.
   All 38 UI checks pass; inline browser confirms removal and usable chat controls.
