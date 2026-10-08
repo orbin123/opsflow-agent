@@ -11,10 +11,22 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 6 persistent-chat/navigation contracts. Step 4 merged in PR #27;
+**Next:** ⏳ Step 7 durable chat history/runtime restoration. Step 6's contract is
+recorded and reviewed in [persistent-chat-contract.md](persistent-chat-contract.md).
+Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Completed step 6 contract documentation after the user selected
+  local single-user ownership and disabled navigation during execution. Defined
+  separate SQLite chat storage, ordered durable outcomes/context, commit and
+  interruption boundaries, non-repeating submission identity, catalogue API shapes,
+  titles/URL restoration, and sidebar/Activity interaction proposals. Reviewed
+  against current history/API/client/UI and reminder/design contracts; whitespace
+  checks pass. No runtime changes/tests, provider calls, or browser verification.
+  Figma inspection was rate-limited; visual approval remains in later UI slices.
+  Next is a separately discussed step 7 implementation; original plan stays paused.
 
 - **2026-10-08:** User approved merging step 5 PR #28 after the browser review.
   Verified the current head, user-only authorship/sign-off, passing DCO, and clean

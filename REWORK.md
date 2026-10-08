@@ -10,9 +10,10 @@ Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Step 4 is implemented and verified
 with offline/scripted-browser checks and merged in PR #27 after user approval.
 Step 5 is verified within the offline/scripted-browser limits below; user approved
-merging PR #28 on 2026-10-08. Remaining rework steps are pending.
+merging PR #28 on 2026-10-08. Step 6's persistence/navigation contract is
+recorded and reviewed; implementation in steps 7 onward remains pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next discussion:** ⏳ Step 6 persistent-chat and navigation contracts.
+**Next discussion:** ⏳ Step 7 durable chat history and runtime restoration.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -739,7 +740,7 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 6. Agree on persistent-chat and navigation contracts
 
-- [ ] Discuss and record the contract before storage/UI implementation.
+- [x] Discuss and record the contract before storage/UI implementation.
 - **Problem/change:** Define what a saved chat contains and how users recover it.
   Propose local SQLite reuse for chat storage, without changing reminder tables or
   worker locking. Decide storage/schema, ownership, restoration, titles, and behavior
@@ -752,6 +753,32 @@ does not authorize those features or change the ordered rework implementation st
 - **Verify:** Review the contract against isolated contexts, refresh/backend restart,
   existing direct/agent history semantics, failure retention, and no repeat execution.
   Renaming/deleting/searching chats are optional future scope, not prerequisites.
+
+#### Step 6 contract and review — 2026-10-08
+
+- **Agreement:** User requested step 6 and selected one trusted local user and
+  disabled New chat/chat switching during execution. Recorded the full target in
+  [docs/persistent-chat-contract.md](docs/persistent-chat-contract.md). This is a
+  documentation slice; storage, API, UI, and event implementations remain separate.
+- **Contract:** Separate local chat SQLite database using existing conventions;
+  versioned chat/ordered-turn records; full execution/failure/demo-marker retention;
+  commit-before-execution/final acknowledgement; read-only context restoration;
+  explicit interrupted/unsaved outcomes and no automatic retries. Proposed turn
+  IDs prevent duplicate persistent submissions. Keep current full-history behavior,
+  HTTP status semantics, caller-owned session-ID compatibility, and FAQ boundaries.
+- **Navigation:** Shared local catalogue, deterministic first-message titles,
+  URL-selected chat restoration, create/list/load API shapes, disabled navigation
+  while running, and later inline Activity using existing tokens. Renaming/deletion/
+  search, hosted ownership, context budgeting, and reminder integration are outside
+  scope. Exact API models and visual patterns are reviewed in their later slices.
+- **Verified:** Contract reviewed against current sessions/runtime history transport,
+  chat API/client, Streamlit state, and memory/reminder/design documentation for
+  isolated contexts, restart/refresh, retained failures, and non-executing recovery.
+  Documentation whitespace checks pass. No runtime tests or browser checks were
+  needed for this documentation-only change. Figma metadata inspection was blocked
+  by the Starter tool-call limit; visual verification remains pending in UI slices.
+- **Next:** Discuss only step 7's durable storage/restoration implementation and
+  proportional offline tests before coding. Steps 8–14 are not authorized together.
 
 ### 7. Implement durable chat history and runtime restoration
 
