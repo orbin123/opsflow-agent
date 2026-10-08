@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from langchain_core.messages import AIMessage
 import pytest
 
-from app import sentiment_workflow, keyword_workflow
+from app import sentiment_workflow, keyword_workflow, faq_workflow
 
 
 @pytest.fixture
@@ -24,6 +24,26 @@ def sentiment_provider(monkeypatch):
             ]
         ]
         monkeypatch.setattr(sentiment_workflow, "_create_model", lambda *args: model)
+        return model
+
+    return install
+
+
+@pytest.fixture
+def faq_provider(monkeypatch):
+    monkeypatch.setattr(faq_workflow, "_create_model",
+                        lambda *args: pytest.fail("Unexpected FAQ provider initialization"))
+
+    def install(question, reply="This fictional demo policy requires manager approval.", status="completed"):
+        model = Mock()
+        model.invoke.side_effect = [
+            AIMessage(content=json.dumps(payload), response_metadata={"finish_reason": "stop"})
+            for payload in [
+                {"status": "ready", "question": question, "reason": "explicit_question"},
+                {"status": status, "reply": reply},
+            ]
+        ]
+        monkeypatch.setattr(faq_workflow, "_create_model", lambda *args: model)
         return model
 
     return install

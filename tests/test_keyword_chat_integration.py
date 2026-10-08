@@ -268,4 +268,5 @@ def test_openapi_allows_keyword_tool_stage():
     alternatives = schema["ChatResponse"]["properties"]["workflow_trace"]["items"]["anyOf"]
     assert {option["$ref"] for option in alternatives} == {
         "#/components/schemas/SentimentStage", "#/components/schemas/KeywordStage",
+        "#/components/schemas/FAQStage",
     }

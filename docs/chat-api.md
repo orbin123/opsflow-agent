@@ -24,19 +24,20 @@ The response includes the echoed `session_id` and the existing execution fields:
   runtime's `agent_required` status (retained in the schema; normal chat handoff
   executes the agent instead of returning this intermediate status).
 - `predicted_intent`, `confidence`, `route`, `reason`: classification and routing.
-  Route is `direct` for local FAQ execution, `llm_assisted` for the fixed
-  sentiment/keyword workflows, or `agent` for dynamic orchestration.
-- `reply`: the sentiment/keyword workflow's explanation/fallback/clarification or the
+  Route is `llm_assisted` for fixed sentiment/keyword/FAQ workflows, or `agent` for
+  dynamic orchestration. The shared schema retains `direct`; the separate FAQ-only
+  endpoint still uses it for wholly local execution.
+- `reply`: the sentiment/keyword/FAQ workflow's explanation/fallback/clarification or the
   agent's application-rendered reply; null for wholly local direct tools.
 - `result`: structured direct or LLM-assisted tool output; null for the agent route.
 - `agent_reason`: the separate agent outcome reason, when present.
 - `trace`: actual tool names, arguments, results, completion/failure states,
   timings, and agent-step reasons when applicable. Nested draft content and fixed
   user actions are retained. No private model reasoning is returned.
-- `workflow_trace`: ordered attempted sentiment or keyword stages, each with `stage`, `status`,
+- `workflow_trace`: ordered attempted sentiment, keyword, or FAQ stages, each with `stage`, `status`,
   sanitized `reason`, and `elapsed_ms`. Empty when no workflow ran. Includes
   extraction on an eventual agent handoff. Local-tool duration also appears in
-  the VADER/YAKE tool trace: both records describe the same single tool call.
+  the VADER/YAKE/FAQ tool trace: both records describe the same single tool call.
 - `elapsed_ms`: session execution time, including lock waiting and history
   processing; excludes HTTP transport, thread-pool scheduling and serialization.
 
@@ -49,16 +50,18 @@ sanitized `{"detail":"..."}`. Failures remain in history through the existing
 session wrapper. There are no automatic endpoint retries or request deduplication;
 resubmitting a turn runs it again and appends another turn.
 
-The classifier runs once before any LLM invocation. A sentiment or keyword
-prediction at or above the saved threshold enters its fixed source-extraction → local VADER/YAKE →
-presentation workflow, including quoted requests. Missing/ambiguous source returns
+The classifier runs once before any LLM invocation. A sentiment, keyword, or FAQ
+prediction at or above the saved threshold enters its fixed extraction → local tool →
+presentation workflow, including quoted requests. FAQ presentation runs only for a
+matched policy; ambiguity/no-match clarifies without presentation. A presenter may
+also clarify when a matched policy lacks a material requested detail. Missing/ambiguous input returns
 clarification without running the local tool. Contextual/compound/unsupported
 extraction abstention invokes the agent once with the unchanged request and prior
-history. Lower-confidence sentiment/keywords go straight to the agent through the existing confidence gate.
+history. Lower-confidence sentiment/keywords/FAQ go straight to the agent through the existing confidence gate.
 
 Extraction/local-tool failure stops without agent fallback. Explanation failure returns
 HTTP 503 with `status=partial_failure`, `reason=presentation_failed`, the successful
-VADER/YAKE `result`/tool trace, a fixed factual `reply`, and the failed explanation stage.
+VADER/YAKE/FAQ `result`/tool trace, a fixed factual `reply`, and the failed explanation stage.
 No endpoint/provider retry or repeated tool execution occurs. Older clients that restrict routes
 to `direct`/`agent` must accept `llm_assisted`; the bundled client validates the
 updated schema. `workflow_trace` defaults to empty when absent in an older response.
@@ -91,3 +94,9 @@ REWORK step 3b verification on 2026-10-07: the 784-test suite passes, including
 keyword workflow gating, retained failures/empty results, original-history handoff,
 API/client/history round-trips, and non-executing UI rerenders with provider doubles.
 No live Groq quality checks or classifier training/threshold changes.
+
+REWORK step 3d verification on 2026-10-07: all 855 tests (22 new), dependency and
+whitespace checks pass. FAQ workflow/API/client/history and rerender contracts are
+covered offline. A limited synthetic live HTTP review confirmed the fixed FAQ path
+and final fresh/post-draft contractor clarifications after an initial agent eligibility
+error and prompt correction. These samples do not establish general model grounding.

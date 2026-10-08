@@ -135,6 +135,48 @@ def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monk
     assert ui.session_state["pending"] is False
 
 
+@pytest.mark.parametrize("scenario", ["matched", "no_match", "presentation_failure"])
+def test_ui_faq_reply_and_inspector_preserve_outcome_without_resubmit(monkeypatch, faq_provider, scenario):
+    question = "What is the cafeteria policy?" if scenario == "no_match" else "What is the remote-work policy?"
+    model = faq_provider(question)
+    if scenario == "presentation_failure":
+        model.invoke.side_effect = [
+            AIMessage(content=json.dumps({"status": "ready", "question": question, "reason": "explicit_question"}),
+                      response_metadata={"finish_reason": "stop"}),
+            RuntimeError("private credentials"),
+        ]
+    recorded = connect_api(monkeypatch)
+    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui.chat_input[0].set_value("Please answer this FAQ: " + question).run()
+    assert not ui.exception
+    data = recorded[0][1]
+    assert data["route"] == "llm_assisted"
+    assert data["status"] == {"matched": "completed", "no_match": "needs_clarification",
+                              "presentation_failure": "partial_failure"}[scenario]
+    assert "FAQ workflow stages" in [element.label for element in ui.expander]
+    assistant = ui.chat_message[1]
+    assert data["reply"] in [element.value for element in assistant.text]
+    assert len(assistant.json) == 0
+    assert "Fictional demo policy — verify your actual company policy." not in [
+        element.value for element in ui.caption
+    ]
+    assert data["result"] in [json.loads(element.value) for element in ui.json]
+    text = "\n".join(element.value for element in ui.text)
+    for stage in data["workflow_trace"]:
+        assert stage["stage"] in text and str(stage["elapsed_ms"]) in text
+    captions = [element.value for element in ui.caption]
+    assert captions.count("LLM stage") == (1 if scenario == "no_match" else 2)
+    assert captions.count("Local tool stage") == 1
+    calls = 1 if scenario == "no_match" else 2
+    assert model.invoke.call_count == calls
+    saved = json.loads(sessions._sessions[data["session_id"]].history.messages[-1].content)
+    for field in ("result", "reply", "trace", "workflow_trace", "status"):
+        assert saved[field] == data[field]
+    ui.run()
+    assert not ui.exception and len(recorded) == 1
+    assert model.invoke.call_count == calls and ui.session_state["pending"] is False
+
+
 def final(status="completed", reply="Done"):
     return AIMessage(content=json.dumps({"status": status, "reply": reply}),
                      response_metadata={"finish_reason": "stop"})

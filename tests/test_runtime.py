@@ -2,9 +2,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import runtime, keyword_workflow
+from app import runtime, keyword_workflow, faq_workflow
 from app.agent import AgentResult, AgentTrace
-from app.routes import faq_route, keyword_route, sentiment_route
+from app.routes import keyword_route, sentiment_route
 from app.tools.faq import retrieve_faq
 from app.tools.keywords import extract_keywords
 
@@ -13,21 +13,23 @@ CASES = [
     ("keyword_extraction", 'Extract keywords from "Customer support improves retention"', "extract_keywords",
      keyword_workflow, extract_keywords, {"text": "Customer support improves retention"}),
     ("faq_retrieval", 'FAQ: "What is the remote-work policy?"', "retrieve_faq",
-     faq_route, retrieve_faq, {"question": "What is the remote-work policy?"}),
+     faq_workflow, retrieve_faq, {"question": "What is the remote-work policy?"}),
 ]
 
 
 @pytest.fixture(autouse=True)
-def agent_double(monkeypatch, sentiment_provider, keyword_provider):
+def agent_double(monkeypatch, sentiment_provider, keyword_provider, faq_provider):
     agent = Mock(return_value=AgentResult("needs_clarification", "Please provide details.", None, [], 0))
     monkeypatch.setattr(runtime, "run_agent", agent)
     return agent
 
 
 @pytest.mark.parametrize(("intent", "message", "tool_name", "module", "function", "arguments"), CASES)
-def test_dispatch_classifies_once_and_traces_exact_payload(intent, message, tool_name, module, function, arguments, monkeypatch, agent_double, keyword_provider):
+def test_dispatch_classifies_once_and_traces_exact_payload(intent, message, tool_name, module, function, arguments, monkeypatch, agent_double, keyword_provider, faq_provider):
     if intent == "keyword_extraction":
         keyword_provider(arguments["text"])
+    else:
+        faq_provider(arguments["question"])
     classifier = Mock(return_value=(intent, 0.71, 0.71))
     tool = Mock(wraps=function)
     monkeypatch.setattr(runtime, "classify_request", classifier)
@@ -36,7 +38,7 @@ def test_dispatch_classifies_once_and_traces_exact_payload(intent, message, tool
     classifier.assert_called_once_with(message)
     tool.assert_called_once_with(next(iter(arguments.values())))
     assert execution.status == "completed"
-    assert execution.route == ("llm_assisted" if intent == "keyword_extraction" else "direct")
+    assert execution.route == "llm_assisted"
     assert execution.predicted_intent == intent and execution.confidence == 0.71
     assert len(execution.trace) == 1
     step = execution.trace[0]
@@ -44,7 +46,7 @@ def test_dispatch_classifies_once_and_traces_exact_payload(intent, message, tool
     assert step.status == "completed" and step.result == execution.result
     assert execution.elapsed_ms >= step.elapsed_ms >= 0
     agent_double.assert_not_called()
-    assert bool(execution.reply) == (intent == "keyword_extraction")
+    assert execution.reply
     assert execution.agent_reason is None
 
 
@@ -56,7 +58,7 @@ def test_dispatch_classifies_once_and_traces_exact_payload(intent, message, tool
     ("out_of_scope", "Hello", 1, "intent_requires_agent"),
     ("sentiment_analysis", 'Sentiment: "sad"', 0.70, "low_confidence"),
     ("keyword_extraction", 'Keywords: "sad" and email me', 1, "compound_request"),
-    ("faq_retrieval", "What about that policy?", 1, "question_not_unambiguous"),
+    ("faq_retrieval", "What about that policy?", 1, "context_required"),
 ])
 def test_fallback_hands_off_once_without_direct_execution(intent, message, confidence, reason, monkeypatch, agent_double):
     if intent == "keyword_extraction":
@@ -67,6 +69,14 @@ def test_fallback_hands_off_once_without_direct_execution(intent, message, confi
             "status": "agent_required", "source_text": None, "reason": "compound_request",
         }), response_metadata={"finish_reason": "stop"})
         monkeypatch.setattr(keyword_workflow, "_create_model", lambda *args: model)
+    elif intent == "faq_retrieval":
+        import json
+        from langchain_core.messages import AIMessage
+        model = Mock()
+        model.invoke.return_value = AIMessage(content=json.dumps({
+            "status": "agent_required", "question": None, "reason": "context_required",
+        }), response_metadata={"finish_reason": "stop"})
+        monkeypatch.setattr(faq_workflow, "_create_model", lambda *args: model)
     classifier = Mock(return_value=(intent, confidence, 0.71))
     monkeypatch.setattr(runtime, "classify_request", classifier)
     tools = []
@@ -85,15 +95,17 @@ def test_fallback_hands_off_once_without_direct_execution(intent, message, confi
 
 
 @pytest.mark.parametrize(("intent", "message", "tool_name", "module", "function", "arguments"), CASES)
-def test_tool_failure_has_failed_trace_without_exception_details(intent, message, tool_name, module, function, arguments, monkeypatch, agent_double, keyword_provider):
+def test_tool_failure_has_failed_trace_without_exception_details(intent, message, tool_name, module, function, arguments, monkeypatch, agent_double, keyword_provider, faq_provider):
     if intent == "keyword_extraction":
         keyword_provider(arguments["text"])
+    else:
+        faq_provider(arguments["question"])
     monkeypatch.setattr(runtime, "classify_request", Mock(return_value=(intent, 1, 0.71)))
     tool = Mock(side_effect=RuntimeError("private payload and credentials"))
     monkeypatch.setattr(module, tool_name, tool)
     result = runtime.execute_request(message)
     assert result.status == "error" and result.result is None
-    assert result.route == ("llm_assisted" if intent == "keyword_extraction" else "direct")
+    assert result.route == "llm_assisted"
     assert result.reason.endswith("_unavailable")
     step, = result.trace
     assert step.status == "failed" and step.result is None and step.arguments == arguments
@@ -136,7 +148,8 @@ def test_classifier_failure_is_sanitized_and_prevents_dispatch(monkeypatch, agen
 @pytest.mark.parametrize("faq_only", [False, True])
 def test_routing_failure_is_sanitized_without_fabricated_trace(faq_only, monkeypatch, agent_double):
     monkeypatch.setattr(runtime, "classify_request", Mock(return_value=("faq_retrieval", 1, 0.71)))
-    monkeypatch.setattr(runtime, "try_direct_faq", Mock(side_effect=RuntimeError("private FAQ path")))
+    dispatch_name = "try_direct_faq" if faq_only else "run_faq_workflow"
+    monkeypatch.setattr(runtime, dispatch_name, Mock(side_effect=RuntimeError("private FAQ path")))
     detail = "FAQ routing unavailable" if faq_only else "Execution routing unavailable"
     with pytest.raises(runtime.RuntimeUnavailable, match=f"^{detail}$"):
         runtime.execute_request("What is the remote-work policy?", faq_only=faq_only)
