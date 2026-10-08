@@ -11,7 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 12b remaining answer presentation discussion. User approved
+**Next:** ⏳ User review of step 12b's single-summary slice, then discussion of
+remaining answer presentation. User approved
 merging step 12a PR #35 on 2026-10-08; step 13 is merged in dependency PR #36.
 Step 11 is merged in PR #34.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
@@ -22,6 +23,18 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Implemented the user-approved step 12b single-summary slice:
+  completed single-summary agent turns show saved summary/key points once;
+  empty points omit the section, raw records stay in Activity, and fallback/
+  compound/draft replies retain their presentation. All 1,001 tests (10 new),
+  dependencies and whitespace checks pass. Inline browser on 8507/backend 8019
+  verifies literal multiline output, Activity JSON, empty points, non-executing
+  refresh and 1440/390 px wrapping without mobile overflow. Scripted providers,
+  real classifier/tool validation/HTTP/SSE/SQLite; no live-provider/email checks.
+  Figma remains rate-limited; native styling retained. Review app stays open;
+  scoped signed change on `feature/readable-single-summary` awaits user review
+  before merge. Other step 12b presentation remains separately agreed work.
 
 - **2026-10-08:** User approved merging step 12a PR #35. Verified user-only
   authorship, matching sign-offs and passing DCO; merged step 13 dependency PR #36,

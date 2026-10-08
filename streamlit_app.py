@@ -34,7 +34,23 @@ def show_execution(execution: dict) -> None:
         st.warning(f"Execution: {status}")
     elif status != "needs_clarification":
         st.caption(f"Execution: {status}")
-    if execution["reply"] is not None:
+    summary = None
+    if status == "completed" and execution["route"] == "agent" and len(execution["trace"]) == 1:
+        step = execution["trace"][0]
+        if step["tool"] == "summarize_text" and step["status"] == "completed":
+            result = step["result"]
+            if (isinstance(result, dict) and isinstance(result.get("summary"), str)
+                    and result["summary"].strip() and isinstance(result.get("key_points"), list)
+                    and all(isinstance(point, str) for point in result["key_points"])):
+                summary = result
+    if summary is not None:
+        st.caption("Summary")
+        st.text(summary["summary"])
+        if summary["key_points"]:
+            st.caption("Key points")
+            for point in summary["key_points"]:
+                st.text("• " + point)
+    elif execution["reply"] is not None:
         st.text(execution["reply"])
     if execution["result"] is not None:
         if execution["predicted_intent"] == "sentiment_analysis" and execution["route"] in {"direct", "llm_assisted"}:

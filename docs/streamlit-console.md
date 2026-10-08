@@ -39,6 +39,12 @@ and a labelled sentiment result. Exact numerical scores and raw JSON remain in
 Activity. A retained score still displays if its explanation failed, alongside the
 failure notice; clarification or failure without a score displays no sentiment label.
 
+Completed agent turns containing exactly one successful summary tool call display
+the saved summary and key points once as literal text. Empty key points omit their
+section. Exact tool JSON remains in Activity; the saved assistant reply is unchanged.
+Clarification, failure, missing results, compound turns and drafts retain their
+existing reply presentation.
+
 Workspace lists saved chats by recent update time. New chat creates a durable empty
 chat; the first Send from an empty workspace creates one before submitting. Merely
 opening/refreshing the app creates nothing. Titles are literal first-message text,
