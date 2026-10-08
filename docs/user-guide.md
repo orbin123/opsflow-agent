@@ -116,8 +116,17 @@ Chats survive refreshes and application restarts. Unsent composer drafts belong
 to the current browser session and each chat; they are not permanently saved.
 
 Open **Settings → Docs** to read this guide, then **Return to chat** to continue
-with your selected chat and multiline draft. Emails and Reminders pages are not
-available yet; their disabled menu options do not mean there are no saved drafts.
+with your selected chat and multiline draft. **Settings → Emails** lists retained successful email drafts across saved chats,
+newest turns first. Each draft shows its recipient, subject, body, review actions,
+save time and originating chat. Expand **Chat context** for its prompting message,
+or choose **Open chat** to read the full conversation. Successful drafts remain
+available when a later step failed; the source turn's outcome is shown separately.
+
+**Refresh** reads current records without drafting again. Renaming a chat updates
+its displayed title, and deleting a chat removes its drafts from this list after
+refresh. If records cannot be read, a loading error appears instead of an incomplete
+list. An invalid saved draft has an unavailable-record notice. Emails does not send,
+edit or export drafts. Reminders remains unavailable; chat cannot schedule reminders.
 
 ## Clarification, failures and recovery
 

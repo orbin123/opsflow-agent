@@ -36,8 +36,23 @@ and continue its remaining work. Earlier next-step notes below are historical.
   stays open; draft PR #40 on `feature/settings-docs-guide` awaits user confirmation
   before merge. User-only authorship/sign-off verified; Emails/Reminders remain next slices.
 
-**Next:** ⏳ Review step 14a Settings/Docs implementation, then separate Emails and
-Reminders page contracts, following the user's revised navigation request.
+**Next:** ⏳ Review implemented step 14b Emails page, then discuss the Reminders
+page and its chat-creation/delivery dependency.
+Settings/Docs draft PR #40 remains open; moving to the next slice was not treated
+as merge authorization. Reminders remains the following separate contract.
+
+- **2026-10-08:** Implemented approved step 14b read-only saved Emails page using
+  existing GET records: distinct successful draft observations, compound/partial
+  outcomes, saved actions/literal content, contextual demo flags and source navigation.
+  Preserves composer drafts; refresh reflects rename/delete and reports read/record
+  failures honestly. Full 1,071-test regression plus final 138 focused checks pass
+  (20 new overall; 1,072 collected), dependency/whitespace pass. Inline 8510/8020
+  review verifies desktop/mobile wrapping, keyboard context/focus, source-chat
+  navigation and multiline composer restoration; fixture log unchanged at five calls.
+  Scripted backend; no live model quality/email/deployment verification. Foundations
+  metadata inspected; detailed Figma context remains limited. Separate signed branch
+  `feature/saved-email-drafts` in draft PR #41 stacks on PR #40; app open, merge
+  awaits user review.
 The initial Docs discussion was requested in a new chat
 on 2026-10-08. Remaining step 12b presentation is deferred, not complete, and
 must be revisited before the rework handover. User approved

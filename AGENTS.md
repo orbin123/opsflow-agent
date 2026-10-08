@@ -17,10 +17,13 @@ recovery controls only read. See `docs/streamlit-console.md`. Completed executio
 details appear between each right-aligned prompt and left-aligned answer in a
 vertically sequential, left-aligned Activity panel (step 11). Step 13 shows actual
 live stage events before the saved answer. Approved step 14a adds bottom-left
-Settings with a read-only Docs guide and unavailable Emails/Reminders page options.
+Settings with a read-only Docs guide and saved-work page options.
 Docs/return preserves chat selection and browser-session drafts without executing
 work; pending/running/unsaved work blocks page entry. See `docs/user-guide.md`.
-Emails and Reminders pages remain separately agreed follow-up slices.
+Approved step 14b enables a read-only Emails page across retained chat drafts,
+including successful drafts from compound/partially failed turns. Existing GET APIs
+provide records; Refresh/Open chat never execute drafting. Saved actions and demo
+qualifications remain separate. Reminders remains a separately agreed follow-up slice.
 
 The approved Workspace addition provides persistent Rename/Delete through a
 themed right-click/More actions menu. Custom titles survive the first message;
