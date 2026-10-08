@@ -7,6 +7,7 @@ from typing import Literal
 
 from langchain_core.messages import AIMessage, HumanMessage
 
+from app.execution_events import emit
 from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
@@ -68,6 +69,7 @@ def execute_request(message: str, *, faq_only: bool = False,
     except Exception:
         raise RuntimeUnavailable("Intent classifier unavailable") from None
 
+    emit("classification", predicted_intent=intent, confidence=confidence)
     result = None
     trace = []
     workflow_trace = []
@@ -91,6 +93,7 @@ def execute_request(message: str, *, faq_only: bool = False,
                 workflow_fn = {"sentiment_analysis": run_sentiment_workflow,
                                "keyword_extraction": run_keyword_workflow,
                                "faq_retrieval": run_faq_workflow}[intent]
+                emit("routing", route="llm_assisted", reason="high_confidence_workflow")
                 workflow = workflow_fn(message)
                 status, reason, result, reply = (workflow.status, workflow.reason,
                                                  workflow.result, workflow.reply)
@@ -120,6 +123,7 @@ def execute_request(message: str, *, faq_only: bool = False,
                                    result, decision.tool_elapsed_ms))
     agent_reason = None
     if status == "agent_required" and not faq_only:
+        emit("routing", route="agent", reason=reason)
         try:
             agent = run_agent(message) if history is None else run_agent(message, history=history)
         except Exception:

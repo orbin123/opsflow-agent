@@ -13,6 +13,7 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, model_validator
 
+from app.execution_events import start_step, finish_step
 from app.tools.sentiment import SentimentResult, analyze_sentiment
 
 
@@ -191,6 +192,7 @@ def run_sentiment_workflow(request: str) -> SentimentWorkflowResult:
                                        trace, (perf_counter() - started) * 1000)
 
     stage_started = perf_counter()
+    step_id = start_step("extract_source")
     try:
         extraction = _invoke(_EXTRACTION_SCHEMA, _Extraction, _EXTRACTION_PROMPT, request)
         if extraction.status == "ready" and extraction.source_text not in request:
@@ -198,9 +200,11 @@ def run_sentiment_workflow(request: str) -> SentimentWorkflowResult:
     except _WorkflowError as error:
         trace.append(SentimentStage("extract_source", "failed", str(error),
                                     (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1])
         return finish("error", "extraction_failed", "Could not identify text for sentiment analysis. No text was scored.")
     trace.append(SentimentStage("extract_source", "completed", extraction.reason,
                                 (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1])
     if extraction.status == "needs_clarification":
         return finish("needs_clarification", extraction.reason, "Which text would you like me to analyze for sentiment?")
     if extraction.status == "agent_required":
@@ -208,25 +212,32 @@ def run_sentiment_workflow(request: str) -> SentimentWorkflowResult:
     source = extraction.source_text
 
     stage_started = perf_counter()
+    arguments = {"text": source}
+    step_id = start_step("analyze_sentiment", kind="tool", arguments=arguments)
     try:
         result = analyze_sentiment(source)
     except Exception:
         trace.append(SentimentStage("analyze_sentiment", "failed", "sentiment_unavailable",
                                     (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1], arguments=arguments, result=result)
         return finish("error", "sentiment_unavailable", "Sentiment analysis failed. No result is available.")
     trace.append(SentimentStage("analyze_sentiment", "completed", None,
                                 (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1], arguments=arguments, result=result)
 
     stage_started = perf_counter()
+    step_id = start_step("explain_result")
     try:
         presentation = _invoke(_PRESENTATION_SCHEMA, _Presentation, _PRESENTATION_PROMPT,
                                json.dumps({"request": request, "source_text": source, "result": asdict(result)}))
     except _WorkflowError as error:
         trace.append(SentimentStage("explain_result", "failed", str(error),
                                     (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1])
         return finish("partial_failure", "presentation_failed",
                       f"VADER classified the supplied text as {result.label} "
                       f"(compound score {result.compound}). The conversational explanation is unavailable.")
     trace.append(SentimentStage("explain_result", "completed", None,
                                 (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1])
     return finish("completed", "sentiment_completed", presentation.reply)

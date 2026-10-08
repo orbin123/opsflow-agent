@@ -13,6 +13,7 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, model_validator
 
+from app.execution_events import start_step, finish_step
 from app.tools.faq import FAQResult, retrieve_faq
 
 
@@ -208,6 +209,7 @@ def run_faq_workflow(request: str) -> FAQWorkflowResult:
                                  trace, (perf_counter() - started) * 1000)
 
     stage_started = perf_counter()
+    step_id = start_step("extract_question")
     try:
         extraction = _invoke(_EXTRACTION_SCHEMA, _Extraction, _EXTRACTION_PROMPT, request)
         if extraction.status == "ready" and extraction.question not in request:
@@ -215,9 +217,11 @@ def run_faq_workflow(request: str) -> FAQWorkflowResult:
     except _WorkflowError as error:
         trace.append(FAQStage("extract_question", "failed", str(error),
                               (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1])
         return finish("error", "extraction_failed", "Could not identify the policy question. No FAQ lookup was performed.")
     trace.append(FAQStage("extract_question", "completed", extraction.reason,
                           (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1])
     if extraction.status == "needs_clarification":
         return finish("needs_clarification", extraction.reason, "Which employee-policy question would you like me to look up?")
     if extraction.status == "agent_required":
@@ -225,14 +229,18 @@ def run_faq_workflow(request: str) -> FAQWorkflowResult:
     question = extraction.question
 
     stage_started = perf_counter()
+    arguments = {"question": question}
+    step_id = start_step("retrieve_faq", kind="tool", arguments=arguments)
     try:
         result = retrieve_faq(question)
     except Exception:
         trace.append(FAQStage("retrieve_faq", "failed", "faq_unavailable",
                               (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1], arguments=arguments, result=result)
         return finish("error", "faq_unavailable", "FAQ lookup failed. No policy result is available.")
     trace.append(FAQStage("retrieve_faq", "completed", result.status,
                           (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1], arguments=arguments, result=result)
     if result.status == "ambiguous":
         candidates = "\n".join(f"- {candidate.question}" for candidate in result.candidates)
         return finish("needs_clarification", "faq_ambiguous",
@@ -244,6 +252,7 @@ def run_faq_workflow(request: str) -> FAQWorkflowResult:
                       "Could you clarify the policy topic or provide the applicable policy text?")
 
     stage_started = perf_counter()
+    step_id = start_step("explain_result")
     try:
         presentation = _invoke(_PRESENTATION_SCHEMA, _Presentation, _PRESENTATION_PROMPT,
                                json.dumps({"request": request, "question": question,
@@ -251,6 +260,7 @@ def run_faq_workflow(request: str) -> FAQWorkflowResult:
     except _WorkflowError as error:
         trace.append(FAQStage("explain_result", "failed", str(error),
                               (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1])
         return finish("partial_failure", "presentation_failed",
                       "The conversational explanation is unavailable. This is the retrieved "
                       "fictional demo policy, which may not resolve every detail of your question:\n\n"
@@ -258,4 +268,5 @@ def run_faq_workflow(request: str) -> FAQWorkflowResult:
     reason = "policy_detail_missing" if presentation.status == "needs_clarification" else "faq_completed"
     trace.append(FAQStage("explain_result", "completed", reason,
                           (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1])
     return finish(presentation.status, reason, presentation.reply)

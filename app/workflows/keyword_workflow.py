@@ -13,6 +13,7 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, model_validator
 
+from app.execution_events import start_step, finish_step
 from app.tools.keywords import Keyword, extract_keywords
 
 
@@ -197,6 +198,7 @@ def run_keyword_workflow(request: str) -> KeywordWorkflowResult:
                                      trace, (perf_counter() - started) * 1000)
 
     stage_started = perf_counter()
+    step_id = start_step("extract_source")
     try:
         extraction = _invoke(_EXTRACTION_SCHEMA, _Extraction, _EXTRACTION_PROMPT, request)
         if extraction.status == "ready" and extraction.source_text not in request:
@@ -204,9 +206,11 @@ def run_keyword_workflow(request: str) -> KeywordWorkflowResult:
     except _WorkflowError as error:
         trace.append(KeywordStage("extract_source", "failed", str(error),
                                 (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1])
         return finish("error", "extraction_failed", "Could not identify text for keyword extraction. No keywords were extracted.")
     trace.append(KeywordStage("extract_source", "completed", extraction.reason,
                               (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1])
     if extraction.status == "needs_clarification":
         return finish("needs_clarification", extraction.reason, "Which text would you like me to extract keywords from?")
     if extraction.status == "agent_required":
@@ -214,16 +218,21 @@ def run_keyword_workflow(request: str) -> KeywordWorkflowResult:
     source = extraction.source_text
 
     stage_started = perf_counter()
+    arguments = {"text": source}
+    step_id = start_step("extract_keywords", kind="tool", arguments=arguments)
     try:
         result = extract_keywords(source)
     except Exception:
         trace.append(KeywordStage("extract_keywords", "failed", "keyword_unavailable",
                                 (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1], arguments=arguments, result=result)
         return finish("error", "keyword_unavailable", "Keyword extraction failed. No result is available.")
     trace.append(KeywordStage("extract_keywords", "completed", None,
                               (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1], arguments=arguments, result=result)
 
     stage_started = perf_counter()
+    step_id = start_step("explain_result")
     try:
         presentation = _invoke(_PRESENTATION_SCHEMA, _Presentation, _PRESENTATION_PROMPT,
                                json.dumps({"request": request, "source_text": source,
@@ -231,10 +240,12 @@ def run_keyword_workflow(request: str) -> KeywordWorkflowResult:
     except _WorkflowError as error:
         trace.append(KeywordStage("explain_result", "failed", str(error),
                                 (perf_counter() - stage_started) * 1000))
+        finish_step(step_id, trace[-1])
         fallback = (f"YAKE extracted {len(result)} keyword phrases."
                     if result else "YAKE found no keyword candidates in the supplied text.")
         return finish("partial_failure", "presentation_failed",
                       fallback + " The conversational introduction is unavailable.")
     trace.append(KeywordStage("explain_result", "completed", None,
                               (perf_counter() - stage_started) * 1000))
+    finish_step(step_id, trace[-1])
     return finish("completed", "keyword_completed", presentation.reply)

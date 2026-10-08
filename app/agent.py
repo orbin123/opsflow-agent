@@ -14,6 +14,7 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, StringConstraints, ValidationError, field_validator
 
+from app.execution_events import start_step, finish_step
 from app.tools.email_drafting import EmailDraftingError, _ACTION_INSTRUCTIONS, draft_email
 from app.tools.faq import retrieve_faq
 from app.tools.keywords import extract_keywords
@@ -241,11 +242,18 @@ def run_agent(message: str, *, history: list[HumanMessage | AIMessage] | None = 
         for _ in range(6):
             if perf_counter() - started >= 120:
                 return fail("time_limit")
+            model_started = perf_counter()
+            model_step = start_step("agent_model", kind="model")
             try:
                 response = model.invoke(messages)
             except Exception as error:
                 reason = _reason(error)
-                return fail("provider_unavailable" if reason == "tool_unavailable" else reason)
+                reason = "provider_unavailable" if reason == "tool_unavailable" else reason
+                finish_step(model_step, {"status": "failed", "reason": reason,
+                                        "elapsed_ms": (perf_counter() - model_started) * 1000})
+                return fail(reason)
+            finish_step(model_step, {"status": "completed", "reason": None,
+                                    "elapsed_ms": (perf_counter() - model_started) * 1000})
             if perf_counter() - started >= 120:
                 return fail("time_limit")
             if (not isinstance(response, AIMessage) or response.invalid_tool_calls
@@ -330,14 +338,17 @@ def run_agent(message: str, *, history: list[HumanMessage | AIMessage] | None = 
                 return fail("time_limit")
             seen_ids.add(call_id)
             tool_started = perf_counter()
+            tool_step = start_step(name, kind="tool", arguments=arguments)
             try:
                 result = _serialize(tool(**arguments))
             except Exception as error:
                 reason = _reason(error)
                 trace.append(AgentTrace(name, arguments, "failed", None, reason,
                                         (perf_counter() - tool_started) * 1000))
+                finish_step(tool_step, trace[-1])
                 return fail(reason)
             trace.append(AgentTrace(name, arguments, "completed", result, None,
                                     (perf_counter() - tool_started) * 1000))
+            finish_step(tool_step, trace[-1])
             messages.extend([response, ToolMessage(content=json.dumps(result), tool_call_id=call_id)])
         return fail("model_limit")

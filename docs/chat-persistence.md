@@ -65,6 +65,13 @@ with a factual unknown-completion reply. No completion timestamp or result is
 fabricated. Recovery never repeats work; a new explicit turn may continue after
 the interrupted outcome. Browser disconnects do not cancel backend work.
 
+Step 10's `/api/v1/chat/stream` publishes transient execution progress alongside
+this same lifecycle. Progress is not a persistence acknowledgment; terminal saved
+outcomes follow the final commit, and failed finalization reports unsaved. Subscriber
+disconnect does not cancel the worker. Graceful shutdown drains disconnected stream
+workers before releasing ownership. Recovery uses these existing records; there is
+no intermediate event journal or progress resume cursor. See [chat-api.md](chat-api.md).
+
 ## Restoration and submission identity
 
 ```python

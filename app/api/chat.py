@@ -4,12 +4,14 @@ from typing import Literal
 from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, Response, Path
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator
 
 from app.agent import AgentTrace
 from app.runtime import ExecutionResult, RuntimeUnavailable, ToolResult, ToolTrace
 from app.sessions import execute_session_request, create_chat, list_chats, get_chat
 from app.chat_store import ChatPersistenceError, ChatTurnConflict
+from app.chat_stream import stream_turn
 from app.workflows.sentiment_workflow import SentimentStage
 from app.workflows.keyword_workflow import KeywordStage
 from app.workflows.faq_workflow import FAQStage
@@ -46,6 +48,20 @@ class ChatResponse(BaseModel):
     reply: str | None
     agent_reason: str | None
     workflow_trace: list[SentimentStage | KeywordStage | FAQStage] = Field(default_factory=list)
+
+
+@router.post("/api/v1/chat/stream", response_class=StreamingResponse, responses={
+    200: {"description": "Ordered SSE events; final/failure contains the outcome HTTP status.",
+          "content": {"text/event-stream": {"schema": {"type": "string"}}}},
+    422: {"description": "Invalid body; no turn execution."},
+})
+async def chat_stream(body: ChatRequest) -> StreamingResponse:
+    turn_id = body.turn_id or uuid4().hex
+    return StreamingResponse(
+        stream_turn(body.session_id, body.message, turn_id, execute_session_request),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 @router.post("/api/v1/chat", response_model=ChatResponse, responses={

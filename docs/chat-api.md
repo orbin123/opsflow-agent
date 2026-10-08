@@ -146,3 +146,77 @@ The HTTP client exposes `create_chat`, `list_chats`, `get_chat`, and optional
 `submit_chat(..., turn_id=...)`. It validates records/identity and reports safe
 errors without retries. Step 9 connects Workspace controls and refresh restoration;
 see [streamlit-console.md](streamlit-console.md).
+
+## Execution event stream — REWORK step 10
+
+`POST /api/v1/chat/stream` accepts the same validated `ChatRequest` as the
+nonstreaming endpoint and executes the same session entry point once. Invalid
+bodies return HTTP 422 before execution. Valid requests return HTTP 200 with
+`Content-Type: text/event-stream`, `Cache-Control: no-cache`, and
+`X-Accel-Buffering: no`. After headers are sent, terminal events carry the outcome
+in `http_status` (200/409/503); the transport's 200 is not execution success.
+
+```sh
+curl -N -X POST http://127.0.0.1:8000/api/v1/chat/stream \
+  -H 'Content-Type: application/json' \
+  -d '{"session_id":"local-chat","turn_id":"one-operation","message":"Just check the sentiment of this I am happy"}'
+```
+
+Use a streaming POST client (`fetch` plus its response reader, or a streaming
+HTTP client), rather than browser `EventSource`, which submits GET requests.
+The response consists of SSE frames with numeric `id`, named `event`, and one
+JSON `data` line. Newlines in user text are JSON-escaped, so caller-owned strings
+cannot create additional SSE fields. A comment heartbeat every 15 idle seconds
+keeps the connection active; it does not assert progress or add an event sequence.
+A client must handle arbitrary byte-chunk boundaries and stop at `final`/`failure`.
+
+Every JSON event has `version=1`, exact `session_id` and `turn_id`, increasing
+one-based `sequence`, and `event`. The sequence is local to this subscription;
+it is neither a durable record ID nor a resume cursor. Step finish events identify
+their corresponding start with `step_id` equal to the start event's sequence.
+
+| Event | Application data and meaning |
+| --- | --- |
+| `turn` | Echoes identity before storage/execution; does not acknowledge durable acceptance. Omitted turn IDs receive a generated UUID. |
+| `classification` | Actual `predicted_intent` and `confidence`, after the classifier returns. |
+| `routing` | Selected `route` and factual `reason`, before entering that route. High-confidence fixed workflows use `high_confidence_workflow`; an extraction abstention emits a second agent routing event with its actual reason. |
+| `step_started` | `name`, `kind` (`workflow`, `model`, `tool`), nullable validated `arguments`. Only attempted stages are emitted. |
+| `step_finished` | Correlated `step_id`, actual `status`, sanitized `reason`, `elapsed_ms`; workflow `stage` or agent `tool`, with validated arguments/results for tools. Tool/workflow fields come from the same trace records retained in the outcome. |
+| `final` | `outcome="saved"`, `http_status`, and `execution` containing all existing execution fields. Sent only after the session wrapper commits the outcome. Includes completed, clarification, error and partial-failure results. |
+| `failure` | Sanitized `code`, `message`, `http_status`, and applicable `outcome` or `state`. Terminal; never invents a final execution payload. |
+
+Fixed workflows emit extraction, local-tool and (only when attempted)
+presentation stages. Agent model events cover actual orchestration calls: completed
+means the provider call returned, not that its output passed validation. Raw
+model responses, instructions, history, provider metadata/logs and private reasoning
+are not emitted. Agent tools start only after local argument validation and budget
+checks. Inputs/results can contain private supplied text, as in the existing trace;
+the trusted local access boundary is unchanged. These are progress events rather
+than token streaming. Final timings retain the existing session timing boundary.
+
+Failure codes are `chat_persistence` (503, `outcome=not_started` or `unsaved`),
+`chat_turn_conflict` (409, nullable `state`), `runtime_unavailable` (503,
+`outcome=saved`, a sanitized failure committed by sessions), or
+`execution_unknown` (503, `outcome=unknown`, unexpected transport/worker failure).
+A failed final save emits `failure` with `unsaved`, even if previous events showed
+successful tools. Those progress events are not durable completion proof.
+
+A subscriber disconnect does not cancel the worker, retry providers/tools, or
+release database ownership. Graceful backend shutdown waits for disconnected work
+before closing the store. A forced process exit can still interrupt execution;
+exclusive ownership recovery marks running turns interrupted under step 7's
+existing contract. No new persistence schema or intermediate event journal is added.
+
+Progress is transient and discarded after disconnect. Use `GET /api/v1/chats/{id}`
+to recover the authoritative running/finished/interrupted state and exact saved
+outcome. Reads never execute a turn. There is no GET subscription/replay endpoint
+and `Last-Event-ID` does not resume progress. Do not automatically resubmit unknown
+work. An explicit POST using the same retained ID/chat/message returns only `turn`
+and the saved terminal outcome, without classifier/provider/tool events or calls.
+An in-flight duplicate waits on the existing per-chat lock and then returns the
+saved outcome; an unsaved/interrupted marker conflicts. Conflicting content/chat
+also conflicts. Identity protection applies while turn records are retained.
+
+Streamlit continues to use the existing nonstreaming endpoint and separate
+inspector. Step 11 moves completed details inline; step 13 consumes live activity.
+No new external service, dependency, email/reminder execution or UI redesign.
