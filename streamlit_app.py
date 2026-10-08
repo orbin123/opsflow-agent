@@ -132,19 +132,33 @@ for name, value in {"session_id": None, "turns": [], "pending": False,
                     "running": False, "queued": None, "drafts": {}, "uncertain": {},
                     "catalogue": [], "action": None, "composer_error": None,
                     "clear_composer": False, "blocked": False, "inflight": None,
-                    "management": None, "deleted_selection": False}.items():
+                    "management": None, "deleted_selection": False, "view": "chat"}.items():
     st.session_state.setdefault(name, value)
 api_url = os.environ.get("OPSFLOW_API_URL", "http://127.0.0.1:8000")
 
 
 def save_draft() -> None:
-    st.session_state.drafts[st.session_state.session_id] = st.session_state.get("composer", "")
+    if "composer" in st.session_state:
+        st.session_state.drafts[st.session_state.session_id] = st.session_state.composer
+
+
+def change_view(view: str) -> None:
+    if (st.session_state.pending or st.session_state.running
+            or st.session_state.session_id in st.session_state.uncertain):
+        return
+    save_draft()
+    st.session_state.view = view
+    if view == "chat":
+        st.session_state.composer = st.session_state.drafts.get(st.session_state.session_id, "")
 
 
 def navigate(session_id: str | None = None) -> None:
     if st.session_state.pending or st.session_state.running:
         return
     save_draft()
+    if st.session_state.view == "docs":
+        st.session_state.composer = st.session_state.drafts.get(st.session_state.session_id, "")
+    st.session_state.view = "chat"
     if session_id is None:
         st.session_state.action = "new"
     else:
@@ -313,6 +327,11 @@ elif selected is not None and not st.session_state.pending:
 blocked = (st.session_state.pending or st.session_state.running or read_error is not None
            or catalogue_error is not None or selected in st.session_state.uncertain)
 st.session_state.blocked = blocked
+if st.session_state.view == "docs" and (st.session_state.pending or st.session_state.running
+                                        or selected in st.session_state.uncertain):
+    # A turn started in another tab must leave recovery controls reachable.
+    st.session_state.view = "chat"
+    st.session_state.composer = st.session_state.drafts.get(selected, "")
 
 st.title(">_ OpsFlow")
 st.caption("Analyze communications, find demo policies, summarize text, and compose email drafts.")
@@ -341,6 +360,31 @@ with st.sidebar:
             st.caption("Selected chat")
         updated = datetime.fromisoformat(chat["updated_at"]).astimezone(ZoneInfo("Asia/Kolkata"))
         st.caption("Updated " + updated.strftime("%d %b · %H:%M") + " IST")
+
+    with st.container(key="settings_footer"):
+        with st.popover("Settings", icon=":material/settings:", key="settings_menu_" + st.session_state.view,
+                        disabled=st.session_state.pending or st.session_state.running
+                        or selected in st.session_state.uncertain):
+            st.button("Docs", key="open_docs", icon=":material/menu_book:",
+                      width="stretch", on_click=change_view, args=("docs",))
+            st.button("Emails", key="open_emails", icon=":material/mail:",
+                      width="stretch", disabled=True)
+            st.caption("Saved email drafts page is not available yet.")
+            st.button("Reminders", key="open_reminders", icon=":material/alarm:",
+                      width="stretch", disabled=True)
+            st.caption("Reminders page is not available yet. Chat cannot schedule reminders.")
+
+if st.session_state.view == "docs":
+    with st.container(width=760, key="docs_guide"):
+        st.button("Return to chat", key="return_to_chat", icon=":material/arrow_back:",
+                  on_click=change_view, args=("chat",))
+        try:
+            guide = (Path(__file__).parent / "docs" / "user-guide.md").read_text(encoding="utf-8")
+        except (OSError, UnicodeError):
+            st.error("The guide is unavailable. Return to chat and try again later.")
+        else:
+            st.markdown(guide)
+    st.stop()
 
 st.subheader("Conversation")
 if navigation_error:

@@ -23,8 +23,9 @@ and verified within the recorded limits; step 12b's single-summary and single-dr
 slices are implemented and verified below. Remaining step 12b presentation and
 steps 14 onward are pending. User approved merging single-draft PR #39.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 14 Docs content/navigation discussion in a new chat, as requested
-by the user on 2026-10-08. Remaining step 12b capability/multi-tool presentation
+**Next:** ⏳ Review step 14a Settings/Docs implementation, then agree the separate
+Emails and Reminders page contracts, as requested by the user on 2026-10-08. Bottom-left
+Settings replaces the standalone Docs entry. Remaining step 12b capability/multi-tool presentation
 is deferred, not complete; revisit it before step 15's rework handover. User approved
 merging Workspace PR #38 and single-summary dependency PR #37 on 2026-10-08;
 PR #37 is merged and #38 now targets `main`. User approved
@@ -753,15 +754,25 @@ its routing revision are now approved as recorded below.
 
 #### Future-build requests recorded — 2026-10-08
 
-User agreed to record these ideas for future builds rather than implement them in
-step 4: a settings icon near the bottom-left sidebar opening Reminders, with Docs
-added in a later build; reminder cards showing due-time details and a link back to
-creation chat, with off/delete controls; and a separate Email page listing drafts
-and actual sent records. Discuss navigation/design alongside step 6 and the Docs
-entry in its planned slice. Reminder creation from chat, delivery integration, sent
-email records and off/delete semantics require separate post-rework contracts under
-the existing side-effect boundaries. A draft must never appear as sent. This record
-does not authorize those features or change the ordered rework implementation steps.
+Originally recorded outside step 4. On 2026-10-08 the user requested these pages
+be addressed after the current PR and replaced the proposed standalone Docs entry
+with a Settings icon in the bottom-left corner. The Settings menu offers Docs,
+Emails and Reminders. Step 14 below now records the requested sequence of bounded
+slices, rather than leaving these pages as an unordered future-build note.
+
+- **Reminders:** One page of reminder cards showing the reminder context, due-time
+  details, actual status and originating chat where available. Chat reminder creation
+  and delivery remain a prerequisite requiring a separate agreed side-effect contract.
+- **Emails:** One page listing all saved chatbot email drafts with recipient,
+  subject/body, relevant originating chat content and details for later use. A draft
+  must never appear as sent; actual sent records require future delivery integration.
+- **Docs:** Example prompts demonstrating every available chat tool, with required
+  inputs, expected outputs and limitations. Explain unavailable reminder/email
+  actions honestly rather than offer working demos for unconnected tools.
+
+Earlier off/delete reminder ideas remain unapproved; the current request does not
+define those controls. Each slice still needs its contract and proportional checks
+agreed before coding. The original plan remains paused.
 
 ### 5. Verify one-agent multi-step requests
 
@@ -1386,13 +1397,14 @@ does not authorize those features or change the ordered rework implementation st
   event journal or dependency changes. Figma remains rate-limited; user-specified
   native adaptation is documented. User review/merge confirmation remains pending.
 
-### 14. Add the in-app Docs guide
+### 14. Add Settings navigation, Docs and saved-work pages
 
 - [ ] Discuss content/navigation, then implement and verify this slice.
 - **Next-step decision — 2026-10-08:** User will discuss this step in a new chat
   after approving single-draft PR #39's merge. Remaining step 12b presentation is
   deferred; this does not mark it complete or authorize Docs implementation yet.
-- **Problem/change:** Add Docs near the lower sidebar, opening a readable guide while
+- **Problem/change:** Add a bottom-left Settings icon with Docs, Emails and Reminders
+  page options. Open the selected page in the main area while
   preserving the active chat. Keep maintained usage content in repository docs.
 - **Input → output:** Docs selection → organized tool/capability guides with purpose,
   necessary information, ordinary-English examples, expected output shape, limitations,
@@ -1404,7 +1416,123 @@ does not authorize those features or change the ordered rework implementation st
 - **Verify:** Walk through every published example against supported behavior with
   controlled fixtures and agreed manual checks. Mark unavailable features clearly;
   never document future reminder sending as currently working. Check navigation,
-  readability, lower-sidebar placement, and unchanged chat state on return.
+  readability, Settings placement, and unchanged chat state on return.
+
+#### Step 14 proposed implementation contract — 2026-10-08
+
+- **Status:** User approved proceeding on 2026-10-08. Step 14a Settings/Docs is
+  the approved first implementation slice; later slices need their separate contracts.
+  Start with Settings and the read-only guide, then address the pages below in
+  separate PRs after the current PR. Remaining step 12b stays
+  deferred and must be revisited before step 15.
+- **Content source:** Add `docs/user-guide.md` as the maintained user-facing guide
+  and render that local content in the app. Keep setup/API/storage details in the
+  existing developer documents. No generated documentation or provider calls.
+- **Guide structure:** Getting started; available capabilities; requests with
+  multiple tasks; execution and Activity; saved chats and drafts; clarification,
+  failures and recovery; current limitations. Each capability describes required
+  inputs, a self-contained ordinary-English demo prompt for each of the five
+  registered chat tools, the expected kind of answer,
+  and a meaningful limitation. Examples illustrate behavior rather than promise
+  exact model wording or classification confidence.
+- **Capability coverage:** Sentiment returns a label/explanation, with exact scores
+  in Activity; keywords return ranked phrases/scores (lower YAKE scores mean
+  greater relevance); FAQ explains matched fictional policies and clarifies missing
+  facts; summaries return a summary/key points; email drafting needs source facts,
+  a recipient and writing instructions, and returns a draft plus separate actions.
+  Explain that chat cannot schedule reminders or send email even though standalone
+  reminder/notification utilities exist. Do not present them as working chat tools.
+- **Execution explanations:** Distinguish task count from execution type. Describe
+  local deterministic execution, the fixed `llm_assisted` extraction/tool/presentation
+  workflows, and the agent choosing tools for contextual or multiple-task requests.
+  A supported compound request uses one agent, sequential tool observations and
+  retained partial results. Activity shows observable work and saved details.
+- **14a — Settings + Docs navigation:** A Settings icon anchored near the
+  bottom-left of the sidebar opens an accessible menu of page options. Docs opens
+  the guide in the main area; Return to chat restores the selected conversation or
+  welcome view. Preserve the `chat` locator, saved turns and per-chat multiline
+  draft. Settings/page navigation and return never create/select/delete a chat or
+  submit/replay a turn. Keep existing chat navigation and submission locks.
+  Disable page navigation while a
+  turn is pending, running or unsaved so a rerun cannot interrupt live Activity;
+  recovery remains available from the conversation. The guide remains readable
+  when catalogue/backend reads fail. Emails and Reminders are clearly unavailable
+  until their slices are implemented, without claiming records are absent.
+  No page URL or section deep links in this first slice.
+- **14b — Emails page (next separate contract/PR):** Read all retained successful
+  `draft_email` results across saved chats, including drafts from compound turns.
+  Show one entry per actual saved tool result with recipient, subject, literal
+  multiline body, saved user actions and originating chat context/link. Preserve
+  fictional-policy qualification where applicable. Failed drafting attempts must
+  not become drafts, and identical content from distinct calls is not one record.
+  Define ordering, empty/error states, deleted-chat behavior and the read-only
+  catalogue/API access needed before coding; never reexecute drafting to populate
+  this page. Sending, editing and exporting are separate scope decisions.
+- **14c — Reminders page (following separate contract/PR):** Show one card per
+  actual stored reminder, including context, timezone-aware due time, persisted
+  delivery status and originating chat/link where recorded. Define read access,
+  empty/error states and chat association before coding. Chat currently cannot
+  create reminders; a useful chatbot-reminder journey therefore needs separately
+  agreed agent creation and due-time delivery integration before it can be verified.
+  Discuss that scope explicitly against the existing rework side-effect boundary;
+  do not silently connect it as part of page rendering. Until connected, state the
+  limitation rather than fabricate chatbot reminders or successful delivery.
+  Scheduling, sent, failed and unknown outcomes must remain distinct; no automatic
+  retry, cancellation or deletion behavior is added by this page contract.
+- **Design decision to agree:** Reuse native controls, documented fonts, colors,
+  focus states and the 640–760 px reading width. The anchored Settings menu,
+  dedicated pages and reminder cards are not yet documented design patterns.
+  Inspect the linked
+  Figma reference before UI implementation; discuss any unavailable reference and
+  approve the adaptation. Initially use a simple flowing guide with headings,
+  without search, interactive examples, or a new component system.
+- **Proportional verification:** Review every published example against current
+  tool/routing contracts. Use representative controlled fixtures for each available
+  capability and one supported compound example; reuse existing coverage where it
+  already proves the contract. AppTest checks Settings/menu/Docs/return, selected-chat and draft
+  preservation, entry locks, backend-error readability and zero execution calls.
+  Check content loading and a readable failure if the guide file is unavailable.
+  Run relevant UI/navigation/stream regressions and dependency/whitespace checks.
+  Then exercise Docs/return with a populated chat and multiline draft in the inline
+  browser at desktop/mobile sizes, checking bottom-left Settings reachability, keyboard
+  focus and wrapping. Leave the app open for user review before merge/direct push.
+- **Delivery:** One scoped implementation commit/PR per agreed slice, with user-only
+  authorship and verified DCO. Update the guide, console/design documentation,
+  this plan and `docs/agents_doc.md` in that change. Record fixture-based evidence
+  and any live-provider or browser limitations without claiming general model quality.
+- **Follow-up verification scope:** Emails checks must cover saved single/compound
+  drafts, multiple chats, restart/read-only access, failed tools, deletion and
+  provenance without duplicate execution. Reminders checks must cover truthful
+  card status/context/timezones and read-only navigation; any approved creation/
+  delivery integration needs its own deduplication and controlled email failure
+  checks. Verify each page in the inline browser and leave it open for review.
+
+#### Step 14a implementation and review — 2026-10-08
+
+- **Implemented:** Native bottom-left Settings popover with Docs and explicitly
+  unavailable Emails/Reminders options. Docs renders maintained `docs/user-guide.md`
+  in a 760 px maximum reading column. Return and Workspace selection retain the
+  selected chat locator, saved records and per-chat multiline browser-session drafts.
+  Page entry is blocked during pending/running/unsaved work; newly detected running
+  work returns to the conversation for recovery. Guide errors are sanitized;
+  backend read errors do not prevent reading Docs. No execution/API/storage changes.
+- **Checks:** All 1,052 tests pass (15 new), dependency and whitespace checks pass.
+  Added proportional AppTest navigation/recovery/error checks and
+  six published-prompt checks with real classification/local tools and controlled
+  extraction/orchestration/writing stages. These fixtures verify contracts, not
+  live model interpretation or output quality.
+- **Design/review:** User-approved Settings/guide adaptation reuses documented
+  fonts, palette, square controls, focus and responsive reading width. Figma
+  inspection remains blocked by the Starter tool-call limit. Review app on
+  8509 uses the existing scripted backend on 8020. No live provider/email or
+  deployment verification. Browser checks at 1440/390 px confirm menu placement,
+  keyboard Enter/Escape/focus return, guide wrapping without horizontal overflow,
+  literal multiline draft restoration and unchanged chat locator. Existing fixture
+  call log remains at four entries after all navigation/reruns; no new tool calls.
+  Screenshots: `/tmp/opsflow-settings-docs-desktop.jpg`,
+  `/tmp/opsflow-settings-docs-mobile.jpg`, `/tmp/opsflow-settings-menu-mobile.jpg`.
+  Draft PR #40 on `feature/settings-docs-guide` contains one user-authored,
+  DCO-signed change. Merge/direct push requires user browser-review approval.
 
 ### 15. Verify the complete rework and hand back to the original plan
 
@@ -1433,8 +1561,11 @@ does not authorize those features or change the ordered rework implementation st
   each response, collapsed by default with expandable details and saved-history replay.
 - [ ] Answers are readable, demo policies remain qualified, and draft/user actions
   remain separate; no misleading sending/delivery/completion claims are introduced.
-- [ ] Docs is reachable near the lower sidebar and covers tools, natural-language
+- [ ] Docs is reachable through bottom-left Settings and covers tools, natural-language
   examples, outputs, execution types, and limitations matching verified behavior.
+- [ ] Requested Emails/Reminders page slices and the chat-reminder integration
+  dependency are implemented and verified, or explicitly rescheduled with the user
+  before handover; neither saved drafts nor scheduled reminders imply sent email.
 - [ ] Relevant checks and reviewed desktop/mobile journeys are recorded. Design-system
   gaps and material contract decisions are resolved in the corresponding slices.
 - [ ] All numbered steps are verified or explicitly revised with the user; the

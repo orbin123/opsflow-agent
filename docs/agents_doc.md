@@ -11,7 +11,34 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 14 Docs content/navigation discussion in a new chat, as requested
+- **2026-10-08:** User replaced the standalone Docs entry with bottom-left Settings
+  offering Docs, Emails and Reminders, and requested the saved-work pages after
+  the current PR. Revised step 14 into separate Settings/Docs, saved-draft and
+  reminder-page slices; recorded chat-reminder creation/delivery as a dependency
+  requiring explicit scope agreement. Docs includes demo prompts for all five
+  current chat tools. Documentation-only proposal; whitespace checks pass.
+
+- **2026-10-08:** Added step 14's proposed implementation contract to `REWORK.md`:
+  maintained local user guide, capability/execution coverage, read-only Docs/return
+  navigation preserving chat/draft state, proposed running/unsaved entry locks,
+  design decisions and proportional verification. Proposal awaits agreement;
+  no application code or runtime behavior changed. Reviewed the scoped documentation
+  diff and checked whitespace. Remaining step 12b stays deferred before handover.
+
+- **2026-10-08:** Implemented approved step 14a Settings/Docs: bottom-left native
+  menu, maintained guide with five tool demos and a compound example, preserved
+  chat/draft state, entry locks, recovery from work detected in another tab and
+  sanitized content failure. All 1,052 tests (15 new), dependency/whitespace checks
+  pass. Inline review on 8509/backend 8020 verifies 1440/390 px menu/guide layout,
+  keyboard interaction and multiline draft restoration without new execution.
+  Six examples use scripted language stages and real routing/local tools; no live
+  model quality/email/deployment checks. Figma remains rate-limited. Review app
+  stays open; draft PR #40 on `feature/settings-docs-guide` awaits user confirmation
+  before merge. User-only authorship/sign-off verified; Emails/Reminders remain next slices.
+
+**Next:** ⏳ Review step 14a Settings/Docs implementation, then separate Emails and
+Reminders page contracts, following the user's revised navigation request.
+The initial Docs discussion was requested in a new chat
 on 2026-10-08. Remaining step 12b presentation is deferred, not complete, and
 must be revisited before the rework handover. User approved
 merging Workspace PR #38 and summary dependency PR #37 on 2026-10-08;

@@ -112,6 +112,18 @@ The native multiline composer uses square surface/control borders. Focus retains
 the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
 remain; live Activity and Docs patterns belong to later steps.
 
+## Settings and Docs adaptation
+
+On 2026-10-08 the user approved the bottom-left Settings menu and Docs as the
+first slice of Settings/Docs/Emails/Reminders navigation. Use a native Settings
+popover with a gear icon and accessible label, 48 px controls, square surfaces,
+the existing palette/IBM Plex Mono and visible keyboard focus. Keep the footer
+near the bottom of the sidebar and the menu within desktop/mobile viewports.
+Docs uses a native reading container capped at 760 px, existing VT323 headings
+and IBM Plex Mono body copy, with Return to chat above the guide. Unavailable
+page options are disabled and explained. Figma inspection remains blocked by
+the Starter tool-call limit; this approved adaptation adds no Figma nodes.
+
 ## Workspace chat actions adaptation
 
 On 2026-10-08 the user approved Rename/Delete through a themed right-click menu
