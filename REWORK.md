@@ -9,8 +9,9 @@ after the recorded rework handover.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Remaining rework steps are pending.
 **Next discussion:** ⏳ Step 4 conversational summarization/drafting review.
-FAQ chat integration is on `feature/faq-chat-workflow`, stacked on open standalone
-PR #25. Keyword workflow/integration/presentation are merged in PR #24.
+Standalone FAQ PR #25 is merged into `main`; chat integration PR #26 now targets
+`main` and is approved for merge. Keyword workflow/integration/presentation are
+merged in PR #24.
 
 ## Intended User Experience
 
@@ -529,7 +530,7 @@ its routing revision are now approved as recorded below.
   classifier/threshold/index, runtime/API/UI/history, pure-tool/agent-registry,
   side effects, or later rework changes. Step 3d requires separate discussion.
 - Delivery: one user-authored DCO-signed change on `feature/faq-language-workflow`;
-  PR preparation follows the verified diff. Merge is not part of this slice.
+  merged as PR #25 into `main` on 2026-10-08 after the user authorized delivery.
 
 #### Step 3d contract — 2026-10-07
 
@@ -599,8 +600,9 @@ its routing revision are now approved as recorded below.
   No dependency/provider, training/threshold, retrieval tuning, side effects,
   persistence/streaming, other endpoints, or later rework work changed.
 - Delivery: one user-authored DCO-signed integration change on
-  `feature/faq-chat-workflow`, stacked on open standalone PR #25. Neither PR's
-  merge is authorized by this implementation request. Step 4 is the next discussion.
+  `feature/faq-chat-workflow` in PR #26. On 2026-10-08 the user authorized merging
+  it and its standalone dependency. PR #25 is merged; PR #26 now targets `main`.
+  Step 4 remains the next discussion.
 
 #### Step 3d caption correction — 2026-10-08
 
@@ -812,6 +814,13 @@ its routing revision are now approved as recorded below.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-08:** User authorized merging FAQ PR #26 and its required standalone
+  dependency. PR #25 merged into `main` with a user-authored signed merge message;
+  PR #26 retargeted to `main`. Implementation and caption checks remain the recorded
+  855-test regression run and 26 UI checks; this delivery record changes only docs.
+  Confirm current heads, DCO, and mergeability before the integration merge. Step 4
+  remains a separate discussion; the original plan stays paused.
 
 - **2026-10-08:** User requested removing the fixed demo-policy verification
   caption. Removed both chat render locations and updated existing FAQ UI coverage

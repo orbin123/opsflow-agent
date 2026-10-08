@@ -12,13 +12,20 @@ Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
 **Next:** ⏳ Step 4 conversational summarization/drafting review. FAQ steps 3c/3d
-are implemented and verified within recorded offline/limited live bounds; integration
-is stacked on open standalone PR #25. Keyword workflow/integration/presentation
-are merged in PR #24. Inline
+are implemented and verified within recorded offline/limited live bounds. Standalone
+PR #25 is merged; integration PR #26 targets `main` and is approved for merge.
+Keyword workflow/integration/presentation are merged in PR #24. Inline
 completed details are deferred to step 11, after tool/agent behavior, persistence,
 and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verified
 within their recorded limits; keyword steps 3a/3b are also verified offline.
 Later implementation awaits discussion.
+
+- **2026-10-08:** User authorized merging FAQ PR #26 and its required standalone
+  dependency. PR #25 merged into `main` with a user-authored signed merge message;
+  PR #26 retargeted to `main`. Implementation and caption checks remain the recorded
+  855-test regression run and 26 UI checks; this delivery record changes only docs.
+  Confirm current heads, DCO, and mergeability before the integration merge. Step 4
+  remains a separate discussion; the original plan stays paused.
 
 - **2026-10-08:** Removed the fixed `Fictional demo policy — verify your actual
   company policy.` chat caption at the user's request. Existing data, generated
