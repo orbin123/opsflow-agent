@@ -15,6 +15,10 @@ from app.agent import AgentTrace
 class ChatClientError(Exception):
     """Safe user-facing failure without raw server, request or transport details."""
 
+    def __init__(self, message: str, *, outcome: str = "unknown"):
+        super().__init__(message)
+        self.outcome = outcome
+
 
 def submit_chat(base_url: str, session_id: str, message: str, *, turn_id: str | None = None) -> dict:
     body = ChatRequest(session_id=session_id, message=message, turn_id=turn_id)
@@ -35,8 +39,8 @@ def submit_chat(base_url: str, session_id: str, message: str, *, turn_id: str | 
             detail = data["detail"]
             if isinstance(detail, dict) and detail.get("code") == "chat_persistence":
                 if detail.get("outcome") == "unsaved":
-                    raise ChatClientError("The turn ran, but its outcome was not saved. No automatic retry.")
-                raise ChatClientError("Chat history could not be saved or restored. No new turn was executed.")
+                    raise ChatClientError("The turn ran, but its outcome was not saved. No automatic retry.", outcome="unsaved")
+                raise ChatClientError("Chat history could not be saved or restored. No new turn was executed.", outcome="not_started")
             raise ChatClientError("Backend unavailable. No execution results were returned.")
         execution = ChatResponse.model_validate(data)
         if execution.session_id != session_id:
@@ -74,7 +78,7 @@ def _catalogue_request(base_url: str, path: str, model, *, create: bool = False)
             if response.status == 404:
                 raise ChatClientError("Chat not found. No turn was submitted.")
             if response.status != (201 if create else 200):
-                raise ChatClientError("Chat catalogue unavailable. No automatic retry.")
+                raise ChatClientError("Saved chats are unavailable. No automatic retry.")
             return TypeAdapter(model).validate_python(json.loads(response.read()))
     except (URLError, OSError):
         raise ChatClientError("Chat catalogue connection failed. No automatic retry.") from None

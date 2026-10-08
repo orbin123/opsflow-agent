@@ -4,8 +4,8 @@ REWORK step 6, recorded 2026-10-08. The user selected **one local user** and
 **disabled navigation while a turn runs**. This document defines the target for
 steps 7–9 and the restoration constraints for steps 10–14. Step 7 now implements
 the storage/session portion; see [chat-persistence.md](chat-persistence.md).
-Step 8 implements catalogue endpoints and HTTP submission IDs; navigation remains
-proposed for step 9. Each implementation slice needs its
+Steps 8–9 implement catalogue endpoints, HTTP submission IDs and Workspace
+navigation/restoration. Each implementation slice needs its
 own discussion and proportional verification.
 
 ## Ownership and storage
@@ -132,7 +132,7 @@ and no execution; a finished ID returns its saved outcome with the original stat
 semantics. Exact response models and failure envelopes are reviewed in step 8.
 The FAQ-only endpoint retains its wholly local, stateless contract.
 
-## Browser identity and navigation for step 9
+## Browser identity and navigation — implemented in step 9
 
 - Use an opaque `chat` URL query parameter for the selected saved chat. This
   survives refresh/reopening that URL and backend/Streamlit restart; it is an
@@ -207,5 +207,15 @@ Step 6 review compared this specification with `app/sessions.py`, `app/api/chat.
 
 Step 6's evidence is documentation review, not runtime or browser evidence. No dependency,
 provider, SMTP, reminder, deployment, framework, routing, or context-limit changes
-were made. Step 9 navigation is the next bounded discussion; this document does not authorize
+were made. Step 10 events is the next bounded discussion; this document does not authorize
 implementing every later slice.
+
+
+Step 9 implementation uses native title buttons and a multiline composer/Send,
+approved by the user. Explicit URL handling retains unknown/invalid-link recovery
+because Streamlit bound selection widgets discard unknown values. Unsaved drafts
+are per-chat browser-session state, committed on text-area blur; refresh may lose
+them. Recovery reads never retry submissions. Unknown outcomes absent from storage
+remain blocked in that chat; another chat may be selected. Existing inspector stays
+through step 10. See [streamlit-console.md](streamlit-console.md) for implemented
+states and verification limits.

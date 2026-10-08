@@ -10,7 +10,11 @@ restores context without reexecution. See `docs/chat-persistence.md` for the
 single-backend Unix-lock boundary, interrupted recovery, and explicit unsaved
 failures. Python and HTTP turn IDs prevent duplicates while records are retained.
 Approved step 8 exposes create/list/load catalogue APIs and client helpers; reads
-never execute work. See `docs/chat-api.md`. Workspace navigation remains step 9.
+never execute work. See `docs/chat-api.md`. Approved step 9 adds Workspace New chat,
+literal titled selection, `chat` URL restoration and a per-chat browser-session
+multiline draft composer. Running/unsaved work locks navigation and submission;
+recovery controls only read. See `docs/streamlit-console.md`. The separate inspector
+remains through step 10; live events/inline Activity and Docs are later slices.
 
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`

@@ -2,12 +2,15 @@
 
 import base64
 import os
+import re
+from datetime import datetime
 from pathlib import Path
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 import streamlit as st
 
-from app.ui_client import ChatClientError, submit_chat
+from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat
 
 
 st.set_page_config(page_title="OpsFlow · Console", layout="wide")
@@ -48,24 +51,160 @@ def show_execution(execution: dict) -> None:
 
 
 st.html(f"<style>{console_styles()}</style>")
-if "session_id" not in st.session_state:
-    st.session_state.session_id = uuid4().hex
+for name, value in {"session_id": None, "turns": [], "pending": False,
+                    "running": False, "queued": None, "drafts": {}, "uncertain": {},
+                    "catalogue": [], "action": None, "composer_error": None,
+                    "clear_composer": False, "blocked": False}.items():
+    st.session_state.setdefault(name, value)
+api_url = os.environ.get("OPSFLOW_API_URL", "http://127.0.0.1:8000")
+
+
+def save_draft() -> None:
+    st.session_state.drafts[st.session_state.session_id] = st.session_state.get("composer", "")
+
+
+def navigate(session_id: str | None = None) -> None:
+    if st.session_state.pending or st.session_state.running:
+        return
+    save_draft()
+    if session_id is None:
+        st.session_state.action = "new"
+    else:
+        st.query_params["chat"] = session_id
+
+
+def queue_message() -> None:
+    if st.session_state.blocked:
+        return
+    save_draft()
+    message = st.session_state.get("composer", "")
+    if not message.strip() or len(message) > 10000:
+        st.session_state.composer_error = "Enter a nonblank message of at most 10,000 characters."
+        return
+    st.session_state.composer_error = None
+    st.session_state.queued = {"session_id": st.session_state.session_id,
+                               "message": message, "turn_id": uuid4().hex}
+    st.session_state.pending = True
+
+
+def literal_label(title: str) -> str:
+    # Native button labels support Markdown; supplied titles must remain literal.
+    return re.sub(r"([\\`*_{}\[\]()<>#+.!|~:$])", r"\\\1", title)
+
+
+catalogue_error = read_error = navigation_error = None
+if st.session_state.action == "new":
+    st.session_state.action = None
+    try:
+        created = create_chat(api_url)
+        st.query_params["chat"] = created["session_id"]
+    except ChatClientError as exc:
+        navigation_error = str(exc)
+
+if not st.session_state.pending:
+    try:
+        st.session_state.catalogue = list_chats(api_url)
+    except ChatClientError as exc:
+        catalogue_error = str(exc)
+
+locators = st.query_params.get_all("chat")
+invalid_locator = bool(locators) and (len(locators) != 1 or not locators[0].strip() or len(locators[0]) > 128)
+selected = locators[0] if locators and not invalid_locator else None
+if st.session_state.pending or st.session_state.running:
+    # Navigation never moves a queued/known-running operation to another chat.
+    selected = st.session_state.session_id
+    invalid_locator = False
+    if selected is not None:
+        st.query_params["chat"] = selected
+elif not locators and catalogue_error is None and st.session_state.catalogue:
+    selected = st.session_state.catalogue[0]["session_id"]
+    st.query_params["chat"] = selected
+
+if selected != st.session_state.session_id:
+    save_draft()
+    st.session_state.session_id = selected
+    st.session_state.composer = st.session_state.drafts.get(selected, "")
+    st.session_state.composer_error = None
     st.session_state.turns = []
-    st.session_state.pending = False
+if st.session_state.clear_composer:
+    st.session_state.composer = ""
+    st.session_state.clear_composer = False
+
+if invalid_locator:
+    read_error = "This chat link is invalid. Choose a saved chat or start a new one."
+    st.session_state.turns = []
+elif selected is not None and not st.session_state.pending:
+    try:
+        saved = get_chat(api_url, selected)
+        st.session_state.turns = []
+        uncertain = st.session_state.uncertain.get(selected)
+        for turn in saved["turns"]:
+            execution = turn["execution"]
+            if execution is not None:
+                execution = {"session_id": selected, "turn_id": turn["turn_id"], **execution}
+            error = turn["failure_reply"]
+            if turn["state"] == "running":
+                error = "Running or unsaved: this turn has no confirmed final outcome. Check saved chat to recover; it will not be retried."
+                if uncertain is not None and uncertain["turn_id"] == turn["turn_id"]:
+                    error = uncertain["error"] + " " + error
+            st.session_state.turns.append({**turn, "execution": execution, "error": error})
+        st.session_state.running = any(turn["state"] == "running" for turn in saved["turns"])
+        if uncertain is not None:
+            matched = next((turn for turn in saved["turns"] if turn["turn_id"] == uncertain["turn_id"]), None)
+            if matched is not None and matched["state"] != "running":
+                del st.session_state.uncertain[selected]
+            elif matched is None:
+                st.session_state.turns.append(uncertain)
+    except ChatClientError as exc:
+        read_error = str(exc)
+        st.session_state.turns = []
+
+blocked = (st.session_state.pending or st.session_state.running or read_error is not None
+           or catalogue_error is not None or selected in st.session_state.uncertain)
+st.session_state.blocked = blocked
 
 st.title(">_ OpsFlow")
 st.caption("Analyze communications, find demo policies, summarize text, and compose email drafts.")
 
 with st.sidebar:
     st.subheader("Workspace")
+    st.button("New chat", key="new_chat", icon=":material/add:", width="stretch",
+              disabled=st.session_state.pending or st.session_state.running or catalogue_error is not None,
+              on_click=navigate)
+    if catalogue_error:
+        st.error(catalogue_error)
+        st.button("Retry chat list", key="retry_catalogue")
+    elif not st.session_state.catalogue:
+        st.caption("No saved chats yet.")
+    for chat in st.session_state.catalogue:
+        current = chat["session_id"] == selected and not invalid_locator
+        with st.container(key="selected_chat" if current else None):
+            st.button(literal_label(chat["title"]), key="chat_" + chat["session_id"],
+                      icon=":material/check:" if current else None, width="stretch", wrap=False,
+                      disabled=st.session_state.pending or st.session_state.running or catalogue_error is not None,
+                      on_click=navigate, args=(chat["session_id"],))
+        if current:
+            st.caption("Selected chat")
+        updated = datetime.fromisoformat(chat["updated_at"]).astimezone(ZoneInfo("Asia/Kolkata"))
+        st.caption("Updated " + updated.strftime("%d %b · %H:%M") + " IST")
     st.caption("Email drafts need your review and sending. Chat cannot schedule reminders or send email.")
 
 chat_column, inspector_column = st.columns([2, 1], gap="large")
 with chat_column:
     st.subheader("Conversation")
+    if navigation_error:
+        st.error(navigation_error)
+    if read_error:
+        st.error(read_error)
+    if read_error or st.session_state.running or selected in st.session_state.uncertain:
+        st.button("Check saved chat", key="recover_chat", disabled=st.session_state.pending)
+    if st.session_state.pending:
+        st.caption("Running — navigation and submission are paused.")
+    elif st.session_state.running:
+        st.warning("Completion is unconfirmed. Navigation and submission are paused until a saved outcome is available.")
     conversation = st.container()
     with conversation:
-        if not st.session_state.turns:
+        if not st.session_state.turns and read_error is None and catalogue_error is None and not st.session_state.pending:
             st.info('Start with: Sentiment: "I am happy"')
         for turn in st.session_state.turns:
             with st.chat_message("user"):
@@ -75,35 +214,28 @@ with chat_column:
                     show_execution(turn["execution"])
                 else:
                     st.error(turn["error"])
-    message = st.chat_input("Message OpsFlow", key="message", max_chars=10000,
-                            disabled=st.session_state.pending, submit_mode="disable")
-    if message is not None:
-        if not message.strip() or len(message) > 10000:
-            st.error("Enter a nonblank message of at most 10,000 characters.")
-        else:
-            st.session_state.pending = True
-            turn = {"message": message, "execution": None, "error": None}
-            # Retain the submitted turn even if the HTTP outcome is unknown.
-            st.session_state.turns.append(turn)
-            try:
-                with st.spinner("Running request…"):
-                    turn["execution"] = submit_chat(os.environ.get("OPSFLOW_API_URL", "http://127.0.0.1:8000"),
-                                                    st.session_state.session_id, message)
-            except ChatClientError as exc:
-                turn["error"] = str(exc)
-            finally:
-                st.session_state.pending = False
-            st.rerun()
+        if st.session_state.queued is not None:
+            with st.chat_message("user"):
+                st.text(st.session_state.queued["message"])
+            with st.chat_message("assistant"):
+                st.caption("Running request…")
+    st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
+                 disabled=blocked, on_change=save_draft)
+    st.button("Send", key="send_message", type="primary", disabled=blocked,
+              on_click=queue_message)
+    if st.session_state.composer_error:
+        st.error(st.session_state.composer_error)
 
 with inspector_column:
     st.subheader("Execution inspector")
     st.caption("Observable tool activity and backend timings.")
     if not st.session_state.turns:
-        st.info("Submit a message to inspect its execution.")
+        st.info("Saved execution details are unavailable. Check saved chat to restore them."
+                if read_error else "Submit a message to inspect its execution.")
     else:
         index = st.selectbox("Inspect turn", range(len(st.session_state.turns)),
                              index=len(st.session_state.turns) - 1,
-                             format_func=lambda value: f"Turn {value + 1}")
+                             format_func=lambda value: f"Turn {value + 1}", key="inspect_" + str(selected))
         turn = st.session_state.turns[index]
         execution = turn["execution"]
         if execution is None:
@@ -138,3 +270,34 @@ with inspector_column:
                     st.json(step["arguments"])
                     st.caption("OBSERVATION")
                     st.json(step["result"])
+
+# A queued button submission runs once after disabled navigation/composer render.
+# Clear the queue before HTTP so later reruns/reconnects cannot submit it again.
+if st.session_state.queued is not None:
+    submission = st.session_state.queued
+    st.session_state.queued = None
+    try:
+        if submission["session_id"] is None:
+            created = create_chat(api_url)
+            submission["session_id"] = created["session_id"]
+            st.session_state.session_id = created["session_id"]
+            st.query_params["chat"] = created["session_id"]
+        with st.spinner("Running request…"):
+            submit_chat(api_url, submission["session_id"], submission["message"], turn_id=submission["turn_id"])
+        st.session_state.drafts[submission["session_id"]] = ""
+        st.session_state.clear_composer = True
+    except ChatClientError as exc:
+        if submission["session_id"] is None:
+            st.session_state.composer_error = "A new chat could not be confirmed. No turn was submitted."
+        else:
+            st.session_state.uncertain[submission["session_id"]] = {
+                **submission, "execution": None, "error": str(exc), "state": "unknown"}
+            if exc.outcome == "not_started":
+                st.session_state.composer_error = str(exc)
+                del st.session_state.uncertain[submission["session_id"]]
+            else:
+                st.session_state.drafts[submission["session_id"]] = ""
+                st.session_state.clear_composer = True
+    finally:
+        st.session_state.pending = False
+    st.rerun()

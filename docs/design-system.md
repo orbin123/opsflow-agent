@@ -95,3 +95,17 @@ and five-decimal score display. Keep YAKE order, the existing font/palette/layou
 and a brief lower-score relevance caption. Raw full-precision JSON stays in the
 inspector. This is a keyword presentation correction; no new CSS or Figma component
 is introduced, and the general answer/inline-activity redesign remains deferred.
+
+
+## Workspace navigation adaptation
+
+On 2026-10-08 the user approved step 9's native sidebar title buttons, New chat,
+URL restoration, and multiline composer with Send. Figma inspection remains
+blocked by the Starter tool-call limit; this adaptation uses the documented
+Foundations tokens and step 6 interaction contract, without adding Figma nodes.
+Chat controls use 48 px targets and IBM Plex Mono, literal/truncated titles with
+full accessible labels, action tint plus a check and Selected chat text. New chat
+and Send use VT323 short action labels; Send uses the existing cyan action states.
+The native multiline composer uses square surface/control borders. Focus retains
+the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
+remain; live Activity and Docs patterns belong to later steps.

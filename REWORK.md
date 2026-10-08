@@ -13,10 +13,11 @@ Step 5 is verified within the offline/scripted-browser limits below; user approv
 merging PR #28 on 2026-10-08. Step 6's persistence/navigation contract is
 recorded and reviewed. Step 7 storage/restoration is merged in PR #30 after user
 approval, with its step 6 dependency PR #29 also merged. Step 8 catalogue APIs and
-HTTP submission IDs are implemented and verified within the offline/scripted-browser
-limits below; user review is pending. Steps 9 onward remain pending.
+HTTP submission IDs and step 9 Workspace navigation/restoration are implemented
+and verified within the offline/scripted-browser limits below; user review is
+pending. Steps 10 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 8 review, then step 9 Workspace navigation discussion.
+**Next:** ⏳ Steps 8–9 user review, then step 10 backend event-contract discussion.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -898,7 +899,16 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 9. Build Workspace chat navigation and restoration
 
-- [ ] Discuss, implement, and verify this slice after step 8.
+- [x] Discuss, implement, and verify this slice after step 8.
+- **Approved slice — 2026-10-08:** User approved native New chat/title-list
+  navigation, explicit `chat` URL restoration, latest/empty startup, read-only
+  history/inspector loading and recovery, locked navigation during running work,
+  and a multiline composer with Send preserving per-chat unsent drafts in the
+  browser session. Use documented design tokens/native sidebar adaptation while
+  Figma inspection remains rate-limited. Verify two-chat isolation, refresh/backend
+  restart, exact retained outcomes, failure recovery, keyboard/long-title/mobile
+  behavior with automated and scripted-provider inline-browser checks. Keep the
+  inspector and defer activity/events/Docs to later steps. Stack on open PR #31.
 - **Problem/change:** Add New chat and a selectable titled chat list. Restore messages
   and activity on selection and refresh; keep technical IDs/configuration invisible.
   Ensure active selection and pending work follow the agreed switching policy.
@@ -907,6 +917,53 @@ does not authorize those features or change the ordered rework implementation st
 - **Verify:** Create two chats, switch and continue each, refresh, restart the backend,
   and restore saved results without resubmission. Check long titles, empty history,
   retrieval failure, keyboard navigation, and mobile sidebar behavior.
+
+#### Step 9 outcome — 2026-10-08
+
+- **Implemented:** Native New chat and titled sidebar buttons, selected tint/check/
+  text, literal truncated titles with full accessible labels, and update times in
+  IST. Explicit `chat` URL selection restores ordered saved messages/outcomes and
+  the unchanged inspector. Missing selection opens the latest chat; empty storage
+  creates nothing until New chat or first Send. Unknown/invalid/repeated locators
+  and unavailable reads block submission without displaying another chat's history.
+- **Composer/execution:** User approved native multiline composer plus Send.
+  Per-chat unsent text is retained in the current browser session after blur;
+  New chat starts empty, and refresh may lose drafts. One queued message freezes
+  its chat/message/turn ID, consumes the queue before HTTP and renders disabled
+  navigation/composer/Send with Running feedback. Reads/rerenders never submit.
+- **Recovery:** Lost replies restore committed matching records without duplicate
+  local turns; unresolved absent outcomes block Send in that chat without retries.
+  Running/unsaved markers lock navigation and submission, including after refresh.
+  Known initial-save failures retain the draft and report no new execution; unsaved
+  failures remain explicit until backend restart/interrupted recovery, which allows
+  a new explicit turn. Check saved chat/Retry chat list only read. Read failures hide
+  cached conversation/inspector content and never appear as empty success.
+- **Verified:** All 939 tests (17 new navigation checks), `pip check` and whitespace
+  checks pass. Final recovery wording/client-message changes passed 88 targeted
+  navigation/UI/storage/catalogue regressions. Tests cover isolated context/drafts,
+  URL refresh/restart/latest/empty selection, invalid/unknown links, creation/read/
+  catalogue failures, running locks, interrupted continuation, initial/final save
+  failures, lost/unknown replies, queued identity and literal long labels. Existing
+  sentiment/keyword/FAQ/agent UI checks use the new composer and retain exact outcomes.
+  Installed Streamlit 1.65.0 text-area/button APIs checked; no dependencies changed.
+- **Browser:** Review app on 8505/backend 8016 uses scripted language providers
+  with real classifier/VADER/runtime/API/storage. Created positive/negative chats,
+  switched/restored an unsent draft, and continued each with its own prior result.
+  An 18-second scripted follow-up showed disabled controls; refresh restored its
+  running marker, then read-only recovery loaded completion without resubmission.
+  Forced retrieval 503 hid history/inspector and recovered by reading. Backend restart
+  plus refresh preserved all five saved turns byte-for-byte before a separate
+  long-title check added one new explicit turn. Unknown-URL recovery was also checked.
+  Desktop 1440 px/mobile 390 px checks verified title truncation/full accessible
+  label, native sidebar/keyboard selection, 48 px targets, 2 px focus outline,
+  stacked panels and no mobile horizontal overflow. Review app remains open.
+- **Limits/delivery:** One user-authored DCO-signed change on
+  `feature/workspace-chat-navigation` in PR #32, stacked on open step 8 PR #31. User browser
+  confirmation is required before merge. Figma inspection remains rate-limited;
+  the user approved documented-token/native adaptation, not new Figma components.
+  No live provider quality, SMTP/reminders, deployment, streaming/Activity/Docs,
+  ownership/authentication, history budgeting or durable composer storage changes.
+  Existing LangChain snapshot deprecation remains. Step 10 needs separate discussion.
 
 ### 10. Stream actual backend execution events
 

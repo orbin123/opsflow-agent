@@ -144,4 +144,5 @@ one-backend boundary; IDs remain identifiers, not authorization.
 
 The HTTP client exposes `create_chat`, `list_chats`, `get_chat`, and optional
 `submit_chat(..., turn_id=...)`. It validates records/identity and reports safe
-errors without retries. Workspace controls and refresh restoration remain step 9.
+errors without retries. Step 9 connects Workspace controls and refresh restoration;
+see [streamlit-console.md](streamlit-console.md).

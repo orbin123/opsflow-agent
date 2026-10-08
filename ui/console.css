@@ -33,6 +33,20 @@
   background: var(--of-subtle); color: var(--of-ink); border-radius: 0;
 }
 .stApp button { min-height: 44px; border-radius: 0; }
+.st-key-new_chat button, .st-key-send_message button {
+  min-height: 48px; font-family: "VT323", monospace; font-size: 24px;
+}
+.st-key-send_message button { background: var(--of-action); color: var(--of-ink); }
+.st-key-send_message button:hover { background: #52CADE; }
+.st-key-send_message button:active { background: #33B7CF; }
+.st-key-selected_chat button { background: #DDF6FB; border-color: var(--of-focus); }
+[data-testid="stSidebar"] [data-testid="stButton"] button { min-height: 48px; }
+[data-testid="stSidebar"] [data-testid="stButton"] button p { font-family: "IBM Plex Mono", monospace; }
+[data-testid="stSidebar"] .st-key-new_chat button p, .st-key-send_message button p {
+  font-family: "VT323", monospace; font-size: 24px;
+}
+.st-key-composer textarea { background: var(--of-surface); border-radius: 0; }
+.st-key-composer [data-baseweb="textarea"] { border: 1px solid var(--of-border); border-radius: 0; }
 [data-testid="stChatInputSubmitButton"] { background: var(--of-action); color: var(--of-ink); }
 [data-testid="stChatInputSubmitButton"]:hover { background: #52CADE; }
 [data-testid="stChatInputSubmitButton"]:active { background: #33B7CF; }

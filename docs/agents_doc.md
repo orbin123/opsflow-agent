@@ -11,7 +11,7 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 8 user review, then step 9 Workspace navigation discussion.
+**Next:** ⏳ Steps 8–9 user review, then step 10 backend event-contract discussion.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
@@ -20,6 +20,21 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Implemented approved step 9 Workspace New chat/title navigation,
+  URL-selected/latest/empty restoration, per-chat browser-session multiline drafts
+  and one frozen/consumed submission queue. Running/unsaved states lock navigation
+  and submission; read-only recovery retains exact outcomes and never retries.
+  All 939 tests (17 new), dependency and whitespace checks pass; final wording
+  changes passed 88 targeted checks. Inline browser on 8505/backend 8016 verifies
+  two isolated sentiment/follow-up chats, an unsent draft, refresh during delayed
+  execution, retrieval-failure recovery and byte-identical records after backend
+  restart. Desktop/mobile checks confirm native navigation, literal/truncated
+  accessible titles, 48 px targets, visible focus, stacked panels and no overflow.
+  Review app stays open; PR #32 stacks on open step 8 PR #31 and requires
+  user confirmation before merge. Figma remains rate-limited; documented-token
+  adaptation approved. No live provider/email, dependency, reminder, streaming,
+  inline Activity, Docs or deployment changes; inspector remains in place.
 
 - **2026-10-08:** Implemented approved step 8 create/list/load catalogue APIs and
   optional HTTP submission-ID replay, with client helpers, sanitized failures,
