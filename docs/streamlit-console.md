@@ -20,7 +20,8 @@ OPSFLOW_API_URL=http://127.0.0.1:8011 .venv/bin/python -m streamlit run streamli
 The default API URL is `http://127.0.0.1:8000`. This is a trusted local console;
 neither service supplies authentication. Use a single backend process so history
 remains coherent. Streamlit's environment setting is separate from backend `.env`
-loading. The console only calls `POST /api/v1/chat`; it does not run tools itself.
+loading. The console uses the create/list/load catalogue APIs and `POST /api/v1/chat`;
+it does not run tools itself.
 
 The project sets `client.toolbarMode = "viewer"` using supported Streamlit
 configuration. Deploy, rerun, and clear-cache developer actions are absent from
@@ -31,18 +32,46 @@ remain internal. Configuration can be overridden by environment or CLI settings.
 
 ## Conversation and results
 
-A random session ID is created once per Streamlit browser session and reused for
-follow-ups. UI turns survive script reruns; refreshing/disconnecting can start a
-new session. Backend history now survives restart in SQLite when the same session
-ID is reused. No durable UI history,
-clear/history endpoint or automatic eviction is added. See [chat-api.md](chat-api.md).
+Workspace lists saved chats by recent update time. New chat creates a durable empty
+chat; the first Send from an empty workspace creates one before submitting. Merely
+opening/refreshing the app creates nothing. Titles are literal first-message text,
+with native truncation/full-label accessibility, a selected check/tint and update
+time in IST. There are no rename/delete/search controls.
 
-Messages are preserved exactly and checked for nonblank text and the API's 10,000
-character bound. The input disables during submission (`submit_mode="disable"`).
-Each turn makes one HTTP request with a 210-second socket timeout, allowing the
-bounded agent's provider calls time to finish. There are no automatic retries;
-transport errors may leave an unknown backend outcome. Submitted turns remain
-visible with that warning. Resubmitting manually executes another turn.
+The opaque `chat` URL locator selects the saved chat. Refresh, reopening that URL,
+and backend/Streamlit restart restore its ordered messages, exact outcomes and
+inspector records through GET without resubmission. Without a locator, the latest
+chat opens; an empty catalogue shows the welcome view. Unknown, invalid or repeated
+locators show recovery and block Send rather than silently select another chat.
+An unavailable history load hides previous messages/inspector data and offers
+Check saved chat. An unavailable catalogue offers Retry chat list. These controls
+only read. Selection uses explicit query-parameter handling because button widgets
+cannot bind URLs and automatic selection-widget binding discards invalid locators.
+
+The approved native multiline Message OpsFlow composer and Send preserve unsent
+text separately per chat during the current browser session. Text-area edits commit
+on blur; navigation saves that committed value before changing chats. Drafts are
+not durable across refresh/disconnection/restart. New chats begin with an empty
+composer. Native input bounds cap text at 10,000 characters; the application also
+checks nonblank/length before queuing and the API validates independently.
+
+Send queues one frozen chat/message/client-generated turn ID. The app renders
+Running feedback and disables New chat, chat switching, composer and Send before
+making one HTTP submission (210-second socket timeout). It consumes the queue
+before HTTP; rerenders, selection, inspector use and reads never repeat it. Outcomes
+are restored from saved records, retaining failure/clarification and timing details.
+Catalogue/history reads remain uncached so other tabs' saved updates are visible.
+
+Transport/invalid-response failures do not retry. Check saved chat retrieves the
+outcome; a saved matching record replaces the local uncertain message. An absent
+record leaves completion unknown and Send blocked in that chat; ordinary navigation
+to another chat remains possible. A saved running marker locks navigation and
+submission and explicitly reports unconfirmed running/unsaved work. Refresh cannot
+cancel or reassign it. A known initial persistence failure preserves the draft and
+reports no new execution. A final unsaved failure retains its explicit warning and
+running marker; backend restart conservatively marks it interrupted. A read then
+shows that unknown outcome and permits a new explicit turn with a fresh ID, without
+repeating old work. See [chat-persistence.md](chat-persistence.md).
 
 LLM-assisted keywords show the backend introduction followed by a native Phrase/Score
 table in YAKE order. Scores display to five decimal places; API/history and the
@@ -134,3 +163,15 @@ sentiment language stages and local VADER scoring, including plain-text reply,
 exact workflow timings, retained HTTP 503 results/history, and rerender non-execution.
 Figma inspection was rate-limited; the existing native expander adaptation was
 retained. No CSS/layout change, live Groq, or new browser-layout checks.
+
+REWORK step 9 verification (2026-10-08): all 939 tests (17 new navigation checks),
+dependency and whitespace checks pass. Final recovery-copy changes passed 88
+targeted navigation/UI/storage/catalogue checks. Scripted-provider inline review
+on 8505/backend 8016 covered isolated chats/follow-ups, an unsent draft, refresh
+during delayed execution, read failure/recovery, unknown links and unchanged
+saved turns after backend restart. Desktop 1440 px/mobile 390 px checks confirmed
+literal/truncated accessible titles, native keyboard/sidebar behavior, 48 px
+targets, visible 2 px focus, stacked panels and no horizontal overflow. Figma
+inspection remains rate-limited; the documented-token/native adaptation was
+approved. No live model quality, email/reminders, streaming, inline Activity,
+Docs or deployment verification; the existing LangChain deprecation remains.

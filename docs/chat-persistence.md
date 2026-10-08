@@ -4,8 +4,9 @@ REWORK step 7 adds `app/chat_store.py` and connects it to `app/sessions.py`.
 SQLite is authoritative: every request restores prior user/assistant context from
 saved records. The process-local history object is a snapshot, not a fallback.
 Reminder storage, worker locking, tools, routing thresholds, and providers are
-unchanged. Step 8 exposes catalogue HTTP APIs and submission IDs; browser navigation/restoration
-remains step 9. See [chat-api.md](chat-api.md).
+unchanged. Step 8 exposes catalogue HTTP APIs and submission IDs; step 9 connects
+browser navigation/restoration. See [chat-api.md](chat-api.md) and
+[streamlit-console.md](streamlit-console.md).
 
 ## Configuration and ownership
 

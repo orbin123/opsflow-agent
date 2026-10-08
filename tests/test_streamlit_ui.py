@@ -98,13 +98,20 @@ def connect_api(monkeypatch):
     recorded = []
 
     def send(request, **kwargs):
-        body = json.loads(request.data)
-        response = client.post("/api/v1/chat", json=body)
-        recorded.append((body, response.json()))
+        body = json.loads(request.data) if request.data else None
+        response = client.request(request.method, request.full_url, json=body)
+        if request.full_url.endswith("/api/v1/chat"):
+            recorded.append((body, response.json()))
         return Response(response.json(), response.status_code)
 
     monkeypatch.setattr(ui_client, "urlopen", send)
     return recorded
+
+
+def send_message(ui, message):
+    ui.text_area(key="composer").set_value(message).run()
+    ui.button(key="send_message").click().run()
+    return ui
 
 
 def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monkeypatch, sentiment_provider):
@@ -112,7 +119,7 @@ def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monk
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     assert not ui.exception
-    ui.chat_input[0].set_value("Just check the sentiment of this I am happy").run()
+    send_message(ui, "Just check the sentiment of this I am happy")
     assert not ui.exception
     data = recorded[0][1]
     assert data["result"]["label"] == "positive"
@@ -128,7 +135,7 @@ def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monk
     assert data["reply"] in text
     for stage in data["workflow_trace"]:
         assert stage["stage"] in text and str(stage["elapsed_ms"]) in text
-    assert ui.chat_input[0].proto.submit_mode == ui.chat_input[0].proto.SUBMIT_MODE_DISABLE
+    assert not ui.button(key="send_message").disabled
     ui.run()
     assert len(recorded) == 1
     assert model.invoke.call_count == 2
@@ -147,7 +154,7 @@ def test_ui_faq_reply_and_inspector_preserve_outcome_without_resubmit(monkeypatc
         ]
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Please answer this FAQ: " + question).run()
+    send_message(ui, "Please answer this FAQ: " + question)
     assert not ui.exception
     data = recorded[0][1]
     assert data["route"] == "llm_assisted"
@@ -189,17 +196,18 @@ def test_ui_agent_clarification_followup_and_browser_isolation(monkeypatch):
     model.invoke.side_effect = [final("needs_clarification", "Who is the recipient?"), final(), final()]
     monkeypatch.setattr(agent, "_create_model", lambda: model)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Draft an email").run()
+    send_message(ui, "Draft an email")
     assert not ui.warning and not ui.error
     assert "Execution: needs_clarification" not in [element.value for element in ui.caption]
     assert "Who is the recipient?" in [element.value for element in ui.text]
-    ui.chat_input[0].set_value("Alex").run()
+    send_message(ui, "Alex")
     assert not ui.exception
     assert recorded[0][0]["session_id"] == recorded[1][0]["session_id"]
     messages = model.invoke.call_args_list[1].args[0]
     assert messages[-3].content == "Draft an email" and messages[-1].content == "Alex"
     other = AppTest.from_file(str(SCRIPT)).run()
-    other.chat_input[0].set_value("Another email").run()
+    other.button(key="new_chat").click().run()
+    send_message(other, "Another email")
     assert recorded[2][0]["session_id"] != recorded[0][0]["session_id"]
     assert len(model.invoke.call_args_list[2].args[0]) == 2
     ui.selectbox[0].select(0).run()
@@ -216,7 +224,7 @@ def test_ui_partial_failure_retains_successful_step(monkeypatch):
     }], response_metadata={"finish_reason": "tool_calls"}), RuntimeError("private credentials")]
     monkeypatch.setattr(agent, "_create_model", lambda: model)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Analyze and then draft").run()
+    send_message(ui, "Analyze and then draft")
     assert not ui.exception
     data = recorded[0][1]
     assert data["status"] == "partial_failure"
@@ -235,6 +243,10 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
     sent = []
 
     def send(request, **kwargs):
+        if not request.full_url.endswith("/api/v1/chat"):
+            result = client.request(request.method, request.full_url,
+                                    json=json.loads(request.data) if request.data else None)
+            return Response(result.json(), result.status_code)
         result = client.post("/api/v1/chat", json=json.loads(request.data))
         sent.append(result.json())
         assert result.status_code == 503
@@ -242,7 +254,7 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
 
     monkeypatch.setattr(ui_client, "urlopen", send)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Just check the sentiment of this I am happy").run()
+    send_message(ui, "Just check the sentiment of this I am happy")
     assert not ui.exception
     data = sent[0]
     assert data["route"] == "llm_assisted" and data["status"] == "partial_failure"
@@ -264,36 +276,48 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
 
 def test_ui_connection_failure_persists_without_retry_or_stale_inspector(monkeypatch):
     send = Mock(side_effect=ui_client.ChatClientError("Connection failed; outcome unknown."))
+    connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Hi").run()
+    send_message(ui, "Hi")
     assert not ui.exception and ui.session_state["pending"] is False
     assert ui.session_state["turns"][0]["execution"] is None
     assert len(ui.error) == 2
+    assert ui.button(key="send_message").disabled
     ui.run()
     assert send.call_count == 1
 
 
-@pytest.mark.parametrize("message", [" \n", "x" * 10001])
-def test_ui_invalid_message_never_submitted(monkeypatch, message):
+@pytest.mark.parametrize("message", [" \n", "x" * 10001], ids=["blank", "too-long"])
+def test_ui_input_bounds_before_submission(monkeypatch, message):
     send = Mock()
+    connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value(message).run()
+    send_message(ui, message)
     assert not ui.exception
     assert not ui.session_state["turns"]
-    send.assert_not_called()
+    if len(message) > 10000:
+        # Native text_area truncates oversized input before the application sees it.
+        assert send.call_count == 1 and send.call_args.args[2] == message[:10000]
+    else:
+        send.assert_not_called()
 
 
 def test_ui_source_is_plain_text_not_executable_markup(monkeypatch):
-    def send(url, session_id, message):
+    def send(url, session_id, message, *, turn_id):
         data = execution(session_id)
         data["reply"] = '<script>private()</script> ![remote](https://example.com/image)'
+        store = sessions._get_store()
+        store.begin(session_id, message, turn_id)
+        data["turn_id"] = turn_id
+        store.finish(turn_id, execution={k: v for k, v in data.items() if k not in {"session_id", "turn_id"}})
         return data
 
+    connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("<b>input</b>").run()
+    send_message(ui, "<b>input</b>")
     assert not ui.exception
     assert "<b>input</b>" in [element.value for element in ui.text]
     assert any("<script>" in element.value for element in ui.text)
@@ -304,7 +328,7 @@ def test_ui_keyword_workflow_and_inspector_match_backend_without_resubmit(monkey
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     assert not ui.exception
-    ui.chat_input[0].set_value("Find keywords in this The server failed after the deployment").run()
+    send_message(ui, "Find keywords in this The server failed after the deployment")
     assert not ui.exception
     data = recorded[0][1]
     assert data["result"] and data["trace"][0]["tool"] == "extract_keywords"
@@ -330,7 +354,7 @@ def test_ui_keyword_workflow_and_inspector_match_backend_without_resubmit(monkey
     assert data["reply"] in text
     for stage in data["workflow_trace"]:
         assert stage["stage"] in text and str(stage["elapsed_ms"]) in text
-    assert ui.chat_input[0].proto.submit_mode == ui.chat_input[0].proto.SUBMIT_MODE_DISABLE
+    assert not ui.button(key="send_message").disabled
     ui.run()
     assert len(recorded) == 1
     assert model.invoke.call_count == 2
@@ -346,6 +370,10 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
     sent = []
 
     def send(request, **kwargs):
+        if not request.full_url.endswith("/api/v1/chat"):
+            result = client.request(request.method, request.full_url,
+                                    json=json.loads(request.data) if request.data else None)
+            return Response(result.json(), result.status_code)
         result = client.post("/api/v1/chat", json=json.loads(request.data))
         sent.append(result.json())
         assert result.status_code == 503
@@ -353,7 +381,7 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
 
     monkeypatch.setattr(ui_client, "urlopen", send)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Find keywords in this The server failed after the deployment").run()
+    send_message(ui, "Find keywords in this The server failed after the deployment")
     assert not ui.exception
     data = sent[0]
     assert data["route"] == "llm_assisted" and data["status"] == "partial_failure"
@@ -383,7 +411,7 @@ def test_ui_keyword_empty_result_has_reply_without_empty_table(monkeypatch, keyw
     monkeypatch.setattr(runtime, "classify_request", lambda _: ("keyword_extraction", 1, 0.71))
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Find keywords: !!!").run()
+    send_message(ui, "Find keywords: !!!")
     assert not ui.exception
     data = recorded[0][1]
     assert data["status"] == "completed" and data["result"] == []
@@ -398,15 +426,20 @@ def test_ui_keyword_table_keeps_phrases_as_literal_text(monkeypatch):
     phrase = "![remote](https://example.com/image) <script>private()</script>"
     scores = [{"phrase": phrase, "score": 0.0123456789}]
 
-    def send(url, session_id, message):
+    def send(url, session_id, message, *, turn_id):
         data = execution(session_id)
         data.update(predicted_intent="keyword_extraction", route="llm_assisted",
                     result=scores, reply="Here are the extracted keywords and their scores.")
+        store = sessions._get_store()
+        store.begin(session_id, message, turn_id)
+        data["turn_id"] = turn_id
+        store.finish(turn_id, execution={k: v for k, v in data.items() if k not in {"session_id", "turn_id"}})
         return data
 
+    connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
     ui = AppTest.from_file(str(SCRIPT)).run()
-    ui.chat_input[0].set_value("Find keywords from supplied source").run()
+    send_message(ui, "Find keywords from supplied source")
     assert not ui.exception
     table = ui.dataframe[0]
     assert table.value.to_dict("records") == [{"Phrase": phrase, "Score": 0.0123456789}]

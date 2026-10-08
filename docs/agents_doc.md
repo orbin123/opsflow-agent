@@ -11,7 +11,7 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 8 user review, then step 9 Workspace navigation discussion.
+**Next:** ⏳ Step 10 backend event-contract discussion.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
@@ -21,14 +21,35 @@ step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
 
+- **2026-10-08:** User approved merging step 9 and its step 8 dependency. Verified
+  current heads, user-only authorship/sign-offs, passing DCO and mergeability.
+  Merged #31 and retargeted #32 to `main`. This delivery-record update changes
+  documentation only; existing 939-test/scripted-browser evidence still applies.
+  Step 10 remains discussion only; original plan stays paused.
+
+- **2026-10-08:** Implemented approved step 9 Workspace New chat/title navigation,
+  URL-selected/latest/empty restoration, per-chat browser-session multiline drafts
+  and one frozen/consumed submission queue. Running/unsaved states lock navigation
+  and submission; read-only recovery retains exact outcomes and never retries.
+  All 939 tests (17 new), dependency and whitespace checks pass; final wording
+  changes passed 88 targeted checks. Inline browser on 8505/backend 8016 verifies
+  two isolated sentiment/follow-up chats, an unsent draft, refresh during delayed
+  execution, retrieval-failure recovery and byte-identical records after backend
+  restart. Desktop/mobile checks confirm native navigation, literal/truncated
+  accessible titles, 48 px targets, visible focus, stacked panels and no overflow.
+  Review app stays open; user approved merging PR #32 after review. Its step 8
+  dependency PR #31 is merged and #32 now targets `main`. Figma remains rate-limited; documented-token
+  adaptation approved. No live provider/email, dependency, reminder, streaming,
+  inline Activity, Docs or deployment changes; inspector remains in place.
+
 - **2026-10-08:** Implemented approved step 8 create/list/load catalogue APIs and
   optional HTTP submission-ID replay, with client helpers, sanitized failures,
   consistent ordered snapshots and no read execution. All 922 tests (20 new),
   dependency and whitespace checks pass; final OpenAPI documentation changes passed
   41 targeted checks. Inline Swagger on 8015 verifies empty/create/load/list,
   scripted sentiment with real classifier/VADER, identical replay, 409/404 and
-  unchanged saved records after backend restart. Review app stays open; user review
-  required before merging PR #31. No live provider/email, dependencies, ownership, navigation,
+  unchanged saved records after backend restart. PR #31 merged after user approval.
+  No live provider/email, dependencies, ownership, navigation,
   Streamlit UI or reminder changes. Step 9 remains a separate discussion.
 
 - **2026-10-08:** User approved merging step 7 PR #30 and contract dependency #29.
