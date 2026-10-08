@@ -106,6 +106,8 @@ Foundations tokens and step 6 interaction contract, without adding Figma nodes.
 Chat controls use 48 px targets and IBM Plex Mono, literal/truncated titles with
 full accessible labels, action tint plus a check and Selected chat text. New chat
 and Send use VT323 short action labels; Send uses the existing cyan action states.
+On 2026-10-08 the user requested Send on the right beneath the composer; use a
+native right-aligned container on desktop and mobile, retaining its 48 px target.
 The native multiline composer uses square surface/control borders. Focus retains
 the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
 remain; live Activity and Docs patterns belong to later steps.

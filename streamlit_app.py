@@ -281,8 +281,9 @@ with conversation:
 
 st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
              disabled=blocked, on_change=save_draft)
-st.button("Send", key="send_message", type="primary", disabled=blocked,
-          on_click=queue_message)
+with st.container(horizontal_alignment="right"):
+    st.button("Send", key="send_message", type="primary", disabled=blocked,
+              on_click=queue_message)
 if st.session_state.composer_error:
     st.error(st.session_state.composer_error)
 

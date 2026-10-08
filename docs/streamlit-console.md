@@ -61,6 +61,7 @@ on blur; navigation saves that committed value before changing chats. Drafts are
 not durable across refresh/disconnection/restart. New chats begin with an empty
 composer. Native input bounds cap text at 10,000 characters; the application also
 checks nonblank/length before queuing and the API validates independently.
+Send is right-aligned beneath the composer on desktop and mobile.
 
 Send queues one frozen chat/message/client-generated turn ID. The app renders
 Running feedback and disables New chat, chat switching, composer and Send before

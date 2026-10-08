@@ -1145,6 +1145,11 @@ does not authorize those features or change the ordered rework implementation st
 
 #### Step 12a outcome — 2026-10-08
 
+- **User-requested correction:** Right-align Send beneath the composer using a
+  native container. All 79 UI/navigation/stream checks pass; inline desktop/mobile
+  review confirms right alignment, a 48 px mobile target and no horizontal overflow.
+  No new tests or CSS; submission/disabled behavior retains existing coverage.
+  Added as a separate signed correction commit in PR #35. App stays open for review.
 - **Implemented:** Direct/fixed-workflow sentiment answers show the saved label
   beneath the existing reply when available; exact scores/raw JSON stay in Activity.
   Retained scoring remains visible with the existing presentation-failure notice;

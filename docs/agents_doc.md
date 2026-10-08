@@ -22,6 +22,12 @@ step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
 
+- **2026-10-08:** At the user's request, right-aligned Send beneath the composer
+  with a native container in PR #35. All 79 UI/navigation/stream checks pass;
+  inline desktop/mobile review confirms alignment, a 48 px target and no mobile
+  overflow. Existing submission/disabled checks retained; no new tests or CSS.
+  App remains open for review; merge still awaits confirmation.
+
 - **2026-10-08:** Implemented approved step 12a: direct/fixed-workflow sentiment
   shows the existing reply and saved label; exact scores/JSON remain in Activity.
   Welcome uses verified natural-English sentiment, keyword and fictional FAQ
