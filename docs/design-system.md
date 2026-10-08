@@ -112,12 +112,12 @@ remain; live Activity and Docs patterns belong to later steps.
 
 ## Completed inline activity adaptation
 
-On 2026-10-08 the user approved step 11's native collapsed Activity expander under
-each assistant answer, with independently collapsed workflow and tool expanders.
-Reuse the existing surface, outlines, typography and spacing. The conversation
-uses a 760 px reading area (856 px including desktop outer padding), shrinking
-with the viewport; mobile expanders use 8 px padding for nested reading space.
-The separate inspector and selector are removed. Native summary
-controls retain the 2 px focus indicator and keyboard expansion. Details show only
-retained observable execution fields. Figma inspection is still rate-limited;
-no Figma nodes are added. Live activity and answer redesign remain later steps.
+On 2026-10-08 the user clarified the step 11 layout with a sketch: a vertical
+sequence of prompt aligned left, collapsed Activity below at center, and answer
+below at right. Use native aligned containers capped at 560 px, shrinking to the
+available width on mobile. The main area uses the 1440 px desktop reference;
+mobile expanders retain 8 px padding. Reuse existing surface, outline, typography
+and spacing tokens. Native summary controls retain the 2 px focus indicator.
+Details show only observable records and stay associated with their original turn.
+The inspector/selector are removed. Figma remains rate-limited; this user-specified
+adaptation adds no Figma nodes. Live formation is the separate step 13 slice.

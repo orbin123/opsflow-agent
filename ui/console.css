@@ -19,7 +19,7 @@
 [data-testid="stCaptionContainer"] p { color: var(--of-secondary); font-size: 11px; line-height: 16px; }
 [data-testid="stCaptionContainer"] { opacity: 1; }
 [data-testid="stSidebar"] { background: var(--of-surface); border-right: 1px solid var(--of-border); }
-[data-testid="stMainBlockContainer"] { padding: 80px 48px 48px; max-width: 856px; }
+[data-testid="stMainBlockContainer"] { padding: 80px 48px 48px; max-width: 1440px; }
 [data-testid="stChatMessage"], [data-testid="stExpander"] {
   background: var(--of-surface); border: 1px solid var(--of-border); border-radius: 0; padding: 16px;
 }

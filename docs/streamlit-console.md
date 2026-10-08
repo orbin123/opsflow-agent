@@ -90,7 +90,7 @@ sent email, and chat does not yet create reminders or submit email.
 
 ## Completed activity
 
-Expand Activity under an assistant answer to see that turn's predicted intent,
+Expand Activity between the prompt and assistant answer to see that turn's predicted intent,
 classifier confidence, execution route,
 routing reason, agent outcome reason, status, and backend elapsed milliseconds.
 Activity and its workflow/tool sections start collapsed. Stable turn keys keep
@@ -130,8 +130,10 @@ Streamlit 1.65.0 is pinned and its native chat/AppTest APIs were checked against
 [chat input documentation](https://docs.streamlit.io/develop/api-reference/chat/st.chat_input)
 and [AppTest documentation](https://docs.streamlit.io/develop/api-reference/app-testing/st.testing.v1.apptest).
 Python 3.12.13 and the installed backend dependencies remain compatible.
-The documented light terminal palette, type scale, square controls and a 760 px
-conversation reading width are adapted to Streamlit; the main area shrinks on mobile. Native Streamlit JSON
+The light terminal palette, type scale and square controls are adapted to Streamlit.
+Each turn is a vertical sequence: left prompt, centered Activity, then right answer.
+Native containers cap each panel at 560 px inside the 1440 px main reference area
+and shrink to available width on mobile. Native Streamlit JSON
 syntax coloring/icons remain framework defaults. CSS uses Streamlit test IDs and
 must be rechecked when upgrading the pinned version.
 
@@ -192,3 +194,10 @@ overflow. Native workflow/tool headers expand with the keyboard and show the
 2 px focus outline. App remains open for review. Other status variants are
 automated UI checks; no live model quality, SMTP or deployment verification.
 Live activity remains step 13; final-answer rendering remains step 12.
+
+Step 11 layout clarification: the user's sketch supersedes the initial placement
+and intermediate column interpretation. All 49 UI/navigation checks pass with
+separate per-turn prompt/details/answer association. Inline browser confirms
+increasing vertical positions and left/center/right alignment at 1440 px, and
+347 px panels in sequential order at 390 px without overflow. Screenshot
+`/tmp/opsflow-sequential-layout.png`. Streaming remains the next separate slice.

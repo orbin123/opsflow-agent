@@ -14,7 +14,9 @@ never execute work. See `docs/chat-api.md`. Approved step 9 adds Workspace New c
 literal titled selection, `chat` URL restoration and a per-chat browser-session
 multiline draft composer. Running/unsaved work locks navigation and submission;
 recovery controls only read. See `docs/streamlit-console.md`. Completed execution
-details now appear inside each assistant turn under collapsed Activity (step 11); live Activity and Docs are later slices.
+details appear between each left-aligned prompt and right-aligned answer in a
+vertically sequential, centered Activity panel (step 11). Live formation (step 13)
+is requested next before step 12; Docs remains later.
 
 Approved REWORK step 10 adds `POST /api/v1/chat/stream` SSE for actual backend
 classification/routing, workflow stages and agent model/tool activity. Progress is

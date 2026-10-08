@@ -163,8 +163,8 @@ def test_ui_faq_reply_and_activity_preserve_outcome_without_resubmit(monkeypatch
     assert "FAQ workflow stages" in [element.label for element in ui.expander]
     assistant = ui.chat_message[1]
     assert data["reply"] in [element.value for element in assistant.text]
-    assert data["result"] in [json.loads(element.value) for element in assistant.expander[0].json]
-    assert len(assistant.json) == len(assistant.expander[0].json)
+    assert len(assistant.json) == 0
+    assert data["result"] in [json.loads(element.value) for element in ui.expander[0].json]
     assert "Fictional demo policy — verify your actual company policy." not in [
         element.value for element in ui.caption
     ]
@@ -486,7 +486,13 @@ def test_restored_activity_belongs_to_each_turn_without_execution(monkeypatch, r
     for number, data in enumerate(outcomes):
         assistant = ui.chat_message[number * 2 + 1]
         assert data["reply"] in [item.value for item in assistant.text]
-        activity = assistant.expander[0]
+        prompt = ui.get_by_key("prompt_saved-" + str(number))
+        details = ui.get_by_key("details_saved-" + str(number))
+        answer = ui.get_by_key("answer_saved-" + str(number))
+        assert f"Message {number}" in [item.value for item in prompt.text]
+        assert data["reply"] in [item.value for item in answer.text]
+        assert not assistant.expander
+        activity = details.expander[0]
         assert activity.label == "Activity" and not activity.proto.expanded
         text = "\n".join(item.value for item in activity.text)
         for value in (data["reason"], str(data["confidence"]),

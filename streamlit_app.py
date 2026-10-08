@@ -240,19 +240,31 @@ with conversation:
     if not st.session_state.turns and read_error is None and catalogue_error is None and not st.session_state.pending:
         st.info('Start with: Sentiment: "I am happy"')
     for turn in st.session_state.turns:
-        with st.chat_message("user"):
-            st.text(turn["message"])
-        with st.chat_message("assistant"):
+        with st.container(key="turn_" + turn["turn_id"]):
+            with st.container(horizontal_alignment="left"):
+                with st.container(width=560, key="prompt_" + turn["turn_id"]):
+                    with st.chat_message("user"):
+                        st.text(turn["message"])
             if turn["execution"] is not None:
-                show_execution(turn["execution"])
-                show_activity(turn["execution"])
-            else:
-                st.error(turn["error"])
+                with st.container(horizontal_alignment="center"):
+                    with st.container(width=560, key="details_" + turn["turn_id"]):
+                        show_activity(turn["execution"])
+            with st.container(horizontal_alignment="right"):
+                with st.container(width=560, key="answer_" + turn["turn_id"]):
+                    with st.chat_message("assistant"):
+                        if turn["execution"] is not None:
+                            show_execution(turn["execution"])
+                        else:
+                            st.error(turn["error"])
     if st.session_state.queued is not None:
-        with st.chat_message("user"):
-            st.text(st.session_state.queued["message"])
-        with st.chat_message("assistant"):
-            st.caption("Running request…")
+        with st.container(horizontal_alignment="left"):
+            with st.container(width=560):
+                with st.chat_message("user"):
+                    st.text(st.session_state.queued["message"])
+        with st.container(horizontal_alignment="center"):
+            with st.container(width=560):
+                st.caption("Running request…")
+
 st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
              disabled=blocked, on_change=save_draft)
 st.button("Send", key="send_message", type="primary", disabled=blocked,

@@ -11,7 +11,7 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 12 readable answers/onboarding discussion; step 11 awaits user
+**Next:** ⏳ Step 13 live sequential activity, requested before step 12; step 11 awaits user
 review before merge.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
@@ -21,6 +21,14 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Corrected step 11 layout from the user's sketch: vertically
+  sequential left prompt, centered Activity, then right answer, each capped at
+  560 px with native alignment and mobile shrinking. Supersedes the initial
+  placement and intermediate columns. All 49 UI/navigation checks pass; inline
+  1440/390 px checks confirm alignment/order and no overflow. PR #34 remains open.
+  User also requested live formation; step 13 follows as a separate slice before
+  step 12. Screenshot `/tmp/opsflow-sequential-layout.png`.
 
 - **2026-10-08:** Implemented approved step 11 completed per-turn Activity with
   collapsed native workflow/tool sections, stable turn keys, exact retained fields,

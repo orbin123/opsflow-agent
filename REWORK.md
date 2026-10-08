@@ -19,7 +19,7 @@ both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implement
 and verified within the recorded offline/scripted-browser limits; step 11 completed
 inline details are implemented and verified within the recorded offline/scripted-browser limits. Steps 12 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 12 readable answers/onboarding discussion; step 11 awaits user
+**Next:** ⏳ Step 13 live sequential activity, requested before step 12; step 11 awaits user
 review before merge.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
@@ -1097,6 +1097,23 @@ does not authorize those features or change the ordered rework implementation st
   Figma inspection was rate-limited; native adaptation was explicitly approved.
   One user-authored DCO-signed change on `feature/rework-inline-activity`; user
   review/merge confirmation remains pending.
+
+#### Step 11 sequential layout revision — 2026-10-08
+
+- User clarified with a sketch: a vertical sequence with prompt left, Activity
+  below at center, and answer below at right. This supersedes the intermediate
+  three-column interpretation and initial under-answer placement.
+- Use native aligned containers capped at 560 px, shrinking on narrow viewports;
+  the main area uses the existing 1440 px desktop reference. Keep turn association,
+  collapsed details, exact records and existing answers/recovery behavior.
+- Verify existing restored-outcome checks with separate prompt/details/answer
+  containers, then browser vertical order/alignment, keyboard, mobile and refresh.
+- Verified the layout correction with 49 UI/navigation checks and inline desktop
+  1440 px/mobile 390 px order/alignment/no-overflow checks. Screenshot
+  `/tmp/opsflow-sequential-layout.png`. Correction belongs to PR #34. The user also
+  requested live sequential formation: take step 13 next, before step 12, as a
+  separate stream-client/UI slice using actual step 10 events and saved terminal
+  outcomes. No fabricated reasoning/token streaming or execution retry.
 
 ### 12. Present readable answers and onboarding
 
