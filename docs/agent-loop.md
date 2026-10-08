@@ -127,4 +127,4 @@ the real chat/session/runtime/UI path with temporary provider/tool doubles; miss
 inputs ask questions, supplied answers complete a draft with separate actions, and
 a contextual summary displays its retained source/result. No live language-quality,
 SMTP/inbox, reminder or deployment verification. Existing provider/tool failure and
-demo-policy regression checks remain covered. Independent user review precedes merge.
+demo-policy regression checks remain covered. User approved merging PR #27 on 2026-10-08.

@@ -8,11 +8,10 @@ after the recorded rework handover.
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Step 4 is implemented and verified
-with offline/scripted-browser checks; independent user review is pending. Remaining
-rework steps are pending.
+with offline/scripted-browser checks and merged in PR #27 after user approval.
+Remaining rework steps are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Active:** ⏳ Step 4 independent user review before merge.
-**Next discussion:** Step 5 one-agent multi-step verification.
+**Next discussion:** ⏳ Step 5 one-agent multi-step verification.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -631,7 +630,7 @@ its routing revision are now approved as recorded below.
 ### 4. Verify conversational summarization and drafting
 
 - [x] Discuss, implement fixes, and verify with offline/scripted-browser checks.
-- ⏳ Independent user review before merge; live model quality remains unverified.
+- User approved merge on 2026-10-08; live model quality remains unverified.
 - **Problem/change:** Audit source extraction, writing instructions, and follow-up
   handling for the remaining available tools; fix demonstrated failures only.
 - **Input → output:** `Summarize this The outage lasted 20 minutes and is resolved`
@@ -678,9 +677,9 @@ its routing revision are now approved as recorded below.
   checks. Doubles cannot establish semantic extraction, reference resolution or
   factual fidelity. Existing LangChain deprecation warnings remain. Figma inspection
   was rate-limited; retained documented/native UI without CSS/layout expansion.
-- Delivery: scoped user-authored DCO-signed commit/PR on
-  `fix/conversational-summary-draft-review`. User confirmation is required before
-  merge; later rework steps need separate agreement.
+- Delivery: user-authored DCO-signed PR #27 on
+  `fix/conversational-summary-draft-review`, merged after user approval on
+  2026-10-08. Later rework steps need separate agreement.
 
 #### Future-build requests recorded — 2026-10-08
 

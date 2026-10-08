@@ -11,8 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Active:** ⏳ Step 4 independent user review before merge. Next discussion is
-step 5 one-agent multi-step verification. Steps 1–4 are verified within their
+**Next:** ⏳ Step 5 one-agent multi-step verification. Step 4 PR #27 is merged
+after user approval on 2026-10-08. Steps 1–4 are verified within their
 recorded limits; live model quality for step 4 remains unverified. FAQ PRs #25/#26
 and workflow package organization are merged. The original plan stays paused;
 later implementation awaits discussion.
@@ -24,7 +24,8 @@ later implementation awaits discussion.
   the inspector. All 870 tests (16 added scripted checks), `pip check`, and whitespace
   checks pass. Inline browser verified clarification answers, completed draft with
   separate actions, and contextual summary against a temporary scripted backend.
-  Review app remains open on port 8502; user confirmation is required before merge.
+  Review app remains open on port 8502. User authorized merging PR #27 on
+  2026-10-08; delivery uses user-only authorship and DCO sign-off.
   No live provider/email/reminder/deployment checks; semantic quality remains
   unverified. Recorded settings/Reminders/Email-page ideas for future discussion,
   with side-effect integration kept outside rework. No dependencies changed.
