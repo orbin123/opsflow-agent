@@ -14,7 +14,15 @@ never execute work. See `docs/chat-api.md`. Approved step 9 adds Workspace New c
 literal titled selection, `chat` URL restoration and a per-chat browser-session
 multiline draft composer. Running/unsaved work locks navigation and submission;
 recovery controls only read. See `docs/streamlit-console.md`. The separate inspector
-remains through step 10; live events/inline Activity and Docs are later slices.
+remains through step 10; live inline Activity and Docs are later slices.
+
+Approved REWORK step 10 adds `POST /api/v1/chat/stream` SSE for actual backend
+classification/routing, workflow stages and agent model/tool activity. Progress is
+transient; saved terminal outcomes follow SQLite finalization. Disconnect does not
+cancel execution; graceful shutdown drains stream workers before releasing storage.
+Recovery/replay never repeats work. See `docs/chat-api.md` for event fields and
+transport/status boundaries. Streamlit still uses the nonstreaming endpoint and
+separate inspector; inline details/live Activity remain steps 11/13.
 
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`

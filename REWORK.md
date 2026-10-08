@@ -15,10 +15,11 @@ recorded and reviewed. Step 7 storage/restoration is merged in PR #30 after user
 approval, with its step 6 dependency PR #29 also merged. Step 8 catalogue APIs and
 HTTP submission IDs and step 9 Workspace navigation/restoration are implemented
 and verified within the offline/scripted-browser limits below. User approved merging
-both on 2026-10-08; PR #31 is merged and PR #32 now targets `main`. Steps 10
-onward remain pending.
+both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implemented
+and verified within the recorded offline/scripted-browser limits; steps 11 onward
+remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 10 backend event-contract discussion.
+**Next:** ⏳ Step 11 completed inline execution-details discussion.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -968,8 +969,7 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 10. Stream actual backend execution events
 
-- [ ] Discuss event contract/transport first, then implement and verify this slice
-  after steps 7–8.
+- [x] Discuss event contract/transport, implement and verify after steps 7–8.
 - **Problem/change:** Emit ordered classification/routing and tool-start/tool-finish
   events during execution, followed by the actual final outcome. Discuss a compatible
   HTTP event-stream approach; do not choose a new external service.
@@ -982,6 +982,62 @@ does not authorize those features or change the ordered rework implementation st
   and failure traces are accurate. Cover disconnect and interrupted finalization.
   Reconnect/restoration must not replay execution; unknown outcomes never automatically
   retry. Keep events consistent with the persisted final results.
+
+#### Step 10 agreed contract — 2026-10-08
+
+- **Agreement:** User approved `POST /api/v1/chat/stream` using SSE alongside the
+  unchanged nonstreaming endpoint. Emit actual classification/routing, workflow
+  stages and agent model/tool start/finish activity, with versioned chat/turn/event
+  sequence and step correlation. Include only validated inputs/results, sanitized
+  failures and actual timings; never model content/reasoning or raw provider logs.
+- **Persistence/recovery:** Progress events are transient. Send a saved terminal
+  outcome only after SQLite finalization; report unsaved failure explicitly.
+  Disconnect closes the subscription while backend work continues. Graceful shutdown
+  drains disconnected work before releasing store ownership. Recovery reads the
+  existing catalogue; duplicate IDs return saved outcomes without execution and
+  unknown/interrupted turns never automatically retry. No event replay buffer,
+  database migration, token streaming or new service/dependency.
+- **Verification scope:** Controlled delayed-tool checks for genuine early delivery,
+  ordering, fixed-workflow/agent handoff, retained successful/failed observations,
+  final-result consistency, duplicate/conflicting IDs, input rejection, isolation,
+  initial/final persistence failures, disconnect/shutdown and interrupted recovery.
+  Follow automated checks with a local inline-browser API review and leave the
+  existing Streamlit app open. Keep its inspector; live inline Activity is step 13.
+
+#### Step 10 outcome — 2026-10-08
+
+- Implemented context-scoped observable events in actual runtime/workflow/agent
+  execution and `POST /api/v1/chat/stream` SSE transport. Events correlate version,
+  chat/turn, sequence and start/finish step; validated tool data and existing trace
+  timings match saved outcomes. Agent orchestration emits call status/timing without
+  provider content. Fixed-workflow abstention retains extraction events before the
+  actual agent handoff. Existing nonstreaming calls require no observer/signature change.
+- Final outcomes are emitted only after the existing session save. Saved execution
+  error/partial failure retains HTTP 503 semantics in terminal event data; validation
+  remains HTTP 422, while conflicts/storage/runtime failures use sanitized terminal
+  events after stream headers. Disconnect discards transient progress while retained
+  workers continue once; graceful shutdown drains those workers before closing SQLite.
+  Replays return only identity plus saved outcome, and recovery never repeats work.
+- Verified all 955 tests (16 new), `pip check`, OpenAPI event-stream content type,
+  and whitespace checks. Controlled real HTTP verifies start before tool release,
+  durable running state, disconnect continuation, shutdown drain, and saved replay.
+  Tests cover all three fixed workflows, agent handoff/failed tools/partial failure,
+  presentation/extraction failures, clarification, invalid tool arguments, literal
+  identities/frame safety, concurrent-chat isolation, initial/final persistence
+  failures, interrupted recovery and saved/event equality. Two initial test setup
+  errors (FAQ JSON normalization and argument-schema name) were corrected.
+- Inline browser on backend 8017 verifies real classifier/VADER/SQLite with scripted
+  LLM stages and a 10-second controlled tool: actual progress precedes completion,
+  read-only running/finished recovery after disconnect, identical non-executing replay,
+  and a full stream whose final payload equals saved history. Existing Streamlit
+  chat/inspector on 8506 restores this record and completes an ordinary nonstreaming
+  turn. Both review pages remain open; screenshot `/tmp/opsflow-step10-review.jpg`.
+- Limits: no live Groq/model-quality, SMTP/inbox, forced process kill in this slice's
+  browser review, deployed proxy/buffering or external-service checks. Existing
+  history deprecation remains. No dependencies, storage migration, routing thresholds,
+  reminder/email execution, production UI changes, token streaming, durable event
+  replay or later-step implementation. Step 11 needs separate agreement. User
+  approved merging PR #33 after review on 2026-10-08.
 
 ### 11. Move completed execution details into each chat turn
 

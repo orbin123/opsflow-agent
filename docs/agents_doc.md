@@ -11,7 +11,7 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 10 backend event-contract discussion.
+**Next:** ⏳ Step 11 completed inline execution-details discussion.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
@@ -20,6 +20,26 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** User authorized merging step 10 PR #33 after review. Verified
+  the tested application head, user-only authorship/sign-off, passing DCO and clean
+  mergeability. This approval record changes documentation only; existing 955-test
+  and scripted-browser evidence remains applicable. Step 11 stays discussion only.
+
+- **2026-10-08:** Implemented approved step 10 actual runtime/workflow/agent events
+  and `POST /api/v1/chat/stream` SSE with chat/turn/sequence/step correlation,
+  validated tool data, sanitized failures and saved terminal outcomes. Progress is
+  transient; disconnect keeps backend work running, shutdown drains workers, replay
+  returns saved outcomes, and unknown/interrupted work never automatically retries.
+  All 955 tests (16 new), dependency, OpenAPI and whitespace checks pass. Real HTTP
+  tests verify early delivery/disconnect/shutdown; inline backend review on 8017
+  verifies progress/running state, disconnect recovery, identical replay and saved
+  payload equality with real classifier/VADER/SQLite and scripted LLMs. Existing
+  Streamlit chat/inspector on 8506 restores history and completes a nonstreaming
+  turn; both pages stay open for user review. No live provider/email, dependency,
+  schema, production UI, token-streaming or event-journal changes. Existing history
+  deprecation remains; proxy behavior is unverified. Step 11 needs separate agreement;
+  user approved merging PR #33 on 2026-10-08. Screenshot `/tmp/opsflow-step10-review.jpg`.
 
 - **2026-10-08:** User approved merging step 9 and its step 8 dependency. Verified
   current heads, user-only authorship/sign-offs, passing DCO and mergeability.
