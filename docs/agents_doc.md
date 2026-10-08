@@ -21,6 +21,11 @@ step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
 
+- **2026-10-08:** User authorized merging step 10 PR #33 after review. Verified
+  the tested application head, user-only authorship/sign-off, passing DCO and clean
+  mergeability. This approval record changes documentation only; existing 955-test
+  and scripted-browser evidence remains applicable. Step 11 stays discussion only.
+
 - **2026-10-08:** Implemented approved step 10 actual runtime/workflow/agent events
   and `POST /api/v1/chat/stream` SSE with chat/turn/sequence/step correlation,
   validated tool data, sanitized failures and saved terminal outcomes. Progress is
@@ -34,7 +39,7 @@ implementation awaits discussion.
   turn; both pages stay open for user review. No live provider/email, dependency,
   schema, production UI, token-streaming or event-journal changes. Existing history
   deprecation remains; proxy behavior is unverified. Step 11 needs separate agreement;
-  merge awaits user confirmation. Screenshot `/tmp/opsflow-step10-review.jpg`.
+  user approved merging PR #33 on 2026-10-08. Screenshot `/tmp/opsflow-step10-review.jpg`.
 
 - **2026-10-08:** User approved merging step 9 and its step 8 dependency. Verified
   current heads, user-only authorship/sign-offs, passing DCO and mergeability.

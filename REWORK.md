@@ -1036,8 +1036,8 @@ does not authorize those features or change the ordered rework implementation st
   browser review, deployed proxy/buffering or external-service checks. Existing
   history deprecation remains. No dependencies, storage migration, routing thresholds,
   reminder/email execution, production UI changes, token streaming, durable event
-  replay or later-step implementation. Step 11 needs separate agreement; merge awaits
-  the user's independent review and confirmation.
+  replay or later-step implementation. Step 11 needs separate agreement. User
+  approved merging PR #33 after review on 2026-10-08.
 
 ### 11. Move completed execution details into each chat turn
 
