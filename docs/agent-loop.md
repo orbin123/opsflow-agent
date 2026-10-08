@@ -128,3 +128,27 @@ inputs ask questions, supplied answers complete a draft with separate actions, a
 a contextual summary displays its retained source/result. No live language-quality,
 SMTP/inbox, reminder or deployment verification. Existing provider/tool failure and
 demo-policy regression checks remain covered. User approved merging PR #27 on 2026-10-08.
+
+## Multi-step requests (REWORK step 5)
+
+One agent can handle several requested operations in dependency order. For example:
+`Analyze the sentiment, extract keywords, summarize this complaint, and draft an
+email to Alex about it: The service failed twice today. It is NOT resolved.`
+Sentiment/keywords/summary receive the source; a dependent draft can use the actual
+summary observation. The model chooses tools and arguments; semantic correctness
+and coverage of every requested operation remain model limitations. Draft replies
+include completed earlier tool results as well as the draft and separate actions.
+Exact arguments, results, scores, and timings remain in the inspector/history.
+
+Current limits remain six orchestration calls, five tool attempts, and a soft
+120-second budget. Three/four-tool requests fit, with one additional orchestration
+call to finish; writing tools make separate bounded provider calls. Longer requests
+may require splitting. A sixth tool does not execute. Failure/time/budget stops
+retain completed observations, explain unfinished work, and do not retry. Missing
+recipient after earlier successful tools clarifies with those results retained.
+
+Step 5 verification: 877 tests pass on 2026-10-08, including seven scripted
+loop/API/history checks. `pip check` and whitespace checks pass. Inline browser
+verified the four-tool complaint, missing-recipient clarification, and five-tool
+budget stopping through the real classifier/local tools/API/UI with scripted agent
+and writing providers. No live language-quality or side-effect verification.

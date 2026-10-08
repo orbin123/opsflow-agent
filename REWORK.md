@@ -9,9 +9,10 @@ after the recorded rework handover.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Step 4 is implemented and verified
 with offline/scripted-browser checks and merged in PR #27 after user approval.
-Remaining rework steps are pending.
+Step 5 is verified within the offline/scripted-browser limits below; user approved
+merging PR #28 on 2026-10-08. Remaining rework steps are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next discussion:** ⏳ Step 5 one-agent multi-step verification.
+**Next discussion:** ⏳ Step 6 persistent-chat and navigation contracts.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -695,7 +696,7 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 5. Verify one-agent multi-step requests
 
-- [ ] Discuss, implement fixes if needed, and verify this slice.
+- [x] Discuss, implement fixes if needed, and verify this slice within recorded limits.
 - **Problem/change:** One agent identifies multiple requested operations, passes
   earlier observations to dependent tools, and reports each actual outcome.
   Use "multi-step request" in the product and documentation.
@@ -706,6 +707,35 @@ does not authorize those features or change the ordered rework implementation st
   successful steps followed by a failure, and requests beyond current budgets.
   Discuss whether limits need adjustment; do not promise unlimited work or silently
   drop tasks. Explain unfinished work without claiming it completed.
+
+#### Step 5 contract and outcome — 2026-10-08
+
+- **Agreement:** User requested implementation of step 5. Bounded audit of three/
+  four-tool requests, dependency observations, missing input after success, later
+  failure, and existing budgets. Keep one agent and current limits; no multi-agent
+  architecture, side-effect integration, routing thresholds, or new dependencies.
+- **Implemented:** Explicit multi-step/dependency/budget guidance in the agent prompt.
+  Fixed application draft rendering that previously hid earlier results: completed
+  sentiment, keywords, summary, and policy lookup now accompany the exact draft and
+  fixed actions. Stopped requests explicitly report unfinished work and retain all
+  actual results. No retry or speculative continuation.
+- **Verified:** All 877 tests (seven added), `pip check`, and whitespace checks pass.
+  Scripted real-loop/API/session tests verify one model initialization, classification
+  once, three/four ordered tools, exact source and earlier observations, summary-to-
+  draft dependency, retained failure/clarification records, five-tool success, refused
+  sixth execution, and soft time-budget overrun with successful results retained.
+  Existing tests cover invalid calls/provider failure, FAQ/draft qualification, and
+  UI rerender non-execution. Saved classifier predicts the four-tool complaint as
+  `compound_request` at 0.7867 against 0.71. Inline browser uses real classifier,
+  sentiment, keywords, chat/session/runtime and UI with temporary scripted agent/
+  writing providers; verified four outcomes, missing-recipient clarification with
+  three retained results, and budget stopping after five tools.
+- **Limits/delivery:** Prompt guidance and provider doubles do not establish live
+  semantic extraction, dependency choice, exhaustive task coverage, or prose fidelity.
+  No live Groq, SMTP/inbox, reminder, or deployment checks. Existing LangChain
+  deprecations remain. Review app stays open on port 8503 for independent user review;
+  user approved merging PR #28 on 2026-10-08. Step 4 PR #27 is already merged; original plan remains
+  paused. Step 6 needs separate discussion.
 
 ### 6. Agree on persistent-chat and navigation contracts
 
