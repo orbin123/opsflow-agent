@@ -11,8 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 8 catalogue APIs. User approved merging step 7 PR #30 and its
-contract dependency PR #29 after browser review; PR #29 is merged and #30 targets `main`.
+**Next:** ⏳ Step 8 user review, then step 9 Workspace navigation discussion.
+Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
 recorded and reviewed in [persistent-chat-contract.md](persistent-chat-contract.md).
@@ -20,6 +20,16 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Implemented approved step 8 create/list/load catalogue APIs and
+  optional HTTP submission-ID replay, with client helpers, sanitized failures,
+  consistent ordered snapshots and no read execution. All 922 tests (20 new),
+  dependency and whitespace checks pass; final OpenAPI documentation changes passed
+  41 targeted checks. Inline Swagger on 8015 verifies empty/create/load/list,
+  scripted sentiment with real classifier/VADER, identical replay, 409/404 and
+  unchanged saved records after backend restart. Review app stays open; user review
+  required before merging PR #31. No live provider/email, dependencies, ownership, navigation,
+  Streamlit UI or reminder changes. Step 9 remains a separate discussion.
 
 - **2026-10-08:** User approved merging step 7 PR #30 and contract dependency #29.
   Verified both current heads, user-only authorship/sign-offs, passing DCO, and

@@ -63,6 +63,24 @@ def close_chat_store() -> None:
             _store = None
 
 
+def create_chat() -> dict:
+    return _get_store().create_chat(uuid4().hex)
+
+
+def list_chats() -> list[dict]:
+    return _get_store().list_chats()
+
+
+def get_chat(session_id: str) -> dict | None:
+    _text(session_id, "Session ID", 128)
+    chat = _get_store().get_chat(session_id)
+    if chat is not None:
+        for turn in chat["turns"]:
+            if turn["execution"] is not None:
+                turn["execution"] = asdict(_execution(turn["execution"]))
+    return chat
+
+
 def _execution(record: dict) -> ExecutionResult:
     try:
         execution = TypeAdapter(ExecutionResult).validate_python(record)
@@ -93,8 +111,8 @@ def _restore(turns: list[dict]) -> list[HumanMessage | AIMessage]:
 def execute_session_request(session_id: str, message: str, *, turn_id: str | None = None) -> ExecutionResult:
     """Commit a turn once, restore its context, execute, then persist its outcome.
 
-    Optional turn IDs provide duplicate protection for Python callers; HTTP wiring
-    follows in step 8. No automatic execution retries or history truncation.
+    Optional turn IDs provide duplicate protection for Python and HTTP callers.
+    No automatic execution retries or history truncation.
     """
     _text(message, "Message", 10000)
     _text(session_id, "Session ID", 128)
@@ -112,7 +130,8 @@ def execute_session_request(session_id: str, message: str, *, turn_id: str | Non
         existing = store.begin(session_id, message, turn_id)
         if existing is not None:
             if existing["state"] != "finished":
-                raise ChatTurnConflict("This turn has unfinished or unknown completion. No execution was repeated.")
+                raise ChatTurnConflict("This turn has unfinished or unknown completion. No execution was repeated.",
+                                       state=existing["state"])
             if existing["execution"] is None:
                 raise RuntimeUnavailable(existing["failure_reply"])
             return _execution(existing["execution"])

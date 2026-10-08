@@ -11,12 +11,12 @@ recorded offline and limited live-review bounds. Step 4 is implemented and verif
 with offline/scripted-browser checks and merged in PR #27 after user approval.
 Step 5 is verified within the offline/scripted-browser limits below; user approved
 merging PR #28 on 2026-10-08. Step 6's persistence/navigation contract is
-recorded and reviewed. Step 7 storage/restoration is implemented and verified within
-the offline/scripted-browser limits below; user approved merging PR #30 and its
-step 6 dependency PR #29. PR #29 is merged; PR #30 now targets `main`.
-Steps 8 onward remain pending.
+recorded and reviewed. Step 7 storage/restoration is merged in PR #30 after user
+approval, with its step 6 dependency PR #29 also merged. Step 8 catalogue APIs and
+HTTP submission IDs are implemented and verified within the offline/scripted-browser
+limits below; user review is pending. Steps 9 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next discussion:** ⏳ Step 8 chat creation/listing/retrieval APIs.
+**Next:** ⏳ Step 8 review, then step 9 Workspace navigation discussion.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -845,7 +845,15 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 8. Expose chat creation, listing, and retrieval
 
-- [ ] Discuss, implement, and verify this slice after step 7.
+- [x] Discuss, implement, and verify this slice after step 7.
+- **Approved slice — 2026-10-08:** Create with empty JSON/HTTP 201; list metadata
+  by descending update time and stable ID; load metadata plus ordered saved turns
+  (unknown ID 404), without execution. Add optional submission `turn_id` and echo
+  accepted IDs, retaining legacy submissions and 200/503 outcomes; conflicting or
+  unfinished IDs return 409. Adapt the HTTP client; navigation stays step 9.
+  Verify round-trips, restart recovery, retained records, replay/conflicts, invalid
+  input, sanitized storage failures and chat/FAQ regressions, then inline-browser
+  review. One trusted local user/backend remains the ownership boundary.
 - **Problem/change:** Add only the backend contracts needed for New chat, a chat list,
   and loading saved turns; adapt the HTTP client. Apply the ownership decision from
   step 6. Reading history must not execute tools or submit provider calls.
@@ -855,6 +863,38 @@ does not authorize those features or change the ordered rework implementation st
   invalid input, sanitized storage failures, and access boundaries where applicable.
   Preserve existing chat submission and FAQ contracts unless an agreed change requires
   an explicit compatibility update.
+
+#### Step 8 outcome — 2026-10-08
+
+- **Implemented:** Empty-object creation returns 201 and generated metadata; listing
+  returns metadata by descending update time with stable ID ties; loading returns
+  one snapshot of metadata and ordered turns. Unknown IDs return 404 without record
+  creation. Reads preserve update times and never classify/invoke providers/tools.
+  Saved runtime failures, lifecycle, exact execution/activity/timings and demo markers
+  remain available. Corrupt execution records fail with sanitized persistence 503.
+- **Submission/client:** Optional HTTP `turn_id` replays saved identical submissions;
+  conflicting content/chat or unfinished IDs return 409 with safe code/state/message.
+  Responses echo accepted IDs; omitted/null IDs generate a new submission each time.
+  Existing 200/503 and FAQ contracts remain. Client create/list/load helpers validate
+  records and chat association, URL-escape caller-owned IDs, and never retry.
+- **Verified:** All 922 tests (20 new) pass, plus `pip check` and whitespace checks.
+  The final OpenAPI response-description changes passed 41 targeted API checks.
+  New coverage includes create/list/load, ordering/ties, unchanged reads, fresh-process
+  interruption recovery without execution, HTTP replay/conflict/status/legacy behavior,
+  workflow activity preservation, invalid bodies/IDs, corrupt/safe storage failures,
+  client round-trips and safe failures. Existing storage tests cover locking, commit
+  rollback, isolation, and full trace/demo retention. Installed FastAPI 0.142.2 and
+  Pydantic 2.13.5 checked; no dependency/provider changes.
+- **Browser:** Inline Swagger app on `http://127.0.0.1:8015/docs` exercised empty
+  listing, creation, real classifier/VADER with scripted language stages, load,
+  identical replay, changed-ID-content 409 and unknown-chat 404. Backend restart
+  retained one completed turn with identical result/stages/timing and metadata;
+  listing/reads did not append or update it. App remains open for user review.
+- **Limits/delivery:** One user-authored DCO-signed change on
+  `feature/chat-catalogue-api` in PR #31; user confirmation required before merge. No live
+  provider quality, SMTP, reminders, deployment, navigation/UI changes or refresh
+  restoration verification. Existing LangChain snapshot deprecation remains.
+  Shared trusted-local ownership stays unchanged. Step 9 needs separate discussion.
 
 ### 9. Build Workspace chat navigation and restoration
 

@@ -4,7 +4,8 @@ REWORK step 6, recorded 2026-10-08. The user selected **one local user** and
 **disabled navigation while a turn runs**. This document defines the target for
 steps 7–9 and the restoration constraints for steps 10–14. Step 7 now implements
 the storage/session portion; see [chat-persistence.md](chat-persistence.md).
-Catalogue endpoints and navigation remain proposed. Each implementation slice needs its
+Step 8 implements catalogue endpoints and HTTP submission IDs; navigation remains
+proposed for step 9. Each implementation slice needs its
 own discussion and proportional verification.
 
 ## Ownership and storage
@@ -107,7 +108,7 @@ Step 7 implements this storage boundary; step 8 reviews its API compatibility.
 
 ## API and client contract for step 8
 
-Proposed catalogue endpoints (not available yet):
+Catalogue endpoints (implemented in step 8):
 
 | Request | Response and boundary |
 | --- | --- |
@@ -206,5 +207,5 @@ Step 6 review compared this specification with `app/sessions.py`, `app/api/chat.
 
 Step 6's evidence is documentation review, not runtime or browser evidence. No dependency,
 provider, SMTP, reminder, deployment, framework, routing, or context-limit changes
-were made. Step 7 is the next bounded discussion; this document does not authorize
+were made. Step 9 navigation is the next bounded discussion; this document does not authorize
 implementing every later slice.

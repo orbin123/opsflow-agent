@@ -8,8 +8,9 @@ uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verif
 Approved REWORK step 7 stores chat history in separate local SQLite storage and
 restores context without reexecution. See `docs/chat-persistence.md` for the
 single-backend Unix-lock boundary, interrupted recovery, and explicit unsaved
-failures. Python turn IDs prevent duplicates while records are retained; HTTP
-catalogue/turn-ID support and browser navigation remain steps 8–9.
+failures. Python and HTTP turn IDs prevent duplicates while records are retained.
+Approved step 8 exposes create/list/load catalogue APIs and client helpers; reads
+never execute work. See `docs/chat-api.md`. Workspace navigation remains step 9.
 
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`

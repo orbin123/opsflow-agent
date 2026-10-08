@@ -4,7 +4,8 @@ REWORK step 7 adds `app/chat_store.py` and connects it to `app/sessions.py`.
 SQLite is authoritative: every request restores prior user/assistant context from
 saved records. The process-local history object is a snapshot, not a fallback.
 Reminder storage, worker locking, tools, routing thresholds, and providers are
-unchanged. Catalogue HTTP APIs and browser navigation/restoration remain steps 8–9.
+unchanged. Step 8 exposes catalogue HTTP APIs and submission IDs; browser navigation/restoration
+remains step 9. See [chat-api.md](chat-api.md).
 
 ## Configuration and ownership
 
@@ -77,8 +78,8 @@ Python callers may supply a nonblank turn ID of at most 128 characters. Reusing
 the same ID/chat/exact message returns the saved outcome without provider/tool calls,
 including after process restart. Reusing it with different content/chat conflicts.
 Running/interrupted IDs conflict without execution. Without an ID, each call creates
-a new UUID and executes a new turn, preserving existing callers. HTTP still accepts
-only `session_id`/`message`; HTTP turn-ID support is step 8. No automatic retries.
+a new UUID and executes a new turn, preserving existing callers. HTTP now accepts optional `turn_id` and echoes the accepted ID, using this same
+replay contract; submissions without IDs retain their previous behavior. No automatic retries.
 
 Reads and context restoration never execute requests. Finalized assistant JSON,
 successful observations, failed/partial/clarification statuses, and application-owned
@@ -102,7 +103,7 @@ Execution's existing HTTP 200/503 rules remain. Storage failures return HTTP 503
 with `detail.code="chat_persistence"`, a sanitized message, and
 `detail.outcome="not_started"` or `"unsaved"`. An unfinished chat returns HTTP 409.
 The client displays fixed storage-specific wording without raw server details or
-retrying. Existing HTTP bodies remain compatible.
+retrying. Existing HTTP request bodies remain compatible; responses add the accepted turn ID.
 
 Offline checks use temporary databases and scripted providers: fresh-process
 context restoration, abrupt exit/unknown recovery, second-process exclusion,
