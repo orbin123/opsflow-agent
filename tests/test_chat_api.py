@@ -5,7 +5,8 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 import pytest
 
-from app import agent, runtime, sessions, sentiment_workflow
+from app import agent, runtime, sessions
+from app.workflows import sentiment_workflow
 from app.api import chat
 from app.main import app
 from app.tools.email_drafting import EmailDraft, EmailDraftResult, _ACTION_INSTRUCTIONS

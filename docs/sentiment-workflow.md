@@ -1,6 +1,6 @@
 # Standalone natural-language sentiment workflow
 
-`app.sentiment_workflow.run_sentiment_workflow(request)` implements the fixed
+`app.workflows.sentiment_workflow.run_sentiment_workflow(request)` implements the fixed
 LLM extraction → VADER scoring → LLM explanation sequence. REWORK step 2b connects
 it to chat behind the intent classifier: high-confidence sentiment uses the
 `llm_assisted` route. The pure VADER tool remains in the agent registry; an agent
@@ -13,7 +13,7 @@ types raise `TypeError`; blank/oversized input raises `ValueError` before provid
 initialization. English is a caller precondition, not an automatic language check.
 
 ```python
-from app.sentiment_workflow import run_sentiment_workflow
+from app.workflows.sentiment_workflow import run_sentiment_workflow
 
 outcome = run_sentiment_workflow("Just check the sentiment of this I am happy")
 print(outcome.status)

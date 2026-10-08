@@ -8,6 +8,7 @@ after the recorded rework handover.
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Remaining rework steps are pending.
+Workflow modules now live under `app/workflows/` for package organization.
 **Next discussion:** ⏳ Step 4 conversational summarization/drafting review.
 Standalone FAQ PR #25 is merged into `main`; chat integration PR #26 now targets
 `main` and is approved for merge. Keyword workflow/integration/presentation are
@@ -78,6 +79,12 @@ Follow `AGENTS.md`, `skills/karpathy-guidelines/SKILL.md`, the Streamlit skill,
 and `docs/design-system.md` for their applicable work. Discuss missing design
 patterns before extending the design system. Verify installed framework/provider
 compatibility during each implementation slice.
+
+For changes affecting chat or Streamlit behavior, automated tests are followed by
+agent-run verification of the changed flow in the inline browser. Leave the app
+open for the user's independent review and wait for their confirmation before
+merging or pushing directly to `main`. Record any unavailable checks and observed
+limits.
 
 Preserve these contracts throughout the rework:
 

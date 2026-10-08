@@ -6,7 +6,7 @@ from unittest.mock import Mock
 from langchain_core.messages import AIMessage
 import pytest
 
-from app import sentiment_workflow, keyword_workflow, faq_workflow
+from app.workflows import sentiment_workflow, keyword_workflow, faq_workflow
 
 
 @pytest.fixture

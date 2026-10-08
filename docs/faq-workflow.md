@@ -1,6 +1,6 @@
 # Natural-language FAQ workflow
 
-`app.faq_workflow.run_faq_workflow(request)` implements REWORK step 3c:
+`app.workflows.faq_workflow.run_faq_workflow(request)` implements REWORK step 3c:
 structured question extraction → unchanged local TF-IDF retrieval → grounded
 LLM explanation. The function remains standalone: it does not classify, invoke
 the agent, or store history. Approved step 3d connects it behind chat's existing
@@ -15,7 +15,7 @@ initialization. English is a caller precondition, not an automatic language chec
 Quotes, colons, and command prefixes are optional.
 
 ```python
-from app.faq_workflow import run_faq_workflow
+from app.workflows.faq_workflow import run_faq_workflow
 
 outcome = run_faq_workflow("Please answer this FAQ: What is the remote-work policy?")
 print(outcome.status)

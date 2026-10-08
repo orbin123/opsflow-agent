@@ -8,7 +8,7 @@ import pytest
 from groq import APITimeoutError, AuthenticationError, BadRequestError, RateLimitError
 from langchain_core.messages import AIMessage
 
-from app import faq_workflow as workflow
+from app.workflows import faq_workflow as workflow
 from app.tools.faq import FAQCandidate, FAQResult
 
 

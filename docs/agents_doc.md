@@ -20,6 +20,19 @@ and backend-event verification. Steps 1 and 2 (2a/2b) are implemented and verifi
 within their recorded limits; keyword steps 3a/3b are also verified offline.
 Later implementation awaits discussion.
 
+- **2026-10-08:** Moved sentiment, keyword, and FAQ workflow modules into
+  `app/workflows/` and updated imports/documentation references. This keeps the
+  focused workflow implementations grouped while preserving their behavior.
+  All 855 tests pass. Inline-browser chat reached the updated backend but the
+  sentiment extraction stage failed with reason `configuration`, so a successful
+  live workflow remains unverified. The app is open for user review; wait for
+  confirmation before pushing to `main`.
+
+- **2026-10-08:** Added a pre-merge chat/Streamlit verification step: after
+  automated tests, exercise the changed flow in the inline browser, leave the app
+  open for the user's independent review, and wait for confirmation before merge.
+  Documentation-only update; no application behavior or tests changed.
+
 - **2026-10-08:** User authorized merging FAQ PR #26 and its required standalone
   dependency. PR #25 merged into `main` with a user-authored signed merge message;
   PR #26 retargeted to `main`. Implementation and caption checks remain the recorded

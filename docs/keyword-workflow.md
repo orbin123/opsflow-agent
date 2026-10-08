@@ -1,6 +1,6 @@
 # Natural-language keyword workflow
 
-`app.keyword_workflow.run_keyword_workflow(request)` implements the fixed
+`app.workflows.keyword_workflow.run_keyword_workflow(request)` implements the fixed
 LLM source extraction → local YAKE extraction → LLM presentation sequence.
 REWORK step 3a supplies the standalone function; approved step 3b connects it to
 chat behind intent/confidence gating using `llm_assisted`. The standalone function
@@ -15,7 +15,7 @@ types raise `TypeError`; blank/oversized input raises `ValueError` before provid
 initialization. English is a caller precondition, not an automatic language check.
 
 ```python
-from app.keyword_workflow import run_keyword_workflow
+from app.workflows.keyword_workflow import run_keyword_workflow
 
 outcome = run_keyword_workflow(
     "Find keywords in this The server failed after the deployment"

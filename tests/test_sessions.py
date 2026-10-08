@@ -74,7 +74,7 @@ def test_draft_revision_uses_prior_result_and_retains_actions_and_demo(monkeypat
 
     monkeypatch.setattr(runtime, "classify_request", lambda message: ("faq_retrieval", 1, 0.71)
                         if message.startswith("FAQ:") else ("email_drafting", 1, 0.71))
-    from app import faq_workflow
+    from app.workflows import faq_workflow
     faq_provider("What is the leave policy?")
     monkeypatch.setattr(faq_workflow, "retrieve_faq", lambda question:
                         FAQResult("matched", answer="Leave needs approval", is_demo=True))
@@ -160,7 +160,7 @@ def test_runtime_exception_remembered_and_reraised_sanitized(monkeypatch):
 
 
 def test_sentiment_tool_failure_remembered_without_agent_execution(monkeypatch, sentiment_provider):
-    from app import sentiment_workflow
+    from app.workflows import sentiment_workflow
 
     sentiment_provider("I am sad")
     monkeypatch.setattr(sentiment_workflow, "analyze_sentiment", Mock(side_effect=RuntimeError("private source")))

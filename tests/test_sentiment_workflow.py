@@ -8,7 +8,7 @@ import pytest
 from groq import APITimeoutError, AuthenticationError, BadRequestError, RateLimitError
 from langchain_core.messages import AIMessage
 
-from app import sentiment_workflow as workflow
+from app.workflows import sentiment_workflow as workflow
 
 
 @pytest.fixture(autouse=True)

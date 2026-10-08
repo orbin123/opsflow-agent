@@ -10,9 +10,9 @@ from langchain_core.messages import AIMessage, HumanMessage
 from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
-from app.faq_workflow import FAQStage, run_faq_workflow
-from app.keyword_workflow import KeywordStage, run_keyword_workflow
-from app.sentiment_workflow import SentimentStage, run_sentiment_workflow
+from app.workflows.faq_workflow import FAQStage, run_faq_workflow
+from app.workflows.keyword_workflow import KeywordStage, run_keyword_workflow
+from app.workflows.sentiment_workflow import SentimentStage, run_sentiment_workflow
 from app.tools.faq import FAQResult
 from app.tools.keywords import Keyword
 from app.tools.sentiment import SentimentResult

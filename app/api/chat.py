@@ -8,9 +8,9 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from app.agent import AgentTrace
 from app.runtime import RuntimeUnavailable, ToolResult, ToolTrace
 from app.sessions import execute_session_request
-from app.sentiment_workflow import SentimentStage
-from app.keyword_workflow import KeywordStage
-from app.faq_workflow import FAQStage
+from app.workflows.sentiment_workflow import SentimentStage
+from app.workflows.keyword_workflow import KeywordStage
+from app.workflows.faq_workflow import FAQStage
 
 
 router = APIRouter()

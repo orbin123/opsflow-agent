@@ -2,7 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import runtime, keyword_workflow, faq_workflow
+from app import runtime
+from app.workflows import keyword_workflow, faq_workflow
 from app.agent import AgentResult, AgentTrace
 from app.routes import keyword_route, sentiment_route
 from app.tools.faq import retrieve_faq
