@@ -11,7 +11,9 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 12b single-draft review; then remaining answer-presentation discussion. User approved
+**Next:** ⏳ Step 14 Docs content/navigation discussion in a new chat, as requested
+on 2026-10-08. Remaining step 12b presentation is deferred, not complete, and
+must be revisited before the rework handover. User approved
 merging Workspace PR #38 and summary dependency PR #37 on 2026-10-08;
 PR #37 is merged and #38 now targets `main`. User approved
 merging step 12a PR #35 on 2026-10-08; step 13 is merged in dependency PR #36.
@@ -25,6 +27,12 @@ step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
 
+- **2026-10-08:** User approved merging single-draft PR #39 and chose step 14
+  Docs discussion in a new chat next. Verified current implementation head,
+  user-only authorship/matching DCO sign-off and passing DCO. Recorded remaining
+  step 12b presentation as deferred until before final handover. Documentation-only
+  approval/agenda update; prior 1,037-test/browser evidence remains applicable.
+
 - **2026-10-08:** Implemented approved step 12b single-draft presentation: saved
   recipient/subject/literal multiline body shown once, separate saved actions,
   raw JSON in Activity and preserved contextual demo qualification. Failure,
@@ -35,7 +43,7 @@ implementation awaits discussion.
   drafting calls after inspection/restoration. Scripted providers; no live model
   quality, semantic contextual drafting or email checks. Figma remains rate-limited;
   native styling retained and existing LangChain deprecation remains. Review app
-  stays open; branch `feature/readable-single-draft` awaits user review before merge.
+  stays open; user approved merging PR #39 on `feature/readable-single-draft`.
 
 - **2026-10-08:** User approved merging Workspace PR #38 and summary dependency
   PR #37 after inline review. Verified current heads, user-only authorship/sign-offs

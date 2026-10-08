@@ -21,9 +21,11 @@ inline details and step 13 live formation are implemented and verified within th
 recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is implemented
 and verified within the recorded limits; step 12b's single-summary and single-draft
 slices are implemented and verified below. Remaining step 12b presentation and
-steps 14 onward are pending. Single-draft merge awaits user review.
+steps 14 onward are pending. User approved merging single-draft PR #39.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 12b single-draft review; then remaining answer-presentation discussion. User approved
+**Next:** ⏳ Step 14 Docs content/navigation discussion in a new chat, as requested
+by the user on 2026-10-08. Remaining step 12b capability/multi-tool presentation
+is deferred, not complete; revisit it before step 15's rework handover. User approved
 merging Workspace PR #38 and single-summary dependency PR #37 on 2026-10-08;
 PR #37 is merged and #38 now targets `main`. User approved
 merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #36.
@@ -1278,6 +1280,10 @@ does not authorize those features or change the ordered rework implementation st
 
 #### Step 12b single-draft slice — 2026-10-08
 
+- **Delivery approval:** User approved merging PR #39 on 2026-10-08 and chose
+  step 14 discussion in a new chat next. Current implementation head has only
+  user authorship/matching sign-off and passing DCO; prior 1,037-test/browser
+  verification remains applicable. This approval record changes documentation only.
 - **Agreement:** User approved readable single-email drafts. Remaining capability
   and multi-tool presentations require separate agreement.
 - **Contract:** A completed agent turn with exactly one successful `draft_email`
@@ -1312,7 +1318,7 @@ does not authorize those features or change the ordered rework implementation st
   tool validation, local FAQ, HTTP/SSE and SQLite; no live-provider quality,
   semantic contextual drafting, SMTP/inbox or deployment checks. Existing LangChain
   history deprecation remains. Scoped branch `feature/readable-single-draft`;
-  merge awaits independent user review.
+  user approved merging PR #39 after the recorded review.
 
 ### 13. Connect live events to collapsible chat activity
 
@@ -1383,6 +1389,9 @@ does not authorize those features or change the ordered rework implementation st
 ### 14. Add the in-app Docs guide
 
 - [ ] Discuss content/navigation, then implement and verify this slice.
+- **Next-step decision — 2026-10-08:** User will discuss this step in a new chat
+  after approving single-draft PR #39's merge. Remaining step 12b presentation is
+  deferred; this does not mark it complete or authorize Docs implementation yet.
 - **Problem/change:** Add Docs near the lower sidebar, opening a readable guide while
   preserving the active chat. Keep maintained usage content in repository docs.
 - **Input → output:** Docs selection → organized tool/capability guides with purpose,
