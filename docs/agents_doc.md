@@ -11,8 +11,9 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ User review of Workspace rename/delete and step 12b's single-summary
-slice, then remaining answer-presentation discussion. User approved
+**Next:** ⏳ Remaining step 12b answer-presentation discussion. User approved
+merging Workspace PR #38 and summary dependency PR #37 on 2026-10-08;
+PR #37 is merged and #38 now targets `main`. User approved
 merging step 12a PR #35 on 2026-10-08; step 13 is merged in dependency PR #36.
 Step 11 is merged in PR #34.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
@@ -23,6 +24,11 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** User approved merging Workspace PR #38 and summary dependency
+  PR #37 after inline review. Verified current heads, user-only authorship/sign-offs
+  and passing DCO; merged #37 and retargeted #38 to `main`. This delivery record
+  changes documentation only; prior 1,022-test/browser evidence remains applicable.
 
 - **2026-10-08:** Implemented user-approved Workspace Rename/Delete: themed
   right-click/More actions menu, native styled dialogs, persistent custom titles,
@@ -35,7 +41,7 @@ implementation awaits discussion.
   calls no providers/tools; existing scripted summary counts remain unchanged.
   Figma remains rate-limited; approved adaptation documented. Review app stays
   open; signed branch `feature/workspace-chat-management` stacks on summary
-  PR #37 and awaits user review before merge. No live-provider/email checks.
+  PR #37; user approved both merges and #38 now targets `main`. No live-provider/email checks.
 
 - **2026-10-08:** Implemented the user-approved step 12b single-summary slice:
   completed single-summary agent turns show saved summary/key points once;
@@ -46,8 +52,8 @@ implementation awaits discussion.
   refresh and 1440/390 px wrapping without mobile overflow. Scripted providers,
   real classifier/tool validation/HTTP/SSE/SQLite; no live-provider/email checks.
   Figma remains rate-limited; native styling retained. Review app stays open;
-  scoped signed change on `feature/readable-single-summary` awaits user review
-  before merge. Other step 12b presentation remains separately agreed work.
+  scoped signed change on `feature/readable-single-summary` is merged as PR #37
+  after user approval. Other step 12b presentation remains separately agreed work.
 
 - **2026-10-08:** User approved merging step 12a PR #35. Verified user-only
   authorship, matching sign-offs and passing DCO; merged step 13 dependency PR #36,

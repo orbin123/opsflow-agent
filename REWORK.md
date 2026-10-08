@@ -22,8 +22,9 @@ recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is imple
 and verified within the recorded limits; step 12b's single-summary slice is implemented
 and verified below. Remaining step 12b presentation and steps 14 onward are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ User review of the requested Workspace rename/delete addition and
-step 12b's single-summary slice, then remaining answer-presentation discussion. User approved
+**Next:** ⏳ Remaining step 12b answer-presentation discussion. User approved
+merging Workspace PR #38 and single-summary dependency PR #37 on 2026-10-08;
+PR #37 is merged and #38 now targets `main`. User approved
 merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #36.
 Step 11 is merged in PR #34.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
@@ -126,8 +127,8 @@ Preserve these contracts throughout the rework:
 ### Requested Workspace chat-management addition — 2026-10-08
 
 - **Agreement:** User approved the Rename/Delete contract and themed menu on
-  2026-10-08, extending step 6's earlier optional future scope. ⏳ Independent
-  review before merge; the original plan remains paused.
+  2026-10-08, extending step 6's earlier optional future scope. User approved
+  merging PR #38 and its summary dependency on 2026-10-08; the original plan remains paused.
 - **Slice:** Persistent catalogue rename/delete operations, HTTP/client
   support, and a small Streamlit v2 menu beside native chat-title buttons with right-click and an
   accessible More actions button opening the same menu. Use documented fonts,
@@ -171,7 +172,9 @@ Preserve these contracts throughout the rework:
 - **Review:** App stays open. Screenshots `/tmp/opsflow-chat-menu-desktop.png`,
   `/tmp/opsflow-chat-menu-mobile.png`, `/tmp/opsflow-chat-rename-mobile.png`.
   Scoped signed change on `feature/workspace-chat-management`, stacked on
-  single-summary PR #37; both await user review before merge.
+  single-summary PR #37. User approved both merges; verified current heads,
+  user-only authorship/sign-offs and passing DCO. PR #37 is merged and #38 now
+  targets `main`. Existing application verification remains applicable.
 
 Tool/routing and one-agent behavior are verified first, followed by durable
 history, chat APIs/navigation, and backend events. The existing inspector stays
@@ -1268,8 +1271,8 @@ does not authorize those features or change the ordered rework implementation st
   SQLite. No new live-provider quality or email checks. Existing LangChain history
   deprecation remains; Figma is still rate-limited, so documented native styling
   is retained. Screenshots `/tmp/opsflow-step12b-desktop.png` and
-  `/tmp/opsflow-step12b-mobile.png`. Review app stays open; merge awaits user
-  confirmation. Scoped user-authored DCO-signed change on
+  `/tmp/opsflow-step12b-mobile.png`. Review app stays open; user approved the merge
+  and PR #37 is merged. Scoped user-authored DCO-signed change on
   `feature/readable-single-summary`.
 
 ### 13. Connect live events to collapsible chat activity
