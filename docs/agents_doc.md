@@ -11,8 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ User review of step 12b's single-summary slice, then discussion of
-remaining answer presentation. User approved
+**Next:** ⏳ User review of Workspace rename/delete and step 12b's single-summary
+slice, then remaining answer-presentation discussion. User approved
 merging step 12a PR #35 on 2026-10-08; step 13 is merged in dependency PR #36.
 Step 11 is merged in PR #34.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
@@ -23,6 +23,19 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** Implemented user-approved Workspace Rename/Delete: themed
+  right-click/More actions menu, native styled dialogs, persistent custom titles,
+  SQLite v1→v2 migration, transactional deletion/context cleanup, and protected
+  PATCH/DELETE/client contracts. All 1,022 tests (21 new), dependency/whitespace
+  checks pass. Inline browser on 8507/backend 8019 verifies both menu entry paths,
+  keyboard/focus, literal rename, refresh/restart, deletion confirmation/cancel,
+  and 1440/390 px themed layouts without overflow. Confirmed deletion/selected
+  recovery covered by AppTest/API; no permanent browser delete click. Management
+  calls no providers/tools; existing scripted summary counts remain unchanged.
+  Figma remains rate-limited; approved adaptation documented. Review app stays
+  open; signed branch `feature/workspace-chat-management` stacks on summary
+  PR #37 and awaits user review before merge. No live-provider/email checks.
 
 - **2026-10-08:** Implemented the user-approved step 12b single-summary slice:
   completed single-summary agent turns show saved summary/key points once;

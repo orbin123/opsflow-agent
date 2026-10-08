@@ -32,6 +32,16 @@ remain internal. Configuration can be overridden by environment or CLI settings.
 
 ## Conversation and results
 
+Every Workspace chat has a More actions (⋯) button. Right-click its title or press
+Shift+F10 to open the same themed Rename/Delete menu. Arrow keys move between
+actions; Escape closes it and restores focus. More actions also works on touch.
+Rename opens a prefilled title field with Save/Cancel; titles persist. Delete
+opens a named confirmation explaining permanent removal of messages and Activity.
+Cancelling changes nothing. Deleting the selected chat opens the latest remaining
+chat, or the empty welcome view, and discards only the deleted chat's local draft.
+Running/unsaved work and unavailable reads disable management. No management
+operation executes a chat turn. Other tabs pointing to a deleted chat show not found.
+
 Empty chats offer natural-English sentiment, keyword and fictional demo-policy
 examples; quotes or command prefixes are not required. For direct and fixed-workflow
 sentiment outcomes, the assistant displays the existing explanation when available

@@ -22,8 +22,8 @@ recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is imple
 and verified within the recorded limits; step 12b's single-summary slice is implemented
 and verified below. Remaining step 12b presentation and steps 14 onward are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ User review of step 12b's single-summary slice, then discussion of
-remaining answer presentation. User approved
+**Next:** ⏳ User review of the requested Workspace rename/delete addition and
+step 12b's single-summary slice, then remaining answer-presentation discussion. User approved
 merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #36.
 Step 11 is merged in PR #34.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
@@ -122,6 +122,56 @@ Preserve these contracts throughout the rework:
   under the original plan after handover.
 
 ## Ordered Implementation Steps
+
+### Requested Workspace chat-management addition — 2026-10-08
+
+- **Agreement:** User approved the Rename/Delete contract and themed menu on
+  2026-10-08, extending step 6's earlier optional future scope. ⏳ Independent
+  review before merge; the original plan remains paused.
+- **Slice:** Persistent catalogue rename/delete operations, HTTP/client
+  support, and a small Streamlit v2 menu beside native chat-title buttons with right-click and an
+  accessible More actions button opening the same menu. Use documented fonts,
+  square surfaces, outlines, cyan hover/focus and error-colored Delete.
+- **Behavior:** Rename opens a prefilled field and saves a nonblank literal title
+  of at most 120 characters with whitespace collapsed, including before the first message. Delete
+  opens a named confirmation describing removal of saved history; successful
+  deletion removes the catalogue entry, turns and cached context/draft. Deleting
+  the selected chat opens the latest remaining chat or the empty welcome view.
+  Running/unsaved work blocks management; backend checks enforce the boundary.
+  Failed writes retain the existing entry and show a sanitized error.
+- **Verification:** Persistence/restart and API failures, title validation,
+  targeted deletion/isolation, active-work protection, and no provider/tool calls
+  from management. Inline browser verifies right-click/More actions, keyboard
+  dismissal/focus, rename persistence, cancelled/confirmed deletion, selected-chat
+  recovery and desktop/mobile theme/layout. Separate scoped PR; existing summary
+  PR review and other rework work remain separate.
+- **Implemented:** SQLite version 2 transactionally migrates version 1 with a
+  custom-title marker. PATCH/DELETE APIs/client helpers enforce identity, safe
+  errors and no automatic retry; nonblocking execution locks plus durable running
+  markers protect active/unsaved work. Delete removes metadata/turns/cache only
+  after commit, and ends duplicate-ID retention for those records. Legacy
+  caller-owned submission IDs retain their existing behavior; deleted locators
+  in other tabs show not found. No reminder/provider/execution changes.
+- **Checks:** All 1,022 tests pass (21 new), including migration, restart, exact
+  turn preservation, deletion isolation/rollback, input and HTTP/client failures,
+  active execution, cancelled/confirmed UI deletion, selected/last-chat recovery,
+  cached draft cleanup and non-execution. Dependency/whitespace checks pass.
+  Corrected component registration across test runtimes and a post-widget
+  composer reset caught by tests. Installed Streamlit 1.65.0 v2/dialog APIs checked.
+- **Browser:** Existing inline review on 8507/backend 8019 verifies selected and
+  unselected right-click/More actions, Shift+F10, arrow keys, Escape focus return,
+  literal rename of populated/empty chats, refresh/backend-restart persistence,
+  named deletion confirmation/cancellation, and 1440/390 px layouts without
+  overflow. Menu/dialog colors, fonts, square geometry and 44–48 px targets match
+  documented tokens. Confirmed deletion/recovery is verified in AppTest/API tests;
+  the browser exercised cancellation, not a permanent delete click. Existing two
+  summary calls remain two after management and restoration. Scripted providers;
+  no live-provider/email checks. Figma remains rate-limited; user-approved design
+  adaptation documented. Existing LangChain history deprecation remains.
+- **Review:** App stays open. Screenshots `/tmp/opsflow-chat-menu-desktop.png`,
+  `/tmp/opsflow-chat-menu-mobile.png`, `/tmp/opsflow-chat-rename-mobile.png`.
+  Scoped signed change on `feature/workspace-chat-management`, stacked on
+  single-summary PR #37; both await user review before merge.
 
 Tool/routing and one-agent behavior are verified first, followed by durable
 history, chat APIs/navigation, and backend events. The existing inspector stays

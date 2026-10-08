@@ -112,6 +112,22 @@ The native multiline composer uses square surface/control borders. Focus retains
 the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
 remain; live Activity and Docs patterns belong to later steps.
 
+## Workspace chat actions adaptation
+
+On 2026-10-08 the user approved Rename/Delete through a themed right-click menu
+and an accessible More actions button beside every native chat-title button.
+A small inline Streamlit v2 component supplies the missing context-menu interaction.
+Use IBM Plex Mono, surface/ink tokens, square corners, a 1 px control border,
+cyan action tint for hover/focus, error-colored Delete and a subtle static shadow.
+More actions has a 44 × 48 px target; menu actions are at least 44 px high.
+Keep the title and actions in one row on mobile. Menus stay within the viewport.
+Support Shift+F10, arrow keys, Escape and focus restoration; titles remain literal.
+Native rename/delete dialogs use square surface panels, IBM Plex Mono body copy,
+VT323 headings, outlined 48 px fields/actions and visible 2 px focus. Rename has
+Save/Cancel; Delete names the chat and confirms permanent removal before mutation.
+Figma inspection remains rate-limited; this explicitly approved adaptation reuses
+documented tokens without adding Figma nodes.
+
 ## Completed inline activity adaptation
 
 On 2026-10-08 the user clarified the step 11 layout with a sketch: a vertical
