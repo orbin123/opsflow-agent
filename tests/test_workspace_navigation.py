@@ -45,7 +45,7 @@ def test_empty_start_does_not_create_and_new_chat_is_durable(workspace):
     execute.assert_not_called()
 
 
-def test_two_chats_restore_drafts_context_and_read_only_inspector(workspace):
+def test_two_chats_restore_drafts_context_and_read_only_activity(workspace):
     recorded, execute = workspace
     ui = open_chat()
     send_message(ui, "First chat")
@@ -62,7 +62,6 @@ def test_two_chats_restore_drafts_context_and_read_only_inspector(workspace):
     assert "Reply: First chat" in text(ui) and "Second chat" not in text(ui)
     send_message(ui, "First follow-up")
     assert execute.call_args.kwargs["history"][0].content == "First chat"
-    ui.selectbox[0].select(0).run()
     ui.run()
     assert len(recorded) == 3 and execute.call_count == 3
     ui.button(key="chat_" + second).click().run()

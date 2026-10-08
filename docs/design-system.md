@@ -109,3 +109,15 @@ and Send use VT323 short action labels; Send uses the existing cyan action state
 The native multiline composer uses square surface/control borders. Focus retains
 the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
 remain; live Activity and Docs patterns belong to later steps.
+
+## Completed inline activity adaptation
+
+On 2026-10-08 the user approved step 11's native collapsed Activity expander under
+each assistant answer, with independently collapsed workflow and tool expanders.
+Reuse the existing surface, outlines, typography and spacing. The conversation
+uses a 760 px reading area (856 px including desktop outer padding), shrinking
+with the viewport; mobile expanders use 8 px padding for nested reading space.
+The separate inspector and selector are removed. Native summary
+controls retain the 2 px focus indicator and keyboard expansion. Details show only
+retained observable execution fields. Figma inspection is still rate-limited;
+no Figma nodes are added. Live activity and answer redesign remain later steps.

@@ -114,7 +114,7 @@ def send_message(ui, message):
     return ui
 
 
-def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monkeypatch, sentiment_provider):
+def test_ui_sentiment_workflow_and_activity_match_backend_without_resubmit(monkeypatch, sentiment_provider):
     model = sentiment_provider("I am happy", "VADER classified this text as positive.")
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
@@ -143,7 +143,7 @@ def test_ui_sentiment_workflow_and_inspector_match_backend_without_resubmit(monk
 
 
 @pytest.mark.parametrize("scenario", ["matched", "no_match", "presentation_failure"])
-def test_ui_faq_reply_and_inspector_preserve_outcome_without_resubmit(monkeypatch, faq_provider, scenario):
+def test_ui_faq_reply_and_activity_preserve_outcome_without_resubmit(monkeypatch, faq_provider, scenario):
     question = "What is the cafeteria policy?" if scenario == "no_match" else "What is the remote-work policy?"
     model = faq_provider(question)
     if scenario == "presentation_failure":
@@ -163,7 +163,8 @@ def test_ui_faq_reply_and_inspector_preserve_outcome_without_resubmit(monkeypatc
     assert "FAQ workflow stages" in [element.label for element in ui.expander]
     assistant = ui.chat_message[1]
     assert data["reply"] in [element.value for element in assistant.text]
-    assert len(assistant.json) == 0
+    assert data["result"] in [json.loads(element.value) for element in assistant.expander[0].json]
+    assert len(assistant.json) == len(assistant.expander[0].json)
     assert "Fictional demo policy — verify your actual company policy." not in [
         element.value for element in ui.caption
     ]
@@ -210,7 +211,7 @@ def test_ui_agent_clarification_followup_and_browser_isolation(monkeypatch):
     send_message(other, "Another email")
     assert recorded[2][0]["session_id"] != recorded[0][0]["session_id"]
     assert len(model.invoke.call_args_list[2].args[0]) == 2
-    ui.selectbox[0].select(0).run()
+    ui.run()
     assert len(recorded) == 3
     assert "STATUS  needs_clarification" in "\n".join(element.value for element in ui.text)
 
@@ -274,7 +275,7 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
     assert "private credentials" not in str(ui)
 
 
-def test_ui_connection_failure_persists_without_retry_or_stale_inspector(monkeypatch):
+def test_ui_connection_failure_persists_without_retry_or_stale_activity(monkeypatch):
     send = Mock(side_effect=ui_client.ChatClientError("Connection failed; outcome unknown."))
     connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
@@ -282,7 +283,7 @@ def test_ui_connection_failure_persists_without_retry_or_stale_inspector(monkeyp
     send_message(ui, "Hi")
     assert not ui.exception and ui.session_state["pending"] is False
     assert ui.session_state["turns"][0]["execution"] is None
-    assert len(ui.error) == 2
+    assert len(ui.error) == 1
     assert ui.button(key="send_message").disabled
     ui.run()
     assert send.call_count == 1
@@ -323,7 +324,7 @@ def test_ui_source_is_plain_text_not_executable_markup(monkeypatch):
     assert any("<script>" in element.value for element in ui.text)
 
 
-def test_ui_keyword_workflow_and_inspector_match_backend_without_resubmit(monkeypatch, keyword_provider):
+def test_ui_keyword_workflow_and_activity_match_backend_without_resubmit(monkeypatch, keyword_provider):
     model = keyword_provider("The server failed after the deployment", "Here are the keywords extracted from your text and their scores.")
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
@@ -338,7 +339,7 @@ def test_ui_keyword_workflow_and_inspector_match_backend_without_resubmit(monkey
     assert data["route"] == "llm_assisted" and model.invoke.call_count == 2
     assert ui.session_state["turns"][0]["execution"] == data
     displayed_json = [json.loads(element.value) for element in ui.json]
-    assert displayed_json.count(data["result"]) == 1  # Inspector only.
+    assert displayed_json.count(data["result"]) == 1  # Activity only.
     assert len(ui.dataframe) == 1
     table = ui.dataframe[0]
     assert table.value.to_dict("records") == [
@@ -445,3 +446,65 @@ def test_ui_keyword_table_keeps_phrases_as_literal_text(monkeypatch):
     assert table.value.to_dict("records") == [{"Phrase": phrase, "Score": 0.0123456789}]
     assert "Phrase" not in json.loads(table.proto.columns)  # Default plain-text cells.
     assert not ui.get("imgs") and not ui.get("iframe")
+
+
+@pytest.mark.parametrize("route,status,with_tool", [
+    ("direct", "completed", True), ("agent", "completed", True),
+    ("agent", "completed", False), ("agent", "needs_clarification", False),
+    ("agent", "error", True), ("agent", "partial_failure", True),
+])
+def test_restored_activity_belongs_to_each_turn_without_execution(monkeypatch, route, status, with_tool):
+    recorded = connect_api(monkeypatch)
+    execute = Mock(side_effect=AssertionError("Restoration must not execute"))
+    monkeypatch.setattr(sessions, "execute_request", execute)
+    chat = sessions.create_chat()["session_id"]
+    store = sessions._get_store()
+    outcomes = []
+    for number in range(2):
+        data = execution(chat, status)
+        data.update(route=route, reason=f"route_reason_{number}",
+                    confidence=0.8 + number / 10, elapsed_ms=10.123 + number,
+                    reply=f"Answer {number}", agent_reason=f"outcome_{number}")
+        if route == "direct":
+            data.update(predicted_intent="sentiment_analysis", agent_reason=None)
+        if with_tool:
+            data["trace"] = [dict(tool="analyze_sentiment", arguments={"text": f"Source {number}"},
+                                  result={"label": "positive"} if status != "error" else None,
+                                  status="failed" if status == "error" else "completed",
+                                  reason="tool_failed" if status == "error" else None,
+                                  elapsed_ms=1.234 + number)]
+        store.begin(chat, f"Message {number}", f"saved-{number}")
+        store.finish(f"saved-{number}", execution={k: v for k, v in data.items() if k != "session_id"})
+        outcomes.append(data)
+    sessions.close_chat_store()
+    sessions._sessions.clear()
+    ui = AppTest.from_file(str(SCRIPT))
+    ui.query_params["chat"] = chat
+    ui.run()
+    assert not ui.exception and not ui.selectbox
+    assert "Execution inspector" not in [item.value for item in ui.subheader]
+    for number, data in enumerate(outcomes):
+        assistant = ui.chat_message[number * 2 + 1]
+        assert data["reply"] in [item.value for item in assistant.text]
+        activity = assistant.expander[0]
+        assert activity.label == "Activity" and not activity.proto.expanded
+        text = "\n".join(item.value for item in activity.text)
+        for value in (data["reason"], str(data["confidence"]),
+                      str(data["elapsed_ms"]), f"ROUTE  {route}", f"STATUS  {status}"):
+            assert value in text
+        if data["agent_reason"] is not None:
+            assert data["agent_reason"] in text
+        assert outcomes[1 - number]["reason"] not in text
+        if with_tool:
+            tool = activity.expander[0]
+            assert not tool.proto.expanded
+            assert str(data["trace"][0]["elapsed_ms"]) in "\n".join(item.value for item in tool.text)
+            if status == "error":
+                assert "Step reason: tool_failed" in [item.value for item in tool.text]
+            assert data["trace"][0]["arguments"] in [json.loads(item.value) for item in tool.json]
+            assert data["trace"][0]["result"] in [json.loads(item.value) for item in tool.json]
+        else:
+            assert "No tool executions reported." in [item.value for item in activity.caption]
+    ui.run()
+    assert not ui.exception and not recorded
+    execute.assert_not_called()
