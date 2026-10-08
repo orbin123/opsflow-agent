@@ -3,7 +3,7 @@
 An operations copilot using TF-IDF + a calibrated linear SVM for intent routing, LangChain/Groq for conversational tool orchestration, FastAPI, Streamlit, and SQLite reminders.
 
 The local Streamlit chat with per-turn Activity runs with `streamlit run streamlit_app.py` and
-uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verification.
+uses `/api/v1/chat/stream`; see `docs/streamlit-console.md` for configuration and verification.
 
 Approved REWORK step 7 stores chat history in separate local SQLite storage and
 restores context without reexecution. See `docs/chat-persistence.md` for the
@@ -15,17 +15,21 @@ literal titled selection, `chat` URL restoration and a per-chat browser-session
 multiline draft composer. Running/unsaved work locks navigation and submission;
 recovery controls only read. See `docs/streamlit-console.md`. Completed execution
 details appear between each right-aligned prompt and left-aligned answer in a
-vertically sequential, left-aligned Activity panel (step 11). Live formation (step 13)
-is requested next before step 12; Docs remains later.
+vertically sequential, left-aligned Activity panel (step 11). Step 13 shows actual
+live stage events before the saved answer; Docs remains later.
 
 Approved REWORK step 10 adds `POST /api/v1/chat/stream` SSE for actual backend
 classification/routing, workflow stages and agent model/tool activity. Progress is
 transient; saved terminal outcomes follow SQLite finalization. Disconnect does not
 cancel execution; graceful shutdown drains stream workers before releasing storage.
 Recovery/replay never repeats work. See `docs/chat-api.md` for event fields and
-transport/status boundaries. Streamlit still uses the nonstreaming endpoint.
+transport/status boundaries. Streamlit uses the SSE endpoint for one-shot
+submission and GET for restoration.
 Approved step 11 replaces the separate inspector with collapsed per-turn Activity and nested workflow/tool
-sections using exact saved records; live Activity remains step 13.
+sections using exact saved records. Step 13 validates live event correlation and
+shows observable stages in a native running panel before the saved outcome.
+Disconnect/rerun recovery only reads; it never automatically reconnects or resubmits.
+Live progress is transient; final/restored details use saved records.
 
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`

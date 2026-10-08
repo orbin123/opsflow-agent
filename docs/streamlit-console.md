@@ -20,7 +20,7 @@ OPSFLOW_API_URL=http://127.0.0.1:8011 .venv/bin/python -m streamlit run streamli
 The default API URL is `http://127.0.0.1:8000`. This is a trusted local console;
 neither service supplies authentication. Use a single backend process so history
 remains coherent. Streamlit's environment setting is separate from backend `.env`
-loading. The console uses the create/list/load catalogue APIs and `POST /api/v1/chat`;
+loading. The console uses the create/list/load catalogue APIs and `POST /api/v1/chat/stream`;
 it does not run tools itself.
 
 The project sets `client.toolbarMode = "viewer"` using supported Streamlit
@@ -57,7 +57,7 @@ checks nonblank/length before queuing and the API validates independently.
 
 Send queues one frozen chat/message/client-generated turn ID. The app renders
 Running feedback and disables New chat, chat switching, composer and Send before
-making one HTTP submission (210-second socket timeout). It consumes the queue
+making one SSE HTTP submission (210-second socket timeout). It consumes the queue
 before HTTP; rerenders, selection, activity expansion and reads never repeat it. Outcomes
 are restored from saved records, retaining failure/clarification and timing details.
 Catalogue/history reads remain uncached so other tabs' saved updates are visible.
@@ -201,3 +201,36 @@ separate per-turn prompt/details/answer association. Inline browser confirms
 increasing vertical positions and left/center/right alignment at 1440 px, and
 347 px panels in sequential order at 390 px without overflow. Screenshot
 `/tmp/opsflow-sequential-layout.png`. Streaming remains the next separate slice.
+
+## Live sequential activity — step 13
+
+A new submission shows the prompt on the right immediately, then an initially
+open Activity panel on the left. Actual classification/routing and attempted
+workflow/model/tool steps arrive incrementally. Stage expanders show validated
+arguments, running/completed/failed status, exact elapsed time, sanitized reasons
+and observations. The running header stays stable so updates preserve expansion.
+Only a terminal saved outcome permits the assistant answer below at the left;
+completed/restored Activity uses exact stored traces and starts collapsed.
+No private model reasoning or synthetic token typing is displayed. Agent model
+call progress is transient and is not added to the saved tool/workflow records.
+
+The client validates SSE framing, event identity/version/sequence, step correlation
+and final execution/status. It never reconnects or resubmits automatically.
+Terminal save failures retain their not-started/unsaved distinction. Interrupted
+or invalid streams direct the user to Check saved chat. Refresh discards transient
+progress and reads running/finished/interrupted history. A rerun of an interrupted
+UI subscriber retains its frozen consumed turn and recovers by GET. Navigation
+and submission stay locked while work is running or its completion is uncertain.
+Provider/server messages are not shown. The nonstreaming client remains available
+for callers that do not supply a progress callback.
+
+Verification: full 983-test suite, then 73 focused UI/navigation/stream checks
+with final refinements (24 added stream/recovery cases overall), dependencies and
+whitespace pass. Inline review on 8506/backend 8018 observes a sentiment workflow,
+three sequential agent tools and a partial failure retaining successful scoring.
+Actual local tools, HTTP and SQLite are used with scripted provider/compound gating
+and controlled delays. Progress appears before answers; refresh recovers without
+another POST. Saved JSON is byte-identical after inspection. Desktop 1440 px and
+mobile 390 px checks confirm alignment/order, no overflow, and keyboard expansion
+with 2 px focus. App remains open. No live provider quality, email, proxy/deployment
+or token-streaming verification. Existing LangChain history deprecation remains.

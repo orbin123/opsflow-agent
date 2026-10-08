@@ -89,7 +89,7 @@ st.html(f"<style>{console_styles()}</style>")
 for name, value in {"session_id": None, "turns": [], "pending": False,
                     "running": False, "queued": None, "drafts": {}, "uncertain": {},
                     "catalogue": [], "action": None, "composer_error": None,
-                    "clear_composer": False, "blocked": False}.items():
+                    "clear_composer": False, "blocked": False, "inflight": None}.items():
     st.session_state.setdefault(name, value)
 api_url = os.environ.get("OPSFLOW_API_URL", "http://127.0.0.1:8000")
 
@@ -126,6 +126,15 @@ def literal_label(title: str) -> str:
     # Native button labels support Markdown; supplied titles must remain literal.
     return re.sub(r"([\\`*_{}\[\]()<>#+.!|~:$])", r"\\\1", title)
 
+
+# A rerun can interrupt the UI subscriber, never restart its consumed submission.
+if st.session_state.inflight is not None and st.session_state.queued is None:
+    interrupted = st.session_state.inflight
+    st.session_state.inflight = None
+    st.session_state.pending = False
+    st.session_state.uncertain[interrupted["session_id"]] = {
+        **interrupted, "execution": None, "state": "unknown",
+        "error": "Activity connection interrupted. Check saved chat; the turn will not be retried."}
 
 catalogue_error = read_error = navigation_error = None
 if st.session_state.action == "new":
@@ -263,7 +272,7 @@ with conversation:
                     st.text(st.session_state.queued["message"])
         with st.container(horizontal_alignment="left"):
             with st.container(width=560):
-                st.caption("Running request…")
+                live_activity = st.empty()
 
 st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
              disabled=blocked, on_change=save_draft)
@@ -284,11 +293,44 @@ if st.session_state.queued is not None:
             submission["session_id"] = created["session_id"]
             st.session_state.session_id = created["session_id"]
             st.query_params["chat"] = created["session_id"]
-        with st.spinner("Running request…"):
-            submit_chat(api_url, submission["session_id"], submission["message"], turn_id=submission["turn_id"])
+        st.session_state.inflight = submission
+        with live_activity.container():
+            activity = st.status("Activity · running", expanded=True)
+            progress_steps = {}
+
+            def update_activity(event):
+                kind = event["event"]
+                if kind == "classification":
+                    activity.text(f"INTENT  {event['predicted_intent']}\nCONFIDENCE  {event['confidence']}")
+                elif kind == "routing":
+                    activity.text(f"ROUTE  {event['route']}\nRouting reason: {event['reason']}")
+                elif kind == "step_started":
+                    step = activity.expander(literal_label(event["name"]), expanded=False)
+                    step.caption(event["kind"] + " stage")
+                    if event.get("arguments") is not None:
+                        step.caption("ARGUMENTS")
+                        step.json(event["arguments"])
+                    progress_steps[event["sequence"]] = step.empty()
+                    progress_steps[event["sequence"]].text("Running…")
+                elif kind == "step_finished":
+                    with progress_steps[event["step_id"]].container():
+                        st.text(f"{event['status']} · {event['elapsed_ms']} ms")
+                        if event.get("reason") is not None:
+                            st.text("Step reason: " + event["reason"])
+                        if "result" in event:
+                            st.caption("OBSERVATION")
+                            st.json(event["result"])
+                elif kind == "final":
+                    failed = event["execution"]["status"] in {"error", "partial_failure"}
+                    activity.update(label="Activity · saved", state="error" if failed else "complete")
+
+            submit_chat(api_url, submission["session_id"], submission["message"],
+                        turn_id=submission["turn_id"], on_event=update_activity)
+        st.session_state.inflight = None
         st.session_state.drafts[submission["session_id"]] = ""
         st.session_state.clear_composer = True
     except ChatClientError as exc:
+        st.session_state.inflight = None
         if submission["session_id"] is None:
             st.session_state.composer_error = "A new chat could not be confirmed. No turn was submitted."
         else:

@@ -120,4 +120,9 @@ mobile expanders retain 8 px padding. Reuse existing surface, outline, typograph
 and spacing tokens. Native summary controls retain the 2 px focus indicator.
 Details show only observable records and stay associated with their original turn.
 The inspector/selector are removed. Figma remains rate-limited; this user-specified
-adaptation adds no Figma nodes. Live formation is the separate step 13 slice.
+adaptation adds no Figma nodes. Step 13 uses a native left-aligned running status panel, initially open, with a
+stable Activity header and individually expandable observable stages. The prompt
+appears immediately on the right; the answer appears below Activity on the left
+only after a saved final outcome. Completed Activity returns to the collapsed
+saved-record expander. Header updates must not reset expansion during progress;
+never show private reasoning or fabricate a typing animation.

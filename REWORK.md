@@ -17,10 +17,11 @@ HTTP submission IDs and step 9 Workspace navigation/restoration are implemented
 and verified within the offline/scripted-browser limits below. User approved merging
 both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implemented
 and verified within the recorded offline/scripted-browser limits; step 11 completed
-inline details are implemented and verified within the recorded offline/scripted-browser limits. Steps 12 onward remain pending.
+inline details and step 13 live formation are implemented and verified within the
+recorded offline/scripted-browser limits. Step 12 and steps 14 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 13 live sequential activity, requested before step 12; step 11 awaits user
-review before merge.
+**Next:** ⏳ Step 12 readable answers/onboarding discussion; steps 11 and 13
+await user review before merge.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -1135,7 +1136,8 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 13. Connect live events to collapsible chat activity
 
-- [ ] Discuss, implement, and verify this slice after steps 9–12.
+- [x] Discuss, implement, and verify this slice after steps 9–11; user requested
+  it before step 12.
 - **Problem/change:** Replace the generic wait with compact in-chat progress. Update
   classification, route, and expandable tool steps as events arrive; leave the
   final answer readable outside the collapsed detail.
@@ -1145,6 +1147,58 @@ does not authorize those features or change the ordered rework implementation st
   during work, failures retain successful observations, and rerenders do not duplicate
   turns or execution. Check expansion usability, disconnect messaging, restored
   history, keyboard accessibility, and mobile layout.
+
+#### Step 13 sequential live activity contract — 2026-10-08
+
+- User explicitly requested visible formation during execution, like thinking-model
+  activity, before the answer. Take this bounded stream hookup before step 12;
+  final-answer/onboarding rendering stays unchanged.
+- One consumed submission uses the existing POST SSE endpoint and frozen turn ID.
+  Prompt appears right immediately; left native Activity starts open with a stable
+  running header and adds expandable stage data from actual classification/routing/start/finish
+  events. Display the answer below at left only after a saved terminal outcome.
+- Validate event version, correlation, contiguous sequence, step pairing and final
+  execution/status. No provider text/private reasoning, synthetic delays or token
+  typing. Progress is transient; the restored panel uses exact saved records.
+- Terminal failures, invalid stream and disconnect keep existing safe read-only
+  recovery. Never reconnect/resubmit automatically. Interrupted UI reruns recover
+  a consumed turn by GET; navigation/submission remain locked during running or
+  uncertain work. No backend/storage/provider/dependency change.
+- Verification: real-API AppTest regressions, incremental consumption, malformed/
+  mismatched events, retained partial results, terminal save failures, transport
+  interruption and consumed-rerun recovery; then delayed inline browser progress
+  before answer, multi-step/failure, refresh/recovery, desktop/mobile and keyboard.
+- Implemented on `feature/rework-live-activity`, stacked on open step 11 PR #34.
+
+#### Step 13 outcome — 2026-10-08
+
+- Added one-shot validated SSE consumption in `app/ui_stream.py`, selected by the
+  UI client's optional progress callback. Nonstreaming callers retain their API.
+  UI displays a right prompt, then left running Activity with actual stage events,
+  then the left answer after a saved final outcome. Live Activity starts open with
+  a stable header; stage sections can expand without label updates resetting them.
+  Completed details collapse and use exact saved records, not transient progress.
+- Validates event version/identity/sequence, SSE fields, step pairing, terminal
+  status/outcome and final execution schema. Invalid/disconnected streams and
+  terminal failures use sanitized errors and existing GET recovery, never automatic
+  retry/reconnect. Interrupted subscriber reruns recover consumed frozen turns.
+- Verified the 983-test full suite, then 73 focused UI/navigation/stream checks
+  after final header/recovery refinements (24 new stream/recovery cases overall).
+  Dependency and whitespace checks pass. Existing history deprecation remains.
+- Inline browser on 8506/backend 8018 uses scripted providers/compound routing,
+  delayed real VADER/YAKE/FAQ, HTTP and SQLite. Observed sentiment workflow and
+  three sequential agent tools, live successful observations before any answer,
+  keyboard expansion, refresh during work with locked read-only recovery, one
+  stream POST per submitted turn, and retained-result agent partial failure.
+  Recovered JSON remains byte-identical after inspection. Desktop 1440 px/mobile
+  390 px checks verify right prompt/left activity/left answer and no overflow;
+  summary focus is 2 px. Review app stays open.
+- Screenshots `/tmp/opsflow-step13-live-final.png` and
+  `/tmp/opsflow-step13-mobile.png`. Browser language stages and compound gate are
+  scripted; direct/restored and other failure variants are automated UI checks.
+  No live provider quality, SMTP, proxy/deployment, token streaming, backend/schema,
+  event journal or dependency changes. Figma remains rate-limited; user-specified
+  native adaptation is documented. User review/merge confirmation remains pending.
 
 ### 14. Add the in-app Docs guide
 
