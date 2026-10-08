@@ -22,6 +22,10 @@ step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
 
+- **2026-10-08:** User requested removal of the sidebar draft/reminder/email
+  limitation caption in PR #35; capability boundaries and draft actions stay unchanged.
+  All 38 UI checks pass; inline browser confirms removal and usable chat controls.
+
 - **2026-10-08:** At the user's request, right-aligned Send beneath the composer
   with a native container in PR #35. All 79 UI/navigation/stream checks pass;
   inline desktop/mobile review confirms alignment, a 48 px target and no mobile

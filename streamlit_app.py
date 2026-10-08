@@ -233,7 +233,6 @@ with st.sidebar:
             st.caption("Selected chat")
         updated = datetime.fromisoformat(chat["updated_at"]).astimezone(ZoneInfo("Asia/Kolkata"))
         st.caption("Updated " + updated.strftime("%d %b · %H:%M") + " IST")
-    st.caption("Email drafts need your review and sending. Chat cannot schedule reminders or send email.")
 
 st.subheader("Conversation")
 if navigation_error:

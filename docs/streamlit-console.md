@@ -26,8 +26,8 @@ it does not run tools itself.
 The project sets `client.toolbarMode = "viewer"` using supported Streamlit
 configuration. Deploy, rerun, and clear-cache developer actions are absent from
 the toolbar/menu; viewer options and runtime Running/Stop feedback remain.
-Workspace hides technical session/history details and retains a concise notice
-about draft review/sending and unavailable reminder/email execution. Session IDs
+Workspace hides technical session/history details. At the user's request, the
+sidebar draft/reminder/email limitation notice is removed. Session IDs
 remain internal. Configuration can be overridden by environment or CLI settings.
 
 ## Conversation and results

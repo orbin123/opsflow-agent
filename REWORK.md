@@ -1145,6 +1145,9 @@ does not authorize those features or change the ordered rework implementation st
 
 #### Step 12a outcome — 2026-10-08
 
+- **User-requested cleanup:** Remove the sidebar draft/reminder/email limitation
+  caption. Capability boundaries and draft action instructions remain unchanged.
+  All 38 UI checks pass; inline browser confirms removal and usable chat controls.
 - **User-requested correction:** Right-align Send beneath the composer using a
   native container. All 79 UI/navigation/stream checks pass; inline desktop/mobile
   review confirms right alignment, a 48 px mobile target and no horizontal overflow.
