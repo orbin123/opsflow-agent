@@ -11,7 +11,8 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 11 completed inline execution-details discussion.
+**Next:** ⏳ Step 13 live sequential activity, requested before step 12; step 11 awaits user
+review before merge.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
@@ -20,6 +21,32 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** User corrected alignment to right user prompt and left Activity/
+  assistant answer, retaining vertical sequencing and live formation request.
+  Apply to step 11 PR #34 before the separate step 13 stream hookup.
+
+- **2026-10-08:** Corrected step 11 layout from the user's sketch: vertically
+  sequential left prompt, centered Activity, then right answer, each capped at
+  560 px with native alignment and mobile shrinking. Supersedes the initial
+  placement and intermediate columns. All 49 UI/navigation checks pass; inline
+  1440/390 px checks confirm alignment/order and no overflow. PR #34 remains open.
+  User also requested live formation; step 13 follows as a separate slice before
+  step 12. Screenshot `/tmp/opsflow-sequential-layout.png`.
+
+- **2026-10-08:** Implemented approved step 11 completed per-turn Activity with
+  collapsed native workflow/tool sections, stable turn keys, exact retained fields,
+  and no inspector/selector. Conversation uses a 760 px desktop reading width,
+  8 px mobile expander padding and visible summary focus. All 961 tests (six new),
+  dependencies and whitespace pass; final assertions passed 49 UI/navigation checks.
+  Inline browser on 8506/backend 8017 verifies restored workflow/tool records, new
+  scripted no-tool agent turn, independent panels, refresh, keyboard/focus and
+  1440/390 px layout without overflow. Saved JSON remains byte-identical after
+  inspection. App stays open for review; merge awaits user confirmation. Figma is
+  rate-limited; native adaptation approved. No live provider/email, dependencies,
+  backend/routing, answer redesign, live UI events or deployment changes. Existing
+  history deprecation remains. Screenshots `/tmp/opsflow-step11-review.png` and
+  `/tmp/opsflow-step11-mobile.png`.
 
 - **2026-10-08:** User authorized merging step 10 PR #33 after review. Verified
   the tested application head, user-only authorship/sign-off, passing DCO and clean

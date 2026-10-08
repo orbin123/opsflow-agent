@@ -109,3 +109,15 @@ and Send use VT323 short action labels; Send uses the existing cyan action state
 The native multiline composer uses square surface/control borders. Focus retains
 the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
 remain; live Activity and Docs patterns belong to later steps.
+
+## Completed inline activity adaptation
+
+On 2026-10-08 the user clarified the step 11 layout with a sketch: a vertical
+sequence of prompt aligned right, collapsed Activity below at left, and answer
+below at left. Use native aligned containers capped at 560 px, shrinking to the
+available width on mobile. The main area uses the 1440 px desktop reference;
+mobile expanders retain 8 px padding. Reuse existing surface, outline, typography
+and spacing tokens. Native summary controls retain the 2 px focus indicator.
+Details show only observable records and stay associated with their original turn.
+The inspector/selector are removed. Figma remains rate-limited; this user-specified
+adaptation adds no Figma nodes. Live formation is the separate step 13 slice.

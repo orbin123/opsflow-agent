@@ -50,11 +50,12 @@
 [data-testid="stChatInputSubmitButton"] { background: var(--of-action); color: var(--of-ink); }
 [data-testid="stChatInputSubmitButton"]:hover { background: #52CADE; }
 [data-testid="stChatInputSubmitButton"]:active { background: #33B7CF; }
-.stApp :is(button, input, textarea):focus-visible { outline: 2px solid var(--of-focus); outline-offset: 2px; }
+.stApp :is(button, input, textarea, summary):focus-visible { outline: 2px solid var(--of-focus); outline-offset: 2px; }
 [data-testid="stAlert"] { border-radius: 0; }
 a { color: var(--of-focus); }
 @media (max-width: 767px) {
   [data-testid="stMainBlockContainer"] { padding: 80px 16px 24px; }
+  [data-testid="stExpander"] { padding: 8px; }
   [data-testid="stHorizontalBlock"] { flex-direction: column; }
   [data-testid="stColumn"] { width: 100%; flex: 1 1 100%; min-width: 100%; }
 }

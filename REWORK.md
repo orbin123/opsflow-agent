@@ -16,10 +16,11 @@ approval, with its step 6 dependency PR #29 also merged. Step 8 catalogue APIs a
 HTTP submission IDs and step 9 Workspace navigation/restoration are implemented
 and verified within the offline/scripted-browser limits below. User approved merging
 both on 2026-10-08; PRs #31/#32 are merged. Step 10 backend events are implemented
-and verified within the recorded offline/scripted-browser limits; steps 11 onward
-remain pending.
+and verified within the recorded offline/scripted-browser limits; step 11 completed
+inline details are implemented and verified within the recorded offline/scripted-browser limits. Steps 12 onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 11 completed inline execution-details discussion.
+**Next:** ⏳ Step 13 live sequential activity, requested before step 12; step 11 awaits user
+review before merge.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -1041,7 +1042,7 @@ does not authorize those features or change the ordered rework implementation st
 
 ### 11. Move completed execution details into each chat turn
 
-- [ ] Discuss, implement, and verify this slice after steps 2–10.
+- [x] Discuss, implement, and verify this slice after steps 2–10.
 - **Sequencing:** First verify the tool/routing and one-agent multi-step behavior,
   saved/restored outcomes, and backend execution-event contract. Keep the existing
   inspector available through steps 2–10 so those checks do not depend on this UI
@@ -1057,6 +1058,65 @@ does not authorize those features or change the ordered rework implementation st
 - **Verify:** Direct, agent, no-tool, clarification, error, and partial-failure
   displays retain actual backend fields; old turns show their own details.
   Inspect collapsed/expanded layout, keyboard use, and mobile reading width.
+
+#### Step 11 agreed contract — 2026-10-08
+
+- User requested implementation and approved native collapsed Activity under each
+  answer, with nested workflow/tool expanders and the existing Foundations styling.
+  Remove the inspector/selector; retain final response presentation and nonstreaming
+  submission. Stable turn keys associate panels with original saved outcomes.
+- Verification scope: existing UI/navigation regression checks plus representative
+  direct, agent/tool, no-tool, clarification, error and partial-failure restored
+  outcomes; exact per-turn fields and read-only rerenders. Then inline-browser
+  collapsed/expanded desktop/mobile, keyboard/focus, refresh and submission checks.
+- Figma metadata remains blocked by the Starter tool-call limit. Document the
+  approved native pattern without modifying Figma or expanding later-step scope.
+
+#### Step 11 outcome — 2026-10-08
+
+- Implemented native collapsed Activity inside each assistant response, with
+  independently collapsed workflow/tool sections and stable saved-turn keys.
+  Removed the inspector column/selector; retained exact classification, confidence,
+  route/reasons, status, timings, arguments, results and failed-step details.
+  Unknown/interrupted turns retain recovery messages without fabricated activity.
+- Single conversation uses a 760 px desktop reading width; mobile expander padding
+  uses the existing 8 px rhythm. Native summary controls have the 2 px focus outline.
+  Updated design/console docs and project facts. Submission, API/storage and answer
+  rendering remain unchanged; live activity and onboarding are later slices.
+- Verified all 961 tests (six new restored-outcome cases), `pip check` and whitespace.
+  Final assertion refinements passed 49 targeted UI/navigation tests. Real inline
+  browser on existing review app 8506/backend 8017 verifies restored sentiment
+  workflow/tool details, a new scripted-agent no-tool turn, independent turn panels,
+  refresh, keyboard expansion/focus, desktop 1440 px and mobile 390 px with no
+  horizontal overflow. Saved JSON is byte-identical before/after expansion/refresh.
+  Desktop chat width is 760 px. Review app remains open. Screenshots:
+  `/tmp/opsflow-step11-review.png`, `/tmp/opsflow-step11-mobile.png`.
+- Limits: browser language stages are scripted; other outcome variants are covered
+  by automated UI tests. No live provider/email, new dependencies, schema/routing,
+  streaming-UI or deployment checks. Existing LangChain history deprecation remains.
+  Figma inspection was rate-limited; native adaptation was explicitly approved.
+  One user-authored DCO-signed change on `feature/rework-inline-activity`; user
+  review/merge confirmation remains pending.
+
+#### Step 11 sequential layout revision — 2026-10-08
+
+- User clarified vertical sequencing with a sketch, then corrected alignment:
+  prompt right, Activity below at left, then answer below at left. This supersedes the intermediate
+  three-column interpretation and initial under-answer placement.
+- Use native aligned containers capped at 560 px, shrinking on narrow viewports;
+  the main area uses the existing 1440 px desktop reference. Keep turn association,
+  collapsed details, exact records and existing answers/recovery behavior.
+- Verify existing restored-outcome checks with separate prompt/details/answer
+  containers, then browser vertical order/alignment, keyboard, mobile and refresh.
+- Verified the layout correction with 49 UI/navigation checks and inline desktop
+  1440 px/mobile 390 px order/alignment/no-overflow checks. Screenshot
+  `/tmp/opsflow-sequential-layout.png`. The latest right-prompt/left-activity/left-answer
+  alignment passes 49 UI/navigation checks and inline 1440 px positioning checks;
+  screenshot `/tmp/opsflow-sequential-final-alignment.png`. Correction belongs
+  to PR #34. The user also
+  requested live sequential formation: take step 13 next, before step 12, as a
+  separate stream-client/UI slice using actual step 10 events and saved terminal
+  outcomes. No fabricated reasoning/token streaming or execution retry.
 
 ### 12. Present readable answers and onboarding
 

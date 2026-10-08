@@ -1,4 +1,4 @@
-"""Local chat and execution inspector. Run from the repository root."""
+"""Local chat with completed inline execution details. Run from the repository root."""
 
 import base64
 import os
@@ -48,6 +48,41 @@ def show_execution(execution: dict) -> None:
                 st.caption("Lower scores indicate greater relevance; scores are not confidence probabilities.")
         elif not (execution["predicted_intent"] == "faq_retrieval" and execution["route"] == "llm_assisted"):
             st.json(execution["result"], expanded=True)
+
+
+def show_activity(execution: dict) -> None:
+    with st.expander("Activity", expanded=False, key="activity_" + execution["turn_id"]):
+        st.text(f"INTENT  {execution['predicted_intent']}\nCONFIDENCE  {execution['confidence']}\n"
+                f"ROUTE  {execution['route']}\nSTATUS  {execution['status']}")
+        st.text(f"Routing reason: {execution['reason']}")
+        if execution["agent_reason"] is not None:
+            st.text(f"Agent outcome reason: {execution['agent_reason']}")
+        st.text(f"Backend elapsed: {execution['elapsed_ms']} ms")
+        st.caption("Includes session waiting/history; excludes HTTP transport. Confidence is the classifier score.")
+        if execution.get("workflow_trace"):
+            capability = {"keyword_extraction": "Keyword", "faq_retrieval": "FAQ",
+                          "sentiment_analysis": "Sentiment"}[execution["predicted_intent"]]
+            with st.expander(f"{capability} workflow stages", expanded=False,
+                             key="workflow_" + execution["turn_id"]):
+                for stage in execution["workflow_trace"]:
+                    st.caption("LLM stage" if stage["stage"] in {"extract_source", "extract_question", "explain_result"}
+                               else "Local tool stage")
+                    st.text(f"{stage['stage']} · {stage['status']}\n"
+                            f"Stage elapsed: {stage['elapsed_ms']} ms")
+                    if stage["reason"] is not None:
+                        st.text(f"Stage reason: {stage['reason']}")
+        if not execution["trace"]:
+            st.caption("No tool executions reported.")
+        for number, step in enumerate(execution["trace"], 1):
+            with st.expander(literal_label(f"{number}. {step['tool']} · {step['status']}"),
+                             expanded=False, key=f"tool_{execution['turn_id']}_{number}"):
+                st.text(f"Step elapsed: {step['elapsed_ms']} ms")
+                if step.get("reason") is not None:
+                    st.text(f"Step reason: {step['reason']}")
+                st.caption("ARGUMENTS")
+                st.json(step["arguments"])
+                st.caption("OBSERVATION")
+                st.json(step["result"])
 
 
 st.html(f"<style>{console_styles()}</style>")
@@ -189,87 +224,54 @@ with st.sidebar:
         st.caption("Updated " + updated.strftime("%d %b · %H:%M") + " IST")
     st.caption("Email drafts need your review and sending. Chat cannot schedule reminders or send email.")
 
-chat_column, inspector_column = st.columns([2, 1], gap="large")
-with chat_column:
-    st.subheader("Conversation")
-    if navigation_error:
-        st.error(navigation_error)
-    if read_error:
-        st.error(read_error)
-    if read_error or st.session_state.running or selected in st.session_state.uncertain:
-        st.button("Check saved chat", key="recover_chat", disabled=st.session_state.pending)
-    if st.session_state.pending:
-        st.caption("Running — navigation and submission are paused.")
-    elif st.session_state.running:
-        st.warning("Completion is unconfirmed. Navigation and submission are paused until a saved outcome is available.")
-    conversation = st.container()
-    with conversation:
-        if not st.session_state.turns and read_error is None and catalogue_error is None and not st.session_state.pending:
-            st.info('Start with: Sentiment: "I am happy"')
-        for turn in st.session_state.turns:
-            with st.chat_message("user"):
-                st.text(turn["message"])
-            with st.chat_message("assistant"):
-                if turn["execution"] is not None:
-                    show_execution(turn["execution"])
-                else:
-                    st.error(turn["error"])
-        if st.session_state.queued is not None:
-            with st.chat_message("user"):
-                st.text(st.session_state.queued["message"])
-            with st.chat_message("assistant"):
+st.subheader("Conversation")
+if navigation_error:
+    st.error(navigation_error)
+if read_error:
+    st.error(read_error)
+if read_error or st.session_state.running or selected in st.session_state.uncertain:
+    st.button("Check saved chat", key="recover_chat", disabled=st.session_state.pending)
+if st.session_state.pending:
+    st.caption("Running — navigation and submission are paused.")
+elif st.session_state.running:
+    st.warning("Completion is unconfirmed. Navigation and submission are paused until a saved outcome is available.")
+conversation = st.container()
+with conversation:
+    if not st.session_state.turns and read_error is None and catalogue_error is None and not st.session_state.pending:
+        st.info('Start with: Sentiment: "I am happy"')
+    for turn in st.session_state.turns:
+        with st.container(key="turn_" + turn["turn_id"]):
+            with st.container(horizontal_alignment="right"):
+                with st.container(width=560, key="prompt_" + turn["turn_id"]):
+                    with st.chat_message("user"):
+                        st.text(turn["message"])
+            if turn["execution"] is not None:
+                with st.container(horizontal_alignment="left"):
+                    with st.container(width=560, key="details_" + turn["turn_id"]):
+                        show_activity(turn["execution"])
+            with st.container(horizontal_alignment="left"):
+                with st.container(width=560, key="answer_" + turn["turn_id"]):
+                    with st.chat_message("assistant"):
+                        if turn["execution"] is not None:
+                            show_execution(turn["execution"])
+                        else:
+                            st.error(turn["error"])
+    if st.session_state.queued is not None:
+        with st.container(horizontal_alignment="right"):
+            with st.container(width=560):
+                with st.chat_message("user"):
+                    st.text(st.session_state.queued["message"])
+        with st.container(horizontal_alignment="left"):
+            with st.container(width=560):
                 st.caption("Running request…")
-    st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
-                 disabled=blocked, on_change=save_draft)
-    st.button("Send", key="send_message", type="primary", disabled=blocked,
-              on_click=queue_message)
-    if st.session_state.composer_error:
-        st.error(st.session_state.composer_error)
 
-with inspector_column:
-    st.subheader("Execution inspector")
-    st.caption("Observable tool activity and backend timings.")
-    if not st.session_state.turns:
-        st.info("Saved execution details are unavailable. Check saved chat to restore them."
-                if read_error else "Submit a message to inspect its execution.")
-    else:
-        index = st.selectbox("Inspect turn", range(len(st.session_state.turns)),
-                             index=len(st.session_state.turns) - 1,
-                             format_func=lambda value: f"Turn {value + 1}", key="inspect_" + str(selected))
-        turn = st.session_state.turns[index]
-        execution = turn["execution"]
-        if execution is None:
-            st.error(turn["error"] or "Waiting for backend results.")
-        else:
-            st.text(f"INTENT  {execution['predicted_intent']}\nCONFIDENCE  {execution['confidence']}\n"
-                    f"ROUTE  {execution['route']}\nSTATUS  {execution['status']}")
-            st.text(f"Routing reason: {execution['reason']}")
-            if execution["agent_reason"] is not None:
-                st.text(f"Agent outcome reason: {execution['agent_reason']}")
-            st.text(f"Backend elapsed: {execution['elapsed_ms']} ms")
-            st.caption("Includes session waiting/history; excludes HTTP transport. Confidence is the classifier score.")
-            if execution.get("workflow_trace"):
-                capability = {"keyword_extraction": "Keyword", "faq_retrieval": "FAQ",
-                              "sentiment_analysis": "Sentiment"}[execution["predicted_intent"]]
-                with st.expander(f"{capability} workflow stages", expanded=True):
-                    for stage in execution["workflow_trace"]:
-                        st.caption("LLM stage" if stage["stage"] in {"extract_source", "extract_question", "explain_result"}
-                                   else "Local tool stage")
-                        st.text(f"{stage['stage']} · {stage['status']}\n"
-                                f"Stage elapsed: {stage['elapsed_ms']} ms")
-                        if stage["reason"] is not None:
-                            st.text(f"Stage reason: {stage['reason']}")
-            if not execution["trace"]:
-                st.caption("No tool executions reported.")
-            for number, step in enumerate(execution["trace"], 1):
-                with st.expander(f"{number}. {step['tool']} · {step['status']}", expanded=True):
-                    st.text(f"Step elapsed: {step['elapsed_ms']} ms")
-                    if step.get("reason") is not None:
-                        st.text(f"Step reason: {step['reason']}")
-                    st.caption("ARGUMENTS")
-                    st.json(step["arguments"])
-                    st.caption("OBSERVATION")
-                    st.json(step["result"])
+st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
+             disabled=blocked, on_change=save_draft)
+st.button("Send", key="send_message", type="primary", disabled=blocked,
+          on_click=queue_message)
+if st.session_state.composer_error:
+    st.error(st.session_state.composer_error)
+
 
 # A queued button submission runs once after disabled navigation/composer render.
 # Clear the queue before HTTP so later reruns/reconnects cannot submit it again.

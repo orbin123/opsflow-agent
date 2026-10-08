@@ -2,7 +2,7 @@
 
 An operations copilot using TF-IDF + a calibrated linear SVM for intent routing, LangChain/Groq for conversational tool orchestration, FastAPI, Streamlit, and SQLite reminders.
 
-The local Streamlit chat/inspector runs with `streamlit run streamlit_app.py` and
+The local Streamlit chat with per-turn Activity runs with `streamlit run streamlit_app.py` and
 uses `/api/v1/chat`; see `docs/streamlit-console.md` for configuration and verification.
 
 Approved REWORK step 7 stores chat history in separate local SQLite storage and
@@ -13,16 +13,19 @@ Approved step 8 exposes create/list/load catalogue APIs and client helpers; read
 never execute work. See `docs/chat-api.md`. Approved step 9 adds Workspace New chat,
 literal titled selection, `chat` URL restoration and a per-chat browser-session
 multiline draft composer. Running/unsaved work locks navigation and submission;
-recovery controls only read. See `docs/streamlit-console.md`. The separate inspector
-remains through step 10; live inline Activity and Docs are later slices.
+recovery controls only read. See `docs/streamlit-console.md`. Completed execution
+details appear between each right-aligned prompt and left-aligned answer in a
+vertically sequential, left-aligned Activity panel (step 11). Live formation (step 13)
+is requested next before step 12; Docs remains later.
 
 Approved REWORK step 10 adds `POST /api/v1/chat/stream` SSE for actual backend
 classification/routing, workflow stages and agent model/tool activity. Progress is
 transient; saved terminal outcomes follow SQLite finalization. Disconnect does not
 cancel execution; graceful shutdown drains stream workers before releasing storage.
 Recovery/replay never repeats work. See `docs/chat-api.md` for event fields and
-transport/status boundaries. Streamlit still uses the nonstreaming endpoint and
-separate inspector; inline details/live Activity remain steps 11/13.
+transport/status boundaries. Streamlit still uses the nonstreaming endpoint.
+Approved step 11 replaces the separate inspector with collapsed per-turn Activity and nested workflow/tool
+sections using exact saved records; live Activity remains step 13.
 
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
 Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
@@ -32,7 +35,7 @@ The natural-language keyword workflow is documented in `docs/keyword-workflow.md
 Approved REWORK step 3b connects it behind the classifier using `llm_assisted`,
 with the same HTTP status and retained-record contracts as sentiment. Keyword
 assistant turns show a brief introduction and a native phrase/score table;
-full-precision raw results remain in the inspector.
+full-precision raw results remain in Activity.
 
 The natural-language FAQ workflow is documented in `docs/faq-workflow.md`.
 Approved REWORK step 3c extracts a complete question, calls unchanged local retrieval,
@@ -40,7 +43,7 @@ and explains only matched fictional policies while retaining exact answers. Ambi
 no-match results clarify without presentation; missing policy details may also clarify.
 Approved REWORK step 3d connects high-confidence FAQ chat requests using `llm_assisted`,
 with the same HTTP status/history/trace rules. Replies stay readable; exact policy JSON
-remains in the inspector. Lower-confidence requests use the agent and its pure FAQ tool.
+remains in Activity. Lower-confidence requests use the agent and its pure FAQ tool.
 Policy answers do not need recipients; ask for those only for requested email drafts.
 The FAQ-only endpoint keeps its existing wholly local contract.
 
