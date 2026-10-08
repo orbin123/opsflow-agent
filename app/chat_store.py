@@ -27,6 +27,10 @@ class ChatTurnConflict(Exception):
         self.state = state
 
 
+class ChatNotFound(Exception):
+    """Management targets only an existing chat."""
+
+
 _ROOT = Path(__file__).resolve().parents[1]
 _SCHEMA = (
     """CREATE TABLE chats (
@@ -114,8 +118,11 @@ class ChatStore:
                 for statement in _SCHEMA:
                     connection.execute(statement)
                 connection.execute("PRAGMA user_version = 1")
-            elif version != 1:
+            elif version not in {1, 2}:
                 raise ChatPersistenceError("Unsupported chat storage schema.")
+            if version in {0, 1}:
+                connection.execute("ALTER TABLE chats ADD COLUMN custom_title INTEGER NOT NULL DEFAULT 0")
+                connection.execute("PRAGMA user_version = 2")
             # Exclusive ownership proves these markers belong to a prior process.
             connection.execute("""UPDATE chat_turns SET state='interrupted',
                 failure_reason='interrupted', failure_reply=? WHERE state='running'""",
@@ -167,13 +174,14 @@ class ChatStore:
             connection.execute("""INSERT OR IGNORE INTO chats
                 (session_id, title, created_at, updated_at) VALUES (?, 'New chat', ?, ?)""",
                                (session_id, now, now))
-            sequence = connection.execute("SELECT next_sequence FROM chats WHERE session_id=?",
-                                          (session_id,)).fetchone()[0]
+            chat = connection.execute("SELECT next_sequence, custom_title FROM chats WHERE session_id=?",
+                                      (session_id,)).fetchone()
+            sequence = chat["next_sequence"]
             empty = not connection.execute("SELECT 1 FROM chat_turns WHERE session_id=?", (session_id,)).fetchone()
             connection.execute("""INSERT INTO chat_turns
                 (turn_id, session_id, sequence, message, started_at, state)
                 VALUES (?, ?, ?, ?, ?, 'running')""", (turn_id, session_id, sequence, message, now))
-            if empty:
+            if empty and not chat["custom_title"]:
                 title = " ".join(message.split())
                 title = title[:60] + ("…" if len(title) > 60 else "")
                 connection.execute("UPDATE chats SET title=? WHERE session_id=?", (title, session_id))
@@ -201,5 +209,27 @@ class ChatStore:
                                   (session_id,)).fetchone():
                 raise ChatTurnConflict("An unfinished or unsaved turn cannot be cleared.")
             connection.execute("DELETE FROM chat_turns WHERE session_id=?", (session_id,))
-            connection.execute("UPDATE chats SET title='New chat', updated_at=? WHERE session_id=?",
+            connection.execute("UPDATE chats SET title='New chat', custom_title=0, updated_at=? WHERE session_id=?",
                                (_now(), session_id))
+
+    def rename(self, session_id: str, title: str) -> dict:
+        with self._connection(write=True) as connection:
+            self._check_management(connection, session_id)
+            connection.execute("UPDATE chats SET title=?, custom_title=1, updated_at=? WHERE session_id=?",
+                               (title, _now(), session_id))
+            return dict(connection.execute("SELECT session_id, title, created_at, updated_at FROM chats WHERE session_id=?",
+                                           (session_id,)).fetchone())
+
+    def delete(self, session_id: str) -> None:
+        with self._connection(write=True) as connection:
+            self._check_management(connection, session_id)
+            connection.execute("DELETE FROM chat_turns WHERE session_id=?", (session_id,))
+            connection.execute("DELETE FROM chats WHERE session_id=?", (session_id,))
+
+    @staticmethod
+    def _check_management(connection, session_id: str) -> None:
+        if not connection.execute("SELECT 1 FROM chats WHERE session_id=?", (session_id,)).fetchone():
+            raise ChatNotFound("Chat not found.")
+        if connection.execute("SELECT 1 FROM chat_turns WHERE session_id=? AND state='running'",
+                              (session_id,)).fetchone():
+            raise ChatTurnConflict("Running or unsaved work blocks chat management.", state="running")

@@ -9,8 +9,8 @@ from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator
 
 from app.agent import AgentTrace
 from app.runtime import ExecutionResult, RuntimeUnavailable, ToolResult, ToolTrace
-from app.sessions import execute_session_request, create_chat, list_chats, get_chat
-from app.chat_store import ChatPersistenceError, ChatTurnConflict
+from app.sessions import execute_session_request, create_chat, list_chats, get_chat, rename_chat, delete_chat
+from app.chat_store import ChatPersistenceError, ChatTurnConflict, ChatNotFound
 from app.chat_stream import stream_turn
 from app.workflows.sentiment_workflow import SentimentStage
 from app.workflows.keyword_workflow import KeywordStage
@@ -97,6 +97,22 @@ class ChatMetadata(BaseModel):
     updated_at: str
 
 
+class RenameChatRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    title: str = Field(strict=True, min_length=1, max_length=120)
+
+    @field_validator("title")
+    @classmethod
+    def nonblank_title(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Title must not be blank")
+        return " ".join(value.split())
+
+
+class DeletedChat(BaseModel):
+    session_id: str
+
+
 class SavedTurn(BaseModel):
     turn_id: str
     session_id: str
@@ -159,3 +175,34 @@ def saved_chat(session_id: str = Path(min_length=1, max_length=128, pattern=r"\S
     if saved is None:
         raise HTTPException(status_code=404, detail="Chat not found.")
     return saved
+
+
+def _management_detail(exc: Exception) -> HTTPException:
+    if isinstance(exc, ChatNotFound):
+        return HTTPException(status_code=404, detail="Chat not found.")
+    if isinstance(exc, ChatTurnConflict):
+        return HTTPException(status_code=409, detail={
+            "code": "chat_turn_conflict", "state": exc.state, "message": str(exc)})
+    return _storage_detail(exc)
+
+
+@router.patch("/api/v1/chats/{session_id:path}", response_model=ChatMetadata, responses={
+    404: {"description": "Chat not found."}, 409: {"description": "Running or unsaved work."},
+    503: {"description": "Chat storage failure."}})
+def rename_saved_chat(body: RenameChatRequest,
+                      session_id: str = Path(min_length=1, max_length=128, pattern=r"\S")) -> dict:
+    try:
+        return rename_chat(session_id, body.title)
+    except (ChatNotFound, ChatTurnConflict, ChatPersistenceError) as exc:
+        raise _management_detail(exc) from None
+
+
+@router.delete("/api/v1/chats/{session_id:path}", response_model=DeletedChat, responses={
+    404: {"description": "Chat not found."}, 409: {"description": "Running or unsaved work."},
+    503: {"description": "Chat storage failure."}})
+def delete_saved_chat(session_id: str = Path(min_length=1, max_length=128, pattern=r"\S")) -> dict:
+    try:
+        delete_chat(session_id)
+    except (ChatNotFound, ChatTurnConflict, ChatPersistenceError) as exc:
+        raise _management_detail(exc) from None
+    return {"session_id": session_id}

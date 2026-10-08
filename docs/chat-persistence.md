@@ -32,14 +32,26 @@ boundary. There is no hosted ownership layer, encryption, or automatic backup.
 
 ## Records and execution lifecycle
 
-Schema version 1 uses `chats` and `chat_turns`, foreign keys, and transactional
-writes. Unsupported versions/foreign schemas are rejected without replacement.
+Schema version 2 uses `chats` and `chat_turns`, foreign keys, and transactional
+writes. Version 1 migrates transactionally by adding the custom-title marker;
+existing metadata and turns remain intact. Unsupported versions/foreign schemas
+are rejected without replacement.
 Chat metadata contains the exact session key, literal first-message title, UTC
 creation/update timestamps, and the next sequence number. A turn contains its ID,
 chat/sequence, original message, timestamps, lifecycle, execution JSON or sanitized
 failure, and the trusted demo-policy marker. Sequences stay increasing even after
 an explicit clear. Titles collapse whitespace, take 60 Unicode characters, and
 append an ellipsis when truncated. No title-generation model call is made.
+
+Manual titles are nonblank, at most 120 characters, and have whitespace collapsed.
+They remain literal and survive the first message in an empty chat. Rename changes
+only the title/custom-title marker and update time. Delete transactionally removes
+that chat's metadata and turns, then clears its cached history. Both reject an
+active execution lock or a running/unsaved durable marker. Interrupted records can
+be managed after recovery. Session locks are retained to serialize existing callers.
+Deletion ends retained-turn-ID duplicate protection for those records; the legacy
+submission API still accepts caller-owned session IDs. Other browser tabs with a
+deleted locator show Chat not found and must select another chat.
 
 1. Validate the message, session key, and optional turn ID before storage.
 2. Under the per-chat lock, restore ordered completed/interrupted context and

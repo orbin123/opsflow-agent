@@ -81,6 +81,29 @@ def get_chat(session_id: str) -> dict | None:
     return chat
 
 
+def rename_chat(session_id: str, title: str) -> dict:
+    _text(title, "Title", 120)
+    session = _get_session(session_id)
+    if not session.lock.acquire(blocking=False):
+        raise ChatTurnConflict("Running work blocks chat management.", state="running")
+    try:
+        return _get_store().rename(session_id, " ".join(title.split()))
+    finally:
+        session.lock.release()
+
+
+def delete_chat(session_id: str) -> None:
+    session = _get_session(session_id)
+    if not session.lock.acquire(blocking=False):
+        raise ChatTurnConflict("Running work blocks chat management.", state="running")
+    try:
+        _get_store().delete(session_id)
+        # Retain the same lock for callers already referencing this session.
+        session.history.clear()
+    finally:
+        session.lock.release()
+
+
 def _execution(record: dict) -> ExecutionResult:
     try:
         execution = TypeAdapter(ExecutionResult).validate_python(record)

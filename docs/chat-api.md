@@ -147,6 +147,27 @@ The HTTP client exposes `create_chat`, `list_chats`, `get_chat`, and optional
 errors without retries. Step 9 connects Workspace controls and refresh restoration;
 see [streamlit-console.md](streamlit-console.md).
 
+## Chat management — requested Workspace addition
+
+`PATCH /api/v1/chats/{session_id}` accepts only `{"title": "Release review"}`.
+Titles must be nonblank strings of at most 120 characters; whitespace is collapsed
+and display remains literal. HTTP 200 returns updated chat metadata. Custom titles
+survive the first submission in an empty chat and backend restart. Rename changes
+no saved turn, context, execution result or Activity record.
+
+`DELETE /api/v1/chats/{session_id}` permanently removes that chat and its saved
+turns, returning HTTP 200 with `{"session_id": "..."}`. Cached context is cleared
+only after the transaction succeeds. Deletion releases retained submission IDs;
+their replay guarantee exists only while records are retained.
+
+Both operations URL-encode IDs, never invoke classification/providers/tools, and
+return 404 for unknown chats, 409 for active execution or running/unsaved markers,
+422 for invalid input, or sanitized 503 storage errors. Transactions roll back
+failed writes; session-lock acquisition is nonblocking. Other chats remain intact.
+The client exposes `rename_chat` and `delete_chat`, validates response identity,
+and never retries mutations. A lost/invalid response may follow a committed change;
+the client tells users to check the catalogue before trying again.
+
 ## Execution event stream — REWORK step 10
 
 `POST /api/v1/chat/stream` accepts the same validated `ChatRequest` as the

@@ -10,10 +10,12 @@ from zoneinfo import ZoneInfo
 
 import streamlit as st
 
-from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat
+from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat
+from app.chat_menu import chat_menu, HTML, CSS, JS
 
 
 st.set_page_config(page_title="OpsFlow · Console", layout="wide")
+_CHAT_MENU = st.components.v2.component("chat_actions", html=HTML, css=CSS, js=JS)
 
 
 def console_styles() -> str:
@@ -107,7 +109,8 @@ st.html(f"<style>{console_styles()}</style>")
 for name, value in {"session_id": None, "turns": [], "pending": False,
                     "running": False, "queued": None, "drafts": {}, "uncertain": {},
                     "catalogue": [], "action": None, "composer_error": None,
-                    "clear_composer": False, "blocked": False, "inflight": None}.items():
+                    "clear_composer": False, "blocked": False, "inflight": None,
+                    "management": None, "deleted_selection": False}.items():
     st.session_state.setdefault(name, value)
 api_url = os.environ.get("OPSFLOW_API_URL", "http://127.0.0.1:8000")
 
@@ -145,6 +148,63 @@ def literal_label(title: str) -> str:
     return re.sub(r"([\\`*_{}\[\]()<>#+.!|~:$])", r"\\\1", title)
 
 
+def open_management(chat: dict) -> None:
+    if st.session_state.blocked:
+        return
+    action = st.session_state["menu_" + chat["session_id"]].action
+    if action in {"rename", "delete"}:
+        st.session_state.management = {**chat, "operation": action}
+        st.session_state.rename_title = chat["title"]
+
+
+def close_management() -> None:
+    st.session_state.management = None
+
+
+@st.dialog("Rename chat", on_dismiss=close_management)
+def rename_dialog(chat: dict) -> None:
+    st.text(chat["title"])
+    title = st.text_input("Chat title", key="rename_title", max_chars=120)
+    if st.button("Save", key="save_chat_name", disabled=st.session_state.blocked):
+        if not title.strip():
+            st.error("Enter a nonblank title of at most 120 characters.")
+        else:
+            try:
+                rename_chat(api_url, chat["session_id"], title)
+            except ChatClientError as exc:
+                st.error(str(exc))
+            else:
+                close_management()
+                st.rerun()
+    if st.button("Cancel", key="cancel_rename"):
+        close_management()
+        st.rerun()
+
+
+@st.dialog("Delete chat", on_dismiss=close_management)
+def delete_dialog(chat: dict) -> None:
+    st.text(chat["title"])
+    st.text("Delete this chat and its saved messages and Activity? This cannot be undone.")
+    if st.button("Delete chat", key="confirm_delete_chat", disabled=st.session_state.blocked):
+        try:
+            delete_chat(api_url, chat["session_id"])
+        except ChatClientError as exc:
+            st.error(str(exc))
+        else:
+            key = chat["session_id"]
+            st.session_state.drafts.pop(key, None)
+            st.session_state.uncertain.pop(key, None)
+            st.session_state.catalogue = [item for item in st.session_state.catalogue if item["session_id"] != key]
+            if st.session_state.session_id == key:
+                st.query_params.pop("chat", None)
+                st.session_state.deleted_selection = True
+            close_management()
+            st.rerun()
+    if st.button("Cancel", key="cancel_delete"):
+        close_management()
+        st.rerun()
+
+
 # A rerun can interrupt the UI subscriber, never restart its consumed submission.
 if st.session_state.inflight is not None and st.session_state.queued is None:
     interrupted = st.session_state.inflight
@@ -168,6 +228,13 @@ if not st.session_state.pending:
         st.session_state.catalogue = list_chats(api_url)
     except ChatClientError as exc:
         catalogue_error = str(exc)
+
+if st.session_state.deleted_selection:
+    # Reset before instantiating the composer, and don't re-save a deleted draft.
+    st.session_state.session_id = None
+    st.session_state.composer = ""
+    st.session_state.turns = []
+    st.session_state.deleted_selection = False
 
 locators = st.query_params.get_all("chat")
 invalid_locator = bool(locators) and (len(locators) != 1 or not locators[0].strip() or len(locators[0]) > 128)
@@ -240,11 +307,14 @@ with st.sidebar:
         st.caption("No saved chats yet.")
     for chat in st.session_state.catalogue:
         current = chat["session_id"] == selected and not invalid_locator
-        with st.container(key="selected_chat" if current else None):
-            st.button(literal_label(chat["title"]), key="chat_" + chat["session_id"],
-                      icon=":material/check:" if current else None, width="stretch", wrap=False,
-                      disabled=st.session_state.pending or st.session_state.running or catalogue_error is not None,
-                      on_click=navigate, args=(chat["session_id"],))
+        with st.container(key="workspace_row_" + chat["session_id"], horizontal=True, gap="small"):
+            with st.container(key="selected_chat" if current else None, width="stretch"):
+                st.button(literal_label(chat["title"]), key="chat_" + chat["session_id"],
+                          icon=":material/check:" if current else None, width="stretch", wrap=False,
+                          disabled=st.session_state.pending or st.session_state.running or catalogue_error is not None,
+                          on_click=navigate, args=(chat["session_id"],))
+            chat_menu(_CHAT_MENU, chat["title"], chat["session_id"], disabled=blocked,
+                      on_action_change=lambda chat=chat: open_management(chat))
         if current:
             st.caption("Selected chat")
         updated = datetime.fromisoformat(chat["updated_at"]).astimezone(ZoneInfo("Asia/Kolkata"))
@@ -366,3 +436,11 @@ if st.session_state.queued is not None:
     finally:
         st.session_state.pending = False
     st.rerun()
+
+if st.session_state.management is not None:
+    if blocked:
+        close_management()
+    elif st.session_state.management["operation"] == "rename":
+        rename_dialog(st.session_state.management)
+    else:
+        delete_dialog(st.session_state.management)

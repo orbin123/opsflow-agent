@@ -18,6 +18,12 @@ details appear between each right-aligned prompt and left-aligned answer in a
 vertically sequential, left-aligned Activity panel (step 11). Step 13 shows actual
 live stage events before the saved answer; Docs remains later.
 
+The approved Workspace addition provides persistent Rename/Delete through a
+themed right-click/More actions menu. Custom titles survive the first message;
+deletion requires a named confirmation and removes saved chat records/context.
+Running/unsaved work blocks management in both the UI and backend. Catalogue
+mutations never execute a chat turn; see `docs/chat-api.md` and `docs/design-system.md`.
+
 Approved REWORK step 10 adds `POST /api/v1/chat/stream` SSE for actual backend
 classification/routing, workflow stages and agent model/tool activity. Progress is
 transient; saved terminal outcomes follow SQLite finalization. Disconnect does not

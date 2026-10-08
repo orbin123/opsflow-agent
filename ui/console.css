@@ -53,9 +53,30 @@
 .stApp :is(button, input, textarea, summary):focus-visible { outline: 2px solid var(--of-focus); outline-offset: 2px; }
 [data-testid="stAlert"] { border-radius: 0; }
 a { color: var(--of-focus); }
+[data-testid="stDialog"] [role="dialog"] {
+  background: var(--of-surface); color: var(--of-ink);
+  border: 1px solid var(--of-border); border-radius: 0;
+}
+[data-testid="stDialog"] > div { border-radius: 0; }
+[data-testid="stDialog"], [data-testid="stDialog"] :is(p, input, button, pre) {
+  font-family: "IBM Plex Mono", monospace; font-size: 14px; line-height: 24px;
+}
+[data-testid="stDialog"] h2 p { font-family: "VT323", monospace; font-size: 28px; line-height: 32px; }
+[data-testid="stDialog"] button { min-height: 48px; border-radius: 0; }
+[data-testid="stDialog"] [data-testid="stTextInputRootElement"] {
+  background: var(--of-surface); border: 1px solid var(--of-border); border-radius: 0;
+}
+[data-testid="stDialog"] input { min-height: 48px; background: var(--of-surface); border-radius: 0; }
+[data-testid="stDialog"] :is(button, input):focus-visible {
+  outline: 2px solid var(--of-focus); outline-offset: 2px;
+}
+.st-key-save_chat_name button { background: var(--of-action); color: var(--of-ink); }
+.st-key-confirm_delete_chat button { color: #A23438; border-color: #A23438; }
+.st-key-confirm_delete_chat button:hover { background: #FBE9E9; }
 @media (max-width: 767px) {
   [data-testid="stMainBlockContainer"] { padding: 80px 16px 24px; }
   [data-testid="stExpander"] { padding: 8px; }
   [data-testid="stHorizontalBlock"] { flex-direction: column; }
   [data-testid="stColumn"] { width: 100%; flex: 1 1 100%; min-width: 100%; }
+  [class*="st-key-workspace_row_"][data-testid="stHorizontalBlock"] { flex-direction: row; }
 }
