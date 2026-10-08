@@ -26,11 +26,18 @@ it does not run tools itself.
 The project sets `client.toolbarMode = "viewer"` using supported Streamlit
 configuration. Deploy, rerun, and clear-cache developer actions are absent from
 the toolbar/menu; viewer options and runtime Running/Stop feedback remain.
-Workspace hides technical session/history details and retains a concise notice
-about draft review/sending and unavailable reminder/email execution. Session IDs
+Workspace hides technical session/history details. At the user's request, the
+sidebar draft/reminder/email limitation notice is removed. Session IDs
 remain internal. Configuration can be overridden by environment or CLI settings.
 
 ## Conversation and results
+
+Empty chats offer natural-English sentiment, keyword and fictional demo-policy
+examples; quotes or command prefixes are not required. For direct and fixed-workflow
+sentiment outcomes, the assistant displays the existing explanation when available
+and a labelled sentiment result. Exact numerical scores and raw JSON remain in
+Activity. A retained score still displays if its explanation failed, alongside the
+failure notice; clarification or failure without a score displays no sentiment label.
 
 Workspace lists saved chats by recent update time. New chat creates a durable empty
 chat; the first Send from an empty workspace creates one before submitting. Merely
@@ -54,6 +61,7 @@ on blur; navigation saves that committed value before changing chats. Drafts are
 not durable across refresh/disconnection/restart. New chats begin with an empty
 composer. Native input bounds cap text at 10,000 characters; the application also
 checks nonblank/length before queuing and the API validates independently.
+Send is right-aligned beneath the composer on desktop and mobile.
 
 Send queues one frozen chat/message/client-generated turn ID. The app renders
 Running feedback and disables New chat, chat switching, composer and Send before
@@ -78,8 +86,9 @@ table in YAKE order. Scores display to five decimal places; API/history and the
 activity panels retain full precision. Raw keyword JSON appears only in Activity.
 A caption explains lower-score relevance; empty results show their reply without
 an empty table. Presentation failure still displays the retained keyword table.
-Direct responses display structured JSON. LLM-assisted sentiment shows the backend
-explanation or factual fallback as plain text and retains the raw VADER result.
+Direct sentiment shows its label; LLM-assisted sentiment shows the backend
+explanation or factual fallback followed by its label. Raw VADER results remain
+in Activity. Other direct responses retain their existing structured display.
 Agent responses display the backend's
 application-rendered reply as plain text, retaining separate email draft/actions;
 supplied text cannot inject HTML or load Markdown images. Demo FAQ results are

@@ -11,8 +11,9 @@ step at a time, updating `REWORK.md` and this record in the same logical change.
 Only after rework completion, reconcile the original plan, record the handover,
 and continue its remaining work. Earlier next-step notes below are historical.
 
-**Next:** ⏳ Step 12 readable answers/onboarding discussion; steps 11 and 13
-await user review before merge.
+**Next:** ⏳ Step 12b remaining answer presentation discussion. User approved
+merging step 12a PR #35 on 2026-10-08; step 13 is merged in dependency PR #36.
+Step 11 is merged in PR #34.
 Step 7 PR #30 and contract dependency PR #29 are merged after user approval.
 Step 7 storage/restoration is implemented and verified within its recorded limits.
 Step 6's contract is
@@ -21,6 +22,33 @@ Step 4 merged in PR #27;
 step 5 is verified within the recorded offline/scripted-browser limits, and user
 approved merging PR #28 on 2026-10-08. Original plan stays paused; later
 implementation awaits discussion.
+
+- **2026-10-08:** User approved merging step 12a PR #35. Verified user-only
+  authorship, matching sign-offs and passing DCO; merged step 13 dependency PR #36,
+  retargeted #35 to `main` and marked it ready. Documentation-only delivery record;
+  application verification remains unchanged. Step 12b still needs separate agreement.
+
+- **2026-10-08:** User requested removal of the sidebar draft/reminder/email
+  limitation caption in PR #35; capability boundaries and draft actions stay unchanged.
+  All 38 UI checks pass; inline browser confirms removal and usable chat controls.
+
+- **2026-10-08:** At the user's request, right-aligned Send beneath the composer
+  with a native container in PR #35. All 79 UI/navigation/stream checks pass;
+  inline desktop/mobile review confirms alignment, a 48 px target and no mobile
+  overflow. Existing submission/disabled checks retained; no new tests or CSS.
+  App remains open for review; merge still awaits confirmation.
+
+- **2026-10-08:** Implemented approved step 12a: direct/fixed-workflow sentiment
+  shows the existing reply and saved label; exact scores/JSON remain in Activity.
+  Welcome uses verified natural-English sentiment, keyword and fictional FAQ
+  examples. All 991 tests pass (six new restoration/onboarding cases, strengthened
+  success/partial-failure assertions), plus dependencies/whitespace. Inline review
+  on 8506/backend 8018 confirms restored/new sentiment, saved scores in Activity,
+  refresh and 1440/390 px answer/welcome wrapping without mobile overflow. Scripted
+  language stages; real classifier/VADER/HTTP/SQLite. Figma remains rate-limited;
+  native styling retained. No backend/dependency/layout or live-provider/email changes.
+  Scoped signed change on `feature/readable-sentiment-onboarding`, stacked on step 13;
+  app stays open and merge awaits user review. Step 12b requires separate agreement.
 
 - **2026-10-08:** Implemented user-requested step 13 before step 12: one consumed
   SSE submission shows a right prompt, left live Activity, then left saved answer.

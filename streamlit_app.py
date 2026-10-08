@@ -37,7 +37,9 @@ def show_execution(execution: dict) -> None:
     if execution["reply"] is not None:
         st.text(execution["reply"])
     if execution["result"] is not None:
-        if execution["predicted_intent"] == "keyword_extraction" and execution["route"] == "llm_assisted":
+        if execution["predicted_intent"] == "sentiment_analysis" and execution["route"] in {"direct", "llm_assisted"}:
+            st.text("Sentiment: " + execution["result"]["label"])
+        elif execution["predicted_intent"] == "keyword_extraction" and execution["route"] == "llm_assisted":
             if execution["result"]:
                 st.dataframe(
                     [{"Phrase": item["phrase"], "Score": item["score"]} for item in execution["result"]],
@@ -231,7 +233,6 @@ with st.sidebar:
             st.caption("Selected chat")
         updated = datetime.fromisoformat(chat["updated_at"]).astimezone(ZoneInfo("Asia/Kolkata"))
         st.caption("Updated " + updated.strftime("%d %b · %H:%M") + " IST")
-    st.caption("Email drafts need your review and sending. Chat cannot schedule reminders or send email.")
 
 st.subheader("Conversation")
 if navigation_error:
@@ -247,7 +248,10 @@ elif st.session_state.running:
 conversation = st.container()
 with conversation:
     if not st.session_state.turns and read_error is None and catalogue_error is None and not st.session_state.pending:
-        st.info('Start with: Sentiment: "I am happy"')
+        st.info("Try a natural-English request:\n\n"
+                "• Just check the sentiment of this I am happy\n\n"
+                "• Find keywords in this The server failed after the deployment\n\n"
+                "• What is the remote work policy? (fictional demo policies)")
     for turn in st.session_state.turns:
         with st.container(key="turn_" + turn["turn_id"]):
             with st.container(horizontal_alignment="right"):
@@ -276,8 +280,9 @@ with conversation:
 
 st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
              disabled=blocked, on_change=save_draft)
-st.button("Send", key="send_message", type="primary", disabled=blocked,
-          on_click=queue_message)
+with st.container(horizontal_alignment="right"):
+    st.button("Send", key="send_message", type="primary", disabled=blocked,
+              on_click=queue_message)
 if st.session_state.composer_error:
     st.error(st.session_state.composer_error)
 

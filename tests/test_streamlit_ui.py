@@ -149,6 +149,9 @@ def test_ui_sentiment_workflow_and_activity_match_backend_without_resubmit(monke
                   str(data["elapsed_ms"]), str(data["trace"][0]["elapsed_ms"])):
         assert value in text
     assert data["reply"] in text
+    assistant = ui.chat_message[1]
+    assert "Sentiment: positive" in [element.value for element in assistant.text]
+    assert not assistant.json
     for stage in data["workflow_trace"]:
         assert stage["stage"] in text and str(stage["elapsed_ms"]) in text
     assert not ui.button(key="send_message").disabled
@@ -268,6 +271,8 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
     assert ui.session_state["turns"][0]["execution"] == data
     assert data["result"] in [json.loads(element.value) for element in ui.json]
     assert data["reply"] in [element.value for element in ui.text]
+    assert "Sentiment: positive" in [element.value for element in ui.chat_message[1].text]
+    assert not ui.chat_message[1].json
     session_id = data["session_id"]
     saved = json.loads(sessions._sessions[session_id].history.messages[-1].content)
     assert saved["result"] == data["result"] and saved["reply"] == data["reply"]
@@ -504,3 +509,58 @@ def test_restored_activity_belongs_to_each_turn_without_execution(monkeypatch, r
     ui.run()
     assert not ui.exception and not recorded
     execute.assert_not_called()
+
+
+@pytest.mark.parametrize('route,status,result', [
+    ('direct', 'completed', {'label': 'negative', 'compound': -0.3456789,
+                            'positive': 0.0, 'neutral': 0.7, 'negative': 0.3}),
+    ('llm_assisted', 'completed', {'label': 'neutral', 'compound': 0.0,
+                                  'positive': 0.0, 'neutral': 1.0, 'negative': 0.0}),
+    ('llm_assisted', 'needs_clarification', None),
+    ('llm_assisted', 'error', None),
+    ('direct', 'completed', None),
+])
+def test_restored_sentiment_answer_keeps_scores_in_activity_without_execution(monkeypatch, route, status, result):
+    recorded = connect_api(monkeypatch)
+    execute = Mock(side_effect=AssertionError('Restoration must not execute'))
+    monkeypatch.setattr(sessions, 'execute_request', execute)
+    chat = sessions.create_chat()['session_id']
+    data = execution(chat, status)
+    data.update(predicted_intent='sentiment_analysis', route=route, result=result,
+                reply='Please supply the text.' if status == 'needs_clarification' else None)
+    if result is not None:
+        data['trace'] = [dict(tool='analyze_sentiment', arguments={'text': 'Saved source'},
+                              result=result, status='completed', reason=None, elapsed_ms=1.23456789)]
+    store = sessions._get_store()
+    store.begin(chat, 'Saved request', 'saved-sentiment')
+    store.finish('saved-sentiment', execution={k: v for k, v in data.items() if k != 'session_id'})
+    sessions.close_chat_store()
+    ui = AppTest.from_file(str(SCRIPT))
+    ui.query_params['chat'] = chat
+    for _ in range(2):
+        ui.run()
+        assert not ui.exception
+        assistant = ui.chat_message[1]
+        assert not assistant.json
+        labels = [item.value for item in assistant.text if item.value.startswith('Sentiment:')]
+        assert labels == ([] if result is None else ['Sentiment: ' + result['label']])
+        assert bool(assistant.error) == (status == 'error')
+        if data['reply']:
+            assert data['reply'] in [item.value for item in assistant.text]
+        if result is not None:
+            activity = ui.get_by_key('details_saved-sentiment')
+            assert result in [json.loads(item.value) for item in activity.json]
+    assert not recorded and execute.call_count == 0
+
+
+def test_empty_chat_welcome_uses_natural_english_without_execution(monkeypatch):
+    recorded = connect_api(monkeypatch)
+    ui = AppTest.from_file(str(SCRIPT)).run()
+    assert not ui.exception
+    welcome = '\n'.join(item.value for item in ui.info)
+    for example in ('Just check the sentiment of this I am happy',
+                    'Find keywords in this The server failed after the deployment',
+                    'What is the remote work policy?', 'fictional demo policies'):
+        assert example in welcome
+    assert 'Sentiment: "' not in welcome
+    assert not recorded and not sessions.list_chats()
