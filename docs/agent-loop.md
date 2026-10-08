@@ -49,7 +49,11 @@ using the summary/draft tools and preserving draft/action separation.
 Six orchestration model calls and five tool attempts are allowed. Calls made
 inside summarize_text/draft_email are additional provider calls bounded by their
 existing settings. At most one tool call per model response; unknown tools,
-invalid arguments, absent/reused IDs and simultaneous calls stop before execution.
+malformed arguments, absent/reused IDs and simultaneous calls stop before execution.
+For summarize_text/draft_email, otherwise valid proposals missing a required source
+or recipient (including blank strings) return a fixed conversational clarification
+without invoking the tool. Other schema errors remain failures; successful earlier
+observations remain in the trace.
 A 120-second elapsed-time budget is checked before each operation and after an
 orchestration provider call. In-flight tools/provider operations cannot be forcibly
 cancelled, so this is a soft budget; retained results can exceed it. No retry,
@@ -95,3 +99,32 @@ operational facts and described the embedded command without executing it, but
 selected that command as summary content. These few samples establish neither
 general reliability nor injection resistance. No reminder was created, email
 submitted, alternate model tested, or API/UI/deployment integration verified.
+
+## Conversational writing (REWORK step 4)
+
+Ordinary English requests use the existing agent. For example, `Summarize this The
+outage lasted 20 minutes and is resolved` supplies the outage statement to
+`summarize_text`; `Draft an email to Alex saying the outage is resolved` supplies
+Alex as recipient and the statement as content. Tone/format belong in the separate
+`instructions` argument. Tool schemas do not establish correct semantic extraction.
+
+An incomplete request asks for the missing information. The next answer is passed
+to the agent with the original request and saved clarification; it can complete the
+draft once both recipient and facts are known. `Make that more formal` reuses the
+prior facts/recipient with revised writing instructions. `Summarize that` uses
+explicitly referenced prior source; a missing/ambiguous reference clarifies.
+Histories remain isolated by session and disappear on backend restart.
+
+Clarifications return HTTP 200 and `needs_clarification`, with no execution trace
+for an unattempted tool. Streamlit displays the question without a technical
+warning banner; the inspector retains the exact status. Sending and reminder
+creation from chat remain unavailable. Generated drafts retain separate review/send
+actions and fictional-policy qualification.
+
+Step 4 verification on 2026-10-08: all 870 tests pass, including 16 added scripted
+writing checks. `pip check` and whitespace checks pass. Inline-browser review uses
+the real chat/session/runtime/UI path with temporary provider/tool doubles; missing
+inputs ask questions, supplied answers complete a draft with separate actions, and
+a contextual summary displays its retained source/result. No live language-quality,
+SMTP/inbox, reminder or deployment verification. Existing provider/tool failure and
+demo-policy regression checks remain covered. User approved merging PR #27 on 2026-10-08.

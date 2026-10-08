@@ -7,11 +7,12 @@ after the recorded rework handover.
 
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
-recorded offline and limited live-review bounds. Remaining rework steps are pending.
+recorded offline and limited live-review bounds. Step 4 is implemented and verified
+with offline/scripted-browser checks and merged in PR #27 after user approval.
+Remaining rework steps are pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next discussion:** ⏳ Step 4 conversational summarization/drafting review.
-Standalone FAQ PR #25 is merged into `main`; chat integration PR #26 now targets
-`main` and is approved for merge. Keyword workflow/integration/presentation are
+**Next discussion:** ⏳ Step 5 one-agent multi-step verification.
+FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
 ## Intended User Experience
@@ -628,7 +629,8 @@ its routing revision are now approved as recorded below.
 
 ### 4. Verify conversational summarization and drafting
 
-- [ ] Discuss, implement fixes if needed, and verify this slice.
+- [x] Discuss, implement fixes, and verify with offline/scripted-browser checks.
+- User approved merge on 2026-10-08; live model quality remains unverified.
 - **Problem/change:** Audit source extraction, writing instructions, and follow-up
   handling for the remaining available tools; fix demonstrated failures only.
 - **Input → output:** `Summarize this The outage lasted 20 minutes and is resolved`
@@ -637,6 +639,59 @@ its routing revision are now approved as recorded below.
 - **Verify:** Standalone and contextual requests, clarification answers, source
   preservation, demo-policy qualification, and unavailable sending/reminder requests.
   Use provider doubles in tests; agree separately on any limited live quality checks.
+
+#### Step 4 agreed contract — 2026-10-08
+
+- User approved auditing the existing agent path and fixing demonstrated failures
+  only, with proportional provider-double tests, regression checks, and inline-browser
+  review. Summarization/drafting remain agent operations; no new fixed workflow.
+- Missing source, draft recipient, or material facts should produce a conversational
+  question, not an execution error. A missing/blank required source or recipient in
+  an otherwise valid proposed writing-tool call clarifies without executing a tool.
+  Malformed types, extra fields, bounds violations and provider failures remain errors.
+  The chat shows clarification as an ordinary reply; its status remains in the inspector.
+- Verify unquoted/multiline source transport, contextual summaries, clarification
+  answers followed by drafting, revisions, session isolation, retained tool results,
+  separate fixed user actions, demo-policy qualification and unavailable actions.
+  Provider doubles establish protocol behavior, not semantic extraction quality.
+  No live model calls are authorized in this slice.
+
+#### Step 4 outcome — 2026-10-08
+
+- Fixed missing/blank required writing-tool arguments that previously produced
+  `invalid_tool_arguments`; now returns `needs_clarification` and a fixed question
+  without executing a tool. Other validation failures retain the error contract.
+  Removed the technical clarification warning from the chat; inspector status remains.
+- Added 16 scripted API/agent checks and adjusted two existing assertions. All 870
+  tests, `pip check`, and whitespace checks pass. Existing standalone summary/draft
+  tests cover provider payload/failure contracts; session tests retain demo-policy
+  qualification and fixed draft actions. No dependencies or provider APIs changed;
+  installed Streamlit 1.65.0/ChatGroq 1.1.3/Core 1.6.6/Groq 0.37.1/Pydantic 2.13.5 checked.
+- Inline browser exercised the real API/session/runtime and Streamlit path with a
+  temporary scripted orchestration/summary/draft provider: missing recipient/facts,
+  recipient answer, supplied facts completing a draft with separate actions, and
+  contextual summary. Questions displayed without error/warning banners; inspector
+  retained status, exact inputs/results and actual timings. Review app stays open
+  at `http://127.0.0.1:8502` (fixture backend on 8001).
+- Limits: no live provider quality, SMTP/inbox, reminder creation or deployment
+  checks. Doubles cannot establish semantic extraction, reference resolution or
+  factual fidelity. Existing LangChain deprecation warnings remain. Figma inspection
+  was rate-limited; retained documented/native UI without CSS/layout expansion.
+- Delivery: user-authored DCO-signed PR #27 on
+  `fix/conversational-summary-draft-review`, merged after user approval on
+  2026-10-08. Later rework steps need separate agreement.
+
+#### Future-build requests recorded — 2026-10-08
+
+User agreed to record these ideas for future builds rather than implement them in
+step 4: a settings icon near the bottom-left sidebar opening Reminders, with Docs
+added in a later build; reminder cards showing due-time details and a link back to
+creation chat, with off/delete controls; and a separate Email page listing drafts
+and actual sent records. Discuss navigation/design alongside step 6 and the Docs
+entry in its planned slice. Reminder creation from chat, delivery integration, sent
+email records and off/delete semantics require separate post-rework contracts under
+the existing side-effect boundaries. A draft must never appear as sent. This record
+does not authorize those features or change the ordered rework implementation steps.
 
 ### 5. Verify one-agent multi-step requests
 

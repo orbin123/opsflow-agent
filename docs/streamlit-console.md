@@ -53,7 +53,9 @@ explanation or factual fallback as plain text and retains the raw VADER result.
 Agent responses display the backend's
 application-rendered reply as plain text, retaining separate email draft/actions;
 supplied text cannot inject HTML or load Markdown images. Demo FAQ results are
-explicitly qualified. Execution status stays visible: a completed draft is not a
+explicitly qualified. Clarification questions appear as ordinary assistant replies without an execution
+warning banner; their status remains visible in the inspector. Other execution
+statuses stay visible: a completed draft is not a
 sent email, and chat does not yet create reminders or submit email.
 
 ## Inspector

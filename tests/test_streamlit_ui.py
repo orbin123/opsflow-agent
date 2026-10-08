@@ -190,7 +190,8 @@ def test_ui_agent_clarification_followup_and_browser_isolation(monkeypatch):
     monkeypatch.setattr(agent, "_create_model", lambda: model)
     ui = AppTest.from_file(str(SCRIPT)).run()
     ui.chat_input[0].set_value("Draft an email").run()
-    assert ui.warning[0].value == "Execution: needs_clarification"
+    assert not ui.warning and not ui.error
+    assert "Execution: needs_clarification" not in [element.value for element in ui.caption]
     assert "Who is the recipient?" in [element.value for element in ui.text]
     ui.chat_input[0].set_value("Alex").run()
     assert not ui.exception

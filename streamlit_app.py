@@ -27,9 +27,9 @@ def show_execution(execution: dict) -> None:
     status = execution["status"]
     if status in {"error", "partial_failure"}:
         st.error(f"Execution: {status}")
-    elif status in {"needs_clarification", "agent_required"}:
+    elif status == "agent_required":
         st.warning(f"Execution: {status}")
-    else:
+    elif status != "needs_clarification":
         st.caption(f"Execution: {status}")
     if execution["reply"] is not None:
         st.text(execution["reply"])
