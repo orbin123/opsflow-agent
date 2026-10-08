@@ -14,10 +14,11 @@ merging PR #28 on 2026-10-08. Step 6's persistence/navigation contract is
 recorded and reviewed. Step 7 storage/restoration is merged in PR #30 after user
 approval, with its step 6 dependency PR #29 also merged. Step 8 catalogue APIs and
 HTTP submission IDs and step 9 Workspace navigation/restoration are implemented
-and verified within the offline/scripted-browser limits below; user review is
-pending. Steps 10 onward remain pending.
+and verified within the offline/scripted-browser limits below. User approved merging
+both on 2026-10-08; PR #31 is merged and PR #32 now targets `main`. Steps 10
+onward remain pending.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Steps 8–9 user review, then step 10 backend event-contract discussion.
+**Next:** ⏳ Step 10 backend event-contract discussion.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
 
@@ -892,7 +893,7 @@ does not authorize those features or change the ordered rework implementation st
   retained one completed turn with identical result/stages/timing and metadata;
   listing/reads did not append or update it. App remains open for user review.
 - **Limits/delivery:** One user-authored DCO-signed change on
-  `feature/chat-catalogue-api` in PR #31; user confirmation required before merge. No live
+  `feature/chat-catalogue-api`, merged in PR #31 after user approval. No live
   provider quality, SMTP, reminders, deployment, navigation/UI changes or refresh
   restoration verification. Existing LangChain snapshot deprecation remains.
   Shared trusted-local ownership stays unchanged. Step 9 needs separate discussion.
@@ -958,8 +959,8 @@ does not authorize those features or change the ordered rework implementation st
   label, native sidebar/keyboard selection, 48 px targets, 2 px focus outline,
   stacked panels and no mobile horizontal overflow. Review app remains open.
 - **Limits/delivery:** One user-authored DCO-signed change on
-  `feature/workspace-chat-navigation` in PR #32, stacked on open step 8 PR #31. User browser
-  confirmation is required before merge. Figma inspection remains rate-limited;
+  `feature/workspace-chat-navigation` in PR #32. User approved merging on 2026-10-08;
+  dependency PR #31 is merged and #32 now targets `main`. Figma inspection remains rate-limited;
   the user approved documented-token/native adaptation, not new Figma components.
   No live provider quality, SMTP/reminders, deployment, streaming/Activity/Docs,
   ownership/authentication, history budgeting or durable composer storage changes.
