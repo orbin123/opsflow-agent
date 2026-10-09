@@ -1,7 +1,7 @@
 # Docs
 
 OpsFlow helps you analyze English text, find fictional employee policies,
-summarize information and prepare email drafts. Write an ordinary-English request
+summarize information, prepare email drafts and schedule one-time reminders. Write an ordinary-English request
 in **Message OpsFlow**, then press **Send**. Quotes, command prefixes and colons
 are optional. Include the text or facts you want the tool to use.
 
@@ -71,6 +71,40 @@ sending actions. This creates a draft. OpsFlow chat does not send email. Review
 facts, recipient and wording, then copy the draft to your email application.
 Drafts using policy information retain the fictional-demo qualification.
 
+## Reminder requests
+
+Ask for one task, a date and a clear time. Use today, tomorrow, or a full calendar
+date with its year (for example 2026-10-10 or 10 October 2026). Include am/pm or a
+24-hour time such as 10:00. An explicit IANA timezone overrides the configured
+zone; otherwise OpsFlow uses the configured zone, defaulting to Asia/Kolkata.
+
+**Demo prompt:**
+
+> Remind me tomorrow at 10 am in Asia/Kolkata to review the deployment report.
+
+Expect a scheduling acknowledgement containing the saved task and the exact due
+date, time, UTC offset and timezone. Tomorrow means the next calendar day in the
+selected zone, resolved at the start of the submitted turn. Missing or ambiguous
+details require clarification; reply in the same chat. A clarification follow-up
+resolves relative dates at the start of that follow-up, so use a full date when
+continuing on another day. Past times, ambiguous numeric dates, timezone
+abbreviations and unsupported date phrases require a clearer future time. A DST
+clock overlap requires a confirmed UTC offset; a skipped local time needs a new time.
+
+Scheduling stores a reminder; it does not send an email or start the delivery
+worker. The separate local worker must be running to submit due reminders to the
+configured user's mailbox. Check **Settings → Reminders** for current delivery
+state. SMTP acceptance does not establish inbox arrival.
+
+Refresh, restoration and replay of the same submission never schedule it again.
+Repeated model calls cannot create a second reminder in that turn. Separate
+submissions have separate identities and can create separate reminders; this is
+not global duplicate-content detection. If scheduling succeeded before a later
+model failure, the reminder remains stored. If the chat outcome could not be
+saved, check Reminders before creating another; recovery never automatically retries.
+Only one-time creation is supported here; ask for one reminder per turn.
+Recurring reminders, cancellation, editing, deletion and manual retry are unavailable.
+
 ## Requests with multiple tasks
 
 You can ask for related operations in one request.
@@ -96,7 +130,8 @@ multiple operations. Example prompts do not guarantee a particular route.
   requests use language-model extraction, a local tool and a presentation stage.
   Missing information clarifies; contextual or compound requests can pass to the agent.
 - **Agent:** A language model chooses tools for contextual, uncertain or multiple-task
-  requests. Summaries and drafts use language-model tools.
+  requests. Summaries and drafts use language-model tools. Reminder creation always
+  uses the agent, with local validation and storage.
 
 “Single task” describes how many operations you asked for. “Deterministic” and
 “agentic” describe how work executes. Local scoring or retrieval can be part of
@@ -139,8 +174,8 @@ SMTP accepted does not confirm inbox arrival. Failed requires intervention;
 Unknown has no automatic retry. A due time in the past does not prove delivery.
 Loading failures appear explicitly rather than as an empty list.
 
-Existing reminders have no originating chat link. Chat cannot schedule reminders;
-creation and delivery remain separate utilities. This page does not start the worker
+Reminders have no originating chat link. Deleting a chat does not cancel or delete
+its reminders. Creation uses chat; delivery uses the separate worker. This page does not start the worker
 or add retry, cancellation, editing or deletion controls.
 
 ## Clarification, failures and recovery
@@ -161,11 +196,11 @@ retry or resubmit. An interrupted or unknown outcome must not be treated as succ
 
 ## Current limitations
 
-Chat cannot schedule reminders or send notification emails. Standalone reminder
-and delivery utilities exist separately; they are not connected chat tools.
+Chat schedules one-time reminders through the agent. Chat does not send draft
+notification emails or start the reminder delivery worker.
 A scheduled record is not a sent email, and SMTP acceptance does not prove inbox arrival.
 
-English examples demonstrate the five current chat tools. Output quality and
+English examples demonstrate the current chat tools. Output quality and
 model interpretation can vary. Fictional policies, generated summaries and drafts
 need appropriate review. This guide does not promise support for external
 recipients, unlimited workflows or automatic delivery.

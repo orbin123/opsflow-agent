@@ -28,7 +28,11 @@ and GET catalogue over existing
 local storage, showing literal tasks, recorded-zone due times and actual delivery
 states. SMTP acceptance does not imply inbox arrival. Reads never start the worker
 or schedule/send/retry work; existing records have no source-chat association.
-Chat reminder creation/delivery remains a separately agreed follow-up slice.
+Approved chat reminder creation uses the agent with literal date/time extraction,
+local resolution, turn-owned creation keys and the existing scheduler. Only one
+one-time reminder per turn is supported. Clarification does not insert; saved
+replay/recovery never repeats creation. The delivery worker remains separate and
+chat never starts it. Reminder records survive chat deletion; see docs/reminders.md.
 
 The approved Workspace addition provides persistent Rename/Delete through a
 themed right-click/More actions menu. Custom titles survive the first message;
