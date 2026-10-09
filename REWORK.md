@@ -39,6 +39,36 @@ merged in PR #24.
 
 ## Intended User Experience
 
+### Approved demo rate-limit recovery fix — 2026-10-09
+
+- **Agreement:** User requested waiting for model capacity to finish the four-tool
+  demo instead of immediately failing. Reproduced the original failure with the
+  same prior context: Groq TPM limit 8,000, used 6,772, requested 3,664, and a
+  19-second retry header after sentiment/keywords completed.
+- **Slice:** Retry only an explicitly rejected model request once after a valid
+  numeric provider wait (rounded up plus one second, at most 60 seconds), within
+  the shared existing soft 120-second agent budget. Include summary/draft model
+  calls during agent execution. Completed tools, saved turns and HTTP submissions
+  are not retried; standalone writing calls keep their existing behavior.
+  Show sanitized transient waiting stages through existing live Activity.
+- **Verification:** Core recovery with completed tools invoked once, nested writing
+  model recovery, repeat rejection, unsafe/missing wait headers, deadline boundaries,
+  non-rate failures and context isolation. Run the suite and exact live demo in
+  the inline browser; retain prior failed history.
+- **Verified:** 1,102 tests pass in a clean copy of committed code plus this fix
+  (12 added); dependency/whitespace checks pass. The current working tree has
+  1,100 passes and two unrelated failures in preexisting welcome-screen edits
+  (AppTest ElementList concatenation and an obsolete welcome-box expectation).
+  Exact live demo in the original populated chat completed all four tools in
+  100.07 seconds. Observed waits of 27/3/29/2/31 seconds and locked submission;
+  original failed turn is retained. App remains open for review.
+- **Limits:** Repeated rejection, invalid/long waits or exhausted budget can still
+  fail with retained results. Live output has existing unrelated demo-policy
+  qualification and draft resolution language unsupported by the source; this
+  fix verifies completion/recovery, not general language fidelity. No email sent.
+  Screenshots: `/tmp/opsflow-rate-wait.jpg`,
+  `/tmp/opsflow-rate-wait-completed.jpg`. ⏳ User review/merge pending.
+
 OpsFlow should feel like a conversational workspace. Users write ordinary
 English, receive readable answers, and can inspect actual execution activity
 without leaving the conversation.

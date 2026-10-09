@@ -11,6 +11,8 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, StringConstraints, ValidationError, field_validator
 
+from app.model_wait import invoke_model
+
 
 class EmailContent(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
@@ -118,7 +120,7 @@ def draft_email(
     try:
         with tracing_context(enabled=False):
             model = _create_model()
-            response = model.invoke([
+            response = invoke_model(model, [
                 ("system", _SYSTEM_PROMPT),
                 ("human", json.dumps({
                     "recipient": recipient, "content": content, "instructions": instructions,

@@ -11,6 +11,8 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError
 
+from app.model_wait import invoke_model
+
 
 class SummaryResult(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
@@ -78,7 +80,7 @@ def summarize_text(text: str) -> SummaryResult:
     try:
         with tracing_context(enabled=False):
             model = _create_model()
-            response = model.invoke([("system", _SYSTEM_PROMPT), ("human", text)])
+            response = invoke_model(model, [("system", _SYSTEM_PROMPT), ("human", text)])
         if (response.response_metadata.get("finish_reason") != "stop"
                 or response.additional_kwargs.get("refusal")
                 or not isinstance(response.content, str)):
