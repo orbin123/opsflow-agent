@@ -104,13 +104,16 @@ URL restoration, and multiline composer with Send. Figma inspection remains
 blocked by the Starter tool-call limit; this adaptation uses the documented
 Foundations tokens and step 6 interaction contract, without adding Figma nodes.
 Chat controls use 48 px targets and IBM Plex Mono, literal/truncated titles with
-full accessible labels, action tint plus a check and Selected chat text. New chat
+full accessible labels, action tint plus a check as the selected-chat indicator. New chat
 and Send use VT323 short action labels; Send uses the existing cyan action states.
 On 2026-10-08 the user requested Send on the right beneath the composer; use a
-native right-aligned container on desktop and mobile, retaining its 48 px target.
-The native multiline composer uses square surface/control borders. Focus retains
-the 2 px indicator. Existing collapsible mobile sidebar and stacked chat/inspector
-remain; live Activity and Docs patterns belong to later steps.
+native right-aligned container, retaining its 48 px target. On 2026-10-09 the user
+requested a ChatGPT-style fixed bottom composer. Keep the multiline field and Send
+inside a fixed footer aligned to the conversation area, with reserved scroll space
+for the last reply and responsive side padding. Reuse the canvas, border, typography
+and focus tokens. The native field keeps its square control border and 2 px focus
+indicator. Existing collapsible mobile sidebar and stacked chat/inspector remain;
+live Activity and Docs patterns belong to later steps.
 
 ## Settings and Docs adaptation
 

@@ -37,6 +37,28 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   Existing unrelated demo label/draft factual-quality issues remain documented.
   App stays open; ⏳ user review/merge pending. No email sent.
 
+- **2026-10-09:** Removed selected-chat and last-updated captions from the
+  Workspace sidebar; selection remains visible through the check/tint. Updated
+  UI documentation and step 9 history. Source review only; no tests/browser review.
+
+- **2026-10-09:** Fixed the multiline composer and right-aligned Send footer to the
+  viewport bottom, aligning its divider to the sidebar edge with no extra inset.
+  Inline browser confirms alignment and both controls remain visible; automated
+  tests and mobile viewport review were not run. Whitespace check passed.
+
+- **2026-10-09:** Removed the example-prompt box from empty Workspace chats and
+  updated the UI assertion. Inline-browser rendering confirms the examples are
+  absent, with no chat creation or execution; the automated check was not run.
+  Docs examples remain available in the guide.
+
+- **2026-10-09:** Verified the pending Workspace footer/sidebar/welcome changes
+  together with rate-limit recovery and reminder creation: 1,153 tests pass, plus
+  dependency/whitespace checks. Fixed stale welcome assertions and default-sidebar
+  footer alignment. Inline desktop/mobile review, saved Docs/Reminders and draft
+  navigation pass. Custom sidebar resizing/mobile keyboards remain unverified.
+  PRs #43/#44/#45 are merged. User authorized this separate Workspace DCO
+  change and merge; no live email sent.
+
 ## Active Agenda — Rework First
 
 From 2026-10-07 until all completion criteria in [REWORK.md](../REWORK.md) are

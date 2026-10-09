@@ -176,7 +176,8 @@ steps 9 and 11; do not mark visual verification complete from this contract.
 - Reuse square geometry, 48 px controls (at least 44 px targets), IBM Plex Mono
   labels, VT323 short action labels, existing surfaces, and a 2 px visible focus
   outline. Selected chat uses action tint plus a visible selection indicator;
-  selection, running, disabled, and failure states have text/accessibility labels.
+  running, disabled, and failure states have text/accessibility labels. Keep the
+  saved-chat list concise without per-chat status or timestamp captions.
   Long titles truncate visually while their full literal text remains accessible.
 - Desktop uses the existing rail proportions; mobile uses the native collapsible
   sidebar, stacked panels, and full-width New chat. Selection is keyboard operable.

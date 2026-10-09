@@ -762,14 +762,13 @@ def test_draft_qualification_does_not_leak_from_future_or_other_chat(monkeypatch
     assert not recorded
 
 
-def test_empty_chat_welcome_uses_natural_english_without_execution(monkeypatch):
+def test_empty_chat_shows_no_welcome_examples_or_execution(monkeypatch):
     recorded = connect_api(monkeypatch)
     ui = AppTest.from_file(str(SCRIPT)).run()
     assert not ui.exception
-    welcome = '\n'.join(item.value for item in ui.info)
-    for example in ('Just check the sentiment of this I am happy',
-                    'Find keywords in this The server failed after the deployment',
-                    'What is the remote work policy?', 'fictional demo policies'):
-        assert example in welcome
-    assert 'Sentiment: "' not in welcome
+    page_text = '\n'.join(item.value for item in [*ui.text, *ui.info])
+    assert 'Just check the sentiment of this I am happy' not in page_text
+    assert 'Find keywords in this The server failed after the deployment' not in page_text
+    assert 'What is the remote work policy?' not in page_text
+    assert 'fictional demo policies' not in page_text
     assert not recorded and not sessions.list_chats()

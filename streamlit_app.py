@@ -361,11 +361,6 @@ with st.sidebar:
                           on_click=navigate, args=(chat["session_id"],))
             chat_menu(_CHAT_MENU, chat["title"], chat["session_id"], disabled=blocked,
                       on_action_change=lambda chat=chat: open_management(chat))
-        if current:
-            st.caption("Selected chat")
-        updated = datetime.fromisoformat(chat["updated_at"]).astimezone(ZoneInfo("Asia/Kolkata"))
-        st.caption("Updated " + updated.strftime("%d %b · %H:%M") + " IST")
-
     with st.container(key="settings_footer"):
         with st.popover("Settings", icon=":material/settings:", key="settings_menu_" + st.session_state.view,
                         disabled=st.session_state.pending or st.session_state.running
@@ -472,11 +467,6 @@ elif st.session_state.running:
     st.warning("Completion is unconfirmed. Navigation and submission are paused until a saved outcome is available.")
 conversation = st.container()
 with conversation:
-    if not st.session_state.turns and read_error is None and catalogue_error is None and not st.session_state.pending:
-        st.info("Try a natural-English request:\n\n"
-                "• Just check the sentiment of this I am happy\n\n"
-                "• Find keywords in this The server failed after the deployment\n\n"
-                "• What is the remote work policy? (fictional demo policies)")
     demo_policy = False
     for turn in st.session_state.turns:
         with st.container(key="turn_" + turn["turn_id"]):
@@ -505,13 +495,14 @@ with conversation:
             with st.container(width=560):
                 live_activity = st.empty()
 
-st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
-             disabled=blocked, on_change=save_draft)
-with st.container(horizontal_alignment="right"):
-    st.button("Send", key="send_message", type="primary", disabled=blocked,
-              on_click=queue_message)
-if st.session_state.composer_error:
-    st.error(st.session_state.composer_error)
+with st.container(key="composer_bar"):
+    st.text_area("Message OpsFlow", key="composer", max_chars=10000, height=120,
+                 disabled=blocked, on_change=save_draft)
+    with st.container(horizontal_alignment="right"):
+        st.button("Send", key="send_message", type="primary", disabled=blocked,
+                  on_click=queue_message)
+    if st.session_state.composer_error:
+        st.error(st.session_state.composer_error)
 
 
 # A queued button submission runs once after disabled navigation/composer render.

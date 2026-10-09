@@ -19,7 +19,7 @@
 [data-testid="stCaptionContainer"] p { color: var(--of-secondary); font-size: 11px; line-height: 16px; }
 [data-testid="stCaptionContainer"] { opacity: 1; }
 [data-testid="stSidebar"] { background: var(--of-surface); border-right: 1px solid var(--of-border); }
-[data-testid="stMainBlockContainer"] { padding: 80px 48px 48px; max-width: 1440px; }
+[data-testid="stMainBlockContainer"] { padding: 80px 48px 260px; max-width: 1440px; }
 [data-testid="stChatMessage"], [data-testid="stExpander"] {
   background: var(--of-surface); border: 1px solid var(--of-border); border-radius: 0; padding: 16px;
 }
@@ -47,6 +47,17 @@
 }
 .st-key-composer textarea { background: var(--of-surface); border-radius: 0; }
 .st-key-composer [data-baseweb="textarea"] { border: 1px solid var(--of-border); border-radius: 0; }
+.st-key-composer_bar {
+  position: fixed; z-index: 1000; right: 0; bottom: 0; left: 0;
+  width: auto !important; box-sizing: border-box;
+  padding: 12px max(48px, calc((100vw - 1440px) / 2 + 48px)) 16px;
+  background: var(--of-canvas); border-top: 1px solid var(--of-border);
+}
+.stApp:has([data-testid="stSidebar"][aria-expanded="true"]) .st-key-composer_bar {
+  left: 300px;
+  padding-right: max(48px, calc((100vw - 300px - 1440px) / 2 + 48px));
+  padding-left: max(48px, calc((100vw - 300px - 1440px) / 2 + 48px));
+}
 [data-testid="stChatInputSubmitButton"] { background: var(--of-action); color: var(--of-ink); }
 [data-testid="stChatInputSubmitButton"]:hover { background: #52CADE; }
 [data-testid="stChatInputSubmitButton"]:active { background: #33B7CF; }
@@ -95,7 +106,11 @@ a { color: var(--of-focus); }
 }
 .st-key-emails_page button, .st-key-reminders_page button { min-height: 48px; }
 @media (max-width: 767px) {
-  [data-testid="stMainBlockContainer"] { padding: 80px 16px 24px; }
+  [data-testid="stMainBlockContainer"] { padding: 80px 16px 260px; }
+  .st-key-composer_bar { left: 0; padding: 12px 16px 16px; }
+  .stApp:has([data-testid="stSidebar"][aria-expanded="true"]) .st-key-composer_bar {
+    left: 0; padding: 12px 16px 16px;
+  }
   [data-testid="stExpander"] { padding: 8px; }
   [data-testid="stHorizontalBlock"] { flex-direction: column; }
   [data-testid="stColumn"] { width: 100%; flex: 1 1 100%; min-width: 100%; }

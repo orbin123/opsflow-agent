@@ -42,8 +42,8 @@ chat, or the empty welcome view, and discards only the deleted chat's local draf
 Running/unsaved work and unavailable reads disable management. No management
 operation executes a chat turn. Other tabs pointing to a deleted chat show not found.
 
-Empty chats offer natural-English sentiment, keyword and fictional demo-policy
-examples; quotes or command prefixes are not required. For direct and fixed-workflow
+Empty chats open directly to the composer without example prompts. Requests accept
+natural English; quotes or command prefixes are not required. For direct and fixed-workflow
 sentiment outcomes, the assistant displays the existing explanation when available
 and a labelled sentiment result. Exact numerical scores and raw JSON remain in
 Activity. A retained score still displays if its explanation failed, alongside the
@@ -64,8 +64,8 @@ presentation.
 Workspace lists saved chats by recent update time. New chat creates a durable empty
 chat; the first Send from an empty workspace creates one before submitting. Merely
 opening/refreshing the app creates nothing. Titles are literal first-message text,
-with native truncation/full-label accessibility, a selected check/tint and update
-time in IST. There are no rename/delete/search controls.
+with native truncation/full-label accessibility and a selected check/tint. The
+sidebar omits per-chat status and timestamp captions to keep the list concise.
 
 The opaque `chat` URL locator selects the saved chat. Refresh, reopening that URL,
 and backend/Streamlit restart restore its ordered messages, exact outcomes and
@@ -77,7 +77,9 @@ Check saved chat. An unavailable catalogue offers Retry chat list. These control
 only read. Selection uses explicit query-parameter handling because button widgets
 cannot bind URLs and automatic selection-widget binding discards invalid locators.
 
-The approved native multiline Message OpsFlow composer and Send preserve unsent
+The native multiline Message OpsFlow composer and Send are fixed at the bottom of
+the page and stay aligned with the conversation area when the sidebar is open.
+Reserved space keeps the final reply readable above the footer. They preserve unsent
 text separately per chat during the current browser session. Text-area edits commit
 on blur; navigation saves that committed value before changing chats. Drafts are
 not durable across refresh/disconnection/restart. New chats begin with an empty
