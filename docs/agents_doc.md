@@ -2,6 +2,12 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** Added the requested reminder demo prompt to Docs with explicit
+  Asia/Kolkata time and the current chat-scheduling limitation. It explains that
+  no reminder/email is created and the Reminders page is read-only. Documentation
+  only; verified rendering in Settings → Docs and left the section open.
+  Whitespace check passed. No prompt execution or new tests; user review pending.
+
 - **2026-10-09:** Approved bounded model rate-limit waiting for the failed four-tool
   demo. Reproduced Groq's 8,000 TPM rejection after sentiment/keywords and a
   19-second retry header. Added one rejected-request retry with an observable wait
