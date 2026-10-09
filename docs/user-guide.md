@@ -71,6 +71,20 @@ sending actions. This creates a draft. OpsFlow chat does not send email. Review
 facts, recipient and wording, then copy the draft to your email application.
 Drafts using policy information retain the fictional-demo qualification.
 
+## Reminder requests
+
+Chat reminder scheduling is not available yet. This example demonstrates the
+current limitation rather than creating a scheduled reminder.
+
+**Demo prompt:**
+
+> Remind me tomorrow at 10 am in Asia/Kolkata to review the deployment report.
+
+Expect OpsFlow to explain that it cannot schedule reminders from chat. No reminder
+is created and no email is sent. **Settings → Reminders** only displays records
+created through the separate reminder utility; submitting this prompt does not
+add a record there.
+
 ## Requests with multiple tasks
 
 You can ask for related operations in one request.

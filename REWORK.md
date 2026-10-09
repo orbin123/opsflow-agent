@@ -39,6 +39,17 @@ merged in PR #24.
 
 ## Intended User Experience
 
+### Requested reminder demo in Docs — 2026-10-09
+
+- **Slice:** Add an ordinary-English reminder example with explicit Asia/Kolkata
+  time and accurately describe the current unavailable chat-scheduling outcome.
+  No reminder creation/delivery integration or execution changes.
+- **Verification:** Review wording against the existing reminder boundary and
+  check Settings → Docs rendering without submitting the prompt.
+  Verified the rendered prompt and limitation in Settings → Docs; left the guide
+  open at Reminder requests. Whitespace check passed. No prompt execution or new
+  behavior tests for this documentation edit. ⏳ User review/merge pending.
+
 ### Approved demo rate-limit recovery fix — 2026-10-09
 
 - **Agreement:** User requested waiting for model capacity to finish the four-tool
