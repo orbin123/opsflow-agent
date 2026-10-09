@@ -5,25 +5,25 @@ An operations copilot using TF-IDF + a calibrated linear SVM for intent routing,
 The local Streamlit chat with per-turn Activity runs with `streamlit run streamlit_app.py` and
 uses `/api/v1/chat/stream`; see `docs/streamlit-console.md` for configuration and verification.
 
-Approved REWORK step 7 stores chat history in separate local SQLite storage and
+The backend stores chat history in separate local SQLite storage and
 restores context without reexecution. See `docs/chat-persistence.md` for the
 single-backend Unix-lock boundary, interrupted recovery, and explicit unsaved
 failures. Python and HTTP turn IDs prevent duplicates while records are retained.
-Approved step 8 exposes create/list/load catalogue APIs and client helpers; reads
-never execute work. See `docs/chat-api.md`. Approved step 9 adds Workspace New chat,
+The backend exposes create/list/load catalogue APIs and client helpers; reads
+never execute work. See `docs/chat-api.md`. Workspace supports New chat,
 literal titled selection, `chat` URL restoration and a per-chat browser-session
 multiline draft composer. Running/unsaved work locks navigation and submission;
 recovery controls only read. See `docs/streamlit-console.md`. Completed execution
 details appear between each right-aligned prompt and left-aligned answer in a
-vertically sequential, left-aligned Activity panel (step 11). Step 13 shows actual
-live stage events before the saved answer. Approved step 14a adds bottom-left
+vertically sequential, left-aligned Activity panel. The running panel shows actual
+live stage events before the saved answer. The sidebar provides bottom-left
 Settings with a read-only Docs guide and saved-work page options.
 Docs/return preserves chat selection and browser-session drafts without executing
 work; pending/running/unsaved work blocks page entry. See `docs/user-guide.md`.
-Approved step 14b enables a read-only Emails page across retained chat drafts,
+The app provides a read-only Emails page across retained chat drafts,
 including successful drafts from compound/partially failed turns. Existing GET APIs
 provide records; Refresh/Open chat never execute drafting. Saved actions and demo
-qualifications remain separate. Approved step 14c adds a read-only Reminders page
+qualifications remain separate. The app provides a read-only Reminders page
 and GET catalogue over existing
 local storage, showing literal tasks, recorded-zone due times and actual delivery
 states. SMTP acceptance does not imply inbox arrival. Reads never start the worker
@@ -40,44 +40,44 @@ deletion requires a named confirmation and removes saved chat records/context.
 Running/unsaved work blocks management in both the UI and backend. Catalogue
 mutations never execute a chat turn; see `docs/chat-api.md` and `docs/design-system.md`.
 
-Approved REWORK step 10 adds `POST /api/v1/chat/stream` SSE for actual backend
+The backend provides `POST /api/v1/chat/stream` SSE for actual backend
 classification/routing, workflow stages and agent model/tool activity. Progress is
 transient; saved terminal outcomes follow SQLite finalization. Disconnect does not
 cancel execution; graceful shutdown drains stream workers before releasing storage.
 Recovery/replay never repeats work. See `docs/chat-api.md` for event fields and
 transport/status boundaries. Streamlit uses the SSE endpoint for one-shot
 submission and GET for restoration.
-Approved step 11 replaces the separate inspector with collapsed per-turn Activity and nested workflow/tool
-sections using exact saved records. Step 13 validates live event correlation and
-shows observable stages in a native running panel before the saved outcome.
+The UI uses collapsed per-turn Activity and nested workflow/tool sections with
+exact saved records. Correlated live events show observable stages in a native
+running panel before the saved outcome.
 Disconnect/rerun recovery only reads; it never automatically reconnects or resubmits.
 Live progress is transient; final/restored details use saved records.
 
 The natural-language sentiment workflow is documented in `docs/sentiment-workflow.md`.
-Approved REWORK step 2b connects it behind the classifier using the `llm_assisted`
+It runs behind the classifier using the `llm_assisted`
 route, with existing chat HTTP status rules and retained workflow/tool records.
-Approved REWORK step 12a shows direct/fixed-workflow sentiment labels beneath the
+The UI shows direct/fixed-workflow sentiment labels beneath the
 existing reply, keeps exact scores/JSON in Activity, and offers natural-English
 welcome examples. Remaining answer presentation stays a separately agreed slice.
 
 The natural-language keyword workflow is documented in `docs/keyword-workflow.md`.
-Approved REWORK step 3b connects it behind the classifier using `llm_assisted`,
+It runs behind the classifier using `llm_assisted`,
 with the same HTTP status and retained-record contracts as sentiment. Keyword
 assistant turns show a brief introduction and a native phrase/score table;
 full-precision raw results remain in Activity.
 
 The natural-language FAQ workflow is documented in `docs/faq-workflow.md`.
-Approved REWORK step 3c extracts a complete question, calls unchanged local retrieval,
+It extracts a complete question, calls unchanged local retrieval,
 and explains only matched fictional policies while retaining exact answers. Ambiguous/
 no-match results clarify without presentation; missing policy details may also clarify.
-Approved REWORK step 3d connects high-confidence FAQ chat requests using `llm_assisted`,
+High-confidence FAQ chat requests use `llm_assisted`,
 with the same HTTP status/history/trace rules. Replies stay readable; exact policy JSON
 remains in Activity. Lower-confidence requests use the agent and its pure FAQ tool.
 Policy answers do not need recipients; ask for those only for requested email drafts.
 The FAQ-only endpoint keeps its existing wholly local contract.
 
-The user-approved persistent demo employee workspace is independent of the rework
-agenda. Schema version 3 stores one fictional Sachin Tendulkar profile (EMP-001)
+The user-approved persistent demo employee workspace is implemented.
+Schema version 3 stores one fictional Sachin Tendulkar profile (EMP-001)
 in the chat database. All retained/future chats, saved drafts and reminders belong
 to this singleton workspace; catalogue records expose its profile ID. GET
 `/api/v1/profile` reads saved identity without executing work. No login, multiple
@@ -86,17 +86,16 @@ included in this first slice. See `docs/employee-profile.md`.
 
 ## Read Before Working
 
-- `REWORK.md`: active implementation agenda until its rework steps and completion criteria are verified.
+- `docs/PLAN.md`: active implementation agenda for remaining project work.
 - `docs/agents_doc.md`: brief record of completed changes and the next step.
 - `skills/karpathy-guidelines/SKILL.md`: follow the supplied Karpathy development guidelines. If missing, ask before development.
 
-## Active Agenda — Rework First
+## Active Agenda
 
-- As agreed on 2026-10-07, pause the original `docs/PLAN.md` agenda until `REWORK.md` is complete. Do not consult the original plan or an `agenda.txt` file to decide, order, or add work during the rework.
-- Choose the next bounded step from `REWORK.md`, discuss its contract and proportional verification with the user, then implement the agreed slice. Creating the rework plan does not authorize implementing all its steps at once.
-- Use current code and feature documentation to understand existing behavior; the paused plan is historical context only and cannot expand rework scope. Existing collaboration, design, routing, and side-effect rules still apply.
-- Track rework decisions, status, and verification in `REWORK.md` and `docs/agents_doc.md`. Keep the pause notice in `docs/PLAN.md`; its original checklist remains paused.
-- Only after all rework completion criteria are verified, record the handover in these files, reconcile the original plan with the resulting implementation, and resume `docs/PLAN.md` for remaining project work.
+- Use `docs/PLAN.md` to choose and order remaining project work. The user resumed this agenda on 2026-10-09.
+- Discuss the next bounded step, its contract and proportional verification with the user, then implement the agreed slice. The plan does not authorize implementing every item at once.
+- Use current code and feature documentation to understand existing behavior and avoid repeating completed work. Existing collaboration, design, routing and side-effect rules still apply.
+- Track decisions, scope, status and verification in `docs/PLAN.md` and `docs/agents_doc.md`. Do not use `agenda.txt` as an alternative agenda.
 
 ## Frontend Design
 
@@ -114,7 +113,7 @@ included in this first slice. See `docs/employee-profile.md`.
 - Verify behavior appropriate to the change. Report what was checked and what remains unverified; never claim delivery, execution, or testing that did not happen.
 - For changes affecting chat or Streamlit behavior, after automated tests pass, start the local app and exercise the changed flow in the inline browser. Then leave the app open there so the user can independently verify it before merge or direct push to `main`; wait for the user's confirmation before either. Record any unavailable checks and observed limits clearly.
 - Keep tests proportional to the agreed slice and discuss the proposed test scope before coding. Cover core successful behavior, meaningful boundaries, realistic failures, and regressions; prioritize routing mistakes, incorrect payload extraction, side effects, and accurate failure reporting. Use representative cases for equivalent inputs and justify exhaustive cases when they protect a real contract. Avoid tests that merely mirror the implementation or repeat coverage without catching a distinct failure.
-- Immediately update the active plan when decisions, scope, architecture, or status change: `REWORK.md` during rework, then `docs/PLAN.md` after the recorded handover. Add a brief completed-change entry to `docs/agents_doc.md`. Update this file too if project facts or working rules change. Include those updates in the same logical change.
+- Immediately update `docs/PLAN.md` when decisions, scope, architecture, or status change. Add a brief completed-change entry to `docs/agents_doc.md`. Update this file too if project facts or working rules change. Include those updates in the same logical change.
 - Keep the plan and record concise and adaptable. Use ✅ only for verified completed work and ⏳ for the active discussion or step.
 
 ## Project Boundaries

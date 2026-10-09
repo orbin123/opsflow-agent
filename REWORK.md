@@ -1,9 +1,10 @@
 # OpsFlow Rework Plan
 
-Agreed direction: 2026-10-07. `REWORK.md` is the active agenda until the completion
-criteria below are verified. The original `docs/PLAN.md` agenda is paused; do not
-use it or `agenda.txt` to decide or order work. Resume the original plan only
-after the recorded rework handover.
+**Archived — closed by the user on 2026-10-09.** Future planning belongs only in
+`docs/PLAN.md`. Do not use this document to choose, order or authorize work.
+The content below is a historical record of earlier decisions and verification;
+its active/paused/next-step wording is superseded by this closure. Closing the
+agenda does not claim that previously unverified delivery or deployment checks ran.
 
 ### Product audit — 2026-10-09
 

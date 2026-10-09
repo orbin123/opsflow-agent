@@ -1,13 +1,44 @@
 # Project Implementation Plan
 
-## Paused for Rework — 2026-10-07
+## Active Agenda — resumed 2026-10-09
 
-The user paused this agenda until the [rework plan](../REWORK.md) is complete.
-Do not use this plan or `agenda.txt` to select or order work during rework.
-Use `REWORK.md` for active scope, decisions, sequencing, and verification;
-the content below remains a historical record of the original project plan.
-After all rework completion criteria are verified, reconcile this plan with the
-implemented changes, record the handover, and resume its remaining work.
+The user closed the rework agenda and resumed this plan for remaining project work.
+Choose each next bounded slice here, discuss its contract and verification before
+coding, and record outcomes in this file and `docs/agents_doc.md`. No additional
+implementation is authorized by this handover.
+
+### Current implementation baseline
+
+This baseline supersedes older pending-integration statements and historical
+slice descriptions below; those descriptions retain their original verification
+limits and are not instructions to repeat completed work.
+
+- Natural-language sentiment, keyword and FAQ workflows are integrated behind
+  the classifier, with retained results and grounded presentation. Uncertain,
+  contextual and compound requests use the agent.
+- Durable SQLite chats, catalogue APIs, Rename/Delete, URL restoration, SSE live
+  Activity and saved execution details are implemented. Settings provides Docs,
+  saved Emails and read-only Reminders pages.
+- Chat supports one-time reminder creation through the agent with turn-owned
+  deduplication. The due-time delivery worker remains a separate process; chat
+  never starts it. Drafting does not send email, and SMTP acceptance does not
+  establish inbox arrival.
+- Merged PR #48 adds the persistent fictional Sachin Tendulkar profile (EMP-001)
+  and singleton workspace association for chats, saved drafts and reminders.
+  Profile display, agent personalization and durable composer/last-selection
+  restoration remain separately discussed future slices.
+- Latest application verification: 1,161 tests pass, dependency/whitespace checks
+  pass, and isolated local restart/refresh review preserves profile/chat/reminder
+  records. Live SMTP/inbox, deployment and general model reliability remain
+  unverified. See feature documentation and `docs/audit.md` for recorded limits.
+
+### Remaining work
+
+The remaining checklist covers observability/remaining endpoints, packaging,
+README and deployment discussion, with complete notification/reminder delivery
+verification still outstanding. Reconcile each proposed slice against the current
+code before implementation. Employee workspace follow-ups require separate
+agreement; the resumed plan does not make them the automatic next step.
 
 ## Objective
 
@@ -175,9 +206,8 @@ Status: ✅ completed; ⏳ current discussion/next step; empty = pending. Each i
 - [ ] Add Docker/Compose, persistent storage, and README; verify the complete complaint → policy → draft → notification → due reminder flow.
 - [ ] Discuss hosting, deploy the agreed setup, and verify persistence and email delivery there.
 
-While this agenda is paused, update `REWORK.md` for active scope, architecture,
-order, and completion status. Record the brief reason in `docs/agents_doc.md`.
-Resume updates to this checklist after the recorded rework handover.
+Update this active checklist and `docs/agents_doc.md` as each agreed slice changes
+scope, architecture, status or verification.
 
 ## Agreed First Agent-Loop Slice
 

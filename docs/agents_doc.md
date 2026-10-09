@@ -2,6 +2,14 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** At the user's direction, closed the rework planning agenda and
+  restored `docs/PLAN.md` as the sole active agenda. Removed rework-first/read/update
+  instructions and step numbering from `AGENTS.md`; reconciled the plan with the
+  merged application/profile baseline and remaining verification limits. Retained
+  the old rework document as explicitly inactive history. Documentation only;
+  checked agenda references and whitespace. User authorized a signed commit and
+  direct push to `main`; no application changes or new runtime checks.
+
 - **2026-10-09:** Implemented the separately approved singleton employee profile
   slice, independent of REWORK: fictional Sachin Tendulkar (EMP-001), saved in
   chat schema version 3 with transactional v1/v2 migration and read-only GET
