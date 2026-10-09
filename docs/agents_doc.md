@@ -2,6 +2,15 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** Added the user-approved concise eight-section `docs/audit.md`:
+  product/feature explanations, connectivity, dependency roles, reliability and
+  prioritized gaps. Fresh baseline `9c2fcb6` verification: 1,153 tests pass, one
+  LangChain history deprecation warning, dependency check passes. Read-only inline
+  review confirms restored reminder replies/Activity, pending reminders and Emails
+  empty state. Historical live evidence is separated from fresh checks; no new
+  reminder/provider execution, worker startup or email sent. Documentation only;
+  rework completion/handover remains pending.
+
 - **2026-10-09:** Implemented approved agent-only one-time reminder creation using
   literal date/time phrases, local resolution and durable turn-owned creation keys
   with the existing scheduler/worker. Clarification never inserts; repeated tool
