@@ -24,10 +24,11 @@ slices are implemented and verified below. Remaining step 12b presentation and
 step 14 Settings/Docs, Emails and read-only Reminders are implemented within
 the recorded limits; final review/handover remains pending. User approved merging single-draft PR #39.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Review implemented step 14c read-only Reminders page.
-Settings/Docs draft PR #40 and Emails draft PR #41 remain open;
-merge authorization has not been inferred from moving to the next slice. Bottom-left
-Settings replaces the standalone Docs entry. Remaining step 12b capability/multi-tool presentation
+**Next:** ⏳ Discuss remaining step 12b capability/multi-tool presentation and the
+separate chat-reminder integration contract before the final rework handover.
+User authorized merging PRs #40/#41/#42 after review on 2026-10-09. Settings/Docs
+and Emails are merged; Reminders PR #42 now targets `main` for the approved merge.
+Bottom-left Settings replaces the standalone Docs entry. Remaining step 12b capability/multi-tool presentation
 is deferred, not complete; revisit it before step 15's rework handover. User approved
 merging Workspace PR #38 and single-summary dependency PR #37 on 2026-10-08;
 PR #37 is merged and #38 now targets `main`. User approved
@@ -1658,6 +1659,18 @@ agreed before coding. The original plan remains paused.
   No dependencies/schema changes; Figma remains rate-limited and existing LangChain
   history deprecation remains. Separate signed branch `feature/saved-reminders`,
   stacked on Emails PR #41. App remains open; merge/direct push awaits user confirmation.
+
+#### Settings/Emails/Reminders delivery approval — 2026-10-09
+
+- User authorized merging all three open PRs after review. Reviewed current
+  application diffs, scope, retained-record/non-execution contracts and recorded
+  1,090-test plus 141-focused-check/browser evidence; no blocking issue found.
+- Verified user-only authorship, matching sign-offs and passing DCO. Merged
+  Settings/Docs PR #40, retargeted Emails PR #41 to `main` and merged it, then
+  retargeted Reminders PR #42 to `main`. PR #42 has explicit merge authorization.
+- This delivery record changes no application code; existing verification remains
+  applicable. The original plan stays paused. Remaining step 12b and chat-reminder
+  integration still need bounded discussion before final handover.
 
 ### 15. Verify the complete rework and hand back to the original plan
 

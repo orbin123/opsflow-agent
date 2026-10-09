@@ -47,10 +47,15 @@ and continue its remaining work. Earlier next-step notes below are historical.
   schema/dependency or chat integration changes. Figma remains rate-limited. Signed
   `feature/saved-reminders` stacks on Emails PR #41; app open, merge awaits review.
 
-**Next:** ⏳ Review implemented step 14c read-only Reminders page.
-Chat creation/delivery integration still requires its separate contract.
-Settings/Docs draft PR #40 remains open; moving to the next slice was not treated
-as merge authorization. The read-only Reminders contract was approved on 2026-10-09.
+- **2026-10-09:** User authorized merging all open PRs after review. Reviewed
+  current heads/scoped diffs and existing 1,090-test/141-focused/browser evidence;
+  no blocking finding. User-only authorship, matching sign-offs and passing DCO
+  verified. Merged Settings/Docs #40 and Emails #41 in dependency order; Reminders
+  #42 now targets `main` with explicit merge authorization. Documentation-only
+  delivery update; no repeated runtime checks or provider/email execution.
+
+**Next:** ⏳ Discuss remaining step 12b presentation and separately scope chat
+reminder creation/delivery before final handover. The original plan stays paused.
 
 - **2026-10-08:** Implemented approved step 14b read-only saved Emails page using
   existing GET records: distinct successful draft observations, compound/partial
