@@ -5,6 +5,18 @@ criteria below are verified. The original `docs/PLAN.md` agenda is paused; do no
 use it or `agenda.txt` to decide or order work. Resume the original plan only
 after the recorded rework handover.
 
+### Product audit — 2026-10-09
+
+- User approved a concise, explainable eight-section audit. Added `docs/audit.md`
+  covering product scope, feature behavior, frontend/backend connections, packages,
+  reliability, evidence and gaps against main commit `9c2fcb6`.
+- Fresh verification: 1,153 tests pass with one history deprecation warning;
+  dependency check passes. Read-only inline review confirms saved reminder replies,
+  Activity, pending reminder records and the Emails empty state. No new execution,
+  worker startup or live email; live model/delivery/deployment limits are explicit.
+- Documentation only; no implementation scope or rework completion status changed.
+  Remaining step 12b and step 15 still require their agreed verification/handover.
+
 **Status:** Steps 1 and 2 (2a/2b) implemented and verified within their recorded limits.
 Keyword steps 3a/3b and FAQ steps 3c/3d are implemented and verified within the
 recorded offline and limited live-review bounds. Step 4 is implemented and verified
