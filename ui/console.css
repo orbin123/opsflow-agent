@@ -73,6 +73,22 @@ a { color: var(--of-focus); }
 .st-key-save_chat_name button { background: var(--of-action); color: var(--of-ink); }
 .st-key-confirm_delete_chat button { color: #A23438; border-color: #A23438; }
 .st-key-confirm_delete_chat button:hover { background: #FBE9E9; }
+[data-testid="stSidebarUserContent"] [data-testid="stVerticalBlock"]:has(> [data-testid="stLayoutWrapper"] > .st-key-settings_footer) {
+  min-height: calc(100dvh - 120px);
+}
+[data-testid="stLayoutWrapper"]:has(> .st-key-settings_footer) {
+  margin-top: auto; position: sticky; bottom: 0;
+  background: var(--of-surface); padding-top: 16px;
+}
+.st-key-settings_footer button, [data-testid="stPopoverBody"] button {
+  min-height: 48px; border-radius: 0;
+  font-family: "IBM Plex Mono", monospace;
+}
+[data-testid="stPopoverBody"] {
+  background: var(--of-surface); color: var(--of-ink);
+  border: 1px solid var(--of-border); border-radius: 0;
+  font-family: "IBM Plex Mono", monospace;
+}
 @media (max-width: 767px) {
   [data-testid="stMainBlockContainer"] { padding: 80px 16px 24px; }
   [data-testid="stExpander"] { padding: 8px; }

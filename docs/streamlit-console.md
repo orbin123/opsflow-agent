@@ -265,3 +265,21 @@ another POST. Saved JSON is byte-identical after inspection. Desktop 1440 px and
 mobile 390 px checks confirm alignment/order, no overflow, and keyboard expansion
 with 2 px focus. App remains open. No live provider quality, email, proxy/deployment
 or token-streaming verification. Existing LangChain history deprecation remains.
+
+## Settings and Docs — step 14a
+
+The bottom-left Settings popover opens Docs. Emails and Reminders options are
+disabled with accurate availability text until their separate slices are built.
+Docs renders the maintained [user guide](user-guide.md), including demo prompts
+for all five current chat tools and one compound request, execution types,
+Activity, saved chats, clarification/recovery and current limitations.
+
+Return to chat or a Workspace title restores the conversation and its per-chat
+multiline draft. Hidden composer widget cleanup cannot erase the retained draft.
+Settings does not execute work, change the chat locator or create a chat.
+Pending/running/unsaved work blocks page entry; running work detected while Docs
+is open returns to the conversation for recovery. Backend read failures do not
+prevent reading the local guide; missing/unreadable content shows a safe error
+with Return to chat still available. The view has no separate URL persistence.
+
+Verification and inline-review evidence are recorded in REWORK step 14a.

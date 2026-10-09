@@ -16,7 +16,11 @@ multiline draft composer. Running/unsaved work locks navigation and submission;
 recovery controls only read. See `docs/streamlit-console.md`. Completed execution
 details appear between each right-aligned prompt and left-aligned answer in a
 vertically sequential, left-aligned Activity panel (step 11). Step 13 shows actual
-live stage events before the saved answer; Docs remains later.
+live stage events before the saved answer. Approved step 14a adds bottom-left
+Settings with a read-only Docs guide and unavailable Emails/Reminders page options.
+Docs/return preserves chat selection and browser-session drafts without executing
+work; pending/running/unsaved work blocks page entry. See `docs/user-guide.md`.
+Emails and Reminders pages remain separately agreed follow-up slices.
 
 The approved Workspace addition provides persistent Rename/Delete through a
 themed right-click/More actions menu. Custom titles survive the first message;
