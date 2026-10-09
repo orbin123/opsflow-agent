@@ -89,10 +89,11 @@ a { color: var(--of-focus); }
   border: 1px solid var(--of-border); border-radius: 0;
   font-family: "IBM Plex Mono", monospace;
 }
-[class*="st-key-email_entry_"][data-testid="stVerticalBlock"] {
+[class*="st-key-email_entry_"][data-testid="stVerticalBlock"],
+[class*="st-key-reminder_entry_"][data-testid="stVerticalBlock"] {
   background: var(--of-surface); border-color: var(--of-border); border-radius: 0;
 }
-.st-key-emails_page button { min-height: 48px; }
+.st-key-emails_page button, .st-key-reminders_page button { min-height: 48px; }
 @media (max-width: 767px) {
   [data-testid="stMainBlockContainer"] { padding: 80px 16px 24px; }
   [data-testid="stExpander"] { padding: 8px; }

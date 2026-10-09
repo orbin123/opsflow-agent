@@ -126,7 +126,22 @@ available when a later step failed; the source turn's outcome is shown separatel
 its displayed title, and deleting a chat removes its drafts from this list after
 refresh. If records cannot be read, a loading error appears instead of an incomplete
 list. An invalid saved draft has an unavailable-record notice. Emails does not send,
-edit or export drafts. Reminders remains unavailable; chat cannot schedule reminders.
+edit or export drafts.
+
+**Settings → Reminders** lists stored reminders by due time, earliest first.
+Each card shows the saved task, due time in its recorded timezone (including UTC
+offset), and current delivery state. Refresh only reads records; it never schedules
+or delivers a reminder. Return to chat preserves your selected chat and draft.
+
+Scheduled means awaiting delivery; Submitting means the outcome is pending;
+Retry scheduled means the worker recorded a definite pre-submission failure.
+SMTP accepted does not confirm inbox arrival. Failed requires intervention;
+Unknown has no automatic retry. A due time in the past does not prove delivery.
+Loading failures appear explicitly rather than as an empty list.
+
+Existing reminders have no originating chat link. Chat cannot schedule reminders;
+creation and delivery remain separate utilities. This page does not start the worker
+or add retry, cancellation, editing or deletion controls.
 
 ## Clarification, failures and recovery
 

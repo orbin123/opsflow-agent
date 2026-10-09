@@ -29,13 +29,13 @@ def test_docs_returns_saved_chat_and_multiline_draft_without_execution(workspace
     assert len(recorded) == execute.call_count == 1
 
 
-def test_docs_empty_welcome_draft_and_unavailable_pages(workspace):
+def test_docs_empty_welcome_draft_and_available_pages(workspace):
     recorded, execute = workspace
     ui = open_chat()
     ui.text_area(key="composer").set_value("Welcome draft\nNext line").run()
     ui.button(key="open_docs").click().run()
     assert not ui.button(key="open_emails").disabled
-    assert ui.button(key="open_reminders").disabled
+    assert not ui.button(key="open_reminders").disabled
     ui.run()
     ui.button(key="return_to_chat").click().run()
     assert ui.text_area(key="composer").value == "Welcome draft\nNext line"

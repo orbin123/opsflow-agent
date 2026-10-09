@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 
 import streamlit as st
 
-from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat
+from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat, list_reminders
 from app.chat_menu import chat_menu, HTML, CSS, JS
 from app.email_catalogue import saved_email_entries
 
@@ -371,8 +371,7 @@ with st.sidebar:
             st.button("Emails", key="open_emails", icon=":material/mail:",
                       width="stretch", on_click=change_view, args=("emails",))
             st.button("Reminders", key="open_reminders", icon=":material/alarm:",
-                      width="stretch", disabled=True)
-            st.caption("Reminders page is not available yet. Chat cannot schedule reminders.")
+                      width="stretch", on_click=change_view, args=("reminders",))
 
 if st.session_state.view == "docs":
     with st.container(width=760, key="docs_guide"):
@@ -384,6 +383,34 @@ if st.session_state.view == "docs":
             st.error("The guide is unavailable. Return to chat and try again later.")
         else:
             st.markdown(guide)
+    st.stop()
+
+if st.session_state.view == "reminders":
+    with st.container(width=760, key="reminders_page"):
+        st.button("Return to chat", key="return_to_chat", icon=":material/arrow_back:",
+                  on_click=change_view, args=("chat",))
+        st.header("Reminders")
+        st.caption("Stored reminders. Chat cannot schedule reminders; delivery uses the separate reminder worker.")
+        st.button("Refresh", key="refresh_reminders", icon=":material/refresh:")
+        try:
+            reminders = list_reminders(api_url)
+        except ChatClientError:
+            st.error("Saved reminders could not be loaded. Refresh to try again.")
+        else:
+            if not reminders:
+                st.info("No stored reminders yet.")
+            labels = {"pending": "Scheduled — awaiting delivery",
+                      "submitting": "Submitting — outcome pending",
+                      "retry": "Retry scheduled — definite pre-submission failure",
+                      "accepted": "SMTP accepted — inbox delivery unconfirmed",
+                      "failed": "Failed — intervention required",
+                      "unknown": "Unknown — no automatic retry"}
+            for reminder in reminders:
+                with st.container(border=True, key="reminder_entry_" + reminder["reminder_id"]):
+                    st.text(labels[reminder["state"]])
+                    st.text(reminder["task"])
+                    due = datetime.fromisoformat(reminder["due_at"]).astimezone(ZoneInfo(reminder["timezone"]))
+                    st.text("Due: " + due.strftime("%d %b %Y · %H:%M:%S %z") + " · " + reminder["timezone"])
     st.stop()
 
 if st.session_state.view == "emails":
