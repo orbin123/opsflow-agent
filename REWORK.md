@@ -21,9 +21,11 @@ inline details and step 13 live formation are implemented and verified within th
 recorded offline/scripted-browser limits. Step 12a sentiment/onboarding is implemented
 and verified within the recorded limits; step 12b's single-summary and single-draft
 slices are implemented and verified below. Remaining step 12b presentation and
-steps 14 onward are pending. User approved merging single-draft PR #39.
+step 14 Settings/Docs, Emails and read-only Reminders are implemented within
+the recorded limits; final review/handover remains pending. User approved merging single-draft PR #39.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Step 14b saved Emails page implementation/review, approved by the user. Settings/Docs draft PR #40 remains open;
+**Next:** ⏳ Review implemented step 14c read-only Reminders page.
+Settings/Docs draft PR #40 and Emails draft PR #41 remain open;
 merge authorization has not been inferred from moving to the next slice. Bottom-left
 Settings replaces the standalone Docs entry. Remaining step 12b capability/multi-tool presentation
 is deferred, not complete; revisit it before step 15's rework handover. User approved
@@ -1606,6 +1608,56 @@ agreed before coding. The original plan remains paused.
   change in draft PR #41 on `feature/saved-email-drafts`, stacked on Settings/Docs
   PR #40. App stays
   open for user review; merge/direct push awaits confirmation. Reminders is next.
+
+#### Step 14c agreed contract — 2026-10-09
+
+- **Agreement:** User approved a read-only page and native Emails-card adaptation.
+  Add GET `/api/v1/reminders` and an HTTP helper reading existing reminder SQLite
+  records without initializing storage, recovering attempts or starting the worker.
+- **Data/presentation:** One card per stored reminder, earliest due time first with
+  identity tie-break. Show literal saved task, due time in the recorded timezone
+  with UTC offset, and persisted pending/submitting/retry/accepted/failed/unknown
+  state. SMTP acceptance never implies inbox delivery. Existing records have no
+  chat association; omit source-chat links rather than infer provenance.
+- **Navigation/errors:** Preserve selected chat and browser-session composer drafts,
+  reuse running/unsaved entry locks, and provide read-only Refresh/Return. Missing
+  database means no stored reminders; invalid/inaccessible storage or malformed
+  records fails explicitly without partial-list/empty success. No storage migration.
+- **Boundaries:** Chat scheduling/delivery integration remains separately agreed.
+  No worker startup, provider/SMTP calls, creation, automatic retry, cancellation,
+  deletion, new service or dependency. Figma inspection is still rate-limited;
+  use the approved native 760 px reading column and existing themed cards.
+- **Verification:** Core stored states, timezone display, ordering, unchanged
+  storage/no initialization, safe reader/API/client failures, preservation and locks.
+  Run regressions/dependency/whitespace checks, then isolated desktop/mobile inline
+  browser review and leave it open before any merge/direct push.
+
+#### Step 14c implementation and review — 2026-10-09
+
+- **Implemented:** Read-only SQLite snapshot and GET `/api/v1/reminders`, validated
+  client helper, Settings page with literal task/timezone-aware due time and all six
+  actual delivery states. Missing storage is empty; malformed/inaccessible storage
+  yields sanitized failure without partial results or repair. No chat association
+  is inferred. Refresh/Return preserve chat selection and multiline composer drafts.
+- **Checks:** All 1,090 tests pass (18 new reader/API/client/UI cases), dependency
+  and whitespace checks pass; all 141 final focused regressions pass after the
+  card styling correction. Coverage includes unchanged storage, absent-file
+  non-creation, pre-worker schema, state/timezone/order fidelity, invalid records,
+  sanitized errors, one-shot GET, navigation preservation and active-work locks.
+  Browser review caught reminder cards lacking Emails CSS selectors; extended the
+  existing square surface/border and 48 px button rules and rechecked rendering.
+- **Browser:** Isolated app 8511/backend 8021 with six synthetic reminder states and
+  one persisted synthetic chat. Verified 1440/390 px layouts, literal multiline
+  content, Kolkata/New York offsets, 760 px desktop cards, square themed surfaces,
+  48 px Refresh with 2 px keyboard focus, no horizontal overflow, Settings entry,
+  Refresh/Return and exact multiline composer restoration. Reminder database stays
+  byte-identical and chat retains one turn after all page reads. Screenshots:
+  `/tmp/opsflow-reminders-desktop.png`, `/tmp/opsflow-reminders-mobile.png`.
+- **Limits/delivery:** No provider/SMTP calls or worker startup; browser records are
+  fixtures, not actual deliveries. Chat scheduling/delivery remains separate.
+  No dependencies/schema changes; Figma remains rate-limited and existing LangChain
+  history deprecation remains. Separate signed branch `feature/saved-reminders`,
+  stacked on Emails PR #41. App remains open; merge/direct push awaits user confirmation.
 
 ### 15. Verify the complete rework and hand back to the original plan
 

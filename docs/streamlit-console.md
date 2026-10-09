@@ -308,3 +308,16 @@ existing not-found chat behavior. Running/unsaved page locks and recovery apply.
 
 No send, edit, export, search or reminder integration. Review evidence and limits
 are recorded in REWORK step 14b.
+
+## Stored Reminders page
+
+Settings → Reminders reads GET `/api/v1/reminders`, ordered by due time then ID.
+Native cards show literal tasks, due times in their stored timezone with UTC offset,
+and actual worker state. SMTP accepted is explicitly inbox-unconfirmed. Missing
+storage yields an empty state; invalid/inaccessible storage yields a safe error
+and Refresh, with no partial list. Return preserves chat selection and multiline
+composer drafts; current pending/running/unsaved page locks remain.
+
+This page never schedules work, starts a worker, recovers attempts or submits email.
+Existing records have no chat association, so no Open chat control is fabricated.
+Chat reminder integration remains separate. See [reminders.md](reminders.md).

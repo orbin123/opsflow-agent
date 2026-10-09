@@ -10,6 +10,7 @@ from pydantic import TypeAdapter, ValidationError
 
 from app.api.chat import ChatRequest, ChatResponse, ChatMetadata, SavedChat, RenameChatRequest, DeletedChat
 from app.agent import AgentTrace
+from app.reminder_catalogue import SavedReminder
 
 
 class ChatClientError(Exception):
@@ -18,6 +19,18 @@ class ChatClientError(Exception):
     def __init__(self, message: str, *, outcome: str = "unknown"):
         super().__init__(message)
         self.outcome = outcome
+
+
+def list_reminders(base_url: str) -> list[dict]:
+    request = Request(base_url.rstrip("/") + "/api/v1/reminders", method="GET")
+    try:
+        with urlopen(request, timeout=30) as response:
+            if response.status != 200:
+                raise ChatClientError("Saved reminders could not be loaded. Refresh to try again.")
+            records = TypeAdapter(list[SavedReminder]).validate_json(response.read())
+        return [record.model_dump(mode="json") for record in records]
+    except (URLError, OSError, ValueError, KeyError):
+        raise ChatClientError("Saved reminders could not be loaded. Refresh to try again.") from None
 
 
 def submit_chat(base_url: str, session_id: str, message: str, *, turn_id: str | None = None, on_event=None) -> dict:

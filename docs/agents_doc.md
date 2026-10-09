@@ -36,10 +36,21 @@ and continue its remaining work. Earlier next-step notes below are historical.
   stays open; draft PR #40 on `feature/settings-docs-guide` awaits user confirmation
   before merge. User-only authorship/sign-off verified; Emails/Reminders remain next slices.
 
-**Next:** ⏳ Review implemented step 14b Emails page, then discuss the Reminders
-page and its chat-creation/delivery dependency.
+- **2026-10-09:** Implemented approved step 14c read-only Reminders page and GET
+  catalogue/client with actual persisted states, literal tasks and recorded-zone
+  due times. Missing storage is empty; invalid storage/records fail safely without
+  repair or partial success. All 1,090 tests (18 new), dependency/whitespace checks
+  pass; 141 final focused regressions pass after styling correction. Inline isolated
+  8511/8021 review covers 1440/390 px cards/focus/wrapping,
+  Refresh/Return, multiline draft preservation and no overflow. Corrected card CSS
+  selectors found in browser review. Fixtures only; no worker/provider/SMTP calls,
+  schema/dependency or chat integration changes. Figma remains rate-limited. Signed
+  `feature/saved-reminders` stacks on Emails PR #41; app open, merge awaits review.
+
+**Next:** ⏳ Review implemented step 14c read-only Reminders page.
+Chat creation/delivery integration still requires its separate contract.
 Settings/Docs draft PR #40 remains open; moving to the next slice was not treated
-as merge authorization. Reminders remains the following separate contract.
+as merge authorization. The read-only Reminders contract was approved on 2026-10-09.
 
 - **2026-10-08:** Implemented approved step 14b read-only saved Emails page using
   existing GET records: distinct successful draft observations, compound/partial

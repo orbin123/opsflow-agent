@@ -74,3 +74,22 @@ There is no automatic reconciliation or manual reset command in this slice. Revi
 46 offline cases use temporary database files and controlled current instants. They cover Kolkata conversion, an explicit timezone override, timezone-data failure, DST gaps and both fold occurrences, past/exact/future boundaries, validation limits, unchanged/conflicting creation retries, distinct keys, concurrent identical-key scheduling, recovery in a fresh process after the due time, configured/relative paths, and sanitized database/commit/filesystem failures. No SMTP or Groq call is made. Full-suite results are recorded in the plan and change record.
 
 Worker verification uses 34 additional offline cases: due/overdue processing, committed attempt visibility before SMTP, retry timing/budget across restarts, terminal outcomes, SMTP-stage classification, configured-recipient and original-zone message content, second-process exclusion, actual process exit, post-acceptance interruption, claim/outcome/recovery database failures, unchanged state on creation retry, and graceful SIGTERM. Existing scheduling and draft-notification tests remain regression checks. No real SMTP connection/authentication/submission or inbox arrival has been verified.
+
+## Read-only catalogue and page
+
+GET `/api/v1/reminders` returns one JSON object per stored reminder with
+`reminder_id`, literal `task`, aware `due_at` and `created_at`, original `timezone`,
+and actual persisted `state`. Ordering is due instant ascending, then ID.
+Creation keys, SMTP credentials and attempt Message-IDs are not exposed.
+Reads open the configured database in SQLite `mode=ro` and do not create storage,
+migrate schema, acquire worker ownership, recover attempts or submit email.
+A missing database returns `[]`; existing invalid/inaccessible storage or invalid
+records returns HTTP 503 with a sanitized detail, never a partial list.
+The scheduling-only schema is supported before worker initialization.
+
+Settings → Reminders displays these records with due times in their recorded
+timezone and UTC offset. Refresh/Return are read-only and preserve selected chat
+and composer drafts. SMTP accepted does not mean inbox delivery; pending,
+submitting, retry, failed and unknown remain distinct. No chat links are shown
+because stored reminders have no chat association. Chat scheduling, worker
+startup, cancellation, deletion and manual retry remain outside this page slice.

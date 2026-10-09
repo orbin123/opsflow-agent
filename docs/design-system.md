@@ -167,3 +167,13 @@ subject, multiline body and review actions together, followed by local save time
 source title and expandable prompting context. Draft/partial outcome and fictional
 policy text must remain explicit. Figma Foundations metadata was inspected; detailed
 design context remains rate-limited. This adaptation adds no Figma nodes.
+
+## Stored Reminders page adaptation
+
+On 2026-10-09 the user approved step 14c using the Emails page's native 760 px
+reading column and square bordered cards. Return/Refresh retain the existing 48 px
+controls and focus states. Use literal IBM Plex Mono task text and timezone-aware
+due times with UTC offset. Status wording distinguishes scheduled, submitting,
+retry, SMTP accepted, failed and unknown; never show SENT for SMTP acceptance.
+No source-chat link is shown because existing reminders have no chat association.
+Figma inspection remains rate-limited; this adaptation adds no Figma nodes.

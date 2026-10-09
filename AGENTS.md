@@ -23,7 +23,12 @@ work; pending/running/unsaved work blocks page entry. See `docs/user-guide.md`.
 Approved step 14b enables a read-only Emails page across retained chat drafts,
 including successful drafts from compound/partially failed turns. Existing GET APIs
 provide records; Refresh/Open chat never execute drafting. Saved actions and demo
-qualifications remain separate. Reminders remains a separately agreed follow-up slice.
+qualifications remain separate. Approved step 14c adds a read-only Reminders page
+and GET catalogue over existing
+local storage, showing literal tasks, recorded-zone due times and actual delivery
+states. SMTP acceptance does not imply inbox arrival. Reads never start the worker
+or schedule/send/retry work; existing records have no source-chat association.
+Chat reminder creation/delivery remains a separately agreed follow-up slice.
 
 The approved Workspace addition provides persistent Rename/Delete through a
 themed right-click/More actions menu. Custom titles survive the first message;
