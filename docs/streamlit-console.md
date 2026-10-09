@@ -119,7 +119,7 @@ supplied text cannot inject HTML or load Markdown images. Demo FAQ results are
 explicitly qualified. Clarification questions appear as ordinary assistant replies without an execution
 warning banner; their status remains visible in Activity. Other execution
 statuses stay visible: a completed draft is not a
-sent email, and chat does not yet create reminders or submit email.
+sent email. Chat can create one-time reminders; delivery uses the separate worker.
 
 ## Completed activity
 
@@ -322,4 +322,6 @@ composer drafts; current pending/running/unsaved page locks remain.
 
 This page never schedules work, starts a worker, recovers attempts or submits email.
 Existing records have no chat association, so no Open chat control is fabricated.
-Chat reminder integration remains separate. See [reminders.md](reminders.md).
+Chat creates one-time reminders through the agent and existing scheduler. The saved
+acknowledgement and Activity persist through restoration; worker states remain on
+this read-only page. See [reminders.md](reminders.md).

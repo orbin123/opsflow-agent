@@ -2,6 +2,23 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** Implemented approved agent-only one-time reminder creation using
+  literal date/time phrases, local resolution and durable turn-owned creation keys
+  with the existing scheduler/worker. Clarification never inserts; repeated tool
+  calls/replay/recovery never create a second reminder for the turn. Exact saved
+  scheduling acknowledgements survive later failures; absent results render clearly.
+  Docs and operational contracts are updated. All 1,141 tests pass (51 new), plus
+  dependency/whitespace checks. Live inline demo scheduled the deployment report
+  for 10 Oct 2026 at 10:00 Asia/Kolkata. Missing time clarified; an initially
+  normalized follow-up was rejected without insertion, then stronger literal
+  instructions and an explicit follow-up completed scheduling. Restart/refresh
+  preserved identical records (two chats/two distinct pending reminders). Verified
+  Activity/Docs/Reminders and navigation draft preservation. Isolated review data;
+  no live SMTP/inbox or mobile-layout verification. Original checkout unchanged;
+  separate main-based feature/chat-reminder-creation DCO-signed change prepared.
+  User authorized push/merge; PRs #43/#44 merged and their Docs reconciled.
+  Combined review with separate Workspace changes passes 1,153 tests and desktop/
+  mobile browser checks. App remains open; no live email sent.
 - **2026-10-09:** Added the requested reminder demo prompt to Docs with explicit
   Asia/Kolkata time and the current chat-scheduling limitation. It explains that
   no reminder/email is created and the Reminders page is read-only. Documentation
@@ -39,7 +56,8 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   dependency/whitespace checks. Fixed stale welcome assertions and default-sidebar
   footer alignment. Inline desktop/mobile review, saved Docs/Reminders and draft
   navigation pass. Custom sidebar resizing/mobile keyboards remain unverified.
-  User authorized separate DCO commits/PRs, push and merge; no live email sent.
+  PRs #43/#44/#45 are merged. User authorized this separate Workspace DCO
+  change and merge; no live email sent.
 
 ## Active Agenda — Rework First
 
@@ -93,8 +111,8 @@ and continue its remaining work. Earlier next-step notes below are historical.
   #42 now targets `main` with explicit merge authorization. Documentation-only
   delivery update; no repeated runtime checks or provider/email execution.
 
-**Next:** ⏳ Discuss remaining step 12b presentation and separately scope chat
-reminder creation/delivery before final handover. The original plan stays paused.
+**Next:** ⏳ Review the verified chat-reminder creation addition, then discuss
+remaining step 12b presentation before final handover. The original plan stays paused.
 
 - **2026-10-08:** Implemented approved step 14b read-only saved Emails page using
   existing GET records: distinct successful draft observations, compound/partial

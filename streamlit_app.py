@@ -125,7 +125,11 @@ def show_activity(execution: dict) -> None:
                 st.caption("ARGUMENTS")
                 st.json(step["arguments"])
                 st.caption("OBSERVATION")
-                st.json(step["result"])
+                if step["tool"] == "schedule_reminder" and step["result"] is None:
+                    st.text("No reminder was created by this call." if step.get("reason") == "reminder_clarification"
+                            else "No scheduling result was returned by this call.")
+                else:
+                    st.json(step["result"])
 
 
 st.html(f"<style>{console_styles()}</style>")
@@ -385,7 +389,7 @@ if st.session_state.view == "reminders":
         st.button("Return to chat", key="return_to_chat", icon=":material/arrow_back:",
                   on_click=change_view, args=("chat",))
         st.header("Reminders")
-        st.caption("Stored reminders. Chat cannot schedule reminders; delivery uses the separate reminder worker.")
+        st.caption("Stored reminders. Create a one-time reminder in chat; delivery uses the separate reminder worker.")
         st.button("Refresh", key="refresh_reminders", icon=":material/refresh:")
         try:
             reminders = list_reminders(api_url)
@@ -538,7 +542,11 @@ if st.session_state.queued is not None:
                             st.text("Step reason: " + event["reason"])
                         if "result" in event:
                             st.caption("OBSERVATION")
-                            st.json(event["result"])
+                            if event.get("tool") == "schedule_reminder" and event["result"] is None:
+                                st.text("No reminder was created by this call." if event.get("reason") == "reminder_clarification"
+                                        else "No scheduling result was returned by this call.")
+                            else:
+                                st.json(event["result"])
                 elif kind == "final":
                     failed = event["execution"]["status"] in {"error", "partial_failure"}
                     activity.update(label="Activity · saved", state="error" if failed else "complete")
