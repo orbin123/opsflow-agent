@@ -15,6 +15,7 @@ from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, StringConstraints, ValidationError, field_validator
 
 from app.execution_events import start_step, finish_step
+from app.model_wait import invoke_model, rate_limit_wait
 from app.tools.email_drafting import EmailDraftingError, _ACTION_INSTRUCTIONS, draft_email
 from app.tools.faq import retrieve_faq
 from app.tools.keywords import extract_keywords
@@ -209,7 +210,8 @@ def run_agent(message: str, *, history: list[HumanMessage | AIMessage] | None = 
     """Run one turn, with six model calls, five tools, and a soft 120s budget.
 
     Prior history is caller-supplied; this loop never stores or mutates it.
-    No retries or hard cancellation. Traces contain source data; do not log them.
+    One bounded retry per rate-limited model request; no tool/turn retries or hard
+    cancellation. Traces contain source data; do not log them.
     Model-level semantic decisions (including dependency selection) are not guarantees.
     """
     if not isinstance(message, str):
@@ -234,7 +236,7 @@ def run_agent(message: str, *, history: list[HumanMessage | AIMessage] | None = 
 
     messages = [SystemMessage(content=_SYSTEM), *(history or []), HumanMessage(content=message)]
     seen_ids = set()
-    with tracing_context(enabled=False):
+    with tracing_context(enabled=False), rate_limit_wait(started + 120):
         try:
             model = _create_model()
         except Exception:
@@ -245,7 +247,7 @@ def run_agent(message: str, *, history: list[HumanMessage | AIMessage] | None = 
             model_started = perf_counter()
             model_step = start_step("agent_model", kind="model")
             try:
-                response = model.invoke(messages)
+                response = invoke_model(model, messages)
             except Exception as error:
                 reason = _reason(error)
                 reason = "provider_unavailable" if reason == "tool_unavailable" else reason

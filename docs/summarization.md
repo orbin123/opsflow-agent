@@ -22,6 +22,9 @@ The client initializes on each valid call. It loads the repository-root `.env` w
 - `GROQ_API_KEY`: required, never logged.
 - `GROQ_SUMMARY_MODEL`: optional; defaults to `openai/gpt-oss-20b`. The supported override is `openai/gpt-oss-120b`. Other model names fail configuration validation; no automatic fallback.
 - Temperature 0, low reasoning effort, 2,048 completion tokens, 30-second request timeout, zero SDK retries, no streaming or tool calls.
+- Standalone calls do not retry. In agent execution, an explicit rate-limit rejection
+  can wait and retry the same model request once under the shared turn deadline;
+  see [agent-loop.md](agent-loop.md). No completed tool is reexecuted.
 - ChatGroq binds a native `json_schema` response format with `strict: true`, required fields, and `additionalProperties: false`. Length/blank constraints are validated locally to keep the provider schema simple. Raw content is parsed with `json.loads`, with no markdown stripping or partial JSON repair.
 - External LangSmith tracing is explicitly disabled for the call even if enabled in the environment. No raw response or model reasoning is returned or logged.
 

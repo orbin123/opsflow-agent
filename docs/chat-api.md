@@ -49,7 +49,11 @@ HTTP 422 rejects invalid bodies before execution/history creation. HTTP 503 retu
 the execution payload for `error` or `partial_failure`, retaining successful
 observations and failed steps; classifier/routing unavailability instead returns
 sanitized `{"detail":"..."}`. Failures remain in history through the existing
-session wrapper. There are no automatic endpoint retries. A supplied nonblank `turn_id` (up to
+session wrapper. There are no automatic endpoint retries. Agent execution can wait
+at most 60 seconds and retry an explicitly rejected rate-limited model request once,
+within the existing soft 120-second turn budget. Completed tools are not repeated;
+live SSE Activity shows the wait. See [agent-loop.md](agent-loop.md).
+A supplied nonblank `turn_id` (up to
 128 characters) replays an identical saved chat/message submission without execution,
 including after restart. Conflicting content/chat or running/interrupted IDs return
 HTTP 409 with `detail.code="chat_turn_conflict"`, nullable `state`, and sanitized
