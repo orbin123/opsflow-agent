@@ -19,14 +19,14 @@ PROMPTS = [line[2:] for line in (Path(__file__).resolve().parents[1] / "docs" / 
 @pytest.mark.parametrize("index,tools", [
     (0, ["analyze_sentiment"]), (1, ["extract_keywords"]), (2, ["retrieve_faq"]),
     (3, ["summarize_text"]), (4, ["draft_email"]),
-    (5, ["analyze_sentiment", "extract_keywords", "summarize_text", "draft_email"]),
+    (6, ["analyze_sentiment", "extract_keywords", "summarize_text", "draft_email"]),
 ])
 def test_published_demo_prompt_contract(monkeypatch, sentiment_provider, keyword_provider,
                                        faq_provider, index, tools):
     sentiment_provider("I am happy")
     keyword_provider("The server failed after the deployment")
     faq_provider("What is the remote work policy?")
-    source = ("The service failed twice today and I am frustrated." if index == 5 else
+    source = ("The service failed twice today and I am frustrated." if index == 6 else
               "The deployment failed on Tuesday. The team rolled back the release. Service was restored at 10 am.")
     summary_model = Mock(return_value=AIMessage(content='{"summary":"' + source + '","key_points":[]}',
         response_metadata={"finish_reason": "stop"}))

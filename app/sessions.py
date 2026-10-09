@@ -13,6 +13,7 @@ from pydantic import TypeAdapter, ValidationError
 
 from app.agent import AgentTrace
 from app.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict, database_path
+from app.chat_reminders import reminder_turn
 from app.runtime import ExecutionResult, RuntimeUnavailable, execute_request
 
 
@@ -161,7 +162,8 @@ def execute_session_request(session_id: str, message: str, *, turn_id: str | Non
 
         failure_reply = None
         try:
-            execution = execute_request(message, history=history)
+            with reminder_turn(turn_id):
+                execution = execute_request(message, history=history)
         except RuntimeUnavailable as error:
             execution = None
             failure_reply = str(error)

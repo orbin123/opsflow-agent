@@ -24,8 +24,8 @@ slices are implemented and verified below. Remaining step 12b presentation and
 step 14 Settings/Docs, Emails and read-only Reminders are implemented within
 the recorded limits; final review/handover remains pending. User approved merging single-draft PR #39.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Discuss remaining step 12b capability/multi-tool presentation and the
-separate chat-reminder integration contract before the final rework handover.
+**Next:** ⏳ User review of the verified chat-reminder creation addition, then
+remaining step 12b capability/multi-tool presentation before the final handover.
 User authorized merging PRs #40/#41/#42 after review on 2026-10-09. Settings/Docs
 and Emails are merged; Reminders PR #42 now targets `main` for the approved merge.
 Bottom-left Settings replaces the standalone Docs entry. Remaining step 12b capability/multi-tool presentation
@@ -36,6 +36,55 @@ merging step 12a PR #35 on 2026-10-08; its step 13 dependency is merged in PR #3
 Step 11 is merged in PR #34.
 FAQ PRs #25/#26 and the workflow package organization are merged into `main`. Keyword workflow/integration/presentation are
 merged in PR #24.
+
+## Approved chat-reminder creation addition — 2026-10-09
+
+- **Agreement:** User approved one-time reminder creation through the existing
+  agent, one reminder per turn, literal today/tomorrow/full-date and clear time
+  resolution in the selected zone, clarification before writes, application-owned
+  durable turn keys, accurate scheduling/delivery language and retained outcomes.
+- **Scope:** Reuse scheduler, storage, delivery worker and read-only catalogue.
+  No worker startup, live SMTP, new service/dependency, recurrence, management
+  controls or chat association schema. The original plan remains paused; this
+  explicit addition does not authorize the remaining integration agenda.
+- **Verification:** Real SQLite plus scripted agent calls cover exact demo/zone
+  boundaries, clarification follow-up, invalid/past/DST details, duplicate keys and
+  calls, HTTP replay/concurrency/restart, SSE/client transport, persisted worker
+  states, reminder-write failures, later model failure and unsaved chat recovery.
+  Run existing regressions/dependency/whitespace checks, then inline-browser
+  scheduling/Activity/Reminders/Docs/restoration with no worker or SMTP submission.
+- **Implemented:** Agent-only one-time scheduling adapter with literal user
+  phrases, local zone/date/time validation and turn-owned creation keys. Exact
+  scheduling acknowledgements survive later model failure; repeated model calls
+  cannot create another reminder. Missing/invalid input clarifies without insertion.
+  Saved/live reminder Activity handles absent results without a JSON-render error.
+  Docs explains the supported inputs, separate worker and actual delivery states.
+- **Verified:** All 1,141 tests pass (51 new), including the existing worker with
+  controlled transport, plus dependency and whitespace checks. Updated the existing
+  compound Docs example's index after inserting the reminder example. Installed
+  tool-schema/provider compatibility is covered offline and by the live demo.
+- **Browser:** Live Groq plus real classifier/agent/SSE/SQLite/Streamlit on 8512/8022
+  scheduled the exact deployment-report demo for 10 October 2026 at 10:00 +05:30.
+  Activity shows one actual scheduling call; Reminders shows its pending state.
+  Missing-time input inserted nothing. A follow-up's normalized 10:00 was rejected
+  because the user supplied 10 am; strengthened literal-field instructions, then
+  an explicit 10 am follow-up scheduled the staging-checklist reminder. Original
+  clarification remains saved. Verified corrected absent-result Activity, Docs,
+  read-only Refresh/Return and multiline draft preservation during navigation.
+  Backend restart/browser refresh retained byte-equivalent API records: two chats,
+  two distinct pending reminders, no duplicate creation and no worker startup.
+- **Limits/review:** Small live samples do not establish general model selection,
+  authorization interpretation or source completeness. The worker/SMTP/attempt
+  policy is unchanged; no live SMTP or inbox arrival was tested. Browser review
+  used isolated temporary storage and the existing viewport; no new mobile layout
+  review. Screenshots: /tmp/opsflow-chat-reminder-demo-final.jpg,
+  /tmp/opsflow-chat-reminder-stored.jpg, /tmp/opsflow-chat-reminder-docs.jpg.
+  ⏳ Separate user-authored DCO-signed change on feature/chat-reminder-creation
+  based on main, excluding pending rate-limit/demo PRs and original checkout edits.
+  User authorized push and merge on 2026-10-09. PRs #43/#44 merged; their
+  rate-limit recovery and historical demo Docs are reconciled with scheduling.
+  Combined review with the separate Workspace changes passes 1,153 tests; desktop
+  and mobile browser checks pass. No live email sent.
 
 ## Intended User Experience
 
@@ -164,8 +213,9 @@ Preserve these contracts throughout the rework:
   action instructions and never imply an email was sent.
 - Streaming, refresh, restoration, and rerendering must not execute a turn again.
   Preserve successful outcomes and represent interrupted/unknown work accurately.
-- Reminders always require agent orchestration when connected. Connecting reminder
-  or notification side effects to chat, deployment, other endpoints, metrics,
+- Reminders always require agent orchestration. The approved 2026-10-09 addition
+  connects only one-time creation to existing storage; the worker stays separate.
+  Other notification side effects, deployment, other endpoints, metrics,
   new external services, and multiple-agent architecture are outside this rework.
   Describe unavailable capabilities honestly; resume remaining integration work
   under the original plan after handover.

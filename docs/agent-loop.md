@@ -2,8 +2,8 @@
 
 `app.agent.run_agent(message, history=None)` runs one English request using LangChain
 ChatGroq local tool calling. `execute_request` now invokes it when direct routing defers; the FAQ-only API
-and classifier gates retain their contracts. Session history is supplied by `app.sessions`; standalone calls remain stateless. HTTP/UI wiring, reminder scheduling and
-email submission remain separate slices. No external tracing or source logging.
+and classifier gates retain their contracts. Session history is supplied by `app.sessions`; standalone calls remain stateless. Saved-chat reminder creation is connected through the adapter documented in
+[reminders.md](reminders.md); email submission remains separate. No external tracing or source logging.
 
 ## Contract
 
@@ -34,7 +34,7 @@ correct dependency selection remain model/prompt limitations, not guarantees.
 ## Tools, dependencies and bounds
 
 The allowlist is analyze_sentiment, extract_keywords, retrieve_faq,
-summarize_text and draft_email. Arguments have strict types, no extra fields and
+summarize_text, draft_email and schedule_reminder. Arguments have strict types, no extra fields and
 nonblank text bounds; draft inputs retain existing recipient/content/instructions
 limits. Tool implementation validation remains in place. The model sees descriptions
 and JSON schemas. Calls execute sequentially; every completed observation is
@@ -85,7 +85,8 @@ trace and return partial_failure; failures before any success return error.
 Application-generated failure replies list successful tool names and the stable
 reason; callers can render retained results from traces without another LLM call.
 FAQ no_match/ambiguous is a completed retrieval, not an infrastructure failure.
-No record is scheduled and no email is sent by this loop.
+Saved-chat scheduling may create a one-time reminder. Scheduling never sends email
+or starts the worker. Its exact acknowledgement is generated from the committed result.
 
 ## Verification
 
@@ -128,8 +129,8 @@ Histories remain isolated by session and disappear on backend restart.
 
 Clarifications return HTTP 200 and `needs_clarification`, with no execution trace
 for an unattempted tool. Streamlit displays the question without a technical
-warning banner; the inspector retains the exact status. Sending and reminder
-creation from chat remain unavailable. Generated drafts retain separate review/send
+warning banner; the inspector retains the exact status. Sending draft emails remains unavailable. One-time reminder creation now uses the
+durable chat adapter; the delivery worker remains separate. Generated drafts retain separate review/send
 actions and fictional-policy qualification.
 
 Step 4 verification on 2026-10-08: all 870 tests pass, including 16 added scripted

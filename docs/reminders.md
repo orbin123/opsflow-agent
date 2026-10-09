@@ -1,6 +1,6 @@
 # Reminder Scheduling
 
-`app/tools/reminders.py` provides a standalone deterministic `schedule_reminder` tool. It stores a one-time reminder in SQLite and returns `scheduled`. Run the separate `app.reminder_worker` process to submit due reminders to the configured user's Gmail mailbox. Scheduling does not itself send email. Natural-language parsing and agent/API/UI integration remain later work.
+`app/tools/reminders.py` provides a standalone deterministic `schedule_reminder` tool. It stores a one-time reminder in SQLite and returns `scheduled`. Run the separate `app.reminder_worker` process to submit due reminders to the configured user's Gmail mailbox. Scheduling does not itself send email. Saved chat turns now connect natural-language one-time creation through the agent; see the chat contract below.
 
 ## Input and output
 
@@ -30,7 +30,7 @@ The date in this example must still be in the future when executed.
 
 The immutable `ReminderRecord` contains `reminder_id` (UUID), `creation_key`, normalized `task`, aware UTC `due_at` and `created_at`, original `timezone`, and `status="scheduled"`. This is a scheduling acknowledgement, not a delivery report. Newly created database records start as `pending`; the worker owns subsequent delivery states. Creation retries preserve existing delivery state and attempt history. The configured recipient and SMTP credentials are not part of the scheduling contract or database.
 
-The future agent owns resolving relative dates against the current instant and clarifying ambiguous/missing details. An explicit request timezone overrides the configured default. Local times are checked through UTC round trips using [Python zoneinfo](https://docs.python.org/3.12/library/zoneinfo.html). A nonexistent DST time fails; an ambiguous time requires a confirmed offset. A `fold` flag alone is not accepted as confirmation. The machine timezone is never a fallback. New reminders due at or before the current instant fail.
+The chat adapter resolves supported literal date/time phrases against the submitted turn instant and clarifies ambiguous/missing details. An explicit request timezone overrides the configured default. Local times are checked through UTC round trips using [Python zoneinfo](https://docs.python.org/3.12/library/zoneinfo.html). A nonexistent DST time fails; an ambiguous time requires a confirmed offset. A `fold` flag alone is not accepted as confirmation. The machine timezone is never a fallback. New reminders due at or before the current instant fail.
 
 ## Persistence and retries of creation
 
@@ -91,5 +91,40 @@ Settings → Reminders displays these records with due times in their recorded
 timezone and UTC offset. Refresh/Return are read-only and preserve selected chat
 and composer drafts. SMTP accepted does not mean inbox delivery; pending,
 submitting, retry, failed and unknown remain distinct. No chat links are shown
-because stored reminders have no chat association. Chat scheduling, worker
+because stored reminders have no chat association. Chat schedules one-time reminders through the agent. Worker
 startup, cancellation, deletion and manual retry remain outside this page slice.
+
+## Chat creation contract
+
+`app.chat_reminders` supplies the agent's `schedule_reminder` schema and adapter.
+The agent extracts literal task, date, time, optional IANA timezone and optional
+confirmed UTC offset from the current user message, or the immediately preceding
+clarification chain. Application code checks those phrases against user messages,
+resolves today/tomorrow in the chosen zone or an explicit ISO/full month-name date
+with year, and validates wall time through the existing scheduler. Times accept
+am/pm, HH:MM, noon and midnight. Unsupported/ambiguous dates, missing details,
+invalid zones, DST gaps/overlaps and past instants clarify without inserting.
+This validation checks literal provenance, not complete semantic interpretation;
+language-model selection and authorization interpretation still have limitations.
+
+`execute_session_request` supplies an application-owned creation key derived from
+its durable turn ID, scoped through a ContextVar. The model cannot supply keys,
+database paths, test clocks or delivery recipients. One successful reminder per
+turn is enforced; a second proposed scheduling call stops with the first result
+retained. Existing SQLite key conflicts and concurrent insert protection remain.
+Standalone `run_agent`/`execute_request` calls without a durable turn context
+cannot schedule; use the saved-chat entry point or existing structured scheduler.
+HTTP, SSE and history carry JSON-safe task/due/zone/ID observations, with the
+creation key omitted. Application-generated acknowledgements and later failure
+replies retain the actual scheduling result, regardless of final model wording.
+Scheduling acknowledgement is historical, not a current delivery-state report.
+Use GET `/api/v1/reminders` for actual persisted states.
+
+Chat and reminder commits are separate. If reminder insertion succeeds but chat
+finalization fails or the process stops, the reminder may exist while the chat
+outcome is unsaved/interrupted. Existing recovery blocks replay and never retries
+that turn. Inspect the read-only Reminders page before any intentional new request.
+Turn-key protection is per operation, not global duplicate-content detection;
+new submissions can create equal reminders. Reminder records and keys survive
+chat deletion, which does not cancel delivery or delete reminder storage.
+The worker, attempt policy, SMTP transport and catalogue schema are unchanged.
