@@ -7,6 +7,7 @@ from typing import Literal
 
 from langchain_core.messages import AIMessage, HumanMessage
 
+from app.monitoring import track_execution
 from app.execution_events import emit
 from app.agent import AgentTrace, run_agent
 from app.intent_router import classify_request
@@ -50,6 +51,7 @@ class ExecutionResult:
     workflow_trace: list[SentimentStage | KeywordStage | FAQStage] = field(default_factory=list)
 
 
+@track_execution
 def execute_request(message: str, *, faq_only: bool = False,
                     history: list[HumanMessage | AIMessage] | None = None) -> ExecutionResult:
     """Classify once; high-confidence sentiment/keywords/FAQ use fixed workflows.

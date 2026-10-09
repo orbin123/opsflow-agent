@@ -1,0 +1,449 @@
+{
+  "uid": "opsflow-monitoring",
+  "title": "OpsFlow monitoring",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "refresh": "30s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timezone": "browser",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Backend scrape availability",
+      "type": "stat",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "up{job=\"opsflow\"}",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 2,
+      "title": "API usage \u2014 requests / second",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (route) (rate(opsflow_http_requests_total{job=\"opsflow\"}[5m]))",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 3,
+      "title": "HTTP p95 duration \u2014 full stream lifetime",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(opsflow_http_request_duration_seconds_bucket{job=\"opsflow\"}[5m])))",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 4,
+      "title": "HTTP 5xx error rate",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * sum(rate(opsflow_http_outcomes_total{job=\"opsflow\",outcome=\"server_error\"}[5m])) / sum(rate(opsflow_http_outcomes_total{job=\"opsflow\"}[5m]))",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 5,
+      "title": "Task error / partial failure rate",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "100 * sum(rate(opsflow_task_outcomes_total{job=\"opsflow\",outcome=~\"error|partial_failure\"}[5m])) / sum(rate(opsflow_task_outcomes_total{job=\"opsflow\"}[5m]))",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 6,
+      "title": "Task distribution by intent \u2014 since backend start",
+      "type": "barchart",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (intent) (opsflow_tasks_total{job=\"opsflow\"})",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "xField": "intent",
+        "showValue": "always"
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Task distribution by route / outcome \u2014 since backend start",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (route, outcome) (opsflow_tasks_total{job=\"opsflow\"})",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {},
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Execution p95 duration \u2014 excludes persistence",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(opsflow_task_duration_seconds_bucket{job=\"opsflow\"}[5m])))",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 9,
+      "title": "Tool calls by outcome \u2014 since backend start",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (tool, outcome) (opsflow_tool_calls_total{job=\"opsflow\"})",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {},
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Tool p95 duration",
+      "type": "timeseries",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "histogram_quantile(0.95, sum by (le, tool) (rate(opsflow_tool_duration_seconds_bucket{job=\"opsflow\"}[5m])))",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "options": {}
+    },
+    {
+      "id": 11,
+      "title": "HTTP responses by status \u2014 since backend start",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (status) (opsflow_http_requests_total{job=\"opsflow\"})",
+          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {},
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "Count"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "Chat persistence outcomes \u2014 since backend start",
+      "type": "table",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "opsflow-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 40,
+        "w": 12,
+        "h": 8
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (outcome) (opsflow_turn_persistence_total{job=\"opsflow\"})",
+          "legendFormat": "{{outcome}}",
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {},
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "Value": "Count"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "description": "Process-scoped backend metrics. HTTP streams and execution outcomes are separate. No traffic means rate panels may have no data; cumulative panels show observed work."
+}

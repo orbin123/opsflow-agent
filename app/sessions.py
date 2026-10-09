@@ -11,6 +11,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langsmith import tracing_context
 from pydantic import TypeAdapter, ValidationError
 
+from app.monitoring import track_persistence
 from app.agent import AgentTrace
 from app.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict, database_path
 from app.chat_reminders import reminder_turn
@@ -164,42 +165,43 @@ def execute_session_request(session_id: str, message: str, *, turn_id: str | Non
                 raise RuntimeUnavailable(existing["failure_reply"])
             return _execution(existing["execution"])
 
-        failure_reply = None
-        try:
-            with reminder_turn(turn_id):
-                execution = execute_request(message, history=history)
-        except RuntimeUnavailable as error:
-            execution = None
-            failure_reply = str(error)
-        except Exception:
-            # Unobserved completion cannot be invented or automatically repeated.
-            raise ChatPersistenceError(
-                "The turn stopped before its outcome was saved. Completion is unknown; no automatic retry.",
-                outcome="unsaved") from None
-        if execution is not None:
-            # Freeze the same timing for response and storage. Final SQLite commit
-            # duration is excluded, as are HTTP transport and rendering.
-            execution = replace(execution, elapsed_ms=(perf_counter() - started) * 1000)
-            record = asdict(execution)
-            demo_policy = any(step.tool == "retrieve_faq" and step.status == "completed"
-                and (step.result.get("is_demo") if isinstance(step.result, dict)
-                     else getattr(step.result, "is_demo", False)) for step in execution.trace)
-        else:
-            record, demo_policy = None, False
-        try:
-            store.finish(turn_id, execution=record, demo_policy=bool(demo_policy),
-                         failure_reply=failure_reply,
-                         failure_reason="runtime_unavailable" if failure_reply is not None else None)
-        except ChatPersistenceError:
-            raise ChatPersistenceError(
-                "The turn ran, but its outcome was not saved. Completion is unknown after reload; no automatic retry.",
-                outcome="unsaved") from None
-        saved = {"execution": record, "demo_policy": bool(demo_policy),
-                 "failure_reply": failure_reply, "failure_reason": "runtime_unavailable"}
-        session.history.messages = [*history, HumanMessage(content=message), _assistant(saved)]
-        if execution is None:
-            raise RuntimeUnavailable(failure_reply) from None
-        return execution
+        with track_persistence():
+            failure_reply = None
+            try:
+                with reminder_turn(turn_id):
+                    execution = execute_request(message, history=history)
+            except RuntimeUnavailable as error:
+                execution = None
+                failure_reply = str(error)
+            except Exception:
+                # Unobserved completion cannot be invented or automatically repeated.
+                raise ChatPersistenceError(
+                    "The turn stopped before its outcome was saved. Completion is unknown; no automatic retry.",
+                    outcome="unsaved") from None
+            if execution is not None:
+                # Freeze the same timing for response and storage. Final SQLite commit
+                # duration is excluded, as are HTTP transport and rendering.
+                execution = replace(execution, elapsed_ms=(perf_counter() - started) * 1000)
+                record = asdict(execution)
+                demo_policy = any(step.tool == "retrieve_faq" and step.status == "completed"
+                    and (step.result.get("is_demo") if isinstance(step.result, dict)
+                         else getattr(step.result, "is_demo", False)) for step in execution.trace)
+            else:
+                record, demo_policy = None, False
+            try:
+                store.finish(turn_id, execution=record, demo_policy=bool(demo_policy),
+                             failure_reply=failure_reply,
+                             failure_reason="runtime_unavailable" if failure_reply is not None else None)
+            except ChatPersistenceError:
+                raise ChatPersistenceError(
+                    "The turn ran, but its outcome was not saved. Completion is unknown after reload; no automatic retry.",
+                    outcome="unsaved") from None
+            saved = {"execution": record, "demo_policy": bool(demo_policy),
+                     "failure_reply": failure_reply, "failure_reason": "runtime_unavailable"}
+            session.history.messages = [*history, HumanMessage(content=message), _assistant(saved)]
+            if execution is None:
+                raise RuntimeUnavailable(failure_reply) from None
+            return execution
 
 
 def clear_session_history(session_id: str) -> None:

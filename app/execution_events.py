@@ -11,6 +11,8 @@ from typing import Callable
 
 from fastapi.encoders import jsonable_encoder
 
+from app.monitoring import record_tool
+
 
 _observer: ContextVar["EventEmitter | None"] = ContextVar("execution_events", default=None)
 
@@ -53,6 +55,7 @@ def start_step(name: str, *, kind: str = "workflow", arguments: dict | None = No
 
 
 def finish_step(step_id: int | None, record, *, arguments: dict | None = None, result=None) -> None:
+    record_tool(record)
     if step_id is None:
         return
     data = asdict(record) if is_dataclass(record) else dict(record)

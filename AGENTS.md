@@ -84,6 +84,13 @@ to this singleton workspace; catalogue records expose its profile ID. GET
 users, agent personalization or durable composer/last-selection restoration is
 included in this first slice. See `docs/employee-profile.md`.
 
+The approved local monitoring slice provides generated HTTP request IDs, sanitized
+JSON request/task/tool/persistence logs, Prometheus `/metrics`, and a provisioned
+local Grafana dashboard. HTTP/SSE transport status, actual task execution and
+persistence outcomes remain separate; saved replay/recovery never counts as new
+work. Metrics are process-scoped and reset on restart. The monitoring Compose
+stack does not start the app or reminder worker. See `docs/monitoring.md`.
+
 ## Read Before Working
 
 - `docs/PLAN.md`: active implementation agenda for remaining project work.
