@@ -14,7 +14,7 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   app stays open on 8501 with backend 8011; no worker/provider/email execution.
   No login, UI/profile display, agent context or durable composer/last-selection
   changes. See `docs/employee-profile.md` for the approved boundary and next slices.
-  Prepared on `feature/persistent-employee-profile`; ⏳ user review/merge pending.
+  User approved review and merge of PR #48 on `feature/persistent-employee-profile`.
 
 - **2026-10-09:** Added the user-approved concise eight-section `docs/audit.md`:
   product/feature explanations, connectivity, dependency roles, reliability and
