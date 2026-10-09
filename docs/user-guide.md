@@ -188,6 +188,12 @@ Errors and partial failures describe unsuccessful work while retaining available
 results. A failed presentation stage can show a factual fallback from a successful
 local tool result. Reading Activity or restoring a chat never executes the turn again.
 
+If the model provider temporarily limits an agent request, Activity can show
+**Model busy — waiting … seconds**. Leave the turn running: it waits up to 60 seconds
+and retries that rejected model request once, without repeating completed tools.
+Waits share the turn's existing 120-second budget. Longer limits or unsuccessful
+retries still report unfinished work accurately; completion is not guaranteed.
+
 Chat navigation pauses during running work. Settings navigation and submission
 also pause while the selected chat has unconfirmed work. If the
 connection is interrupted, execution may continue on the backend. Use **Check

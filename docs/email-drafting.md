@@ -37,6 +37,9 @@ Uses the existing pinned ChatGroq/Groq dependencies, independently of summarizat
 - `GROQ_API_KEY`: required.
 - `GROQ_EMAIL_MODEL`: optional, default `openai/gpt-oss-20b`; only supported override is `openai/gpt-oss-120b`. Unsupported names fail configuration validation.
 - Temperature 0, low reasoning effort, 2,048 completion tokens, 30-second request timeout, zero automatic retries. One nonstreaming call with native strict JSON Schema and no model tool execution; type/length limits are validated locally.
+- Standalone calls retain that no-retry behavior. In agent execution, an explicit
+  rate-limit rejection can wait and retry only the rejected model request once
+  under the shared turn deadline; see [agent-loop.md](agent-loop.md).
 - Lazy repository-root `.env` loading without overriding environment values; no provider initialization on import. External tracing is explicitly disabled. No logging of credentials, input content, raw responses, or private reasoning.
 
 [Groq documents strict-schema support](https://console.groq.com/docs/structured-outputs) for both supported models; [LangChain documents ChatGroq](https://docs.langchain.com/oss/python/integrations/chat/groq).

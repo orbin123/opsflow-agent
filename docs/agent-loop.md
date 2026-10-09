@@ -13,7 +13,13 @@ repository-root `.env` loading does not override environment values. Configure
 `GROQ_API_KEY` and optionally `GROQ_AGENT_MODEL` (default
 `openai/gpt-oss-20b`; supported override `openai/gpt-oss-120b`). Temperature 0,
 low reasoning effort, 2,048 completion tokens, 30-second request timeout and
-zero retries. Existing installed LangChain Core/ChatGroq APIs are used; the now directly
+zero SDK retries. During agent execution only, an explicit HTTP 429 with a valid
+numeric `retry-after` can wait and retry that same model request once. The wait
+rounds up the header and adds one second for reset rounding, must be at most
+60 seconds, and must fit the existing 120-second turn budget. Summary/draft model
+requests share the same deadline. Missing/invalid headers, longer waits, repeated
+429s and other failures stop accurately. Completed tools and whole turns are never
+retried. Existing installed LangChain Core/ChatGroq APIs are used; the now directly
 imported langchain-core is pinned to its installed 1.6.6 version. No new framework
 dependency. Tool calling does not use strict provider JSON output;
 application code validates arguments and the final JSON reply locally.
@@ -56,14 +62,19 @@ without invoking the tool. Other schema errors remain failures; successful earli
 observations remain in the trace.
 A 120-second elapsed-time budget is checked before each operation and after an
 orchestration provider call. In-flight tools/provider operations cannot be forcibly
-cancelled, so this is a soft budget; retained results can exceed it. No retry,
-JSON repair, fallback model or speculative continuation after failures.
+cancelled, so this is a soft budget; retained results can exceed it. Rate-limit waits
+count toward that budget and do not consume another orchestration decision or tool
+attempt. No tool/turn retry, JSON repair, fallback model or continuation after
+unrecovered failures.
 
 ## Observability and failures
 
 Each actually attempted tool has name, validated arguments, completed/failed
 status, structured result or sanitized reason, and elapsed_ms. Invalid proposals
 are rejected without an execution trace entry. Total timing includes orchestration.
+Rate-limit waits emit a transient correlated model stage such as
+`Model busy — waiting 20 seconds` in live Activity. Wait stages are not saved tool
+results; restored Activity retains the exact tool outcomes and elapsed time.
 No raw model response, reasoning tokens or provider exception text is returned.
 Traces contain source content and should be treated as private application data,
 not logged. There is no external tracing even if tracing environment variables
@@ -145,7 +156,8 @@ Current limits remain six orchestration calls, five tool attempts, and a soft
 120-second budget. Three/four-tool requests fit, with one additional orchestration
 call to finish; writing tools make separate bounded provider calls. Longer requests
 may require splitting. A sixth tool does not execute. Failure/time/budget stops
-retain completed observations, explain unfinished work, and do not retry. Missing
+retain completed observations and explain unfinished work after bounded model
+rate-limit recovery is exhausted. Missing
 recipient after earlier successful tools clarifies with those results retained.
 
 Step 5 verification: 877 tests pass on 2026-10-08, including seven scripted

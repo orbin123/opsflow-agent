@@ -16,7 +16,26 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   Activity/Docs/Reminders and navigation draft preservation. Isolated review data;
   no live SMTP/inbox or mobile-layout verification. Original checkout unchanged;
   separate main-based feature/chat-reminder-creation DCO-signed change prepared.
-  App remains open; ⏳ PR/user review pending, merge requires approval.
+  User authorized push/merge; PRs #43/#44 merged and their Docs reconciled.
+  Combined review with separate Workspace changes passes 1,153 tests and desktop/
+  mobile browser checks. App remains open; no live email sent.
+- **2026-10-09:** Added the requested reminder demo prompt to Docs with explicit
+  Asia/Kolkata time and the current chat-scheduling limitation. It explains that
+  no reminder/email is created and the Reminders page is read-only. Documentation
+  only; verified rendering in Settings → Docs and left the section open.
+  Whitespace check passed. No prompt execution or new tests; user review pending.
+
+- **2026-10-09:** Approved bounded model rate-limit waiting for the failed four-tool
+  demo. Reproduced Groq's 8,000 TPM rejection after sentiment/keywords and a
+  19-second retry header. Added one rejected-request retry with an observable wait
+  under the existing shared agent deadline, including nested summary/draft calls;
+  no tool/turn replay. All 1,102 tests pass in a clean committed-code copy plus
+  this fix (12 new); current dirty-tree run has 1,100 passes/two unrelated existing
+  welcome-screen test failures. Dependency/whitespace checks pass. Exact live
+  four-tool demo in the original chat completed in 100.07 seconds after five
+  observed waits; each tool completed once and original failure is retained.
+  Existing unrelated demo label/draft factual-quality issues remain documented.
+  App stays open; ⏳ user review/merge pending. No email sent.
 
 ## Active Agenda — Rework First
 
