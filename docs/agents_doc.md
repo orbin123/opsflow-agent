@@ -2,6 +2,20 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** Implemented the separately approved singleton employee profile
+  slice, independent of REWORK: fictional Sachin Tendulkar (EMP-001), saved in
+  chat schema version 3 with transactional v1/v2 migration and read-only GET
+  `/api/v1/profile`. All retained/future chats, saved draft projections and reminders
+  expose this singleton workspace identity; reminder storage/worker state is
+  unchanged. All 1,161 tests pass (eight new), dependency and whitespace checks
+  pass. Updated the legacy v1 fixture to remove the new table before migration.
+  Isolated live HTTP/browser review verifies identical profile/chat/reminder records
+  after backend restart, chat refresh restoration and Reminders rendering. Local
+  app stays open on 8501 with backend 8011; no worker/provider/email execution.
+  No login, UI/profile display, agent context or durable composer/last-selection
+  changes. See `docs/employee-profile.md` for the approved boundary and next slices.
+  User approved review and merge of PR #48 on `feature/persistent-employee-profile`.
+
 - **2026-10-09:** Added the user-approved concise eight-section `docs/audit.md`:
   product/feature explanations, connectivity, dependency roles, reliability and
   prioritized gaps. Fresh baseline `9c2fcb6` verification: 1,153 tests pass, one

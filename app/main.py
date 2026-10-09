@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api.chat import router as chat_router
+from app.api.profile import router as profile_router
 from app.api.faq import router as faq_router
 from app.api.reminders import router as reminders_router
 from app.sessions import close_chat_store
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="OpsFlow Agent", lifespan=lifespan)
+app.include_router(profile_router)
 app.include_router(chat_router)
 app.include_router(faq_router)
 app.include_router(reminders_router)

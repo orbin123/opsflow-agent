@@ -91,6 +91,7 @@ class CreateChatRequest(BaseModel):
 
 
 class ChatMetadata(BaseModel):
+    profile_id: Literal["EMP-001"] = "EMP-001"
     session_id: str
     title: str
     created_at: str

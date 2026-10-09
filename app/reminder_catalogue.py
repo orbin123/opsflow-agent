@@ -15,6 +15,7 @@ from app.tools.reminders import ReminderPersistenceError, _ROOT, _database_path
 class SavedReminder(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
 
+    profile_id: Literal["EMP-001"] = "EMP-001"
     reminder_id: str = Field(min_length=1)
     task: str = Field(min_length=1, max_length=1000)
     due_at: AwareDatetime
