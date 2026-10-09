@@ -4,6 +4,7 @@ from datetime import datetime
 
 from pydantic import ValidationError
 
+from app.profile import PROFILE_ID
 from app.tools.email_drafting import EmailDraftResult
 
 
@@ -33,7 +34,7 @@ def saved_email_entries(chats: list[dict]) -> tuple[list[dict], int]:
                 except (ValidationError, ValueError, TypeError):
                     unavailable += 1
                     continue
-                entries.append({"session_id": chat["session_id"], "title": chat["title"],
+                entries.append({"profile_id": PROFILE_ID, "session_id": chat["session_id"], "title": chat["title"],
                     "turn_id": turn["turn_id"], "sequence": turn["sequence"], "trace_index": index,
                     "completed": completed, "message": turn["message"],
                     "demo_policy": demo_policy, "status": execution["status"],

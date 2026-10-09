@@ -64,6 +64,10 @@ def close_chat_store() -> None:
             _store = None
 
 
+def get_profile():
+    return _get_store().profile()
+
+
 def create_chat() -> dict:
     return _get_store().create_chat(uuid4().hex)
 

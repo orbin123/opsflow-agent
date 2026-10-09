@@ -32,9 +32,10 @@ boundary. There is no hosted ownership layer, encryption, or automatic backup.
 
 ## Records and execution lifecycle
 
-Schema version 2 uses `chats` and `chat_turns`, foreign keys, and transactional
+Schema version 3 uses `chats` and `chat_turns`, foreign keys, and transactional
 writes. Version 1 migrates transactionally by adding the custom-title marker;
-existing metadata and turns remain intact. Unsupported versions/foreign schemas
+existing metadata and turns remain intact. Version 3 adds the persistent singleton
+employee profile without altering retained records; see [employee-profile.md](employee-profile.md). Unsupported versions/foreign schemas
 are rejected without replacement.
 Chat metadata contains the exact session key, literal first-message title, UTC
 creation/update timestamps, and the next sequence number. A turn contains its ID,

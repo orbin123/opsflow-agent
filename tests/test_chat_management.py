@@ -110,12 +110,13 @@ def test_version_one_migration_retains_catalogue_and_turns(monkeypatch):
     path = sessions._get_store().path
     sessions.close_chat_store()
     with sqlite3.connect(path) as connection:
+        connection.execute('DROP TABLE employee_profile')
         connection.execute('ALTER TABLE chats DROP COLUMN custom_title')
         connection.execute('PRAGMA user_version = 1')
     assert sessions.get_chat('one') == before
     assert sessions.rename_chat('one', 'Migrated')['title'] == 'Migrated'
     with sessions._get_store()._connection() as connection:
-        assert connection.execute('PRAGMA user_version').fetchone()[0] == 2
+        assert connection.execute('PRAGMA user_version').fetchone()[0] == 3
 
 
 def test_management_client_escaped_identity_and_safe_failure(monkeypatch):

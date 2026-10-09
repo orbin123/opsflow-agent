@@ -9,6 +9,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
+from pydantic import ValidationError
+
+from app.profile import EmployeeProfile, PROFILE_ID
 
 
 class ChatPersistenceError(Exception):
@@ -118,15 +121,37 @@ class ChatStore:
                 for statement in _SCHEMA:
                     connection.execute(statement)
                 connection.execute("PRAGMA user_version = 1")
-            elif version not in {1, 2}:
+            elif version not in {1, 2, 3}:
                 raise ChatPersistenceError("Unsupported chat storage schema.")
             if version in {0, 1}:
                 connection.execute("ALTER TABLE chats ADD COLUMN custom_title INTEGER NOT NULL DEFAULT 0")
                 connection.execute("PRAGMA user_version = 2")
+            if version in {0, 1, 2}:
+                connection.execute("""CREATE TABLE employee_profile (
+                    profile_id TEXT PRIMARY KEY CHECK(profile_id='EMP-001'),
+                    name TEXT NOT NULL, role TEXT NOT NULL, company TEXT NOT NULL,
+                    timezone TEXT NOT NULL, is_demo INTEGER NOT NULL CHECK(is_demo=1))""")
+                connection.execute("INSERT INTO employee_profile VALUES (?, ?, ?, ?, ?, 1)",
+                    (PROFILE_ID, "Sachin Tendulkar", "Operations Associate",
+                     "OpsFlow Demo Company", "Asia/Kolkata"))
+                connection.execute("PRAGMA user_version = 3")
             # Exclusive ownership proves these markers belong to a prior process.
             connection.execute("""UPDATE chat_turns SET state='interrupted',
                 failure_reason='interrupted', failure_reply=? WHERE state='running'""",
                 ("The previous turn was interrupted. Its completion is unknown; it was not retried.",))
+
+    def profile(self) -> EmployeeProfile:
+        with self._connection() as connection:
+            row = connection.execute("SELECT * FROM employee_profile WHERE profile_id=?",
+                                     (PROFILE_ID,)).fetchone()
+            try:
+                if row is None:
+                    raise ValueError("Missing employee")
+                data = dict(row)
+                data["is_demo"] = data["is_demo"] == 1
+                return EmployeeProfile.model_validate(data)
+            except (ValueError, ValidationError):
+                raise ChatPersistenceError("Employee profile could not be loaded.") from None
 
     def turns(self, session_id: str) -> list[dict]:
         """Read ordered records without creating chats or executing requests."""

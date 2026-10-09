@@ -76,6 +76,14 @@ remains in Activity. Lower-confidence requests use the agent and its pure FAQ to
 Policy answers do not need recipients; ask for those only for requested email drafts.
 The FAQ-only endpoint keeps its existing wholly local contract.
 
+The user-approved persistent demo employee workspace is independent of the rework
+agenda. Schema version 3 stores one fictional Sachin Tendulkar profile (EMP-001)
+in the chat database. All retained/future chats, saved drafts and reminders belong
+to this singleton workspace; catalogue records expose its profile ID. GET
+`/api/v1/profile` reads saved identity without executing work. No login, multiple
+users, agent personalization or durable composer/last-selection restoration is
+included in this first slice. See `docs/employee-profile.md`.
+
 ## Read Before Working
 
 - `REWORK.md`: active implementation agenda until its rework steps and completion criteria are verified.
