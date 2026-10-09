@@ -56,7 +56,8 @@ def test_delete_cancel_then_selected_deletion_restores_other_and_last_welcome(wo
     ui.button(key='confirm_delete_chat').click().run()
     assert not ui.exception and not sessions.list_chats()
     assert ui.session_state['session_id'] is None and 'chat' not in ui.query_params
-    assert not ui.chat_message and ui.info
+    assert not ui.chat_message and not ui.info
+    assert not ui.text_area(key="composer").disabled
     assert ui.text_area(key='composer').value == ''
     assert len(recorded) == execute.call_count == 2
 

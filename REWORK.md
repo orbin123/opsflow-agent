@@ -1039,9 +1039,9 @@ agreed before coding. The original plan remains paused.
 
 #### Step 9 outcome — 2026-10-08
 
-- **Implemented:** Native New chat and titled sidebar buttons, selected tint/check/
-  text, literal truncated titles with full accessible labels, and update times in
-  IST. Explicit `chat` URL selection restores ordered saved messages/outcomes and
+- **Implemented:** Native New chat and titled sidebar buttons, selected tint/check,
+  literal truncated titles with full accessible labels, and update-time ordering.
+  Explicit `chat` URL selection restores ordered saved messages/outcomes and
   the unchanged inspector. Missing selection opens the latest chat; empty storage
   creates nothing until New chat or first Send. Unknown/invalid/repeated locators
   and unavailable reads block submission without displaying another chat's history.
@@ -1751,6 +1751,36 @@ agreed before coding. The original plan remains paused.
   original plan resumes only after the recorded completion and handover.
 
 ## Decision and Verification Record
+
+- **2026-10-09:** User authorized committing, pushing and merging the pending
+  rate-limit, reminder-demo, chat-reminder and Workspace layout changes. Combined
+  review passes all 1,153 tests plus dependency/whitespace checks. Repaired two
+  stale welcome-view assertions. Inline browser checked the 1440 px desktop and
+  390 px mobile composer, saved reminder/Docs views and multiline draft return.
+  Corrected footer offset to Streamlit's default 300 px sidebar and desktop inset.
+  Custom sidebar resizing and mobile keyboard behavior remain unverified. Local
+  virtual-environment skill symlinks remain outside Git. No live email sent.
+
+- **2026-10-09:** User requested removing low-value selected-chat and last-updated
+  captions from the Workspace sidebar. Removed both captions; the selected check
+  and tint remain the selection cue. Updated UI/design/console documentation and
+  step 9 history. Verification: source and diff review only; no runtime tests or
+  browser inspection yet. No chat/API behavior changed.
+
+- **2026-10-09:** User requested a ChatGPT-style fixed bottom message composer.
+  Kept the multiline input, Send, per-chat drafts and submission locks together in
+  a fixed footer; reserved space for the final reply and aligned it with the open
+  Workspace sidebar. Removed the extra inset so the footer divider starts at the
+  sidebar edge. Inline-browser review confirms the alignment and both controls at
+  the viewport bottom. Automated tests and mobile viewport review were not run;
+  whitespace check passed.
+
+- **2026-10-09:** User requested removing the three example prompts from the empty
+  Workspace welcome view. Removed that welcome box and updated its UI check to
+  assert the examples are absent without creating a chat or executing a request.
+  Inline-browser rendering confirms the empty conversation and composer appear
+  without the examples; automated checks were updated but not run. Examples remain
+  in the separate Docs guide.
 
 - **2026-10-08:** User authorized merging FAQ PR #26 and its required standalone
   dependency. PR #25 merged into `main` with a user-authored signed merge message;
