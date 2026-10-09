@@ -34,7 +34,7 @@ def test_docs_empty_welcome_draft_and_unavailable_pages(workspace):
     ui = open_chat()
     ui.text_area(key="composer").set_value("Welcome draft\nNext line").run()
     ui.button(key="open_docs").click().run()
-    assert ui.button(key="open_emails").disabled
+    assert not ui.button(key="open_emails").disabled
     assert ui.button(key="open_reminders").disabled
     ui.run()
     ui.button(key="return_to_chat").click().run()

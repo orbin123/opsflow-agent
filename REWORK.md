@@ -23,8 +23,8 @@ and verified within the recorded limits; step 12b's single-summary and single-dr
 slices are implemented and verified below. Remaining step 12b presentation and
 steps 14 onward are pending. User approved merging single-draft PR #39.
 Workflow modules now live under `app/workflows/` for package organization.
-**Next:** ⏳ Review step 14a Settings/Docs implementation, then agree the separate
-Emails and Reminders page contracts, as requested by the user on 2026-10-08. Bottom-left
+**Next:** ⏳ Step 14b saved Emails page implementation/review, approved by the user. Settings/Docs draft PR #40 remains open;
+merge authorization has not been inferred from moving to the next slice. Bottom-left
 Settings replaces the standalone Docs entry. Remaining step 12b capability/multi-tool presentation
 is deferred, not complete; revisit it before step 15's rework handover. User approved
 merging Workspace PR #38 and single-summary dependency PR #37 on 2026-10-08;
@@ -1533,6 +1533,79 @@ agreed before coding. The original plan remains paused.
   `/tmp/opsflow-settings-docs-mobile.jpg`, `/tmp/opsflow-settings-menu-mobile.jpg`.
   Draft PR #40 on `feature/settings-docs-guide` contains one user-authored,
   DCO-signed change. Merge/direct push requires user browser-review approval.
+
+#### Step 14b agreed contract — 2026-10-08
+
+- **Status:** User approved this contract on 2026-10-08. Separate implementation
+  based on Settings/Docs PR #40; review and publication evidence follow below.
+- **Data:** Reuse existing GET catalogue and saved-chat APIs to read retained
+  records across all chats. No new endpoint, schema, duplicate draft store, provider
+  call or tool execution. These reads are per-chat snapshots, not one globally
+  atomic snapshot; refresh reads current retained data again without execution.
+- **Inclusion:** One entry per completed, valid `draft_email` tool observation in
+  a finished saved turn, including compound turns and successful drafting before
+  a later failure/clarification. Retain distinct calls even when their content is
+  identical. Failed tools and unsaved/running/interrupted outcomes are not drafts.
+  Stable identity uses chat ID, turn ID and trace position internally.
+- **Presentation:** Enable Settings → Emails. Show newest turns first by saved
+  completion time with a stable tie-break; preserve tool order within each turn.
+  Native outlined entries show Draft, recipient, literal subject/body, saved action
+  instructions, local completion time and originating chat title. Expandable context
+  shows the exact prompting message; Open chat returns to the full conversation.
+  Qualify fictional-policy context using saved flags from the turn or earlier turns
+  in that chat, consistent with current answer presentation. A partial/clarification
+  source turn is labelled honestly while its successful draft remains available.
+- **Navigation:** Preserve the active chat locator and per-chat multiline composer
+  draft when entering/returning; Open chat intentionally selects the originating
+  chat. Reuse Settings pending/running/unsaved locks and recovery behavior. No page
+  URL, search, edit, export, send, reminder integration or new CSS component system.
+  Adapt native cards using the existing design tokens; inspect Figma or record its
+  continuing access limit before implementation.
+- **Empty/error/deletion:** An empty state appears only after all requested reads
+  succeed and no saved drafts exist. Any catalogue/chat read failure, including
+  concurrent deletion, shows a sanitized loading failure with an explicit read-only
+  Refresh; do not display an incomplete list as complete. Malformed completed draft
+  observations produce an explicit unavailable-record notice rather than a fabricated
+  draft. Refresh removes records belonging to deleted chats and updates renamed
+  titles. Open chat uses existing not-found handling if its source was deleted.
+- **Proportional verification:** Controlled persisted records cover single/compound
+  drafts, successful drafting before later failure, repeated equal content, failed
+  tools, running/unsaved exclusion, contextual demo qualification, restart and
+  deleted-chat removal. AppTest covers entry/return/Open chat, multiline preservation,
+  ordering, truthful empty/error/malformed states and zero execution on reads/refresh.
+  Existing draft-tool tests retain content/action contracts. Run relevant regressions,
+  dependency/whitespace checks, then desktop/mobile inline review with saved fixtures.
+  Leave the app open for user confirmation before merge/direct push. No live model
+  quality or email submission is required for this read-only page.
+
+#### Step 14b implementation and review — 2026-10-08
+
+- **Implemented:** Settings → Emails reads retained chats through existing GET
+  APIs and projects valid completed draft observations from finished turns. Cards
+  preserve distinct calls, successful drafts before later failure/clarification,
+  saved actions, literal content, source prompt/title and contextual demo qualification.
+  Completion-time ordering preserves tool order within a turn. Return/Open chat
+  retains per-chat composer drafts; Refresh reflects rename/delete without execution.
+  Read failures hide the list with a safe error; invalid completed drafts have an
+  unavailable-record notice. No new API/schema/provider/dependency or sending path.
+- **Checks:** Full 1,071-test regression passes, followed by all 138 focused
+  projection/UI/navigation/stream/management checks after final refinements,
+  including the added deleted-source case (20 new tests overall; 1,072 now collected).
+  Dependency/whitespace checks pass. Coverage includes persisted restart, equal-content
+  calls, compound/partial outcomes, demo context, ordering, failed/running exclusion,
+  invalid records, empty/read-failure states, rename/delete, page locks and no execution.
+- **Browser:** Review app on 8510/backend 8020 lists three existing saved drafts.
+  At 1440/390 px, verified square surface/border tokens, literal multiline body,
+  actions, IST timestamps, source title/context, keyboard expansion with 2 px focus,
+  no horizontal overflow, Refresh, Return/Open chat and restored unsent multiline
+  composer. Fixture call log stays at five entries throughout reads/navigation.
+  Screenshots `/tmp/opsflow-emails-desktop.jpg` and `/tmp/opsflow-emails-mobile.jpg`.
+- **Limits/delivery:** Existing scripted backend; no live model quality/email or
+  deployment checks. Figma Foundations metadata inspected; detailed design context
+  remains rate-limited. Existing LangChain deprecation remains. Separate signed
+  change in draft PR #41 on `feature/saved-email-drafts`, stacked on Settings/Docs
+  PR #40. App stays
+  open for user review; merge/direct push awaits confirmation. Reminders is next.
 
 ### 15. Verify the complete rework and hand back to the original plan
 

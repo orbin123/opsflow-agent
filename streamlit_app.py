@@ -12,6 +12,7 @@ import streamlit as st
 
 from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat
 from app.chat_menu import chat_menu, HTML, CSS, JS
+from app.email_catalogue import saved_email_entries
 
 
 st.set_page_config(page_title="OpsFlow · Console", layout="wide")
@@ -156,7 +157,7 @@ def navigate(session_id: str | None = None) -> None:
     if st.session_state.pending or st.session_state.running:
         return
     save_draft()
-    if st.session_state.view == "docs":
+    if st.session_state.view != "chat":
         st.session_state.composer = st.session_state.drafts.get(st.session_state.session_id, "")
     st.session_state.view = "chat"
     if session_id is None:
@@ -327,7 +328,7 @@ elif selected is not None and not st.session_state.pending:
 blocked = (st.session_state.pending or st.session_state.running or read_error is not None
            or catalogue_error is not None or selected in st.session_state.uncertain)
 st.session_state.blocked = blocked
-if st.session_state.view == "docs" and (st.session_state.pending or st.session_state.running
+if st.session_state.view != "chat" and (st.session_state.pending or st.session_state.running
                                         or selected in st.session_state.uncertain):
     # A turn started in another tab must leave recovery controls reachable.
     st.session_state.view = "chat"
@@ -368,8 +369,7 @@ with st.sidebar:
             st.button("Docs", key="open_docs", icon=":material/menu_book:",
                       width="stretch", on_click=change_view, args=("docs",))
             st.button("Emails", key="open_emails", icon=":material/mail:",
-                      width="stretch", disabled=True)
-            st.caption("Saved email drafts page is not available yet.")
+                      width="stretch", on_click=change_view, args=("emails",))
             st.button("Reminders", key="open_reminders", icon=":material/alarm:",
                       width="stretch", disabled=True)
             st.caption("Reminders page is not available yet. Chat cannot schedule reminders.")
@@ -384,6 +384,48 @@ if st.session_state.view == "docs":
             st.error("The guide is unavailable. Return to chat and try again later.")
         else:
             st.markdown(guide)
+    st.stop()
+
+if st.session_state.view == "emails":
+    with st.container(width=760, key="emails_page"):
+        st.button("Return to chat", key="return_to_chat", icon=":material/arrow_back:",
+                  on_click=change_view, args=("chat",))
+        st.header("Emails")
+        st.caption("Saved drafts across chats. Review and send using your email application.")
+        st.button("Refresh", key="refresh_emails", icon=":material/refresh:")
+        try:
+            if catalogue_error:
+                raise ChatClientError("Catalogue unavailable")
+            chats = [get_chat(api_url, chat["session_id"]) for chat in st.session_state.catalogue]
+            entries, unavailable = saved_email_entries(chats)
+        except ChatClientError:
+            st.error("Saved email drafts could not be loaded. Refresh to try again.")
+        else:
+            if unavailable:
+                st.warning(f"{unavailable} saved draft record(s) are unavailable because their details are invalid.")
+            if not entries and not unavailable:
+                st.info("No saved email drafts yet. Ask OpsFlow to draft an email in a chat.")
+            for entry in entries:
+                identity = f"{entry['session_id']}_{entry['turn_id']}_{entry['trace_index']}"
+                with st.container(border=True, key="email_entry_" + identity):
+                    st.caption("Draft")
+                    if entry["status"] != "completed":
+                        st.text("Source turn outcome: " + entry["status"])
+                    if entry["demo_policy"]:
+                        st.text("Policy information below is fictional demo policy.")
+                    st.text("Intended recipient: " + entry["draft"]["recipient"])
+                    st.text("Subject: " + entry["draft"]["subject"])
+                    st.text(entry["draft"]["body"])
+                    st.caption("What you should do")
+                    for action in entry["actions"]:
+                        st.text("• " + action)
+                    completed = entry["completed"].astimezone(ZoneInfo("Asia/Kolkata"))
+                    st.caption("Saved " + completed.strftime("%d %b %Y · %H:%M") + " IST")
+                    st.text("Chat: " + entry["title"])
+                    with st.expander("Chat context", key="email_context_" + identity):
+                        st.text(entry["message"])
+                    st.button("Open chat", key="email_source_" + identity,
+                              on_click=navigate, args=(entry["session_id"],))
     st.stop()
 
 st.subheader("Conversation")

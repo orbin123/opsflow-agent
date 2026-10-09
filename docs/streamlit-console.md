@@ -283,3 +283,28 @@ prevent reading the local guide; missing/unreadable content shows a safe error
 with Return to chat still available. The view has no separate URL persistence.
 
 Verification and inline-review evidence are recorded in REWORK step 14a.
+
+## Saved email drafts — step 14b
+
+Settings → Emails reads the existing catalogue and saved-chat GET APIs, then
+projects one entry per successful valid draft tool observation from a finished
+turn. Compound turns and successful drafts before later failure/clarification are
+included. Distinct observations remain separate even with equal content. No new
+draft database, endpoint, provider call or execution path is introduced.
+
+Entries show literal recipient/subject/body, exact saved actions, local completion
+time, source title and prompt context. Fictional-policy qualification propagates
+from earlier saved chat turns consistently with answer presentation. Newest
+completion times sort first; ties use chat ID/turn sequence, preserving tool order
+within each turn. Backend reads keep their existing per-chat snapshot boundary.
+
+Return/Workspace/Open chat preserve per-chat browser-session composer drafts.
+Refresh reads current records, including renamed titles and deleted-chat removal.
+Any catalogue/chat read failure hides the draft list and reports a safe loading
+error; it never displays a partial list as complete. Malformed completed draft
+observations have an unavailable-record notice. Empty state requires successful
+reads with no valid or malformed drafts. Source deletion after rendering uses the
+existing not-found chat behavior. Running/unsaved page locks and recovery apply.
+
+No send, edit, export, search or reminder integration. Review evidence and limits
+are recorded in REWORK step 14b.

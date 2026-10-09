@@ -156,3 +156,14 @@ appears immediately on the right; the answer appears below Activity on the left
 only after a saved final outcome. Completed Activity returns to the collapsed
 saved-record expander. Header updates must not reset expansion during progress;
 never show private reasoning or fabricate a typing animation.
+
+## Saved Emails page adaptation
+
+On 2026-10-08 the user approved step 14b's read-only saved-draft page. Use the
+existing 760 px reading column and native bordered containers with surface/control
+tokens, square corners and IBM Plex Mono literal content. Return/Refresh/Open chat
+use native 48 px controls and existing focus states. Each card keeps its recipient,
+subject, multiline body and review actions together, followed by local save time,
+source title and expandable prompting context. Draft/partial outcome and fictional
+policy text must remain explicit. Figma Foundations metadata was inspected; detailed
+design context remains rate-limited. This adaptation adds no Figma nodes.
