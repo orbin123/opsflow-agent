@@ -105,7 +105,7 @@ agreement; the resumed plan does not make them the automatic next step.
   history, and logs are content-free stderr records without durable ingestion.
 
 
-### ⏳ Dockerization and hosting — temporary demo implementation, 2026-10-09
+### ✅ Dockerization and hosting — protected temporary demo, 2026-10-09
 
 - **Latest decision:** User reversed the persistence requirement and approved a
   protected temporary Render Free demo: one container with Streamlit and a
@@ -117,7 +117,10 @@ agreement; the resumed plan does not make them the automatic next step.
   saved replay, child-failure/shutdown handling, and container-backed browser flow
   before publication. Use Render's repository Docker builder to avoid a separate
   registry upload. CLI 2.28.0 is installed and authenticated; implementation is
-  active, with no hosted service or deployed URL yet. Paid hosting remains separate.
+  active. GitHub connection now permits the private repository build. Created
+  `srv-db4gtd3tqb8s73f7mrrg` on Free in Singapore with automatic deploys disabled;
+  hosted build is live at https://opsflow-temporary-demo.onrender.com.
+  Paid hosting remains separate; PR #50 remains draft and main is unmerged.
 - **Free shutdown limit:** Actual Blueprint validation rejects custom shutdown
   delays on Free services. Keep the platform's default 30-second window and record
   that longer in-flight turns can be interrupted; recovery never resubmits them.
@@ -140,7 +143,12 @@ agreement; the resumed plan does not make them the automatic next step.
   Inline browser verifies the explicit demo notice, a live sentiment workflow
   completed/saved with Activity, and refresh restoration with exactly one task
   execution. After-chat memory is about 382 MiB within the 512 MiB cap. Hosted
-  Intel build, access/runtime verification and deployment remain pending.
+  Intel build succeeds on Render. Hosted HTTP/WebSocket checks pass with
+  password rejection and hidden backend paths. Browser verifies classifier,
+  live Groq-assisted sentiment and agent summarization with completed tools
+  and saved Activity. Refresh restores both answers with only the same two
+  task executions in hosted logs. Cloud data remains temporary; reminder emails
+  are disabled. Hosted demo remains open for user review.
 - **Earlier planning request:** Plan Docker packaging with Render for FastAPI and Streamlit
   Community Cloud for the UI, and compare alternatives. Planning is authorized;
   application/container implementation, paid provisioning and deployment await

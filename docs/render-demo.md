@@ -83,4 +83,14 @@ startup and child-failure propagation pass. Inline browser verifies the demo not
 successful sentiment, saved Activity and refresh with exactly one task execution.
 Memory after chat is about 382 MiB within a 512 MiB cap; this is a single-session
 smoke measurement, not a concurrency capacity claim. The emulated local AMD64
-download was cancelled; hosted Intel build/runtime verification remains pending.
+download was cancelled; Render's hosted Intel build succeeds.
+
+Hosted service: https://opsflow-temporary-demo.onrender.com, service
+`srv-db4gtd3tqb8s73f7mrrg`, Free plan, Singapore, one instance, automatic deploys
+off. Deployment `dep-db4gtdbtqb8s73f7mt00` runs commit `ed56040`. Hosted HTTP/
+WebSocket checks pass, including password rejection and hidden backend routes.
+Browser verification completes real classifier/Groq-assisted sentiment and agent
+summarization with saved Activity. Main remains unmerged; draft PR #50 contains
+the reviewed deployment change. Refresh restores both answers and hosted logs
+retain exactly two task executions. Credentials are outside Git. Hosted shutdown
+and multi-session capacity were not tested; local shutdown checks are recorded above.

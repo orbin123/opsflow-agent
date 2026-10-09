@@ -2,6 +2,16 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** Connected private repository access and deployed the approved
+  protected demo to https://opsflow-temporary-demo.onrender.com using Render CLI.
+  Hosted Intel Docker build succeeds; service is Free, Singapore, one instance,
+  manual deploys only. Hosted HTTP/WebSocket authentication and hidden backend
+  paths pass. Browser completes real classifier/Groq-assisted sentiment and
+  agent summarization, with saved Activity; refresh restores both answers and
+  hosted logs retain exactly two task executions. Credentials remain outside Git.
+  Demo stays open for review. Draft PR #50; main unmerged. Data is disposable,
+  reminder emails disabled; no hosted shutdown or capacity claim.
+
 - **2026-10-09:** User approved the protected temporary Render Free demo after
   reversing the persistence/email requirement. Added scoped Docker packaging,
   loopback API/UI with authenticated nginx, fail-closed password startup, child
