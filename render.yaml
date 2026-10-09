@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: opsflow-temporary-demo
+    runtime: docker
+    repo: https://github.com/orbin123/opsflow-agent
+    branch: feature/free-render-demo
+    plan: free
+    region: singapore
+    numInstances: 1
+    autoDeployTrigger: "off"
+    healthCheckPath: /health
+    envVars:
+      - key: OPSFLOW_DEMO_PASSWORD
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: OPSFLOW_TIMEZONE
+        value: Asia/Kolkata

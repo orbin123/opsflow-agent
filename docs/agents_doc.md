@@ -2,6 +2,39 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** User approved the protected temporary Render Free demo after
+  reversing the persistence/email requirement. Added scoped Docker packaging,
+  loopback API/UI with authenticated nginx, fail-closed password startup, child
+  supervision and an explicit disposable-data/no-delivery UI notice. Focused
+  checks pass 153 tests; full local suite passes 1,190 with the existing LangChain
+  warning. Dependency/whitespace checks pass. CLI authenticated successfully.
+  Actual Render validation rejects custom Free shutdown delays; retained the
+  default window and documented interrupted-turn limits. Native Linux build and
+  dependencies pass. Fixed unprivileged nginx temporary directories; actual
+  HTTP/WebSocket access and absent-password/child-failure checks pass. Linux
+  focused run: 150 passed/three failures (two 3-second UI timeouts and one normal
+  UI assertion affected by demo mode); normal-mode rerun passes 14/one timeout,
+  with the remaining test passing under an uncommitted 15-second harness. No
+  default single Linux focused-suite green run claimed. Inline browser verifies
+  successful saved sentiment/Activity and refresh without recount. After-chat
+  memory is about 382 MiB under a 512 MiB cap. Hosted deployment remains active.
+
+- **2026-10-09:** Installed Render CLI 2.28.0 through Homebrew and verified the
+  executable version. Rechecked official free-tier/deployment documentation and
+  confirmed the repo has no Dockerfile. User chose to retain persistence and email
+  rather than accept a disposable free demo; recorded the paused free deployment
+  and open hosting decision in the plan. Preserved existing documentation edits.
+  No authentication, cloud resources, image publication, deployment or emails.
+
+- **2026-10-09:** Recorded Docker/hosting proposal in `docs/PLAN.md` following
+  code/feature-document review and official Render/Streamlit/Docker documentation.
+  Proposed paid Render plus Community Cloud for a controlled demo; identified
+  single-process SQLite, disk sharing, unauthenticated API and worker supervision
+  decisions. Compared all-Render, single-host Compose and future Postgres options;
+  proposed local Docker foundation as the first bounded slice. Implementation and
+  platform selection await discussion. Documentation-only; no image builds,
+  runtime tests, deployment, provider calls or email execution.
+
 - **2026-10-09:** Implemented the approved local monitoring slice: generated
   request IDs, sanitized JSON API/task/tool/persistence logs, bounded Prometheus
   metrics with aggregate first-error counters, and pinned local Prometheus/Grafana

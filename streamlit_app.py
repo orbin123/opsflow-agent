@@ -133,6 +133,9 @@ def show_activity(execution: dict) -> None:
 
 
 st.html(f"<style>{console_styles()}</style>")
+if os.environ.get("OPSFLOW_TEMPORARY_DEMO") == "1":
+    st.warning("Temporary demo: chats, drafts and reminders may disappear when the service sleeps, "
+               "restarts or redeploys. Reminder emails are disabled. Use synthetic data only.")
 for name, value in {"session_id": None, "turns": [], "pending": False,
                     "running": False, "queued": None, "drafts": {}, "uncertain": {},
                     "catalogue": [], "action": None, "composer_error": None,
