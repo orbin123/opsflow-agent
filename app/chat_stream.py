@@ -7,6 +7,7 @@ from dataclasses import asdict
 
 from app.chat_store import ChatPersistenceError, ChatTurnConflict
 from app.execution_events import EventEmitter, observe_events
+from app.monitoring import log
 from app.runtime import RuntimeUnavailable
 
 
@@ -41,16 +42,20 @@ async def stream_turn(session_id: str, message: str, turn_id: str,
             try:
                 execution = execute(session_id, message, turn_id=turn_id)
             except ChatPersistenceError as error:
+                log("stream_failure", failed=True, failure_code="chat_persistence")
                 emitter.emit("failure", http_status=503, code="chat_persistence",
                              outcome=error.outcome, message=str(error))
             except ChatTurnConflict as error:
+                log("stream_failure", failure_code="chat_turn_conflict")
                 emitter.emit("failure", http_status=409, code="chat_turn_conflict",
                              state=error.state, message=str(error))
             except RuntimeUnavailable as error:
+                log("stream_failure", failed=True, failure_code="runtime_unavailable")
                 # The session wrapper saves this sanitized runtime failure first.
                 emitter.emit("failure", http_status=503, code="runtime_unavailable",
                              outcome="saved", message=str(error))
             except Exception:
+                log("stream_failure", failed=True, failure_code="execution_unknown")
                 emitter.emit("failure", http_status=503, code="execution_unknown",
                              outcome="unknown", message="Turn completion is unknown. Read saved chat history; do not automatically retry.")
             else:

@@ -2,6 +2,23 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-09:** Implemented the approved local monitoring slice: generated
+  request IDs, sanitized JSON API/task/tool/persistence logs, bounded Prometheus
+  metrics with aggregate first-error counters, and pinned local Prometheus/Grafana
+  provisioning with 12 panels. Fifteen new tests pass; final monitoring/SSE set
+  passes 31, plus dependency/whitespace/Prometheus configuration checks. Default
+  full suite has 1,172 passes/four 3-second AppTest timeouts. Temporary 15-second
+  harness has 1,175 passes/one fresh-process timeout; that test passes separately.
+  No default full-suite green run claimed or repository timeouts changed.
+  Chrome verifies successful task correlation, a retained model invalid-output
+  partial failure under SSE 200, refresh without recount, zero execution counters
+  on restart/restoration and exactly one new task/tool afterward. All 12 dashboard
+  queries succeed. Inline browser attachment failed; isolated Chrome chat/Grafana
+  stay open on 8502/3000 (backend 8012), original app remains on 8501/8011.
+  No worker/email execution. Docs/plan/working facts updated together;
+  User approved review and merge of PR #49 on feature/monitoring-logging on
+  2026-10-09; the commit carries the user's DCO sign-off.
+
 - **2026-10-09:** At the user's direction, closed the rework planning agenda and
   restored `docs/PLAN.md` as the sole active agenda. Removed rework-first/read/update
   instructions and step numbering from `AGENTS.md`; reconciled the plan with the

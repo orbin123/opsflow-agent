@@ -247,3 +247,12 @@ activity, and restores authoritative outcomes through GET. Step 11 places saved
 details between the right prompt and left answer in a vertical sequence. The
 nonstreaming endpoint remains available to other callers.
 No new external service, dependency, email/reminder execution or UI redesign.
+
+## Request tracking and metrics
+
+Responses include a generated `X-Request-ID` for content-free backend log
+correlation. Prometheus metrics distinguish HTTP status and full stream lifetime
+from execution outcome/duration; SSE HTTP 200 is not task success. Saved replay
+and GET recovery do not increment task/tool execution counters. See
+[Monitoring and logging](monitoring.md) for local Grafana setup, persistence
+outcomes and logging/privacy boundaries.

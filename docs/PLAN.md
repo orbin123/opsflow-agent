@@ -40,6 +40,71 @@ verification still outstanding. Reconcile each proposed slice against the curren
 code before implementation. Employee workspace follow-ups require separate
 agreement; the resumed plan does not make them the automatic next step.
 
+### ✅ Monitoring and logging — implemented and reviewed, 2026-10-09
+
+- **Decision:** User requested explicit API logging, error logging, request tracking,
+  response time, API usage, error rates and task distribution, and selected local
+  Prometheus + Grafana. The existing Operations note anticipated logs/metrics but
+  did not define their implementation. User approved the bounded contract and
+  verification on 2026-10-09; implementation and review are complete on
+  `feature/monitoring-logging`, with the verification limits below.
+- **Contract:** Sanitized structured JSON request/error logs with generated request
+  IDs returned in response headers and correlated through backend execution.
+  Record method, route template, HTTP status, duration and stable failure codes;
+  exclude message bodies, drafts, tool arguments/results, credentials and raw
+  exception text. Request IDs belong in logs, never metric labels.
+- **Metrics:** Expose Prometheus `/metrics`; measure request counts/duration by
+  bounded method/route/status labels, and actual newly executed tasks by intent,
+  execution route and outcome, with execution duration and tool latency/failures.
+  Separate HTTP errors from task failures: SSE HTTP 200 does not establish task
+  success. Define response duration for streams explicitly; disconnected backend
+  execution still reaches its own terminal metric. Catalogue reads, saved replay
+  and recovery do not increment task/tool execution counts. Unsaved and unknown
+  outcomes remain explicit rather than being reported as successful persistence.
+- **Local stack:** Propose a monitoring-only Compose configuration with pinned
+  compatible Prometheus/Grafana images, local persistent metrics/dashboard storage,
+  and provisioned Prometheus data source/dashboard. Panels cover usage, latency,
+  HTTP/task error rates, intent/route distribution and tool behavior. Browser
+  control configures/verifies Grafana; the operational connection is backend
+  metrics → Prometheus → Grafana. No cloud telemetry destination chosen.
+- **Verification proposal:** Proportional offline tests for success, validation,
+  server/task errors, sanitized log fields and bounded labels, request-ID
+  correlation, SSE disconnect completion and replay without double counting.
+  Run existing suite/dependency/whitespace checks, verify actual Prometheus
+  scraping and Grafana panels, then exercise the changed chat flow in the inline
+  browser and leave it open for user review before merge/direct main push.
+  Provider/email test doubles prevent real sending during automated checks.
+- **Implementation/verification:** API middleware, correlated runtime/tool and
+  persistence logs, bounded metrics and preinitialized aggregate error counters
+  are implemented. Monitoring-only Compose pins Prometheus 3.15.0 and Grafana
+  13.2.2, with local volumes and a provisioned 12-panel dashboard. Browser review
+  corrected distribution axes/table labels and a supported 30-second refresh.
+  All 15 new tests pass; final monitoring/SSE checks pass (31 tests), along with
+  dependency/whitespace and Prometheus configuration checks. Default full suite:
+  1,172 passed/four existing 3-second AppTest timeouts. An uncommitted harness
+  using 15-second AppTest allowance passed 1,175; its one fresh-process timeout
+  passed separately in 10.76 seconds. No single default full-suite green run is
+  claimed; assertions and repository test timeouts remain unchanged.
+- **Live evidence:** Docker Desktop services run on localhost 9090/3000. Chrome
+  verifies Grafana panels and supported auto-refresh; all 12 PromQL queries
+  succeed. Isolated backend/UI on 8012/8502 use separate SQLite files and a local
+  Prometheus config override; original 8011/8501 processes remain available.
+  Synthetic sentiment completed/saved; a second turn was classified compound,
+  used the agent and retained a successful sentiment tool before final model
+  `invalid_output`/partial failure. Logs distinguish this from SSE HTTP 200.
+  Refresh did not recount work. After the aggregate-counter fix/restart, saved
+  restoration left counters at zero; one explicitly new synthetic turn produced
+  exactly one completed task/tool/persistence count. No reminder worker or email
+  sending ran. Existing model-output reliability limits remain separate.
+- **Review boundary:** Inline browser creation/attachment failed; Chrome review
+  succeeded and the live dashboard/chat remain open. See `docs/monitoring.md`.
+  User approved review and merge of [PR #49](https://github.com/orbin123/opsflow-agent/pull/49)
+  on 2026-10-09; its commit carries the user's DCO sign-off. Alerting, Loki ingestion,
+  distributed tracing, worker telemetry, cloud export and full deployment remain
+  separate scopes. Metrics reset on backend restart; Prometheus retains scraped
+  history, and logs are content-free stderr records without durable ingestion.
+
+
 ## Objective
 
 Build **OpsFlow-Agent**, an explainable operations copilot combining classical ML routing with LangChain tool calling. It should analyze communications, summarize text, retrieve company policies, extract keywords/action items, draft emails, and create reminders with email notifications to the user.
