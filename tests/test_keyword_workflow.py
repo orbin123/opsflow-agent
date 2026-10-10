@@ -211,6 +211,10 @@ def test_invalid_configuration_fails_before_client_creation(monkeypatch, key, mo
     monkeypatch.setattr(workflow, "ChatGroq", client)
     result = workflow.run_keyword_workflow("Find keywords: happy")
     assert result.trace[0].reason == "configuration"
+    assert result.status == "error" and result.reason == "extraction_failed"
+    assert "model configuration is missing or invalid" in result.reply
+    assert "No keywords were extracted." in result.reply
+    assert result.result is None and len(result.trace) == 1
     client.assert_not_called()
 
 

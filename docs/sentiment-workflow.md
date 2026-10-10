@@ -64,6 +64,11 @@ See [chat-api.md](chat-api.md) for the full response contract.
 
 ## Configuration and limits
 
+Configuration failures during extraction return an explicit model-configuration
+failure message rather than suggesting the supplied text/question was missing.
+The existing `error`/`extraction_failed` outcome and `configuration` stage reason
+remain unchanged; no local tool executes and no retry or agent fallback occurs.
+
 - Reuses `GROQ_API_KEY`, loaded lazily from the environment or root `.env` without
   overriding environment values. Optional `GROQ_SENTIMENT_MODEL` defaults to
   `openai/gpt-oss-20b`; `openai/gpt-oss-120b` is also accepted. No silent model fallback.

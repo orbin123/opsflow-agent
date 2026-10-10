@@ -273,6 +273,10 @@ def test_invalid_configuration_fails_before_client_creation(monkeypatch, key, mo
     monkeypatch.setattr(workflow, "ChatGroq", client)
     outcome = workflow.run_faq_workflow("What is the remote-work policy?")
     assert outcome.trace[0].reason == "configuration"
+    assert outcome.status == "error" and outcome.reason == "extraction_failed"
+    assert "model configuration is missing or invalid" in outcome.reply
+    assert "No FAQ lookup was performed." in outcome.reply
+    assert outcome.result is None and len(outcome.trace) == 1
     client.assert_not_called()
 
 
