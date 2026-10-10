@@ -11,8 +11,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import reminder_worker as worker_module
-from app.reminder_worker import ReminderWorker, WorkerAlreadyRunning
+from app.reminders import reminder_worker as worker_module
+from app.reminders.reminder_worker import ReminderWorker, WorkerAlreadyRunning
 from app.tools import email_notifications as email
 from app.tools import reminders
 
@@ -190,7 +190,7 @@ def test_second_process_cannot_recover_or_submit_while_owner_is_active(db, clock
         assert worker._claim() is not None
         script = """
 import sys
-from app.reminder_worker import ReminderWorker, WorkerAlreadyRunning
+from app.reminders.reminder_worker import ReminderWorker, WorkerAlreadyRunning
 try:
     with ReminderWorker(sys.argv[1]):
         sys.exit(99)
@@ -214,7 +214,7 @@ def test_recovery_after_actual_process_exit_keeps_claim_unknown(db, clock, sende
     script = """
 import os, socket, sys
 from datetime import UTC, datetime
-from app import reminder_worker as module
+from app.reminders import reminder_worker as module
 socket.socket.connect = lambda *args: (_ for _ in ()).throw(AssertionError('network forbidden'))
 module.send_reminder_notification = lambda *args, **kwargs: os._exit(23)
 with module.ReminderWorker(sys.argv[1], clock=lambda: datetime(2026, 10, 6, 0, 1, tzinfo=UTC)) as worker:

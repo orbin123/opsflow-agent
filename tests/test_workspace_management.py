@@ -2,7 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import sessions, ui_client
+from app.chat import sessions
+from app.ui import ui_client
 from tests.test_workspace_navigation import workspace, open_chat, text
 from tests.test_streamlit_ui import send_message
 

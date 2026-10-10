@@ -192,8 +192,8 @@ steps 9 and 11; do not mark visual verification complete from this contract.
 
 ## Contract review and later verification
 
-Step 6 review compared this specification with `app/sessions.py`, `app/api/chat.py`,
-`app/ui_client.py`, `streamlit_app.py`, and the memory/API/reminder/design documents:
+Step 6 review compared this specification with `app/chat/sessions.py`, `app/api/chat.py`,
+`app/ui/ui_client.py`, `streamlit_app.py`, and the memory/API/reminder/design documents:
 
 | Scenario | Required result; implementation verification belongs to the indicated slice |
 | --- | --- |

@@ -7,7 +7,8 @@ import pytest
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
-from app import agent, runtime, sessions
+from app.core import agent, runtime
+from app.chat import sessions
 from app.main import app
 from app.tools.email_drafting import EmailDraft, EmailDraftResult, _ACTION_INSTRUCTIONS
 from app.tools.summarization import SummaryResult

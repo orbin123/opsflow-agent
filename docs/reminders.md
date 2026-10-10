@@ -1,6 +1,6 @@
 # Reminder Scheduling
 
-`app/tools/reminders.py` provides a standalone deterministic `schedule_reminder` tool. It stores a one-time reminder in SQLite and returns `scheduled`. Run the separate `app.reminder_worker` process to submit due reminders to the configured user's Gmail mailbox. Scheduling does not itself send email. Saved chat turns now connect natural-language one-time creation through the agent; see the chat contract below.
+`app/tools/reminders.py` provides a standalone deterministic `schedule_reminder` tool. It stores a one-time reminder in SQLite and returns `scheduled`. Run the separate `app.reminders.reminder_worker` process to submit due reminders to the configured user's Gmail mailbox. Scheduling does not itself send email. Saved chat turns now connect natural-language one-time creation through the agent; see the chat contract below.
 
 ## Input and output
 
@@ -45,7 +45,7 @@ Invalid arguments raise `TypeError` or sanitized `ValueError` without inserting 
 Use the existing [Gmail configuration](email-notifications.md). Start the worker separately from FastAPI:
 
 ```bash
-.venv/bin/python -m app.reminder_worker
+.venv/bin/python -m app.reminders.reminder_worker
 ```
 
 `--db-path /absolute/path/reminders.sqlite3` overrides the configured database. `--once` processes eligible records and exits without waiting for future due times. The normal loop polls every five seconds after processing its current batch. Pending overdue records are eligible immediately after downtime. This is local polling, not an exact-time inbox-delivery promise. SMTP keeps the existing verified TLS settings, configured-user-only envelope, and 30-second socket-operation timeout; it has no total-call deadline.
@@ -96,7 +96,7 @@ startup, cancellation, deletion and manual retry remain outside this page slice.
 
 ## Chat creation contract
 
-`app.chat_reminders` supplies the agent's `schedule_reminder` schema and adapter.
+`app.reminders.chat_reminders` supplies the agent's `schedule_reminder` schema and adapter.
 The agent extracts literal task, date, time, optional IANA timezone and optional
 confirmed UTC offset from the current user message, or the immediately preceding
 clarification chain. Application code checks those phrases against user messages,

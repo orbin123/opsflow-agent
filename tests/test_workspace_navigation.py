@@ -4,7 +4,8 @@ from unittest.mock import Mock
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app import sessions, ui_client
+from app.chat import sessions
+from app.ui import ui_client
 from tests.test_chat_catalogue import BASE
 from tests.test_streamlit_ui import SCRIPT, connect_api, send_message
 
@@ -199,7 +200,7 @@ def test_unknown_missing_outcome_blocks_submission_until_read_resolves(workspace
 
 @pytest.mark.parametrize("phase", ["begin", "finish"])
 def test_storage_failure_draft_and_running_recovery(workspace, monkeypatch, phase):
-    from app.chat_store import ChatPersistenceError
+    from app.chat.chat_store import ChatPersistenceError
     recorded, execute = workspace
     ui = open_chat()
     ui.button(key="new_chat").click().run()

@@ -103,8 +103,8 @@ def track_persistence():
     try:
         yield
     except Exception as error:
-        from app.chat_store import ChatPersistenceError
-        from app.runtime import RuntimeUnavailable
+        from app.chat.chat_store import ChatPersistenceError
+        from app.core.runtime import RuntimeUnavailable
         outcome = ('unsaved' if isinstance(error, ChatPersistenceError) else
                    'saved_failure' if isinstance(error, RuntimeUnavailable) else 'unknown')
         persistence.labels(outcome).inc()

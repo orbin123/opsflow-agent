@@ -6,7 +6,8 @@ from urllib.error import URLError
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app import sessions, ui_client
+from app.chat import sessions
+from app.ui import ui_client
 from tests.test_streamlit_ui import SCRIPT, execution, connect_api
 
 

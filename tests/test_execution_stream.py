@@ -14,10 +14,11 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 
-from app import agent, runtime, sessions
+from app.core import agent, runtime
+from app.chat import sessions
 from app.api import chat
-from app.chat_store import ChatPersistenceError
-from app.chat_stream import drain_stream_workers, stream_turn
+from app.chat.chat_store import ChatPersistenceError
+from app.chat.chat_stream import drain_stream_workers, stream_turn
 from app.main import app
 from app.workflows import sentiment_workflow, keyword_workflow, faq_workflow
 

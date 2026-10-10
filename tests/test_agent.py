@@ -4,7 +4,7 @@ from dataclasses import asdict
 import pytest
 from langchain_core.messages import AIMessage, ToolMessage
 
-from app import agent
+from app.core import agent
 from app.tools.summarization import SummarizationError
 
 

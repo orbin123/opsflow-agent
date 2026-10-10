@@ -11,11 +11,13 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage
 import pytest
 
-from app import agent, chat_reminders, runtime, sessions
-from app.chat_store import ChatPersistenceError, ChatTurnConflict
+from app.core import agent, runtime
+from app.reminders import chat_reminders
+from app.chat import sessions
+from app.chat.chat_store import ChatPersistenceError, ChatTurnConflict
 from app.main import app
 from app.tools import reminders
-from app.reminder_catalogue import list_saved_reminders
+from app.reminders.reminder_catalogue import list_saved_reminders
 
 
 NOW = datetime(2026, 10, 9, 12, tzinfo=UTC)
@@ -278,7 +280,7 @@ def test_model_cannot_claim_creation_without_a_successful_tool(monkeypatch):
 ])
 def test_stream_events_and_client_validation_preserve_scheduling(monkeypatch, kind, status, http_status):
     from io import BytesIO
-    from app import ui_client
+    from app.ui import ui_client
     args = {**ARGS, "time": None} if kind == "clarification" else ARGS
     model(monkeypatch, [call(args)] + ([] if kind == "clarification" else
                                      [RuntimeError("private") if kind == "later_failure" else final()]))
@@ -300,7 +302,7 @@ def test_stream_events_and_client_validation_preserve_scheduling(monkeypatch, ki
 
 
 def test_chat_record_runs_through_existing_worker_with_controlled_transport(monkeypatch):
-    from app import reminder_worker
+    from app.reminders import reminder_worker
     from app.tools.email_notifications import NotificationResult
     model(monkeypatch, [call(), final()])
     result = sessions.execute_session_request("worker", DEMO)

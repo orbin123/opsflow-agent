@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 import pytest
 
-from app import runtime
+from app.core import runtime
 from app.main import app
 from app.routes import faq_route
 from app.tools.faq import FAQCandidate, FAQResult

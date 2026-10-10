@@ -8,9 +8,10 @@ from fastapi.testclient import TestClient
 from langchain_core.messages import AIMessage, HumanMessage
 import pytest
 
-from app import agent, runtime, sessions
+from app.core import agent, runtime
+from app.chat import sessions
 from app.workflows import keyword_workflow as workflow
-from app.agent import AgentResult, AgentTrace
+from app.core.agent import AgentResult, AgentTrace
 from app.main import app
 
 

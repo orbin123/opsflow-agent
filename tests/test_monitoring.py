@@ -8,12 +8,14 @@ from fastapi import FastAPI
 from fastapi.testclient import TestClient
 import pytest
 
-from app import monitoring as m, runtime, sessions
-from app.execution_events import finish_step
+from app.observability import monitoring as m
+from app.core import runtime
+from app.chat import sessions
+from app.core.execution_events import finish_step
 from app.main import app
-from app.runtime import ExecutionResult, RuntimeUnavailable, ToolTrace
-from app.chat_store import ChatPersistenceError
-from app.chat_stream import stream_turn, drain_stream_workers
+from app.core.runtime import ExecutionResult, RuntimeUnavailable, ToolTrace
+from app.chat.chat_store import ChatPersistenceError
+from app.chat.chat_stream import stream_turn, drain_stream_workers
 
 
 @pytest.fixture

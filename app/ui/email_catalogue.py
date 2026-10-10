@@ -4,7 +4,7 @@ from datetime import datetime
 
 from pydantic import ValidationError
 
-from app.profile import PROFILE_ID
+from app.chat.profile import PROFILE_ID
 from app.tools.email_drafting import EmailDraftResult
 
 

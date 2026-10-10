@@ -100,6 +100,8 @@ shutdown window. See `docs/render-demo.md` for packaging and verification limits
 
 ## Read Before Working
 
+- `docs/package-structure.md`: application package responsibilities and launch commands.
+
 - `docs/PLAN.md`: active implementation agenda for remaining project work.
 - `docs/agents_doc.md`: brief record of completed changes and the next step.
 - `skills/karpathy-guidelines/SKILL.md`: follow the supplied Karpathy development guidelines. If missing, ask before development.

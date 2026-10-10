@@ -7,7 +7,7 @@ from time import perf_counter, sleep
 
 from groq import RateLimitError
 
-from app.execution_events import start_step, finish_step
+from app.core.execution_events import start_step, finish_step
 
 
 _deadline: ContextVar[float | None] = ContextVar("model_wait_deadline", default=None)

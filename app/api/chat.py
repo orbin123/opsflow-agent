@@ -7,11 +7,11 @@ from fastapi import APIRouter, HTTPException, Response, Path
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter, field_validator
 
-from app.agent import AgentTrace
-from app.runtime import ExecutionResult, RuntimeUnavailable, ToolResult, ToolTrace
-from app.sessions import execute_session_request, create_chat, list_chats, get_chat, rename_chat, delete_chat
-from app.chat_store import ChatPersistenceError, ChatTurnConflict, ChatNotFound
-from app.chat_stream import stream_turn
+from app.core.agent import AgentTrace
+from app.core.runtime import ExecutionResult, RuntimeUnavailable, ToolResult, ToolTrace
+from app.chat.sessions import execute_session_request, create_chat, list_chats, get_chat, rename_chat, delete_chat
+from app.chat.chat_store import ChatPersistenceError, ChatTurnConflict, ChatNotFound
+from app.chat.chat_stream import stream_turn
 from app.workflows.sentiment_workflow import SentimentStage
 from app.workflows.keyword_workflow import KeywordStage
 from app.workflows.faq_workflow import FAQStage

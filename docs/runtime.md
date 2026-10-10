@@ -1,12 +1,12 @@
 # Shared stateless runtime
 
-`app.runtime.execute_request(message)` is the stateless entry point for direct
+`app.core.runtime.execute_request(message)` is the stateless entry point for direct
 keyword/FAQ execution, the fixed LLM-assisted sentiment workflow, and bounded agent
 handoff. It accepts a nonblank string up to 10,000 characters and classifies once
 using the trusted saved model and unchanged metadata threshold. It adds no dependencies.
 
 ```python
-from app.runtime import execute_request
+from app.core.runtime import execute_request
 
 execution = execute_request('Check the sentiment of this I am sad')
 print(execution.status, execution.result)
@@ -56,7 +56,7 @@ Tool exceptions produce `error`, a null result, a tool-specific unavailable reas
 `execute_request(message, faq_only=True)` serves the existing `/api/v1/faq` endpoint. It classifies once but permits only FAQ execution, preserving the endpoint's response fields, reasons, and HTTP status behavior. Fallback in this mode still produces `agent_required`, null result and no trace. No agent runs. A sentiment prediction sent to that endpoint cannot execute sentiment. See [faq-api.md](faq-api.md) for its public contract.
 
 This entry point does not store history. The separate
-`app.sessions.execute_session_request(session_id, message)` wrapper saves outcomes
+`app.chat.sessions.execute_session_request(session_id, message)` wrapper saves outcomes
 from all three routes and supplies prior conversation to the agent; see
 [session-memory.md](session-memory.md) and [chat-api.md](chat-api.md). Saved-model
 sentiment checks use provider doubles for language stages; classifier evaluation

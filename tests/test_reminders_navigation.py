@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import ui_client
+from app.ui import ui_client
 from tests.test_reminder_catalogue import database, seed
 from tests.test_workspace_navigation import workspace, open_chat, text
 from tests.test_emails_navigation import save
@@ -51,7 +51,7 @@ def test_empty_failure_and_refresh_recovery(workspace, database, monkeypatch):
 
 @pytest.mark.parametrize("state", ["pending", "running", "unknown"])
 def test_work_locks_reminders_page(workspace, database, state):
-    from app import sessions
+    from app.chat import sessions
     save(steps=[])
     ui = open_chat()
     if state == "running":

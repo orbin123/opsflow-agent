@@ -2,6 +2,24 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-10:** User approved local review and merge of refactor PR #51.
+  Verified both PRs mergeable with user-only DCO-signed commits. Merged deployment
+  dependency PR #50 into main, then retargeted #51 to main; recorded approval
+  and preserved verification limits. Automatic Render deploys remain off and
+  the live service remains on `ed56040`. No additional tests, cloud redeploy or
+  reminder/email execution; application code is unchanged from the reviewed refactor.
+
+- **2026-10-10:** Implemented the user-approved Python folder refactor on
+  `refactor/python-package-structure`, stacked on draft PR #50. Moved 17 modules
+  into core/chat/reminders/ui/observability; updated imports, test patches,
+  resource roots and module/worker documentation. Entry points, API/storage
+  contracts and execution behavior remain unchanged. All 1,190 tests pass before
+  and after; dependency/whitespace checks and worker CLI help pass. Native ARM64
+  Docker build/import/model/storage checks pass. Inline browser completes live
+  sentiment and agent summarization with saved Activity; refresh restores both
+  without recounting (exactly two task executions). No SMTP or worker ran;
+  no cloud redeploy. Local review remains open; user review/merge pending.
+
 - **2026-10-09:** Connected private repository access and deployed the approved
   protected demo to https://opsflow-temporary-demo.onrender.com using Render CLI.
   Hosted Intel Docker build succeeds; service is Free, Singapore, one instance,

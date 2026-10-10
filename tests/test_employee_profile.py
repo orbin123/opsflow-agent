@@ -7,9 +7,9 @@ from unittest.mock import Mock
 import pytest
 from fastapi.testclient import TestClient
 
-from app import sessions
-from app.chat_store import ChatStore
-from app.email_catalogue import saved_email_entries
+from app.chat import sessions
+from app.chat.chat_store import ChatStore
+from app.ui.email_catalogue import saved_email_entries
 from app.main import app
 from tests.test_chat_catalogue import BASE
 from tests.test_email_catalogue import chat as draft_chat
@@ -32,7 +32,7 @@ def test_singleton_survives_fresh_process_without_execution(monkeypatch):
         assert connection.execute("SELECT COUNT(*) FROM chats").fetchone()[0] == 0
     sessions.close_chat_store()
     result = subprocess.run([os.path.abspath('.venv/bin/python'), '-c',
-        'from app.sessions import get_profile, close_chat_store; '
+        'from app.chat.sessions import get_profile, close_chat_store; '
         'print(get_profile().model_dump_json()); close_chat_store()'],
         capture_output=True, text=True, check=True)
     assert json.loads(result.stdout) == EXPECTED
@@ -60,7 +60,7 @@ def test_existing_reminders_and_saved_drafts_share_identity_without_writes(tmp_p
     path = tmp_path / 'reminders.sqlite3'
     seed(path, "unknown")
     before = path.read_bytes()
-    from app.reminder_catalogue import list_saved_reminders
+    from app.reminders.reminder_catalogue import list_saved_reminders
     records = list_saved_reminders(path)
     assert records[0].profile_id == EXPECTED["profile_id"]
     assert records[0].state == "unknown" and path.read_bytes() == before
@@ -92,7 +92,7 @@ def test_failed_migration_rolls_back_without_touching_records(tmp_path):
     store.close()
     with sqlite3.connect(path) as connection:
         connection.execute('PRAGMA user_version=2')
-    from app.chat_store import ChatPersistenceError
+    from app.chat.chat_store import ChatPersistenceError
     with pytest.raises(ChatPersistenceError):
         ChatStore(path)
     with sqlite3.connect(path) as connection:

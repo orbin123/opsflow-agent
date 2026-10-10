@@ -9,7 +9,9 @@ from langchain_core.messages import AIMessage
 import pytest
 from streamlit.testing.v1 import AppTest
 
-from app import agent, runtime, sessions, ui_client
+from app.core import agent, runtime
+from app.chat import sessions
+from app.ui import ui_client
 from app.main import app
 from app.tools.summarization import SummaryResult
 from app.tools.email_drafting import EmailDraftResult, _ACTION_INSTRUCTIONS

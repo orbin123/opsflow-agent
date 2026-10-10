@@ -6,7 +6,8 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 import pytest
 
-from app import sessions, ui_client
+from app.chat import sessions
+from app.ui import ui_client
 from app.main import app
 from tests.test_chat_catalogue import BASE, submit
 

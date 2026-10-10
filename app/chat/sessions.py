@@ -11,11 +11,11 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langsmith import tracing_context
 from pydantic import TypeAdapter, ValidationError
 
-from app.monitoring import track_persistence
-from app.agent import AgentTrace
-from app.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict, database_path
-from app.chat_reminders import reminder_turn
-from app.runtime import ExecutionResult, RuntimeUnavailable, execute_request
+from app.observability.monitoring import track_persistence
+from app.core.agent import AgentTrace
+from app.chat.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict, database_path
+from app.reminders.chat_reminders import reminder_turn
+from app.core.runtime import ExecutionResult, RuntimeUnavailable, execute_request
 
 
 @dataclass

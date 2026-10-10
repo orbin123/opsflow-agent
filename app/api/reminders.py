@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, HTTPException
 
-from app.reminder_catalogue import SavedReminder, list_saved_reminders
+from app.reminders.reminder_catalogue import SavedReminder, list_saved_reminders
 from app.tools.reminders import ReminderPersistenceError
 
 

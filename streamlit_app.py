@@ -10,9 +10,9 @@ from zoneinfo import ZoneInfo
 
 import streamlit as st
 
-from app.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat, list_reminders
-from app.chat_menu import chat_menu, HTML, CSS, JS
-from app.email_catalogue import saved_email_entries
+from app.ui.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat, list_reminders
+from app.ui.chat_menu import chat_menu, HTML, CSS, JS
+from app.ui.email_catalogue import saved_email_entries
 
 
 st.set_page_config(page_title="OpsFlow · Console", layout="wide")
