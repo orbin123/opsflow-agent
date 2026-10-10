@@ -11,7 +11,7 @@ from typing import Callable
 
 from fastapi.encoders import jsonable_encoder
 
-from app.monitoring import record_tool
+from app.observability.monitoring import record_tool
 
 
 _observer: ContextVar["EventEmitter | None"] = ContextVar("execution_events", default=None)

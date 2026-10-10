@@ -2,9 +2,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import runtime
+from app.core import runtime
 from app.workflows import keyword_workflow, faq_workflow
-from app.agent import AgentResult, AgentTrace
+from app.core.agent import AgentResult, AgentTrace
 from app.routes import keyword_route, sentiment_route
 from app.tools.faq import retrieve_faq
 from app.tools.keywords import extract_keywords
@@ -221,7 +221,7 @@ def test_unexpected_agent_exception_is_sanitized_without_invented_results(monkey
 def test_runtime_invokes_real_agent_loop_with_offline_model(monkeypatch):
     import json
     from langchain_core.messages import AIMessage
-    from app import agent
+    from app.core import agent
 
     monkeypatch.setattr(runtime, "run_agent", agent.run_agent)
     monkeypatch.setattr(runtime, "classify_request", Mock(return_value=("sentiment_analysis", 0.5, 0.71)))

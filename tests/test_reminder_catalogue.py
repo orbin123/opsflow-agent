@@ -9,9 +9,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.reminder_catalogue import list_saved_reminders
+from app.reminders.reminder_catalogue import list_saved_reminders
 from app.tools.reminders import ReminderPersistenceError, schedule_reminder
-from app import ui_client
+from app.ui import ui_client
 from tests.test_streamlit_ui import Response
 
 

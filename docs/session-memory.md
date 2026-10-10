@@ -1,7 +1,7 @@
 # Durable local session memory
 
 ```python
-from app.sessions import execute_session_request, clear_session_history
+from app.chat.sessions import execute_session_request, clear_session_history
 
 first = execute_session_request("local-chat", 'Sentiment: "I am happy"')
 followup = execute_session_request("local-chat", "Draft an email to Alex about that result")

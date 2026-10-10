@@ -9,7 +9,7 @@ from pathlib import Path
 import joblib
 
 
-_MODEL_DIR = Path(__file__).resolve().parents[1] / "artifacts/models"
+_MODEL_DIR = Path(__file__).resolve().parents[2] / "artifacts/models"
 
 
 @lru_cache(maxsize=1)

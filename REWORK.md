@@ -174,9 +174,9 @@ These findings come from code/document inspection, not new runtime verification:
 - `streamlit_app.py` uses one temporary browser-session ID and an adjacent
   inspector. The welcome example encourages `Sentiment: "I am happy"` syntax;
   structured results are displayed as JSON.
-- `app/ui_client.py` and `app/api/chat.py` exchange one final response after
+- `app/ui/ui_client.py` and `app/api/chat.py` exchange one final response after
   execution. There is no live execution-event stream.
-- `app/sessions.py` retains direct and agent outcomes in process-local history.
+- `app/chat/sessions.py` retains direct and agent outcomes in process-local history.
   It has no durable chat catalogue or history retrieval API; backend restart
   loses chat history. SQLite reminder persistence is separate.
 - Direct sentiment and keyword extraction require recognized instructions with
@@ -452,7 +452,7 @@ its routing revision are now approved as recorded below.
 **Step 2b outcome — 2026-10-07**
 
 - Connected the fixed sentiment workflow behind unchanged intent/confidence gating
-  in `app/runtime.py`. The chat API/client accepts `llm_assisted` and preserves
+  in `app/core/runtime.py`. The chat API/client accepts `llm_assisted` and preserves
   the reply/result/tool trace plus actual `workflow_trace` stages. Existing session
   serialization saves these fields automatically. Contextual/compound abstention
   retains extraction details and hands the original request/history to the agent
@@ -1476,7 +1476,7 @@ agreed before coding. The original plan remains paused.
 
 #### Step 13 outcome — 2026-10-08
 
-- Added one-shot validated SSE consumption in `app/ui_stream.py`, selected by the
+- Added one-shot validated SSE consumption in `app/ui/ui_stream.py`, selected by the
   UI client's optional progress callback. Nonstreaming callers retain their API.
   UI displays a right prompt, then left running Activity with actual stage events,
   then the left answer after a saved final outcome. Live Activity starts open with

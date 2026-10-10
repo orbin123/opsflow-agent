@@ -4,14 +4,14 @@ from fastapi import FastAPI, Response
 
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
-from app.monitoring import RequestMonitoring, registry
+from app.observability.monitoring import RequestMonitoring, registry
 
 from app.api.chat import router as chat_router
 from app.api.profile import router as profile_router
 from app.api.faq import router as faq_router
 from app.api.reminders import router as reminders_router
-from app.sessions import close_chat_store
-from app.chat_stream import drain_stream_workers
+from app.chat.sessions import close_chat_store
+from app.chat.chat_stream import drain_stream_workers
 
 
 @asynccontextmanager

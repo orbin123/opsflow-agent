@@ -7,10 +7,10 @@ from typing import Literal
 
 from langchain_core.messages import AIMessage, HumanMessage
 
-from app.monitoring import track_execution
-from app.execution_events import emit
-from app.agent import AgentTrace, run_agent
-from app.intent_router import classify_request
+from app.observability.monitoring import track_execution
+from app.core.execution_events import emit
+from app.core.agent import AgentTrace, run_agent
+from app.core.intent_router import classify_request
 from app.routes.faq_route import try_direct_faq
 from app.workflows.faq_workflow import FAQStage, run_faq_workflow
 from app.workflows.keyword_workflow import KeywordStage, run_keyword_workflow

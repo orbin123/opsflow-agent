@@ -1,6 +1,6 @@
 # Durable local chat history
 
-REWORK step 7 adds `app/chat_store.py` and connects it to `app/sessions.py`.
+REWORK step 7 adds `app/chat/chat_store.py` and connects it to `app/chat/sessions.py`.
 SQLite is authoritative: every request restores prior user/assistant context from
 saved records. The process-local history object is a snapshot, not a fallback.
 Reminder storage, worker locking, tools, routing thresholds, and providers are
@@ -88,7 +88,7 @@ no intermediate event journal or progress resume cursor. See [chat-api.md](chat-
 ## Restoration and submission identity
 
 ```python
-from app.sessions import execute_session_request
+from app.chat.sessions import execute_session_request
 
 result = execute_session_request(
     "local-chat", "Just check the sentiment of this I am happy", turn_id="one-operation"

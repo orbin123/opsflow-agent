@@ -5,7 +5,7 @@ from typing import Literal
 from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from app.runtime import RuntimeUnavailable, execute_request
+from app.core.runtime import RuntimeUnavailable, execute_request
 from app.tools.faq import FAQResult
 
 

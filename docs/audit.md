@@ -17,9 +17,9 @@ correct results for every possible natural-language request.
 
 ## 2. How a request works
 
-`streamlit_app.py` sends a message through `app/ui_client.py` and `app/ui_stream.py`
-to FastAPI's `POST /api/v1/chat/stream`. `app/sessions.py` saves a running turn and
-restores its chat context. `app/runtime.py` classifies the request once, then routes it:
+`streamlit_app.py` sends a message through `app/ui/ui_client.py` and `app/ui/ui_stream.py`
+to FastAPI's `POST /api/v1/chat/stream`. `app/chat/sessions.py` saves a running turn and
+restores its chat context. `app/core/runtime.py` classifies the request once, then routes it:
 
 - **LLM-assisted:** High-confidence sentiment, keyword, or FAQ requests use a fixed
   model extraction → local tool → model explanation workflow. Missing input clarifies;
@@ -68,10 +68,10 @@ All rows have code connections and automated coverage; fresh live checks are nar
 | `POST /api/v1/faq` | Standalone API consumer | Intentionally separate; chat calls retrieval through its runtime. |
 | `GET /health` | Operational HTTP check | No dedicated UI; reports liveness, not Groq/SMTP/storage readiness. |
 | `send_draft_notification` | Python utility only | No chat/API/UI send action; a built capability, not a user-facing integration. |
-| Reminder worker | Separate `app.reminder_worker` process → Gmail transport | Connected to reminder storage; intentionally independent of chat. |
+| Reminder worker | Separate `app.reminders.reminder_worker` process → Gmail transport | Connected to reminder storage; intentionally independent of chat. |
 
 There is no separate Emails HTTP endpoint: the frontend reads existing chat APIs and
-uses `app/email_catalogue.py`. Sentiment, keywords, summaries and drafts similarly
+uses `app/ui/email_catalogue.py`. Sentiment, keywords, summaries and drafts similarly
 run behind chat rather than dedicated public endpoints.
 
 ## 5. Packages and Python responsibilities

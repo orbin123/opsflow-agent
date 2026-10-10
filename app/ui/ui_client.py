@@ -9,8 +9,8 @@ from urllib.parse import quote
 from pydantic import TypeAdapter, ValidationError
 
 from app.api.chat import ChatRequest, ChatResponse, ChatMetadata, SavedChat, RenameChatRequest, DeletedChat
-from app.agent import AgentTrace
-from app.reminder_catalogue import SavedReminder
+from app.core.agent import AgentTrace
+from app.reminders.reminder_catalogue import SavedReminder
 
 
 class ChatClientError(Exception):
@@ -35,7 +35,7 @@ def list_reminders(base_url: str) -> list[dict]:
 
 def submit_chat(base_url: str, session_id: str, message: str, *, turn_id: str | None = None, on_event=None) -> dict:
     if on_event is not None:
-        from app.ui_stream import submit_stream
+        from app.ui.ui_stream import submit_stream
         return submit_stream(base_url, session_id, message, turn_id, on_event)
     body = ChatRequest(session_id=session_id, message=message, turn_id=turn_id)
     request = Request(base_url.rstrip("/") + "/api/v1/chat",

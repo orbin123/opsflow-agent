@@ -5,10 +5,11 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 import pytest
 
-from app import sessions, ui_client
-from app.chat_store import ChatPersistenceError
+from app.chat import sessions
+from app.ui import ui_client
+from app.chat.chat_store import ChatPersistenceError
 from app.main import app
-from app.runtime import ExecutionResult, RuntimeUnavailable
+from app.core.runtime import ExecutionResult, RuntimeUnavailable
 
 
 client = TestClient(app)
@@ -176,7 +177,7 @@ def test_catalogue_fresh_process_recovery_without_execution(monkeypatch):
     sessions.close_chat_store()
     result = child('''
 import json
-from app import sessions
+from app.chat import sessions
 def forbidden(*args, **kwargs):
     raise AssertionError("Read executed work")
 sessions.execute_request = forbidden

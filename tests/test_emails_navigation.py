@@ -3,7 +3,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import sessions, ui_client
+from app.chat import sessions
+from app.ui import ui_client
 from tests.test_chat_catalogue import BASE
 from tests.test_email_catalogue import draft_step
 from tests.test_workspace_navigation import workspace, open_chat, text

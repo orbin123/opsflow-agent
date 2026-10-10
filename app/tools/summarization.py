@@ -11,7 +11,7 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError
 
-from app.model_wait import invoke_model
+from app.core.model_wait import invoke_model
 
 
 class SummaryResult(BaseModel):

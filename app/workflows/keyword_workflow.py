@@ -13,7 +13,7 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, model_validator
 
-from app.execution_events import start_step, finish_step
+from app.core.execution_events import start_step, finish_step
 from app.tools.keywords import Keyword, extract_keywords
 
 

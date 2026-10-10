@@ -7,7 +7,8 @@ from unittest.mock import Mock
 import pytest
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-from app import agent, runtime, sessions
+from app.core import agent, runtime
+from app.chat import sessions
 from app.tools.email_drafting import EmailDraft, EmailDraftResult, _ACTION_INSTRUCTIONS
 
 

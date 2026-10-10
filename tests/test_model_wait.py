@@ -6,8 +6,8 @@ import pytest
 from groq import RateLimitError, APITimeoutError
 from langchain_core.messages import AIMessage
 
-from app import agent, model_wait
-from app.execution_events import EventEmitter, observe_events
+from app.core import agent, model_wait
+from app.core.execution_events import EventEmitter, observe_events
 from app.tools import summarization, email_drafting
 
 

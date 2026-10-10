@@ -1,8 +1,8 @@
 # Standalone agent loop
 
-`app.agent.run_agent(message, history=None)` runs one English request using LangChain
+`app.core.agent.run_agent(message, history=None)` runs one English request using LangChain
 ChatGroq local tool calling. `execute_request` now invokes it when direct routing defers; the FAQ-only API
-and classifier gates retain their contracts. Session history is supplied by `app.sessions`; standalone calls remain stateless. Saved-chat reminder creation is connected through the adapter documented in
+and classifier gates retain their contracts. Session history is supplied by `app.chat.sessions`; standalone calls remain stateless. Saved-chat reminder creation is connected through the adapter documented in
 [reminders.md](reminders.md); email submission remains separate. No external tracing or source logging.
 
 ## Contract

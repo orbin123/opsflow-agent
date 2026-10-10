@@ -14,10 +14,10 @@ from langchain_groq import ChatGroq
 from langsmith import tracing_context
 from pydantic import BaseModel, ConfigDict, StringConstraints, ValidationError, field_validator
 
-from app.execution_events import start_step, finish_step
-from app.chat_reminders import (ReminderArguments, ReminderClarification,
+from app.core.execution_events import start_step, finish_step
+from app.reminders.chat_reminders import (ReminderArguments, ReminderClarification,
                                 creation_requested, schedule_chat_reminder, scheduling_reply)
-from app.model_wait import invoke_model, rate_limit_wait
+from app.core.model_wait import invoke_model, rate_limit_wait
 from app.tools.email_drafting import EmailDraftingError, _ACTION_INSTRUCTIONS, draft_email
 from app.tools.faq import retrieve_faq
 from app.tools.keywords import extract_keywords
@@ -186,7 +186,7 @@ Do not include private reasoning. Tools and schema validation cannot guarantee f
 
 
 def _create_model():
-    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
     key = os.environ.get("GROQ_API_KEY", "").strip()
     model = os.environ.get("GROQ_AGENT_MODEL", "openai/gpt-oss-20b").strip()
     if not key or model not in {"openai/gpt-oss-20b", "openai/gpt-oss-120b"}:

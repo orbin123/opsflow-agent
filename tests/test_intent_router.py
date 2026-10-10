@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from app import intent_router
+from app.core import intent_router
 
 
 def test_bundled_model_and_threshold_load_from_any_directory(tmp_path, monkeypatch):

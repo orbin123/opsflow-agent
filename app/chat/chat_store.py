@@ -11,7 +11,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from pydantic import ValidationError
 
-from app.profile import EmployeeProfile, PROFILE_ID
+from app.chat.profile import EmployeeProfile, PROFILE_ID
 
 
 class ChatPersistenceError(Exception):
@@ -34,7 +34,7 @@ class ChatNotFound(Exception):
     """Management targets only an existing chat."""
 
 
-_ROOT = Path(__file__).resolve().parents[1]
+_ROOT = Path(__file__).resolve().parents[2]
 _SCHEMA = (
     """CREATE TABLE chats (
         session_id TEXT PRIMARY KEY, title TEXT NOT NULL,

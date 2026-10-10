@@ -14,11 +14,12 @@ from unittest.mock import Mock
 from fastapi.testclient import TestClient
 import pytest
 
-from app import sessions, ui_client
-from app.agent import AgentTrace
-from app.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict
+from app.chat import sessions
+from app.ui import ui_client
+from app.core.agent import AgentTrace
+from app.chat.chat_store import ChatPersistenceError, ChatStore, ChatTurnConflict
 from app.main import app
-from app.runtime import ExecutionResult, RuntimeUnavailable
+from app.core.runtime import ExecutionResult, RuntimeUnavailable
 
 
 BASE = ExecutionResult('completed', 'sentiment_analysis', 1, 'direct', 'direct', None, [], 0, reply='Done')
@@ -46,8 +47,8 @@ def test_fresh_process_restores_exact_context_without_reexecuting(monkeypatch):
     result = child('''
 import json
 from dataclasses import asdict
-from app import sessions
-from app.runtime import ExecutionResult
+from app.chat import sessions
+from app.core.runtime import ExecutionResult
 seen = []
 def execute(message, *, history):
     seen.append([turn.content for turn in history])
@@ -96,7 +97,7 @@ def test_abrupt_process_exit_recovers_unknown_and_never_retries(monkeypatch, tmp
     path = tmp_path / 'chats.sqlite3'
     result = child('''
 import os
-from app.chat_store import ChatStore, database_path
+from app.chat.chat_store import ChatStore, database_path
 store = ChatStore(database_path())
 store.begin('one', 'Unfinished source', 'unfinished')
 os._exit(7)
@@ -123,7 +124,7 @@ def test_second_process_cannot_recover_live_marker():
     store = sessions._get_store()
     store.begin('one', 'Still running', 'live')
     result = child('''
-from app.chat_store import ChatStore, ChatPersistenceError, database_path
+from app.chat.chat_store import ChatStore, ChatPersistenceError, database_path
 try:
     ChatStore(database_path())
 except ChatPersistenceError:
@@ -266,7 +267,7 @@ def test_restoration_preserves_status_results_reasons_and_demo_marker(monkeypatc
 
 
 def test_workflow_result_and_stage_records_survive_restart(monkeypatch, sentiment_provider):
-    from app import runtime
+    from app.core import runtime
 
     sentiment_provider('I am happy', 'Synthetic positive explanation')
     monkeypatch.setattr(runtime, 'classify_request', lambda message: ('sentiment_analysis', 1, .71))

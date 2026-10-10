@@ -8,8 +8,8 @@ from urllib.request import Request
 
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
 
-from app import ui_client
-from app.agent import AgentTrace
+from app.ui import ui_client
+from app.core.agent import AgentTrace
 from app.api.chat import ChatRequest, ChatResponse
 
 

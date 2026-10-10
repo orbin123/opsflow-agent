@@ -7,7 +7,7 @@ from unittest.mock import Mock
 import pytest
 from langchain_core.messages import AIMessage
 
-from app import runtime
+from app.core import runtime
 from app.tools import summarization, email_drafting
 from tests.test_agent import call, final, install
 

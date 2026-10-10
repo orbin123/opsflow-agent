@@ -5,10 +5,10 @@ import json
 from collections.abc import AsyncIterator, Callable
 from dataclasses import asdict
 
-from app.chat_store import ChatPersistenceError, ChatTurnConflict
-from app.execution_events import EventEmitter, observe_events
-from app.monitoring import log
-from app.runtime import RuntimeUnavailable
+from app.chat.chat_store import ChatPersistenceError, ChatTurnConflict
+from app.core.execution_events import EventEmitter, observe_events
+from app.observability.monitoring import log
+from app.core.runtime import RuntimeUnavailable
 
 
 _workers: set[asyncio.Task] = set()

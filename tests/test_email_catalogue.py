@@ -2,7 +2,7 @@ from copy import deepcopy
 
 import pytest
 
-from app.email_catalogue import saved_email_entries
+from app.ui.email_catalogue import saved_email_entries
 
 
 def draft_step(status="completed"):

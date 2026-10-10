@@ -2,9 +2,9 @@
 
 from fastapi import APIRouter, HTTPException
 
-from app.chat_store import ChatPersistenceError
-from app.profile import EmployeeProfile
-from app.sessions import get_profile
+from app.chat.chat_store import ChatPersistenceError
+from app.chat.profile import EmployeeProfile
+from app.chat.sessions import get_profile
 
 
 router = APIRouter(prefix="/api/v1")
