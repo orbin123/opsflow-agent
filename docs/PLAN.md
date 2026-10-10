@@ -105,6 +105,140 @@ agreement; the resumed plan does not make them the automatic next step.
   history, and logs are content-free stderr records without durable ingestion.
 
 
+### ✅ Dockerization and hosting — protected temporary demo, 2026-10-09
+
+- **Latest decision:** User reversed the persistence requirement and approved a
+  protected temporary Render Free demo: one container with Streamlit and a
+  loopback-only single-process API behind a password-protected nginx proxy.
+  Cloud records are disposable; local records/SMTP credentials are excluded and
+  no reminder worker runs. Add an explicit temporary-demo UI notice. Docker
+  packaging, runtime supervision and free deployment are authorized. Verify Linux
+  build/dependencies, password protection (including WebSockets), chat/SSE and
+  saved replay, child-failure/shutdown handling, and container-backed browser flow
+  before publication. Use Render's repository Docker builder to avoid a separate
+  registry upload. CLI 2.28.0 is installed and authenticated; implementation is
+  active. GitHub connection now permits the private repository build. Created
+  `srv-db4gtd3tqb8s73f7mrrg` on Free in Singapore with automatic deploys disabled;
+  hosted build is live at https://opsflow-temporary-demo.onrender.com.
+  Paid hosting remains separate; PR #50 remains draft and main is unmerged.
+- **Free shutdown limit:** Actual Blueprint validation rejects custom shutdown
+  delays on Free services. Keep the platform's default 30-second window and record
+  that longer in-flight turns can be interrupted; recovery never resubmits them.
+- **Verification so far:** Focused demo/UI/stream/persistence/monitoring set:
+  153 passed; full local suite: 1,190 passed with the existing LangChain history
+  deprecation warning. Local dependency and whitespace checks pass. Linux image
+  build and live access/browser checks remain in progress; no deployment claimed.
+- **Container evidence:** Native Linux ARM64 build/dependency check succeeds;
+  local emulated AMD64 download was cancelled and that architecture will be built
+  on Render. Live HTTP/WebSocket checks reject missing/wrong credentials, allow
+  authenticated UI and keep API/metrics paths inaccessible. Missing-password
+  startup fails; an exited API child stops the service with exit 1 and no OOM.
+  Corrected nginx's unprivileged temporary paths and verified proxy readiness
+  before reporting startup. Idle runtime uses about 220 MiB within a 512 MiB cap.
+  Initial Linux focused run: 150 passed, two 3-second AppTest timeouts and one
+  existing no-warning assertion affected by the image's demo flag. Normal-UI
+  rerun: 14 passed, one remaining timeout; that remaining assertion passes in a
+  temporary 15-second harness without changing repository test timeouts. No
+  single default Linux focused-suite green run is claimed.
+  Inline browser verifies the explicit demo notice, a live sentiment workflow
+  completed/saved with Activity, and refresh restoration with exactly one task
+  execution. After-chat memory is about 382 MiB within the 512 MiB cap. Hosted
+  Intel build succeeds on Render. Hosted HTTP/WebSocket checks pass with
+  password rejection and hidden backend paths. Browser verifies classifier,
+  live Groq-assisted sentiment and agent summarization with completed tools
+  and saved Activity. Refresh restores both answers with only the same two
+  task executions in hosted logs. Cloud data remains temporary; reminder emails
+  are disabled. Hosted demo remains open for user review.
+- **Earlier planning request:** Plan Docker packaging with Render for FastAPI and Streamlit
+  Community Cloud for the UI, and compare alternatives. Planning is authorized;
+  application/container implementation, paid provisioning and deployment await
+  agreement on a bounded slice. Assume “Streamlit deploy” means Community Cloud.
+- **Durable-hosting option (outside the approved temporary demo):** Paid, single-instance Render Docker
+  web service with a persistent disk, plus GitHub-based Streamlit Community Cloud
+  UI. Community Cloud manages its own runtime; our UI Docker image would support
+  local verification and alternative hosts, not be deployed there. Keep the
+  singleton fictional workspace; this does not introduce multiple users.
+- **Current constraints:** One Uvicorn process owns the chat SQLite lock. Store
+  both databases under a mounted path (proposed `/var/data`), selected through
+  `OPSFLOW_CHATS_DB` and `OPSFLOW_REMINDERS_DB`. Only the reminder database is
+  shared with the separately started worker. No replicas, network filesystem or
+  automatic execution/retries during restoration. Preserve model artifacts,
+  FAQ JSON, UI assets and the Docs guide. Streamlit imports backend schemas and
+  modules today; a minimal UI dependency list needs import/build verification,
+  not merely deleting backend packages from requirements.
+- **Hosting constraints verified in official docs:** Render Free loses local
+  SQLite files across restarts/redeploys, idles after 15 minutes and blocks SMTP
+  ports including the existing Gmail port 465. Render disks belong to only one
+  service instance, cannot be shared with a separate worker service, prevent
+  horizontal scaling and require deployment downtime. Community Cloud deploys
+  source/dependencies from GitHub and hibernates after 12 hours without traffic.
+  A sleeping UI need not stop an independently running backend/worker, but
+  browser-session drafts are not durable across UI process loss.
+- **Worker decision:** For Render with current SQLite, propose explicitly
+  starting one API process and one worker process under a tested process
+  supervisor in the same service/container, sharing the disk. Chat must never
+  launch the worker. Define worker failure visibility, termination propagation,
+  shutdown draining and exclusive ownership before implementing this later slice.
+  A separate Render worker plus shared SQLite disk is not supported. Postgres
+  would permit a separate worker, but requires a separately agreed redesign of
+  persistence, locks, recovery and delivery claims; it is not a Docker change.
+- **Public access boundary:** Current docs explicitly prohibit exposing the
+  unauthenticated backend publicly. Before hosted access, discuss a minimal
+  configured service token on data/execution/metrics endpoints and server-side
+  UI requests, with secret-safe errors/logs and negative tests. A private UI
+  does not protect a separately public API. Public demo viewers would still
+  share the same workspace and configured reminder recipient; decide private
+  access versus intentional public demo behavior before enabling delivery.
+- **Alternatives:** Hosting UI on Render as another Docker web service gives
+  uniform deployment and a possible private API network path, at additional
+  service cost; it does not solve separate-worker disk sharing. A single Linux
+  VPS with Compose best preserves separate API/UI/worker containers and shared
+  local reminder storage, but requires patching, TLS, backups and monitoring
+  operations. Separate managed services with Postgres are a future scaling
+  option, not the first packaging slice. No exact cost or instance sizing is
+  promised before memory/build measurements and budget discussion.
+- **Proposed sequence (each separately agreed):**
+  1. Local Docker foundation: compatible pinned Python 3.12 Linux base, scoped
+     dependency packaging, backend/worker and UI build targets, `.dockerignore`,
+     and application Compose. One backend process, separate UI service and an
+     opt-in worker profile; persistent local volumes and runtime-only secrets.
+     Bind API to `0.0.0.0` and a configurable port; local UI uses the Compose
+     API hostname. Keep monitoring Compose separate/optional. Exclude credentials,
+     local databases, notebooks/test tooling and caches from runtime images;
+     verify files needed by imports and the UI Docs page before excluding them.
+  2. Hosted access boundary: agree token/access behavior, then implement and
+     verify HTTP plus SSE protection without automatic resubmission.
+  3. Selected hosting configuration: Render Docker blueprint/disk/environment,
+     Community Cloud source/dependencies/Python 3.12/API URL, and explicit
+     same-service worker supervision if selected. Configure shutdown allowance
+     against the soft 120-second turn budget and SMTP operation bounds. Existing
+     `/health` is liveness only; add or explicitly verify storage readiness.
+     Define SQLite-consistent backup/restore and schema-aware rollback steps.
+  4. Deployment review: hosted SSE progress/finalization, disconnect/read-only
+     recovery, restart persistence, authentication, and worker delivery behavior.
+     Use synthetic data; real SMTP/inbox testing requires explicit authorization.
+     Keep cloud monitoring/export separate from the existing local dashboard.
+- **Proposed first-slice verification:** Linux image builds and dependency checks;
+  existing relevant chat/SSE/persistence/worker regression tests in Linux;
+  container health/catalogue and deterministic local-tool smoke checks; restart
+  retention and replay without new execution; second-process lock exclusion;
+  graceful stop/disconnected completion and forced-stop interrupted recovery.
+  Worker checks use isolated records and a controlled transport double, never
+  real SMTP. Exercise container-backed Streamlit in the inline browser and leave
+  it open for user review. Run broader existing checks as required and report
+  timing/availability limits honestly. No new tests merely for static Docker text.
+- **Sources checked 2026-10-09:** [Render Docker](https://render.com/docs/docker),
+  [Free limits](https://render.com/docs/free),
+  [disk limitations](https://render.com/docs/disks),
+  [shutdown](https://render.com/docs/deploys),
+  [Community Cloud deployment](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy),
+  [dependencies](https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies),
+  [hibernation](https://docs.streamlit.io/deploy/streamlit-community-cloud/manage-your-app),
+  [Compose in production](https://docs.docker.com/compose/how-tos/production/).
+- **Earlier planning verification:** Reviewed current API/UI imports, persistence locks,
+  worker/storage/SMTP contracts, dependency pins and hosted platform docs. No
+  image build, runtime test, provider/email execution or deployment performed.
+
 ## Objective
 
 Build **OpsFlow-Agent**, an explainable operations copilot combining classical ML routing with LangChain tool calling. It should analyze communications, summarize text, retrieve company policies, extract keywords/action items, draft emails, and create reminders with email notifications to the user.

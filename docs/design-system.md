@@ -180,3 +180,10 @@ due times with UTC offset. Status wording distinguishes scheduled, submitting,
 retry, SMTP accepted, failed and unknown; never show SENT for SMTP acceptance.
 No source-chat link is shown because existing reminders have no chat association.
 Figma inspection remains rate-limited; this adaptation adds no Figma nodes.
+
+## Temporary hosting notice
+
+The approved temporary Render demo uses a native warning above the existing
+workspace, only when `OPSFLOW_TEMPORARY_DEMO=1`. It states disposable storage,
+disabled reminder emails and synthetic-data use. Reuse the existing warning
+palette and body typography; no new layout, CSS or reusable component is added.

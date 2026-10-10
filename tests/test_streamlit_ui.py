@@ -132,6 +132,20 @@ def send_message(ui, message):
     return ui
 
 
+@pytest.mark.parametrize("demo", ["1", "0"])
+def test_temporary_demo_notice_is_explicit_and_does_not_execute(monkeypatch, demo):
+    monkeypatch.setenv("OPSFLOW_TEMPORARY_DEMO", demo)
+    recorded = connect_api(monkeypatch)
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
+    assert not ui.exception
+    notices = [element.value for element in ui.warning if "Temporary demo:" in element.value]
+    assert bool(notices) == (demo == "1")
+    if notices:
+        assert "Reminder emails are disabled" in notices[0]
+        assert "may disappear" in notices[0]
+    assert not recorded
+
+
 def test_ui_sentiment_workflow_and_activity_match_backend_without_resubmit(monkeypatch, sentiment_provider):
     model = sentiment_provider("I am happy", "VADER classified this text as positive.")
     recorded = connect_api(monkeypatch)

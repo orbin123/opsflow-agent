@@ -91,6 +91,13 @@ persistence outcomes remain separate; saved replay/recovery never counts as new
 work. Metrics are process-scoped and reset on restart. The monitoring Compose
 stack does not start the app or reminder worker. See `docs/monitoring.md`.
 
+The user approved a protected temporary Render Free demo. Its Docker launcher
+runs one loopback-only API, Streamlit and a password-protected public nginx proxy;
+it never starts the reminder worker. Cloud SQLite records are disposable and local
+records/SMTP credentials are excluded. A native demo notice makes storage loss
+and disabled delivery explicit. Free hosting cannot extend Render's default
+shutdown window. See `docs/render-demo.md` for packaging and verification limits.
+
 ## Read Before Working
 
 - `docs/PLAN.md`: active implementation agenda for remaining project work.
