@@ -40,7 +40,7 @@ verification still outstanding. Reconcile each proposed slice against the curren
 code before implementation. Employee workspace follow-ups require separate
 agreement; the resumed plan does not make them the automatic next step.
 
-### ⏳ GitHub → Render CI/CD — implementation, 2026-10-10
+### ✅ GitHub → Render CI/CD — merged and deployed, 2026-10-10
 
 - **Request:** Local fixes merged into GitHub `main` should update the existing
   Render demo automatically. User approved this bounded slice on 2026-10-10,
@@ -69,7 +69,7 @@ agreement; the resumed plan does not make them the automatic next step.
   unchanged. The fresh-process profile test now uses sys.executable instead of
   a local .venv path that failed on the hosted runner. Updated YAML to
   `main`/`checksPass`; added `docs/cicd.md`.
-  GitHub confirms the repository is now public and main has no protection yet.
+  GitHub confirms the repository is now public; main initially had no protection.
 - **Status:** PR #52 published with user-only DCO-signed commits. Main protection
   now requires current CI/DCO checks from their genuine GitHub Apps, including
   admins. Render API readback confirms main/checksPass, Free and one instance;
@@ -81,9 +81,18 @@ agreement; the resumed plan does not make them the automatic next step.
   and consolidated the final diff into one user-signed commit. Hosted run
   38023988938 passes all 1,190 tests, dependencies/whitespace, AMD64 Docker build
   and actual container smoke checks. CI/DCO both pass; PR is mergeable. Verification
-  records are included in the same logical change. No merge/redeploy yet; first
-  automatic main deploy follows user review/merge approval. A failed-main Render
-  gate was not directly probed.
+  records are included in the same logical change. User approved merge on
+  2026-10-10; PR #52 merged as a3176c2 after current CI/DCO passed. Main run
+  38051090755 passes all 1,190 tests, dependency/whitespace, AMD64 build and smoke
+  checks. Render automatically created dep-db52ogf40ujc73c2ec2g after CI passed;
+  it is live on the matching merge SHA. Hosted health, HTTP/WebSocket access and
+  hidden backend paths pass. Chrome completes real Groq-assisted sentiment with
+  saved workflow/tool Activity; refresh restores it with exactly one task in the
+  new instance's logs. Hosted inline browser remained on Render's loading page;
+  Chrome review succeeds and stays open. No reminder worker or email delivery ran.
+  A failed-main Render gate was not directly probed. Concise completion facts
+  are recorded in AGENTS.md and deployment docs; documentation-only follow-up
+  uses [skip render] to preserve the verified release.
 
 ### ✅ Python package organization — implemented and reviewed, 2026-10-10
 
@@ -196,7 +205,7 @@ agreement; the resumed plan does not make them the automatic next step.
   Paid hosting remains separate; dependency PR #50 merged into main on
   2026-10-10 as part of the user-approved refactor merge. Automatic deployment
   was disabled for those merges. The approved CI/CD slice above now configures
-  main/checksPass; the first automatic main deployment awaits reviewed merge.
+  main/checksPass; PR #52's first automatic main deployment is verified above.
 - **Free shutdown limit:** Actual Blueprint validation rejects custom shutdown
   delays on Free services. Keep the platform's default 30-second window and record
   that longer in-flight turns can be interrupted; recovery never resubmits them.

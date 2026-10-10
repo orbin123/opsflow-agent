@@ -38,8 +38,7 @@ Render deployment gating are separate controls.
 Live configuration was verified on 2026-10-10: main protection requires current
 CI/DCO results from GitHub Actions/DCO respectively, applies to admins and
 requires a PR (no extra approving-review count). Render's API confirms
-`main`/`checksPass`, Free, Singapore and one instance. The existing `ed56040`
-deployment remains live until an approved merge triggers the first main deploy.
+`main`/`checksPass`, Free, Singapore and one instance.
 An intentional failing test in hosted run `38023780514` produced failed CI and
 a blocked PR merge, with no new Render deployment. The temporary probe was
 removed from the final diff. This verifies the PR gate; it does not directly
@@ -53,8 +52,24 @@ After merging, inspect GitHub Actions for the `main` commit and Render Events
 for the automatic deploy. Confirm Render's deployed commit equals the merged
 SHA, `/health` returns 200, authentication works, and browser chat/Activity plus
 refresh restoration succeed. Health only proves UI liveness; it does not prove
-model-provider availability or successful task execution. The first automatic
-deploy requires live verification before calling CI/CD complete.
+model-provider availability or successful task execution.
+
+## Completed deployment verification — 2026-10-10
+
+User-approved PR #52 merged as `a3176c2b649c645bc16f666941383e9200105474`.
+Main CI run `38051090755` passes all 1,190 tests, dependency/whitespace checks,
+AMD64 Docker build and container smoke checks. Render automatically created
+`dep-db52ogf40ujc73c2ec2g` with trigger `new_commit` after CI completed; it became
+live on that exact SHA. No manual deploy command was used.
+
+Hosted health, HTTP/WebSocket authentication and hidden backend routes pass.
+Chrome completes a synthetic Groq-assisted sentiment request with saved workflow/
+tool Activity. Refresh restores the same answer, while the new instance's logs
+retain exactly one completed task. The hosted inline browser remained on Render's
+loading page; Chrome review succeeds and stays open. No worker or email delivery
+ran. Failed-main deployment gating, rollback and hosting capacity were not
+experimentally tested. The verified documentation-only follow-up uses
+`[skip render]` in its commit/merge message; CI still runs, but Render skips it.
 
 ## Recovery
 
