@@ -95,7 +95,15 @@ Browser verification completes real classifier/Groq-assisted sentiment and agent
 summarization with saved Activity. PR #50 merged into main on 2026-10-10 as the
 dependency of user-approved refactor PR #51. Automatic deploys were disabled for
 those merges; that verification used `ed56040`. The CI/CD slice now configures
-main/checksPass; first automatic deployment verification awaits approved merge.
+main/checksPass; PR #52's first automatic deployment is verified in `docs/cicd.md`.
 Refresh restores both answers and hosted logs
 retain exactly two task executions. Credentials are outside Git. Hosted shutdown
 and multi-session capacity were not tested; local shutdown checks are recorded above.
+
+CI/CD verification on 2026-10-10: PR #52 merged as a3176c2; main CI passes all
+1,190 tests, AMD64 build and container smoke checks. Render automatically deployed
+that SHA (dep-db52ogf40ujc73c2ec2g). Hosted access checks, completed sentiment/
+Activity and refresh restoration pass, with exactly one new task execution.
+Chrome review succeeds; the hosted inline browser remained on Render's loading
+page. No reminder worker/email delivery ran. See `docs/cicd.md` for operation,
+rollback and remaining verification limits.

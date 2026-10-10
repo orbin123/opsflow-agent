@@ -2,6 +2,16 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-10:** At the user's instruction, merged PR #52 as a3176c2 after
+  CI/DCO passed. Main CI 38051090755 passes 1,190 tests, dependency/whitespace,
+  AMD64 Docker build and smoke checks. Render automatically deployed the same
+  SHA (dep-db52ogf40ujc73c2ec2g), now live. Hosted health/authentication/hidden
+  routes pass; Chrome verifies completed Groq-assisted sentiment, saved Activity
+  and refresh with exactly one task execution. Hosted inline browser remained
+  on Render's loading page; Chrome stays open. No worker/email delivery ran.
+  Added concise verified CI/CD facts to AGENTS.md and deployment docs; the
+  documentation-only follow-up uses [skip render] to avoid another redeploy.
+
 - **2026-10-10:** Implemented the approved CI/CD slice on
   `feature/github-render-cicd`: unconditional PR/main GitHub Actions `CI` check,
   offline suite, dependency/whitespace checks, Linux AMD64 Docker build and

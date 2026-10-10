@@ -105,14 +105,15 @@ credentials and local storage. Render builds directly from the connected
 GitHub repository. The live demo is https://opsflow-temporary-demo.onrender.com
 (`srv-db4gtd3tqb8s73f7mrrg`, Free, Singapore, one instance). Hosted Docker build,
 HTTP/WebSocket authentication, chat/Activity and refresh restoration were verified.
-The repository is now public. The last recorded live commit is `ed56040`.
+The repository is now public. CI/CD is complete: PR #52 merged as `a3176c2` and
+Render automatically deployed it as `dep-db52ogf40ujc73c2ec2g` after main CI passed.
 GitHub Actions CI runs on PRs/pushes to `main`, with offline tests,
 dependency checks, Linux AMD64 Docker build and container authentication smoke
 checks. Main protection requires genuine CI/DCO checks, including admins. Both
 `render.yaml` and the live service target `main` with `checksPass`; failed CI was
-verified to block PR merge. Hosted CI verifies all 1,190 tests, the AMD64 image
-and authentication smoke checks. The first automatic deployment awaits approved
-merge and verification. See `docs/cicd.md`.
+verified to block PR merge. Main CI passes all 1,190 tests, the AMD64 image and
+authentication smoke checks. Hosted health/access, chat/Activity and refresh
+restoration pass without reexecution. See `docs/cicd.md`.
 
 ## Read Before Working
 
