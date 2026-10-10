@@ -90,7 +90,8 @@ Hosted service: https://opsflow-temporary-demo.onrender.com, service
 off. Deployment `dep-db4gtdbtqb8s73f7mt00` runs commit `ed56040`. Hosted HTTP/
 WebSocket checks pass, including password rejection and hidden backend routes.
 Browser verification completes real classifier/Groq-assisted sentiment and agent
-summarization with saved Activity. Main remains unmerged; draft PR #50 contains
-the reviewed deployment change. Refresh restores both answers and hosted logs
+summarization with saved Activity. PR #50 merged into main on 2026-10-10 as the
+dependency of user-approved refactor PR #51. Automatic deploys remain disabled;
+the live service still runs `ed56040`. Refresh restores both answers and hosted logs
 retain exactly two task executions. Credentials are outside Git. Hosted shutdown
 and multi-session capacity were not tested; local shutdown checks are recorded above.

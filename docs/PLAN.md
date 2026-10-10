@@ -40,13 +40,14 @@ verification still outstanding. Reconcile each proposed slice against the curren
 code before implementation. Employee workspace follow-ups require separate
 agreement; the resumed plan does not make them the automatic next step.
 
-### ✅ Python package organization — implemented; review pending, 2026-10-10
+### ✅ Python package organization — implemented and reviewed, 2026-10-10
 
 - **Request/proposal:** Group the flat `app/` modules by responsibility under
   `core/`, `chat/`, `reminders/`, `ui/` and `observability/`; retain existing
   `api/`, `routes/`, `tools/`, `workflows/` and launch entry points. User approved
   this bounded refactor and verification on 2026-10-10. Implement on
-  `refactor/python-package-structure`, stacked on draft deployment PR #50.
+  `refactor/python-package-structure`; deployment dependency PR #50 is merged
+  and refactor PR #51 now targets main.
 - **Contract:** Preserve behavior, stored records, API payloads and side-effect
   rules. Update imports/test patches, repository-relative resource paths,
   worker launch references and documentation together. Separate PR from #50;
@@ -64,7 +65,8 @@ agreement; the resumed plan does not make them the automatic next step.
   and storage path checks pass. Inline container-backed browser verifies live
   sentiment and agent summarization with saved Activity; refresh restores both
   answers with exactly two task executions, without recounting. No SMTP or worker ran;
-  cloud redeployment remains outside this slice. User review/merge is pending.
+  cloud redeployment remains outside this slice. User approved local review and
+  merge of PR #51 on 2026-10-10; DCO passes before publication.
 
 ### ✅ Monitoring and logging — implemented and reviewed, 2026-10-09
 
@@ -146,7 +148,9 @@ agreement; the resumed plan does not make them the automatic next step.
   active. GitHub connection now permits the private repository build. Created
   `srv-db4gtd3tqb8s73f7mrrg` on Free in Singapore with automatic deploys disabled;
   hosted build is live at https://opsflow-temporary-demo.onrender.com.
-  Paid hosting remains separate; PR #50 remains draft and main is unmerged.
+  Paid hosting remains separate; dependency PR #50 merged into main on
+  2026-10-10 as part of the user-approved refactor merge. Automatic deployment
+  remains disabled; merging does not redeploy the live service.
 - **Free shutdown limit:** Actual Blueprint validation rejects custom shutdown
   delays on Free services. Keep the platform's default 30-second window and record
   that longer in-flight turns can be interrupted; recovery never resubmits them.
