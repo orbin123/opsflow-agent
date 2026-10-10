@@ -1,5 +1,5 @@
 import json
-import os
+import sys
 import sqlite3
 import subprocess
 from unittest.mock import Mock
@@ -31,7 +31,7 @@ def test_singleton_survives_fresh_process_without_execution(monkeypatch):
         assert connection.execute("SELECT COUNT(*) FROM employee_profile").fetchone()[0] == 1
         assert connection.execute("SELECT COUNT(*) FROM chats").fetchone()[0] == 0
     sessions.close_chat_store()
-    result = subprocess.run([os.path.abspath('.venv/bin/python'), '-c',
+    result = subprocess.run([sys.executable, '-c',
         'from app.chat.sessions import get_profile, close_chat_store; '
         'print(get_profile().model_dump_json()); close_chat_store()'],
         capture_output=True, text=True, check=True)

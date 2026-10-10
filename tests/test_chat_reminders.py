@@ -335,7 +335,7 @@ def test_saved_reminder_clarification_renders_no_result_without_json_error(monke
     model(monkeypatch, [call({**ARGS, "time": None})])
     sessions.execute_session_request("ui", DEMO, turn_id="missing-time")
     requests = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params["chat"] = "ui"
     for _ in range(2):
         ui.run()

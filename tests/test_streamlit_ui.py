@@ -151,7 +151,7 @@ def test_temporary_demo_notice_is_explicit_and_does_not_execute(monkeypatch, dem
 def test_ui_sentiment_workflow_and_activity_match_backend_without_resubmit(monkeypatch, sentiment_provider):
     model = sentiment_provider("I am happy", "VADER classified this text as positive.")
     recorded = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     assert not ui.exception
     send_message(ui, "Just check the sentiment of this I am happy")
     assert not ui.exception
@@ -190,7 +190,7 @@ def test_ui_faq_reply_and_activity_preserve_outcome_without_resubmit(monkeypatch
             RuntimeError("private credentials"),
         ]
     recorded = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Please answer this FAQ: " + question)
     assert not ui.exception
     data = recorded[0][1]
@@ -233,7 +233,7 @@ def test_ui_agent_clarification_followup_and_browser_isolation(monkeypatch):
     model = Mock()
     model.invoke.side_effect = [final("needs_clarification", "Who is the recipient?"), final(), final()]
     monkeypatch.setattr(agent, "_create_model", lambda: model)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Draft an email")
     assert not ui.warning and not ui.error
     assert "Execution: needs_clarification" not in [element.value for element in ui.caption]
@@ -243,7 +243,7 @@ def test_ui_agent_clarification_followup_and_browser_isolation(monkeypatch):
     assert recorded[0][0]["session_id"] == recorded[1][0]["session_id"]
     messages = model.invoke.call_args_list[1].args[0]
     assert messages[-3].content == "Draft an email" and messages[-1].content == "Alex"
-    other = AppTest.from_file(str(SCRIPT)).run()
+    other = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     other.button(key="new_chat").click().run()
     send_message(other, "Another email")
     assert recorded[2][0]["session_id"] != recorded[0][0]["session_id"]
@@ -261,7 +261,7 @@ def test_ui_partial_failure_retains_successful_step(monkeypatch):
         "name": "analyze_sentiment", "args": {"text": "I am happy"}, "id": "call1",
     }], response_metadata={"finish_reason": "tool_calls"}), RuntimeError("private credentials")]
     monkeypatch.setattr(agent, "_create_model", lambda: model)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Analyze and then draft")
     assert not ui.exception
     data = recorded[0][1]
@@ -278,7 +278,7 @@ def test_ui_sentiment_presentation_failure_retains_score_stages_and_reply_withou
                            response_metadata={"finish_reason": "stop"})
     model.invoke.side_effect = [extraction, RuntimeError("private credentials")]
     sent_pairs = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Just check the sentiment of this I am happy")
     assert not ui.exception
     data = sent_pairs[0][1]
@@ -305,7 +305,7 @@ def test_ui_connection_failure_persists_without_retry_or_stale_activity(monkeypa
     send = Mock(side_effect=ui_client.ChatClientError("Connection failed; outcome unknown."))
     connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Hi")
     assert not ui.exception and ui.session_state["pending"] is False
     assert ui.session_state["turns"][0]["execution"] is None
@@ -320,7 +320,7 @@ def test_ui_input_bounds_before_submission(monkeypatch, message):
     send = Mock()
     connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, message)
     assert not ui.exception
     assert not ui.session_state["turns"]
@@ -343,7 +343,7 @@ def test_ui_source_is_plain_text_not_executable_markup(monkeypatch):
 
     connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "<b>input</b>")
     assert not ui.exception
     assert "<b>input</b>" in [element.value for element in ui.text]
@@ -353,7 +353,7 @@ def test_ui_source_is_plain_text_not_executable_markup(monkeypatch):
 def test_ui_keyword_workflow_and_activity_match_backend_without_resubmit(monkeypatch, keyword_provider):
     model = keyword_provider("The server failed after the deployment", "Here are the keywords extracted from your text and their scores.")
     recorded = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     assert not ui.exception
     send_message(ui, "Find keywords in this The server failed after the deployment")
     assert not ui.exception
@@ -394,7 +394,7 @@ def test_ui_keyword_presentation_failure_retains_phrases_stages_and_reply_withou
                            response_metadata={"finish_reason": "stop"})
     model.invoke.side_effect = [extraction, RuntimeError("private credentials")]
     sent_pairs = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Find keywords in this The server failed after the deployment")
     assert not ui.exception
     data = sent_pairs[0][1]
@@ -424,7 +424,7 @@ def test_ui_keyword_empty_result_has_reply_without_empty_table(monkeypatch, keyw
     model = keyword_provider(source, "No keyword candidates were found in the supplied text.")
     monkeypatch.setattr(runtime, "classify_request", lambda _: ("keyword_extraction", 1, 0.71))
     recorded = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Find keywords: !!!")
     assert not ui.exception
     data = recorded[0][1]
@@ -452,7 +452,7 @@ def test_ui_keyword_table_keeps_phrases_as_literal_text(monkeypatch):
 
     connect_api(monkeypatch)
     monkeypatch.setattr(ui_client, "submit_chat", send)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, "Find keywords from supplied source")
     assert not ui.exception
     table = ui.dataframe[0]
@@ -491,7 +491,7 @@ def test_restored_activity_belongs_to_each_turn_without_execution(monkeypatch, r
         outcomes.append(data)
     sessions.close_chat_store()
     sessions._sessions.clear()
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params["chat"] = chat
     ui.run()
     assert not ui.exception and not ui.selectbox
@@ -553,7 +553,7 @@ def test_restored_sentiment_answer_keeps_scores_in_activity_without_execution(mo
     store.begin(chat, 'Saved request', 'saved-sentiment')
     store.finish('saved-sentiment', execution={k: v for k, v in data.items() if k != 'session_id'})
     sessions.close_chat_store()
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params['chat'] = chat
     for _ in range(2):
         ui.run()
@@ -589,7 +589,7 @@ def test_single_summary_submission_shows_saved_content_once(monkeypatch, points)
                   response_metadata={'finish_reason': 'stop'}),
     ]
     monkeypatch.setattr(agent, '_create_model', lambda: model)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     send_message(ui, 'Summarize this: The outage is resolved. Review the release.')
     for _ in range(2):
         assert not ui.exception
@@ -633,7 +633,7 @@ def test_restored_summary_and_fallback_answers_never_execute(monkeypatch, scenar
     store.begin(chat, 'Saved request', 'saved-summary')
     store.finish('saved-summary', execution={k: v for k, v in data.items() if k != 'session_id'})
     sessions.close_chat_store()
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params['chat'] = chat
     for _ in range(2):
         ui.run()
@@ -675,7 +675,7 @@ def test_single_draft_submission_shows_literal_saved_fields_once(monkeypatch, de
         final(reply='Generated reply'),
     ]
     monkeypatch.setattr(agent, '_create_model', lambda: model)
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params['chat'] = chat
     ui.run()
     send_message(ui, 'Draft an email to Alex saying the outage is resolved.')
@@ -734,7 +734,7 @@ def test_restored_draft_fallback_preserves_reply_and_never_executes(monkeypatch,
     store.begin(chat, 'Saved request', 'saved-draft')
     store.finish('saved-draft', execution={k: v for k, v in data.items() if k != 'session_id'})
     sessions.close_chat_store()
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params['chat'] = chat
     for _ in range(2):
         ui.run()
@@ -768,7 +768,7 @@ def test_draft_qualification_does_not_leak_from_future_or_other_chat(monkeypatch
     store.finish('demo-policy', execution={k: v for k, v in policy.items() if k != 'session_id'},
                  demo_policy=True)
     sessions.close_chat_store()
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params['chat'] = chat
     ui.run()
     assert not ui.exception
@@ -780,7 +780,7 @@ def test_draft_qualification_does_not_leak_from_future_or_other_chat(monkeypatch
 
 def test_empty_chat_shows_no_welcome_examples_or_execution(monkeypatch):
     recorded = connect_api(monkeypatch)
-    ui = AppTest.from_file(str(SCRIPT)).run()
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15).run()
     assert not ui.exception
     page_text = '\n'.join(item.value for item in [*ui.text, *ui.info])
     assert 'Just check the sentiment of this I am happy' not in page_text

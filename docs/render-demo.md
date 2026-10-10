@@ -51,9 +51,11 @@ and forces the UI API address to loopback. It never starts the delivery worker.
 
 ## Render deployment
 
-Use a Docker web service built from the reviewed feature branch, with the Free
-compute plan, a single instance, `/health` and no attached disk. Disable automatic
-deploys so later branch changes require an explicit deployment. Select Singapore
+Use a Docker web service built from the connected GitHub repository, with the Free
+compute plan, a single instance, `/health` and no attached disk. The initial demo
+used manual deployment from `feature/free-render-demo`. The approved CI/CD slice
+targets `main` with **After CI Checks Pass**; see `docs/cicd.md` for checks and
+the live activation/verification boundary. Select Singapore
 for the India-based demo. Set the demo password and Groq configuration only as
 runtime secrets. No Docker Hub publication is needed for Render's repository
 Docker builder. Deployment does not authorize merging the feature branch.
@@ -85,13 +87,15 @@ Memory after chat is about 382 MiB within a 512 MiB cap; this is a single-sessio
 smoke measurement, not a concurrency capacity claim. The emulated local AMD64
 download was cancelled; Render's hosted Intel build succeeds.
 
-Hosted service: https://opsflow-temporary-demo.onrender.com, service
+Initial hosted verification (before CI/CD): https://opsflow-temporary-demo.onrender.com, service
 `srv-db4gtd3tqb8s73f7mrrg`, Free plan, Singapore, one instance, automatic deploys
 off. Deployment `dep-db4gtdbtqb8s73f7mt00` runs commit `ed56040`. Hosted HTTP/
 WebSocket checks pass, including password rejection and hidden backend routes.
 Browser verification completes real classifier/Groq-assisted sentiment and agent
 summarization with saved Activity. PR #50 merged into main on 2026-10-10 as the
-dependency of user-approved refactor PR #51. Automatic deploys remain disabled;
-the live service still runs `ed56040`. Refresh restores both answers and hosted logs
+dependency of user-approved refactor PR #51. Automatic deploys were disabled for
+those merges; that verification used `ed56040`. The CI/CD slice now configures
+main/checksPass; first automatic deployment verification awaits approved merge.
+Refresh restores both answers and hosted logs
 retain exactly two task executions. Credentials are outside Git. Hosted shutdown
 and multi-session capacity were not tested; local shutdown checks are recorded above.

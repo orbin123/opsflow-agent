@@ -3,11 +3,11 @@ services:
     name: opsflow-temporary-demo
     runtime: docker
     repo: https://github.com/orbin123/opsflow-agent
-    branch: feature/free-render-demo
+    branch: main
     plan: free
     region: singapore
     numInstances: 1
-    autoDeployTrigger: "off"
+    autoDeployTrigger: checksPass
     healthCheckPath: /health
     envVars:
       - key: OPSFLOW_DEMO_PASSWORD

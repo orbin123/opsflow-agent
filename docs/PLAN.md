@@ -40,6 +40,51 @@ verification still outstanding. Reconcile each proposed slice against the curren
 code before implementation. Employee workspace follow-ups require separate
 agreement; the resumed plan does not make them the automatic next step.
 
+### ⏳ GitHub → Render CI/CD — implementation, 2026-10-10
+
+- **Request:** Local fixes merged into GitHub `main` should update the existing
+  Render demo automatically. User approved this bounded slice on 2026-10-10,
+  including concise Docker/deployment and later verified CI/CD facts in `AGENTS.md`.
+- **Proposed contract:** GitHub Actions runs on pull requests and pushes to
+  `main`. Always-run checks cover existing offline tests, dependency validation,
+  a Linux AMD64 Docker build and container startup/authentication smoke checks.
+  Resolve known Streamlit test timing limits explicitly rather than hiding failures.
+  No provider credentials or actual email/worker execution in CI.
+- **Connection:** Keep the existing GitHub Render integration and
+  service. Change its tracked branch and `render.yaml` to `main`, with
+  `autoDeployTrigger: checksPass` (After CI Checks Pass). Render builds the Docker
+  image after the merged commit passes CI; no registry or deploy-hook secret needed.
+  Recommend requiring CI and the existing DCO check before PR merge, subject to
+  the repository's available branch-protection controls.
+- **Verification:** Demonstrate passing PR/main checks, a deliberately failing
+  check blocking deployment, and a successful automatic deploy matching the
+  merged commit. Verify hosted health/authentication, browser chat/Activity and
+  refresh restoration; retain manual rollback instructions. Enabling deployment
+  can replace the current demo and discard its SQLite records. Free hosting,
+  runtime secrets, single-instance storage and disabled delivery stay in scope.
+- **Implementation:** One unconditional `CI` job on PRs/pushes to `main`, pinned
+  Actions, Python 3.12.13/Ubuntu 24.04, full offline suite and Linux AMD64 Docker
+  build with disposable-container HTTP/WebSocket authentication smoke checks.
+  AppTest constructors explicitly use 15 seconds; assertions/app timeouts are
+  unchanged. The fresh-process profile test now uses sys.executable instead of
+  a local .venv path that failed on the hosted runner. Updated YAML to
+  `main`/`checksPass`; added `docs/cicd.md`.
+  GitHub confirms the repository is now public and main has no protection yet.
+- **Status:** PR #52 published with user-only DCO-signed commits. Main protection
+  now requires current CI/DCO checks from their genuine GitHub Apps, including
+  admins. Render API readback confirms main/checksPass, Free and one instance;
+  existing live deployment remains ed56040. Local tests pass 1,190; dependency,
+  whitespace/actionlint, native Docker and authentication smoke checks pass.
+  Inline container-backed UI loads and stays open on port 8515 without provider
+  credentials. Hosted failure probe (run 38023780514) failed as intended and
+  PR merge stayed BLOCKED; no new Render deployment appeared. Removed the probe
+  and consolidated the final diff into one user-signed commit. Hosted run
+  38023988938 passes all 1,190 tests, dependencies/whitespace, AMD64 Docker build
+  and actual container smoke checks. CI/DCO both pass; PR is mergeable. Verification
+  records are included in the same logical change. No merge/redeploy yet; first
+  automatic main deploy follows user review/merge approval. A failed-main Render
+  gate was not directly probed.
+
 ### ✅ Python package organization — implemented and reviewed, 2026-10-10
 
 - **Request/proposal:** Group the flat `app/` modules by responsibility under
@@ -150,7 +195,8 @@ agreement; the resumed plan does not make them the automatic next step.
   hosted build is live at https://opsflow-temporary-demo.onrender.com.
   Paid hosting remains separate; dependency PR #50 merged into main on
   2026-10-10 as part of the user-approved refactor merge. Automatic deployment
-  remains disabled; merging does not redeploy the live service.
+  was disabled for those merges. The approved CI/CD slice above now configures
+  main/checksPass; the first automatic main deployment awaits reviewed merge.
 - **Free shutdown limit:** Actual Blueprint validation rejects custom shutdown
   delays on Free services. Keep the platform's default 30-second window and record
   that longer in-flight turns can be interrupted; recovery never resubmits them.
