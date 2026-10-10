@@ -32,6 +32,36 @@ limits and are not instructions to repeat completed work.
   records. Live SMTP/inbox, deployment and general model reliability remain
   unverified. See feature documentation and `docs/audit.md` for recorded limits.
 
+### ✅ Fixed-workflow configuration correction — verified 2026-10-10
+
+- **Diagnosis:** The reported `check the sentiment of I am sad` failure is saved
+  in the inline local CI container on port 8515, not Render. Its extraction stage
+  reports `configuration`; container inspection confirms no Groq key is configured.
+  Sentiment, keywords, FAQ, summarization and drafting samples completed on Render.
+- **Approved slice:** Correct repository-root `.env` loading in the three fixed
+  workflows and make extraction configuration failures explicitly report unavailable
+  model configuration. Keep outcome/status/trace contracts and no-retry behavior.
+  Do not bundle routing, provider changes or unrelated answer presentation.
+- **Verification:** Reproduce root `.env` failure offline for all three workflows,
+  test environment precedence and missing/invalid configuration without execution,
+  run the existing suite/dependency checks, then review local chat in the inline
+  browser. Prepare a user-only DCO-signed commit and PR; merge awaits user review.
+- **Verification results:** Three root-configuration regressions failed before the
+  correction; six new `.env`/precedence cases and the focused set pass (134 tests).
+  Full suite passes 1,196 tests with the existing LangChain history warning;
+  dependencies and whitespace pass. Inline review on 8516 verifies explicit
+  configuration errors for all three workflows, then successful live sentiment,
+  keyword and FAQ after restarting the isolated backend with root `.env` enabled.
+  Refresh restores all three with exactly three task/tool executions in its logs.
+- **Hosted audit:** Three sentiment samples (including the exact failed local
+  wording), keywords, FAQ, summarization and email drafting complete. Missing
+  sentiment source and reminder time correctly clarify. Drafting took about
+  44 seconds with model-wait events; no common hosted configuration failure was
+  reproduced. These are representative smoke checks, not general model-quality
+  guarantees. Reminder creation/delivery and actual email sending were not tested.
+- **Publication:** User authorized branch push/PR; merge and deployment of this
+  fix remain pending independent user review. Local review stays open on 8516.
+
 ### Remaining work
 
 The remaining checklist covers observability/remaining endpoints, packaging,

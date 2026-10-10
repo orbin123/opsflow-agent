@@ -210,6 +210,10 @@ def test_invalid_configuration_fails_before_client_creation(monkeypatch, key, mo
     monkeypatch.setattr(workflow, "ChatGroq", client)
     result = workflow.run_sentiment_workflow("Check sentiment: happy")
     assert result.trace[0].reason == "configuration"
+    assert result.status == "error" and result.reason == "extraction_failed"
+    assert "model configuration is missing or invalid" in result.reply
+    assert "No text was scored." in result.reply
+    assert result.result is None and len(result.trace) == 1
     client.assert_not_called()
 
 
