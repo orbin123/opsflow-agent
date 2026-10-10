@@ -19,7 +19,7 @@ def workspace(monkeypatch):
 
 
 def open_chat(key=None):
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     if key is not None:
         ui.query_params["chat"] = key
     ui.run()

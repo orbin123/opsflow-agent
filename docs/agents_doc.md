@@ -2,6 +2,24 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-10:** Implemented the approved CI/CD slice on
+  `feature/github-render-cicd`: unconditional PR/main GitHub Actions `CI` check,
+  offline suite, dependency/whitespace checks, Linux AMD64 Docker build and
+  disposable-container health/authentication checks. YAML targets main/checksPass;
+  documented operation/rollback and completed Docker/hosted facts in `AGENTS.md`.
+  AppTest runs explicitly allow 15 seconds, preserving assertions/app timeouts.
+  Local suite passes 1,190 tests; dependency/whitespace/actionlint checks, native
+  Docker build and actual HTTP/WebSocket/missing-password smoke checks pass.
+  GitHub reports the repository public. Main now requires genuine CI/DCO checks,
+  including admins; Render API verifies main/checksPass, Free and one instance.
+  Intentional CI failure blocks PR #52 merge; live deployment stays ed56040.
+  Removed the temporary probe. Fixed the profile test's local .venv assumption
+  with sys.executable (eight focused tests pass). Inline container UI loads on
+  8515 without model credentials. Hosted run 38023988938 passes all 1,190 tests,
+  dependency/whitespace checks, AMD64 Docker build and container smoke checks;
+  CI/DCO pass and PR is mergeable. First automatic main deployment remains
+  to verify after user-approved merge.
+
 - **2026-10-10:** User approved local review and merge of refactor PR #51.
   Verified both PRs mergeable with user-only DCO-signed commits. Merged deployment
   dependency PR #50 into main, then retargeted #51 to main; recorded approval

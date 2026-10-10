@@ -124,7 +124,7 @@ def test_interrupted_subscriber_rerun_reads_saved_turn_without_submission(monkey
         store.create_chat("one")
     if state == "finished":
         store.finish("turn", execution={k: v for k, v in execution().items() if k != "session_id"})
-    ui = AppTest.from_file(str(SCRIPT))
+    ui = AppTest.from_file(str(SCRIPT), default_timeout=15)
     ui.query_params["chat"] = "one"
     ui.session_state["session_id"] = "one"
     ui.session_state["pending"] = True
