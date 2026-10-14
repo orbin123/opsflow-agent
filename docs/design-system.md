@@ -187,3 +187,15 @@ The approved temporary Render demo uses a native warning above the existing
 workspace, only when `OPSFLOW_TEMPORARY_DEMO=1`. It states disposable storage,
 disabled reminder emails and synthetic-data use. Reuse the existing warning
 palette and body typography; no new layout, CSS or reusable component is added.
+
+
+## Evaluations adaptation
+
+On 2026-10-14 the user approved reusing the 760 px Settings reading container,
+VT323 headings/IBM Plex Mono body, native tables/selectors/expanders and existing
+semantic warnings for saved evaluation reports. Return and Refresh keep the
+existing controls/navigation locks. Mobile tables scroll within their container;
+case input/reference/result panels stack at 390 px. No new token, custom dashboard
+pattern or Figma node is introduced. Foundations listing succeeded; its deeper
+read hit the Starter quota. Historical bundled-run warnings, missing/unscored
+states and explicit unevaluated categories stay textual as well as colored.

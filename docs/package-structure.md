@@ -12,6 +12,7 @@ FastAPI entry point; `streamlit_app.py` remains the Streamlit entry point.
 | `app/ui/` | Streamlit transport, components and saved draft presentation | ui_client, ui_stream, chat_menu, email_catalogue |
 | `app/observability/` | Sanitized request/task/tool logs and process-scoped metrics | monitoring |
 | `app/evaluation/` | Explicit offline classifier/FAQ baselines and saved synthetic reports | contracts, scoring, reports, runner |
+| `app/evaluation/` | Explicit offline evaluation, pure scorers and read-only saved report catalogue | contracts, runner, scoring, reports, catalogue |
 | `app/routes/` | Deterministic execution gates | sentiment_route, keyword_route, faq_route |
 | `app/tools/` | Individual analysis, retrieval, writing, scheduling and email utilities | existing tool modules |
 | `app/workflows/` | Fixed extraction/tool/presentation workflows | sentiment_workflow, keyword_workflow, faq_workflow |

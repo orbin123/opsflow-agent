@@ -4,13 +4,14 @@ import argparse
 from pathlib import Path
 
 from app.evaluation.reports import load_report
-from app.evaluation.runner import ROOT, run_baseline
+from app.evaluation.catalogue import report_directory
+from app.evaluation.runner import run_baseline
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Offline synthetic classifier and FAQ evaluation; no LLM or side effects.")
-    parser.add_argument("--report-dir", type=Path, default=ROOT / "var/evaluations",
-                        help="Local generated-report directory (default: repository var/evaluations).")
+    parser.add_argument("--report-dir", type=Path, default=report_directory(),
+                        help="Local generated-report directory (default: OPSFLOW_EVALUATIONS_DIR or repository var/evaluations).")
     args = parser.parse_args()
     try:
         path = run_baseline(args.report_dir)

@@ -2,6 +2,20 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** Implemented approved evaluation slice 2 in the shared draft PR #55:
+  GET-only list/detail, native Settings catalogue/evidence/downloads, shared report
+  directory and exact historical synthetic baseline packaging. All 1,251 offline
+  tests pass (32 new), dependencies/whitespace pass. Native ARM64 Docker build,
+  bundled report inspection and authentication smoke pass. Inline desktop/390 px
+  mobile verifies historical warning, failed/unscored FAQ evidence, exact JSON
+  download, Return/draft retention, Refresh and reload selection restoration.
+  Backend task/tool counts stay zero, review chat has no turns and reminder DB
+  is absent. App stays open on 8517. Deeper Figma inspection hit quota; documented
+  approved Settings adaptation used. Existing reload/session-draft limits remain.
+  Hosted CI is pending publication; no live model/worker/SMTP, merge or deployment.
+  Next: agree slice 3 case/reference/isolation/call-budget contract before coding.
+
+
 - **2026-10-14:** User changed evaluation publication to one shared draft PR #55
   on `feature/evaluation-baseline` → main, with scoped commits for each agreed
   slice. Updated AGENTS.md and the evaluation plan with this exception, a completion

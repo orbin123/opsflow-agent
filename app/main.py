@@ -10,6 +10,7 @@ from app.api.chat import router as chat_router
 from app.api.profile import router as profile_router
 from app.api.faq import router as faq_router
 from app.api.reminders import router as reminders_router
+from app.api.evaluations import router as evaluations_router
 from app.chat.sessions import close_chat_store
 from app.chat.chat_stream import drain_stream_workers
 
@@ -29,6 +30,7 @@ app.include_router(profile_router)
 app.include_router(chat_router)
 app.include_router(faq_router)
 app.include_router(reminders_router)
+app.include_router(evaluations_router)
 
 
 @app.get("/health")

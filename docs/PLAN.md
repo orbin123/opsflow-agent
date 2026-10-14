@@ -75,13 +75,39 @@ limits and are not instructions to repeat completed work.
   yield safe no-match abstention. These results are provisional development evidence,
   not model-quality guarantees. No UI/browser, live LLM, reminder/SMTP or hosted
   execution was needed or performed in this CLI-only slice.
-- **Next bounded discussion:** Read-only Settings evaluation catalogue/detail
-  page and explicit synthetic baseline packaging. Later agent/semantic slices
+- **Slice 1 handoff (completed by slice 2 below):** Read-only Settings evaluation
+  catalogue/detail page and explicit synthetic baseline packaging. Later agent/semantic slices
   remain proposed; no merge or deployment is authorized by the baseline approval.
   Slice 1 is commit `140d8f6`; GitHub CI run `38518747613` and DCO pass, including
   the Linux AMD64 image and container checks. The evaluation checkout is
   `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`; primary checkout
   changes belong to the separate configuration fix and must be preserved.
+
+### ✅ Evaluation slice 2 — verified locally 2026-10-14
+
+- **Contract:** Read-only report list/detail APIs and Settings → Evaluations using
+  the existing native 760 px Settings layout. Preserve chat selection/drafts and
+  pending/running/unsaved locks. Reads, Refresh, selection and downloads never run
+  or resume evaluation. Missing/corrupt/incomplete/unscored evidence stays explicit.
+- **Storage/packaging:** Shared `OPSFLOW_EVALUATIONS_DIR` CLI/API configuration;
+  bundle the selected slice 1 synthetic report with evaluated commit/date and an
+  explicit historical-version warning. No hosted execution, merge or deployment.
+- **Checks:** API storage/path/failure boundaries; UI navigation/drafts/locks and
+  zero execution on reruns; full offline suite/dependencies/whitespace, packaging
+  inspection and inline desktop/mobile/refresh review. Scoped user-signed commit
+  in the existing draft PR #55. Slices 3–5 remain later discussions.
+- **Results:** All 1,251 tests pass (32 new), dependencies/whitespace pass. Native
+  ARM64 Docker build, exact bundled report reading without generated storage and
+  container authentication smoke pass. Inline desktop/390 px mobile verifies
+  failed/unscored evidence, historical warning, exact JSON download, Refresh,
+  Return with multiline draft and browser reload restoring selection. Task/tool
+  counters remain zero; review chat has no turns and no reminder DB was created.
+  Browser reload retains existing session-draft limitations. App stays open on
+  8517. Figma deeper read hit quota; documented native adaptation used.
+- **Next bounded discussion:** Slice 3 workflow/agent evaluation; agree cases,
+  references, isolated storage/SMTP and opt-in live call budget before coding.
+  PR remains draft; hosted CI is pending publication, no merge/deployment.
+
 
 ### Remaining work
 

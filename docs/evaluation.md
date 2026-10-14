@@ -2,8 +2,8 @@
 
 The first evaluation slice runs the saved intent classifier and local fictional
 FAQ retriever explicitly. It does not invoke the agent, a language model, chat
-persistence, reminder creation, delivery or the UI. Settings → Evaluations remains
-the proposed next slice; see [evaluation-plan.md](evaluation-plan.md).
+persistence, reminder creation or delivery. Settings → Evaluations reads its saved
+reports; see [evaluation-plan.md](evaluation-plan.md).
 
 ## Run and inspect
 
@@ -14,7 +14,11 @@ python -m app.evaluation
 python -m app.evaluation --report-dir /absolute/path/to/local/reports
 ```
 
-The default is the ignored `var/evaluations/` directory. Every run owns a new
+The default is the ignored `var/evaluations/` directory. Set
+`OPSFLOW_EVALUATIONS_DIR` to share another report root between the CLI and API;
+`--report-dir` overrides it for that CLI invocation. Relative configured paths
+resolve against the process working directory; absolute paths are recommended.
+Every run owns a new
 opaque run-ID directory containing `report.json`. The console prints its absolute
 path, execution state, quality verdict and selected metrics. A completed run exits
 zero even when it finds incorrect predictions: no quality threshold is agreed yet.
@@ -94,9 +98,9 @@ not promise survival of every filesystem or power-loss failure.
 The normal CLI belongs in a separate offline process. It makes no production
 task/HTTP metrics and never starts the reminder worker. Generated reports contain
 synthetic source text, not sanitized operational logs. Do not use real employee
-data with this development pilot. Docker does not currently package the classifier
-CSV, pilot or generated reports; hosted evaluation display needs the next slice's
-explicit packaging decision.
+data with this development pilot. Docker packages only the explicitly selected
+historical synthetic baseline, not the classifier CSV, pilot or local generated
+reports. It does not run evaluation.
 
 ## Observed development baseline — 2026-10-14
 
@@ -116,3 +120,39 @@ no-match. Two broad leave/payroll ambiguity references also return no-match;
 both abstain safely, but differ from the provisional exact-status label. Human
 review should adjudicate these references before treating them as ground truth.
 Missing-detail clarification and generated policy claims remain unverified.
+
+## Settings catalogue (slice 2)
+
+`GET /api/v1/evaluations` lists saved runs and the selected bundled baseline.
+`GET /api/v1/evaluations/{run_id}?source=local` returns the exact validated Report
+with its source; `source=bundled` selects only the tracked historical baseline.
+Run IDs are 32 lowercase hexadecimal characters. No mutation/execution endpoint
+is provided. These readers import no runner, classifier or application tools.
+
+A missing local root is empty and is never created. Invalid/missing/unreadable
+run snapshots remain visible in the catalogue. Detail responses use 404 for missing,
+422 for invalid identities/schema/symlinks and 503 for unavailable storage; no raw
+filesystem or exception information is returned. IDs must agree with the saved
+report. Run/report symlinks are rejected. The configured root is trusted local
+storage: this is not a multi-user or hostile concurrent-filesystem boundary.
+Finished, failed, interrupted and incomplete `running` snapshots are read literally,
+without repair, rescoring or resume. A snapshot cannot prove a process is still active.
+
+Settings → Evaluations reuses the native 760 px Settings layout and navigation locks.
+Refresh and selection use GET; downloads serialize the selected validated Report
+without recalculating it. Empty/error states retain Return to chat. Browser-session
+multiline drafts and selected chats survive navigation; a browser reload still has
+existing session-draft limitations. Lists include suite/date/source commit/model/
+pilot fingerprint; detail exposes full provenance, counts, metric definitions,
+classifier details and literal per-case references/observations. Missing values
+remain unscored. Classifier eligibility/retrieval are not runtime/semantic quality.
+Later unimplemented categories say Not evaluated; no single agent accuracy is shown.
+Filters, comparison and run controls remain later slices.
+
+`data/evaluation/baseline.json` is an exact copy of selected run
+`89c111c7f91d4382b6ca872b62dbada4`, evaluated locally on 2026-10-14 at clean commit
+`140d8f6`. The page displays its recorded date/commit, pending human-reference
+review and historical-version warning. It is not a live hosted run or evidence
+for the currently deployed version. Generated Docker/Render records use disposable
+`/tmp/opsflow-data/evaluations`; no reports are generated at startup. Packaging
+this baseline does not authorize deployment or live evaluation.

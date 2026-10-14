@@ -194,6 +194,14 @@ and retries that rejected model request once, without repeating completed tools.
 Waits share the turn's existing 120-second budget. Longer limits or unsuccessful
 retries still report unfinished work accurately; completion is not guaranteed.
 
+**Settings → Evaluations** reads saved synthetic evaluation reports. Choose a run
+and case to inspect expected/actual evidence, metric definitions, counts and
+missing scores. Refresh and JSON downloads never run or resume evaluation. The
+bundled baseline is a historical local run with its evaluated date/commit, not
+current hosted verification. Pilot references await human review; agent, generated
+answer and reminder quality remain unevaluated. Return to chat preserves selection
+and the browser-session multiline draft. Running/unsaved work blocks page entry.
+
 Chat navigation pauses during running work. Settings navigation and submission
 also pause while the selected chat has unconfirmed work. If the
 connection is interrupted, execution may continue on the backend. Use **Check

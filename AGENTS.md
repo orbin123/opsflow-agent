@@ -120,7 +120,12 @@ On `feature/evaluation-baseline`, the approved first evaluation slice provides
 offline classifier holdout and 24-case development pilot with versioned,
 atomically saved synthetic reports. Reads and pure rescoring never execute work.
 Pilot references await human review; classifier eligibility is not runtime routing,
-and FAQ retrieval is not generated-answer quality. Settings display, live agent/
+and FAQ retrieval is not generated-answer quality. Slice 2 adds GET-only report
+catalogue/detail APIs and native Settings → Evaluations with exact case evidence,
+missing scores and synthetic JSON downloads. Reads never execute/rescore/resume.
+`OPSFLOW_EVALUATIONS_DIR` shares CLI/API storage. Docker packages one historical
+synthetic baseline with evaluated date/commit and version warning; no evaluation
+runs at startup. Local catalogue/UI/container verification passes; live agent/
 workflow evaluation and semantic judging remain later slices. See docs/evaluation.md.
 
 ## Read Before Working
