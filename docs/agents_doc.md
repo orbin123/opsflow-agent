@@ -2,6 +2,22 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** At the user's request, replaced PR #55's five-slice evaluation
+  infrastructure with two Settings sections: full recorded classifier report and
+  six pending manual generation-quality criteria, each with collapsed explanations.
+  Removed the old catalogue/storage/CLI, runtime harness, semantic annotation/
+  snapshot/comparison pipeline, development fixtures and obsolete tests; no backup
+  implementation retained. One GET reads validated model metadata/hash, without
+  model execution. Updated scope/guide/package/design documentation. All 1,210
+  offline tests pass (20 focused checks), dependencies/whitespace and native ARM64
+  Docker/authentication smoke checks pass. Inline desktop/390 px mobile verifies
+  tables/formulas/weights, contained scrolling, Return/draft and reload selection;
+  zero backend tasks/chat turns and no reminder DB. Figma deep read quota-limited;
+  documented native adaptation used. App open on 8517/backend 8024. Generation
+  scores remain unassigned. Ragas/live judge/model/SMTP/worker and merge/deployment
+  excluded. Earlier evaluation entries below are historical, superseded where
+  they describe removed code or next steps. Keep existing PR #55 draft pending review.
+
 - **2026-10-14:** User approved advancing to evaluation slice 4's offline scope
   while keeping slice 3 live calls and the optional judge deferred. Added eight
   development source/fact targets, six 0–3 rubrics, explicitly attributed human

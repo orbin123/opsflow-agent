@@ -115,29 +115,18 @@ verified to block PR merge. Main CI passes all 1,190 tests, the AMD64 image and
 authentication smoke checks. Hosted health/access, chat/Activity and refresh
 restoration pass without reexecution. See `docs/cicd.md`.
 
-On `feature/evaluation-baseline`, the approved first evaluation slice provides
-`python -m app.evaluation`: an
-offline classifier holdout and 24-case development pilot with versioned,
-atomically saved synthetic reports. Reads and pure rescoring never execute work.
-Pilot references await human review; classifier eligibility is not runtime routing,
-and FAQ retrieval is not generated-answer quality. Slice 2 adds GET-only report
-catalogue/detail APIs and native Settings → Evaluations with exact case evidence,
-missing scores and synthetic JSON downloads. Reads never execute/rescore/resume.
-`OPSFLOW_EVALUATIONS_DIR` shares CLI/API storage. Docker packages one historical
-synthetic baseline with evaluated date/commit and version warning; no evaluation
-runs at startup. Local catalogue/UI/container verification passes. Slice 3's approved offline
-scope adds 24 scripted runtime scenarios, pure observable-trajectory/state scorers,
-schema-v2 reports and a subprocess/temporary-storage harness with blocked SMTP/
-worker startup and an explicit model-attempt cap. Existing report readers support
-both schemas. The user deferred all live calls on 2026-10-14; live workflow/agent
-quality, repeated live stability and human reference review remain outstanding.
-Slice 4's approved offline implementation adds source/fact rubrics, persisted human
-review attestations, immutable schema-v3 snapshots, pure arithmetic and compatible
-saved-run comparisons in read-only Settings. The user approved advancing to this
-scope while keeping live calls and the optional judge deferred. No actual human
-reference/answer annotations have been supplied; semantic scores stay missing.
-Next is slice 5 contract discussion, not an automatic full benchmark claim.
-See docs/evaluation.md.
+On `feature/evaluation-baseline`, the user-approved evaluation submission scope
+is now two read-only Settings sections: the trained classifier's full classification
+report and one generation-quality table with six manual-review criteria.
+`GET /api/v1/evaluations` reads validated existing model metadata, verifies its
+association with the model file, and never loads/runs/trains the classifier.
+Generation ratings are not supplied and remain Not scored. The user explicitly
+rejected Ragas and requested removing the earlier run catalogue/storage/CLI,
+runtime harness, annotation snapshots/comparisons, logs/JSON and fixtures rather
+than retaining them as backup. Those earlier five-slice implementation contracts
+are superseded by the simplified scope; application chat Activity, reminder
+behavior and monitoring remain separate. See docs/evaluation.md and
+`docs/evaluation-plan.md` for the current scope and verification status.
 
 ## Read Before Working
 
@@ -154,7 +143,7 @@ See docs/evaluation.md.
 - Discuss the next bounded step, its contract and proportional verification with the user, then implement the agreed slice. The plan does not authorize implementing every item at once.
 - Use current code and feature documentation to understand existing behavior and avoid repeating completed work. Existing collaboration, design, routing and side-effect rules still apply.
 - Track decisions, scope, status and verification in `docs/PLAN.md` and `docs/agents_doc.md`. Do not use `agenda.txt` as an alternative agenda.
-- Evaluation work must follow the five slices in `docs/evaluation-plan.md` in order. Keep its completion table and handoff current with the project plan and change record; discuss and record any scope/order change before implementing it.
+- Evaluation work must follow the current approved scope in `docs/evaluation-plan.md`. Keep its handoff current with the project plan and change record; discuss and record any scope change before implementing it.
 
 ## Frontend Design
 

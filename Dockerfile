@@ -5,7 +5,6 @@ ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
     OPSFLOW_CHATS_DB=/tmp/opsflow-data/chats.sqlite3 \
     OPSFLOW_REMINDERS_DB=/tmp/opsflow-data/reminders.sqlite3 \
     OPSFLOW_TEMPORARY_DEMO=1 \
-    OPSFLOW_EVALUATIONS_DIR=/tmp/opsflow-data/evaluations \
     OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
 
 RUN apt-get update && apt-get install -y --no-install-recommends nginx apache2-utils \
@@ -17,7 +16,6 @@ RUN pip install --no-cache-dir -r requirements.runtime.txt && pip check
 COPY app/ app/
 COPY artifacts/models/ artifacts/models/
 COPY data/company_faq.json data/company_faq.json
-COPY data/evaluation/baseline.json data/evaluation/baseline.json
 COPY ui/ ui/
 COPY .streamlit/config.toml .streamlit/config.toml
 COPY docs/user-guide.md docs/user-guide.md

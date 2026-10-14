@@ -1,25 +1,15 @@
-"""GET-only evaluation catalogue; these endpoints never run or resume work."""
+"""Read-only classifier results for the two-section evaluation page."""
 
 from fastapi import APIRouter, HTTPException
 
-from app.evaluation.catalogue import (CatalogueError, RunID, SavedReport, SavedRun,
-                                      Source, list_saved_runs, read_saved_report)
+from app.evaluation.classifier_report import ClassifierReport, read_classifier_report
 
 router = APIRouter(prefix="/api/v1/evaluations")
 
 
-@router.get("", response_model=list[SavedRun])
+@router.get("", response_model=ClassifierReport)
 def get_evaluations():
     try:
-        return list_saved_runs()
-    except CatalogueError:
-        raise HTTPException(503, detail="Saved evaluations are unavailable") from None
-
-
-@router.get("/{run_id}", response_model=SavedReport)
-def get_evaluation(run_id: RunID, source: Source = "local"):
-    try:
-        return read_saved_report(run_id, source)
-    except CatalogueError as exc:
-        status = {"missing": 404, "invalid": 422, "invalid_id": 422, "unavailable": 503}[exc.code]
-        raise HTTPException(status, detail="Saved evaluation " + exc.code) from None
+        return read_classifier_report()
+    except (OSError, ValueError):
+        raise HTTPException(503, detail="Classifier results are unavailable") from None

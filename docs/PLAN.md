@@ -32,148 +32,36 @@ limits and are not instructions to repeat completed work.
   records. Live SMTP/inbox, deployment and general model reliability remain
   unverified. See feature documentation and `docs/audit.md` for recorded limits.
 
-### ✅ Local evaluation baseline — verified 2026-10-14
+### ✅ Simplified evaluation submission — verified locally 2026-10-14
 
-- **Request:** Plan a Settings evaluation area with major project-relevant agent,
-  ground-truth, context/summary relevance and generation criteria; include staged
-  implementation, self-verification and assessment talking points.
-- **Proposal:** [evaluation-plan.md](evaluation-plan.md) defines seven evaluation
-  areas, reviewed reference data, explicit score denominators, local execution/
-  scoring separation and saved reports. Recommend an offline baseline first,
-  then read-only Settings catalogue, isolated live workflow/agent evaluation,
-  semantic review and final CI/assessment evidence. Each slice requires its own
-  contract/verification discussion. The user approved slice 1 on 2026-10-14;
-  the local baseline is now implemented, with no UI or live LLM work in this slice.
-- **Publication decision, 2026-10-14:** The user wants the entire evaluation plan
-  in the existing draft [PR #55](https://github.com/orbin123/opsflow-agent/pull/55),
-  on `feature/evaluation-baseline` → `main`, with scoped commits for each agreed
-  slice. No new PR per evaluation slice; keep the shared PR draft until the full
-  agreed work is verified and the user authorizes final review/merge. This does
-  not authorize implementing all slices at once. Follow the completion table and
-  new-chat handoff in `docs/evaluation-plan.md`.
-- **Planning verification:** Reviewed actual routing, traces, tools, Settings,
-  storage/deployment and primary evaluation documentation; inspected Figma
-  Foundations metadata. Offline reproduction matches the saved 200-row synthetic
-  classifier holdout (accuracy 0.88, macro F1 0.8813, calibration metrics) and
-  historical threshold figures (47/47 accepted labels, 23.5% coverage). Canonical
-  FAQ checks match 25/25 indexed questions. These do not measure live workflow
-  quality or independent FAQ generalization. No live LLM, worker/email execution,
-  UI implementation, full-suite rerun or publication performed for this proposal.
-- **Implementation:** `python -m app.evaluation` runs the unchanged 200-row
-  classifier holdout plus eight router/sixteen FAQ development cases. Versioned
-  contracts, pure scorers, fingerprints, explicit unscored states and atomic
-  per-run JSON reports separate execution state from quality misses. Pilot
-  references are AI-authored pending human review. See [evaluation.md](evaluation.md).
-- **Verification:** All 1,219 offline tests pass (29 new evaluation checks), with
-  the existing LangChain history warning; dependency/whitespace checks pass. A
-  fresh-process CLI blocks network, classifier fitting and provider/side-effect
-  imports. Failure tests cover wrong scores/policies, invalid references/reports,
-  changed artifacts, zero denominators, interruption and failed atomic writes.
-  All 224 baseline cases execute; holdout scores reproduce saved metadata. Pilot
-  finds 7/8 intent labels, 8/8 permitted eligibility, 12/16 FAQ statuses, 8/8
-  accepted policy matches and 8/10 expected matches. Two proposed ambiguity labels
-  yield safe no-match abstention. These results are provisional development evidence,
-  not model-quality guarantees. No UI/browser, live LLM, reminder/SMTP or hosted
-  execution was needed or performed in this CLI-only slice.
-- **Slice 1 handoff (completed by slice 2 below):** Read-only Settings evaluation
-  catalogue/detail page and explicit synthetic baseline packaging. Later agent/semantic slices
-  remain proposed; no merge or deployment is authorized by the baseline approval.
-  Slice 1 is commit `140d8f6`; GitHub CI run `38518747613` and DCO pass, including
-  the Linux AMD64 image and container checks. The evaluation checkout is
-  `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`; primary checkout
-  changes belong to the separate configuration fix and must be preserved.
-
-### ✅ Evaluation slice 2 — verified locally 2026-10-14
-
-- **Contract:** Read-only report list/detail APIs and Settings → Evaluations using
-  the existing native 760 px Settings layout. Preserve chat selection/drafts and
-  pending/running/unsaved locks. Reads, Refresh, selection and downloads never run
-  or resume evaluation. Missing/corrupt/incomplete/unscored evidence stays explicit.
-- **Storage/packaging:** Shared `OPSFLOW_EVALUATIONS_DIR` CLI/API configuration;
-  bundle the selected slice 1 synthetic report with evaluated commit/date and an
-  explicit historical-version warning. No hosted execution, merge or deployment.
-- **Checks:** API storage/path/failure boundaries; UI navigation/drafts/locks and
-  zero execution on reruns; full offline suite/dependencies/whitespace, packaging
-  inspection and inline desktop/mobile/refresh review. Scoped user-signed commit
-  in the existing draft PR #55. Slices 3–5 remain later discussions.
-- **Results:** All 1,251 tests pass (32 new), dependencies/whitespace pass. Native
-  ARM64 Docker build, exact bundled report reading without generated storage and
-  container authentication smoke pass. Inline desktop/390 px mobile verifies
-  failed/unscored evidence, historical warning, exact JSON download, Refresh,
-  Return with multiline draft and browser reload restoring selection. Task/tool
-  counters remain zero; review chat has no turns and no reminder DB was created.
-  Browser reload retains existing session-draft limitations. App stays open on
-  8517. Figma deeper read hit quota; documented native adaptation used.
-- **Next bounded discussion:** Slice 3 workflow/agent evaluation; agree cases,
-  references, isolated storage/SMTP and opt-in live call budget before coding.
-  PR remains draft; commit `ca25384` is pushed, DCO passes and hosted CI
-  run `38523501919` is running. No merge/deployment.
-
-
-### ⏳ Evaluation slice 3 — offline scope verified; live deferred, 2026-10-14
-
-- **Contract:** 24 synthetic development scenarios covering fixed-workflow literal
-  extraction, agent arguments/dependencies/compound/history, reminders and saved
-  replay/recovery. Pure scorers and schema-v2 reports retain observable executions,
-  results, stage events, failures, call counts and isolated storage evidence. Schema-v1
-  baseline readers/reports remain compatible; Settings continues to read only.
-- **Isolation:** Dedicated subprocesses, disposable chat/reminder databases, frozen
-  reminder time, blocked SMTP/worker startup, synthetic recipients and an explicit
-  60-request run cap. Existing application routing/tools/providers stay unchanged.
-- **Verification decision:** The user selected harness/offline checks and deferred
-  all live calls. Provider doubles exercise real workflows/agent/storage/HTTP/SSE;
-  defective observations test scorer failures. Opt-in live execution is implemented
-  but not invoked or claimed as verified model quality. References remain pending
-  human review; semantic generated-answer scoring belongs to slice 4.
-- **Checks:** Extraction/order/multiplicity/forbidden actions, context dependencies,
-  clarification, date/time/zone, partial failures, exactly-once replay and interrupted
-  recovery; isolation/budget/error/report boundaries; existing offline suite and
-  inline read-only report review. Keep scoped signed commits in draft PR #55.
-- **Automated evidence:** All 1,295 tests pass (44 new), with the existing
-  LangChain history warning; dependency/whitespace checks pass. Native ARM64
-  Docker build, authentication smoke and retained schema-v1 packaging checks pass.
-  All 24 scripted scenarios produce observations; provider doubles account for 48
-  model attempts and 21 tool calls, zero SMTP/worker attempts and disposable state.
-  Controlled partial failures remain 2/24 application failures despite expected
-  contract checks passing. Inline desktop/mobile/download/draft/refresh review passes.
-  Standalone routing is unobserved/unscored; collection labels/counts retain partial
-  observations without claiming app success.
-- **Saved evidence:** clean `3738c50`, report `45dbe8795b9c4b32ae534d43133be12b`;
-  all 24 cases observed, 48 scripted attempts, 21 tools and zero provider/SMTP/
-  worker invocations. API/browser export match; review backend task/tool counts
-  stay zero and its chat/reminder work is empty. App stays open on 8517.
-- **Publication/next:** initial harness `5a90b82`, correction `3738c50` and signed
-  handoff in draft PR #55. DCO passes; GitHub CI run `38547084304` is running.
-  Live calls, human reference review and three-repeat live stability remain deferred.
-  The user subsequently approved offline slice 4 with these gaps retained.
-  No merge/deployment.
-
-
-### ✅ Evaluation slice 4 — offline implementation verified locally, 2026-10-14
-
-- **Decision:** Proceed to slice 4 while slice 3 live verification remains deferred.
-  The user approved versioned facts/0–3 rubrics, persisted human annotations with
-  evidence, pure semantic scoring, compatible-run comparison and read-only Settings
-  display. All live calls and the optional model judge remain deferred.
-- **Contract:** Score saved synthetic runtime outputs only; never replay tools.
-  Reference review and answer annotations must be supplied explicitly by a human;
-  absent reviews stay unscored. Preserve old reports and create immutable new
-  semantic snapshots. Separate critical violations from descriptive averages.
-- **Checks:** Good/bad annotation fixtures, fabricated facts/dates, missing
-  uncertainty, unsupported draft promises, relevance, malformed/stale annotations,
-  incompatible comparisons and zero execution on reads; offline suite and inline
-  desktop/mobile/Refresh/Return review. Keep the shared PR #55 draft.
-- **Results:** Full offline suite: 1,329 pass; final focused semantic/catalogue
-  checks: 67 pass (35 new semantic tests). Dependencies/whitespace and native
-  ARM64 Docker/authentication smoke pass. Inline desktop/390 px mobile verifies
-  missing scores/output, compatible/incompatible comparisons, exact JSON/API,
-  Refresh, Return/draft and reload chat selection. Backend has zero task/tool
-  executions, no chat turns and no reminder DB; app open on 8517/backend 8024.
-- **Limits/next:** Actual human reference/answer annotations remain absent; seven
-  available outputs/eight targets and zero scores/38 applicable dimensions are
-  saved honestly. References were authored after scripted collection for development,
-  not a held-out claim. Human identity/semantic correctness is attested, not verified
-  by software. Discuss bounded offline slice 5 next; live checks/judge remain deferred.
+- **Decision:** The user rejected Ragas and requested only a full classifier report
+  plus one generation-quality table (faithfulness, coverage, relevance, instruction
+  compliance, status accuracy, context relevance). Explanations of sources,
+  calculations and weighting belong in collapsible panels.
+- **Removal:** The user explicitly requested removing unwanted code rather than
+  keeping it as backup. Delete the evaluation run catalogue/storage/CLI, runtime
+  harness, detailed traces, annotation snapshots/comparison machinery, development
+  fixtures and their obsolete tests. Keep existing application behavior and tests.
+- **Contract:** Read the existing trained model's metadata for classification
+  results, without loading/retraining/executing the model. Display all eight labels,
+  accuracy, precision/recall/F1/support, macro and weighted averages. Validate saved
+  metrics and model association; unavailable evidence never becomes zero or a pass.
+  Show the six manual-review criteria with pending ratings; no human labels exist.
+- **Verification:** Saved-value/average checks, invalid metadata/model mismatch,
+  read-only API/UI failure handling, the two-section UI and chat/draft locks. Run
+  full offline suite/dependencies/whitespace and packaging checks, then inline
+  desktop/mobile/navigation/reload review on 8517. No model/provider/SMTP/worker work.
+- **Results:** All 1,210 offline tests pass (20 focused evaluation checks), with
+  the existing LangChain history warning. Dependencies/whitespace and native ARM64
+  Docker build/authentication smoke checks pass; the image reads classifier metadata
+  without evaluation fixtures. Inline desktop/390 px mobile verifies both tables,
+  collapsed source/formula/weighting explanations, table-contained mobile scrolling,
+  Return with multiline draft and reload restoring the same chat. Review backend
+  task counts stay zero, the chat has zero turns and no reminder DB exists. Deeper
+  Figma inspection remains quota-limited; documented native adaptation used.
+- **Publication:** One scoped user-signed removal/rework commit in existing draft
+  PR #55. Earlier five-slice infrastructure is superseded by this approved submission
+  scope; further evaluation work requires discussion. No merge/deployment authorization.
 
 ### Remaining work
 

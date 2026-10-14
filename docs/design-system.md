@@ -191,11 +191,13 @@ palette and body typography; no new layout, CSS or reusable component is added.
 
 ## Evaluations adaptation
 
-On 2026-10-14 the user approved reusing the 760 px Settings reading container,
-VT323 headings/IBM Plex Mono body, native tables/selectors/expanders and existing
-semantic warnings for saved evaluation reports. Return and Refresh keep the
-existing controls/navigation locks. Mobile tables scroll within their container;
-case input/reference/result panels stack at 390 px. No new token, custom dashboard
-pattern or Figma node is introduced. Foundations listing succeeded; its deeper
-read hit the Starter quota. Historical bundled-run warnings, missing/unscored
-states and explicit unevaluated categories stay textual as well as colored.
+The user simplified Evaluations on 2026-10-14 to two sections: a full classifier
+report followed by one six-dimension generation-quality table. Reuse the 760 px
+Settings container, VT323 headings, IBM Plex Mono body and existing semantic error
+colors. Native static tables avoid extra download/search/toolbars; calculation
+explanations use collapsed native expanders. Return to chat and existing navigation
+locks remain. Table content should wrap or stay within the container at 390 px.
+Missing scores stay textual (Not scored); unavailable classifier results must not
+hide the generation criteria. No new CSS/token/component or Figma node is needed.
+Foundations listing succeeded; deeper inspection hit the Starter quota, so use
+this documented native adaptation. Previous run/case/catalogue layouts are removed.

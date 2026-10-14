@@ -1,1 +1,1 @@
-"""Explicit offline evaluations; importing this package executes no work."""
+"""Read the trained classifier's recorded classification report."""

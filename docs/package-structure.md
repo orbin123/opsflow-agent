@@ -11,8 +11,7 @@ FastAPI entry point; `streamlit_app.py` remains the Streamlit entry point.
 | `app/reminders/` | Chat scheduling, retained reminders and delivery worker | chat_reminders, reminder_catalogue, reminder_worker |
 | `app/ui/` | Streamlit transport, components and saved draft presentation | ui_client, ui_stream, chat_menu, email_catalogue |
 | `app/observability/` | Sanitized request/task/tool logs and process-scoped metrics | monitoring |
-| `app/evaluation/` | Explicit offline classifier/FAQ baselines and saved synthetic reports | contracts, scoring, reports, runner |
-| `app/evaluation/` | Explicit offline evaluation, saved human generation review and read-only report catalogue | contracts, runners, scorers, reports, catalogue, semantic_contracts, semantic_review, semantic_scoring |
+| `app/evaluation/` | Read-only trained classifier report for Settings | classifier_report |
 | `app/routes/` | Deterministic execution gates | sentiment_route, keyword_route, faq_route |
 | `app/tools/` | Individual analysis, retrieval, writing, scheduling and email utilities | existing tool modules |
 | `app/workflows/` | Fixed extraction/tool/presentation workflows | sentiment_workflow, keyword_workflow, faq_workflow |
@@ -28,13 +27,10 @@ Run the backend with `python -m uvicorn app.main:app` and the UI with
 started process. `--help` is a read-only check. Do not start it merely to read
 saved reminders or review the UI.
 
-Run the local baseline explicitly with `python -m app.evaluation`; see
-`docs/evaluation.md`. It invokes only the saved classifier/local FAQ retriever
-and writes synthetic reports; it does not run chat, an LLM, reminders or delivery.
-`python -m app.evaluation --suite runtime` explicitly runs the isolated scripted
-runtime contract harness. `--mode live` is a separate opt-in invoking configured
-models; no UI read runs it. All scheduling uses disposable storage, never delivery.
-The user deferred live execution; see docs/evaluation.md for budgets and limits.
+Settings → Evaluations reads the trained classifier's metadata through
+`GET /api/v1/evaluations`, followed by six pending manual generation-quality criteria.
+It never runs models/tools. See `docs/evaluation.md`; no evaluation execution CLI,
+run catalogue or runtime harness remains in the approved simplified submission.
 
 The repository-level `ui/` directory contains CSS/fonts; `app/ui/` contains Python
 modules. Model artifacts, SQLite defaults and agent environment loading retain

@@ -194,13 +194,13 @@ and retries that rejected model request once, without repeating completed tools.
 Waits share the turn's existing 120-second budget. Longer limits or unsuccessful
 retries still report unfinished work accurately; completion is not guaranteed.
 
-**Settings → Evaluations** reads saved synthetic evaluation reports. Choose a run
-and case to inspect expected/actual evidence, metric definitions, counts and
-missing scores. Refresh and JSON downloads never run or resume evaluation. The
-bundled baseline is a historical local run with its evaluated date/commit, not
-current hosted verification. Pilot references await human review. Runtime reports labelled scripted contain
-observable workflow/agent/reminder contract checks using provider doubles, not
-live model quality. Generated-answer semantics remains unscored. Return to chat preserves selection
+**Settings → Evaluations** shows two things: the trained classifier's full
+classification report and six generation-quality review criteria. Classifier
+scores come from the existing model's recorded synthetic holdout; no model is
+rerun. Generation ratings say **Not scored** because human review is pending.
+Expand the calculation explanations for sources, definitions and weighting.
+There are no evaluation run/history/download/log/comparison controls. Opening the
+page and ordinary chat use never trigger scoring. Return to chat preserves selection
 and the browser-session multiline draft. Running/unsaved work blocks page entry.
 
 Chat navigation pauses during running work. Settings navigation and submission

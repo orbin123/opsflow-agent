@@ -9,8 +9,6 @@
 !artifacts/models/intent_router_svm_metadata.json
 !data/
 !data/company_faq.json
-!data/evaluation/
-!data/evaluation/baseline.json
 !ui/
 !ui/**
 !.streamlit/
