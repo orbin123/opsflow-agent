@@ -11,8 +11,13 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   dependencies/whitespace, native ARM64 Docker/authentication/old-baseline packaging
   checks pass. Initial full pilot observes 24/24 cases, 48 scripted model attempts,
   21 tool calls and zero SMTP/worker attempts; controlled failures remain visible.
-  Inline desktop/mobile/download/draft/refresh review passed; the corrected
-  standalone-route scope is receiving a final clean-report browser check. All live calls were explicitly deferred;
+  Inline desktop/mobile/download/draft/refresh review passed. Corrected standalone
+  routing is unobserved/unscored; collection labels/counts retain budget observations
+  without implying app success. Clean report `45dbe8795b9c4b32ae534d43133be12b` at
+  `3738c50` records 24 cases, 48 scripted attempts and 21 tools with zero delivery
+  attempts/provider invocations. API/download match; the review backend has zero
+  task/tool executions and no chat turns/reminder DB. App remains open on 8517.
+  Initial harness commit `5a90b82` and correction `3738c50` stay distinct in PR #55. All live calls were explicitly deferred;
   human reference review, live quality/stability and semantic scoring are unverified.
   Keep PR #55 draft and finish/report the deferred slice 3 work or agree an order
   change before slice 4. No merge/deployment or actual provider/email execution.

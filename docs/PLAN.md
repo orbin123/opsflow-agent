@@ -110,7 +110,7 @@ limits and are not instructions to repeat completed work.
   run `38523501919` is running. No merge/deployment.
 
 
-### ⏳ Evaluation slice 3 — approved offline scope, 2026-10-14
+### ⏳ Evaluation slice 3 — offline scope verified; live deferred, 2026-10-14
 
 - **Contract:** 24 synthetic development scenarios covering fixed-workflow literal
   extraction, agent arguments/dependencies/compound/history, reminders and saved

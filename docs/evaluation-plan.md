@@ -31,14 +31,17 @@ scope or order changes before implementing them.
   `docs/PLAN.md`, `docs/agents_doc.md`, `docs/evaluation.md` and
   `skills/karpathy-guidelines/SKILL.md` in the evaluation checkout. Before UI work,
   also read `docs/design-system.md` and the required Streamlit skill and references.
-- **Latest application verification:** slice 2, the scoped Settings catalogue commit
-  in PR #55. All 1,251 offline tests pass (32 new catalogue/UI checks); dependency
-  and whitespace checks pass. Native ARM64 Docker build, container authentication
-  smoke and exact bundled-report packaging checks pass. Inline desktop/390 px
-  mobile, download, Return/draft and refresh checks pass on port 8517. The app
-  stays open there; no merge/deployment or live model/SMTP execution occurred.
-  Slice 1 remains commit `140d8f6`, with passing CI run `38518747613`/DCO and
-  its original 1,219-test verification. Slice 2 GitHub CI run `38523659729` and DCO pass.
+- **Latest application verification:** slice 3's approved offline scope at
+  `3738c50` (initial harness commit `5a90b82`). All 1,295 offline tests pass
+  (44 new); dependencies/whitespace and native ARM64 Docker/container checks pass.
+  Inline desktop/390 px mobile, exact download, Return/draft and Refresh pass.
+  Clean report: `var/evaluations/45dbe8795b9c4b32ae534d43133be12b/report.json`,
+  24 observations, 48 scripted model attempts, 21 tool calls and zero SMTP/worker
+  attempts. It records a clean `3738c50` and no provider invocation. If missing,
+  explicitly regenerate with `python -m app.evaluation --suite runtime`; reads
+  never rerun it. Live calls and human reference review remain deferred.
+  App stays open on 8517. Slice 2 CI/DCO pass (`38523659729`); fresh slice 3
+  hosted CI runs after publication. Keep the shared PR draft.
 - **Saved slice 1 evidence:**
   `var/evaluations/89c111c7f91d4382b6ca872b62dbada4/report.json` in that checkout.
   It records commit `140d8f6` with a clean working tree and all 224 cases executed.
