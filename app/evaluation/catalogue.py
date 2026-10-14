@@ -85,7 +85,7 @@ def _summary(run_id: str, source: Source) -> SavedRun:
                     runtime_model=provenance.get("runtime_model") if isinstance(provenance.get("runtime_model"), str) else None,
                     dataset_version=provenance.get("pilot_sha256") if isinstance(provenance.get("pilot_sha256"), str) else None,
                     state=report.state, quality_verdict=report.quality_verdict,
-                    planned=len(report.cases), observed=sum(item.execution == "completed" for item in report.cases))
+                    planned=len(report.cases), observed=sum(item.actual is not None for item in report.cases))
 
 
 def list_saved_runs() -> list[SavedRun]:

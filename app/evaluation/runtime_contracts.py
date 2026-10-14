@@ -41,7 +41,7 @@ class ExpectedCall(Record):
 
 class RuntimeReferenceTurn(Record):
     input: Text
-    allowed_routes: Annotated[list[Route], Field(min_length=1)]
+    allowed_routes: list[Route]
     expected_statuses: Annotated[list[Status], Field(min_length=1)]
     calls: Annotated[list[ExpectedCall], Field(max_length=5)] = Field(default_factory=list)
     independent_order: bool = False
@@ -109,6 +109,8 @@ class RuntimeCase(Record):
             raise ValueError("Frozen clock must include a timezone")
         if (self.suite == "workflow_extraction") != (self.entry_point != "chat"):
             raise ValueError("Suite must identify standalone workflow or chat execution")
+        if self.entry_point == "chat" and self.recovery != "interrupted" and any(not turn.allowed_routes for turn in self.turns):
+            raise ValueError("Executed chat references require allowed runtime routes")
         if self.entry_point != "chat" and (len(self.turns) != 1 or self.recovery != "none"
                 or any(turn.transport != "python" for turn in self.turns)):
             raise ValueError("Standalone workflow requires one Python turn and no recovery")
@@ -145,10 +147,12 @@ class RuntimeTurn(Record):
     def coherent_execution(self):
         if self.execution is not None:
             execution = self.execution
-            if (execution.get("status") != self.status or execution.get("route") not in {"agent", "llm_assisted", "direct"}
+            if (execution.get("status") != self.status or execution.get("route") not in {"agent", "llm_assisted", "direct", None}
                     or not isinstance(execution.get("trace"), list)
                     or not isinstance(execution.get("workflow_trace"), list)):
                 raise ValueError("Invalid runtime execution snapshot")
+            if execution.get("route") is None and execution.get("entry_point") not in {"sentiment_workflow", "keyword_workflow", "faq_workflow"}:
+                raise ValueError("Only standalone workflows omit a runtime route")
             for step in execution["trace"]:
                 if (not isinstance(step, dict) or step.get("tool") not in Tool.__args__
                         or step.get("status") not in {"completed", "failed"}

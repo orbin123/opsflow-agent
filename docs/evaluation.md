@@ -169,7 +169,9 @@ python -m app.evaluation --suite runtime --case extract-missing-source --repeat 
 Runtime defaults to **scripted provider doubles**, with the unchanged application
 workflows, agent loop, classifier, tools, HTTP/SSE and storage paths. The 24 new
 scenarios comprise eight standalone extraction, eight agent/compound/history and
-eight reminder/recovery cases. References in `runtime_pilot.json` were authored
+eight reminder/recovery cases. Standalone observations preserve the actual workflow
+record and declare runtime routing unobserved/unscored; chat cases retain actual
+classifier/runtime routing. References in `runtime_pilot.json` were authored
 before execution and remain **pending human review**. `runtime_scripts.json`
 contains separate synthetic provider responses; passing these cases verifies
 contracts, not a model's decisions or general robustness. They are development

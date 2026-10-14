@@ -54,7 +54,7 @@ scope or order changes before implementing them.
 | --- | --- | --- |
 | 1 — Local baseline | ✅ Implemented and verified | Commit `140d8f6`; CLI, 24-case development pilot, 200-row holdout, pure scorers and atomic saved reports; verification above and detailed outcome below. |
 | 2 — Settings catalogue | ✅ Implemented and verified locally | GET list/detail, native Settings, shared report root and exact historical synthetic packaging. 1,251 tests; Docker/container checks; inline desktop/mobile/download/draft/refresh; details below. Hosted deployment remains unverified. |
-| 3 — Real workflows and agent | ⏳ Offline scope implemented; verification in progress | 24 development scenarios, pure evaluators, isolated bounded runner and saved traces. User deferred live calls; live quality/stability and human reference review remain explicit gaps. |
+| 3 — Real workflows and agent | ⏳ Offline scope verified; live calls deferred | 24 development scenarios, pure evaluators, isolated bounded runner and saved traces. User deferred live calls; live quality/stability and human reference review remain explicit gaps. |
 | 4 — Generation quality | Planned | Reviewed facts/rubrics, human annotations, optional validated judge, generation scores and compatible version comparisons. |
 | 5 — Assessment and CI | Planned | Final benchmark/CI regression gates, exports, browser walkthrough and assessment talking points. Slice 1's existing CI checks do not complete this assessment slice. |
 
@@ -137,6 +137,40 @@ The app remains open for user review. Figma Foundations listing succeeded; deepe
 inspection hit its quota, so the approved documented Settings adaptation was used.
 No live LLM, worker, SMTP, Render deployment or merge was performed. Slice 3 awaits
 its separate contract discussion.
+
+## Slice 3 offline outcome — 2026-10-14
+
+The user approved implementation and offline checks and explicitly deferred live
+calls. Added 24 separate development scenarios, pure literal-argument/trajectory/
+dependency/context/state scorers and schema-v2 reports. The bounded runner uses
+fresh subprocesses/disposable SQLite, frozen reminder time, real scheduling and
+HTTP/SSE/persistence, scripted provider doubles, blocked SMTP/worker startup and
+an explicit model-attempt budget. Live mode is opt-in and was not invoked.
+
+All 1,295 offline tests pass (44 new), including defective observations, missing/
+extra/forbidden calls, dependency/order/history mistakes, wrong reminder instants/
+zones/states, replay/recovery, bounded requests/cases, interruption/worker/storage
+failures, reader/API/UI compatibility and zero execution on reads. Dependencies
+and whitespace pass. Native ARM64 Docker build, authentication smoke and schema-v1
+baseline packaging pass. Browser review verifies desktop/390 px mobile saved
+partial-failure evidence, exact JSON download, mode qualification, Return/draft
+and Refresh. The running review backend's task/tool counts remain zero, its chat
+has no turns and its reminder DB is absent.
+
+The full scripted pilot observes all 24 scenarios, 48 model attempts and 21 tool
+calls, with zero SMTP/worker attempts and isolated state. Expected contract checks
+pass 24/24; two controlled partial failures remain in application availability
+(22/24). Generated-answer semantics is unscored. Standalone workflow records retain
+actual extraction fields and mark runtime routing unobserved; chat records retain
+real classifier/runtime routes. Collection state/observed counts include retained
+budget-limited observations and do not imply application success. Final clean-report
+and publication evidence are recorded in the handoff/change record.
+
+This completes the approved **offline** scope, not the original full slice 3 live
+validation. Reference human review, actual live model quality/provider compatibility
+and three-repeat live stability remain deferred/unverified. Discuss completing
+those checks, or explicitly agree a plan order change, before slice 4. Keep PR #55
+draft; no merge/deployment or semantic judge was authorized.
 
 ## Existing evidence and gaps
 

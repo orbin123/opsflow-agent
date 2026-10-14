@@ -58,7 +58,7 @@ def score_runtime(case: RuntimeCase, actual: RuntimeObservation):
         checks[prefix + "context_transport"] = all(record.get("user_inputs") == [turn.input for turn in case.turns[:number + 1]]
             for record in context_requests) if context_requests else None
         checks[prefix + "outcome"] = observed.status in reference.expected_statuses
-        checks[prefix + "route"] = execution.get("route") in reference.allowed_routes if observed.status != "interrupted" else None
+        checks[prefix + "route"] = execution.get("route") in reference.allowed_routes if case.entry_point == "chat" and observed.status != "interrupted" else None
         checks[prefix + "transport_status"] = observed.http_status == reference.expected_http_status if reference.expected_http_status else None
         checks[prefix + "outcome_http_status"] = observed.outcome_http_status == reference.expected_outcome_http_status if reference.expected_outcome_http_status else None
         checks[prefix + "required_calls"] = matched == len(reference.calls)

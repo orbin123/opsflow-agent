@@ -282,9 +282,9 @@ def _worker(job_path: Path):
                     trace = [dict(tool=tool_name, arguments=event.get("arguments", {}), status=event["status"],
                                   result=event.get("result"), elapsed_ms=event["elapsed_ms"])
                              for event in events if event["event"] == "step_finished" and event.get("stage") == tool_name]
-                    execution = jsonable_encoder({"status": result.status, "route": "llm_assisted", "reason": result.reason,
-                                                  "result": result.result, "reply": result.reply, "trace": trace,
-                                                  "workflow_trace": result.trace, "elapsed_ms": result.elapsed_ms})
+                    execution = jsonable_encoder(asdict(result))
+                    execution["workflow_trace"] = execution.pop("trace")
+                    execution.update(trace=trace, route=None, entry_point=case.entry_point)
                 elif reference.transport == "python":
                     execution = jsonable_encoder(asdict(sessions.execute_session_request(session_id, reference.input, turn_id=turn_id)))
                 else:

@@ -7,11 +7,12 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   schema-v2 reports, dedicated subprocesses/disposable SQLite and fixed reminder
   clock, blocked SMTP/worker startup, explicit global model budget and opt-in live
   mode. Existing schema-v1 reports remain readable; Settings displays saved runtime
-  traces and their scripted qualification. All 1,294 offline tests pass (43 new),
+  traces and their scripted qualification. All 1,295 offline tests pass (44 new),
   dependencies/whitespace, native ARM64 Docker/authentication/old-baseline packaging
-  checks pass. Initial full pilot observes 24/24 cases, 50 scripted model attempts,
+  checks pass. Initial full pilot observes 24/24 cases, 48 scripted model attempts,
   21 tool calls and zero SMTP/worker attempts; controlled failures remain visible.
-  Inline review/clean-commit report are next. All live calls were explicitly deferred;
+  Inline desktop/mobile/download/draft/refresh review passed; the corrected
+  standalone-route scope is receiving a final clean-report browser check. All live calls were explicitly deferred;
   human reference review, live quality/stability and semantic scoring are unverified.
   Keep PR #55 draft and finish/report the deferred slice 3 work or agree an order
   change before slice 4. No merge/deployment or actual provider/email execution.
@@ -695,7 +696,7 @@ implementation awaits discussion.
 
 - **2026-10-06:** Recorded a proposed standalone email-drafting contract in `docs/PLAN.md`: recipient/source/writing inputs, generated subject/body separated from fixed user actions, strict Groq settings, sanitized failures, and proportional offline/live verification. Reviewed existing summarization code and current Groq/LangChain documentation. Proposal awaits agreement; no application code, provider calls, or runtime tests changed.
 
-- **2026-10-06:** Implemented the agreed standalone `draft_email` tool with separate source/writing inputs, unchanged recipient, strict subject/body generation, fixed user actions, lazy Groq configuration, and sanitized failures. All 456 tests (43 new), `pip check`, and whitespace checks pass. Nine synthetic live calls across three prompt iterations exposed invented reopening dates; explicit grounding examples corrected the final inspected set. Final samples preserved inspected facts and excluded an embedded command, without establishing general fidelity/injection resistance. Added `docs/email-drafting.md`; no delivery, routing, agent, API, or memory changes.
+- **2026-10-06:** Implemented the agreed standalone `draft_email` tool with separate source/writing inputs, unchanged recipient, strict subject/body generation, fixed user actions, lazy Groq configuration, and sanitized failures. All 456 tests (44 new), `pip check`, and whitespace checks pass. Nine synthetic live calls across three prompt iterations exposed invented reopening dates; explicit grounding examples corrected the final inspected set. Final samples preserved inspected facts and excluded an embedded command, without establishing general fidelity/injection resistance. Added `docs/email-drafting.md`; no delivery, routing, agent, API, or memory changes.
 
 - **2026-10-06:** Recorded a provider-independent notification-delivery proposal: configured-user-only envelope, separate draft/action sections, accepted/failed/unknown outcomes, no automatic retries, and proportional transport-double tests. Requested the existing sender provider and confirmation of Asia/Kolkata as the future reminder default. No delivery code or messages sent; settings/implementation agreement remain pending. Email-drafting PR #11 remains open and separate.
 

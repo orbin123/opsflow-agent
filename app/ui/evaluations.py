@@ -101,7 +101,7 @@ def show_evaluations(base_url: str) -> None:
         cases = [item for item in report.cases if item.case.suite == suite]
         checks = [check for item in cases for check in item.checks.values()]
         categories.append({"Category": suite, "Planned": len(cases),
-                           "Observed": sum(item.execution == "completed" for item in cases),
+                           "Observed": sum(item.actual is not None for item in cases),
                            ("Failed collection" if runtime_report else "Failed execution"): sum(item.execution == "failed" for item in cases),
                            "Not run": sum(item.execution == "not_run" for item in cases),
                            "Scored checks": sum(check is not None for check in checks),
@@ -143,7 +143,7 @@ def show_evaluations(base_url: str) -> None:
         return
     cases = {item.case.case_id: item for item in report.cases}
     case_id = st.selectbox("Saved case", list(cases), key="evaluation_case",
-                           format_func=lambda key: key + " · " + cases[key].execution)
+                           format_func=lambda key: key + " · " + ("collection " if runtime_report else "") + cases[key].execution)
     if case_id not in cases:
         return
     case = cases[case_id]
@@ -151,7 +151,7 @@ def show_evaluations(base_url: str) -> None:
     st.text(case.case.input)
     st.caption("Literal reference expectation")
     st.json(case.case.model_dump(mode="json", exclude={"input"}))
-    st.text("Execution: " + case.execution)
+    st.text(("Collection: " if runtime_report else "Execution: ") + case.execution)
     if case.failure_code:
         st.text("Failure: " + case.failure_code)
     st.caption("Actual saved observation")
@@ -166,7 +166,10 @@ def show_evaluations(base_url: str) -> None:
                 if turn.http_status is not None:
                     st.text(f"HTTP transport: {turn.http_status} · Terminal outcome HTTP status: {turn.outcome_http_status or 'Not separate'}")
                 if turn.execution:
-                    st.text("Route: " + str(turn.execution.get("route")))
+                    if turn.execution.get("route") is None:
+                        st.text("Entry point: " + str(turn.execution.get("entry_point")) + " · Runtime route: Not observed")
+                    else:
+                        st.text("Route: " + str(turn.execution.get("route")))
                     if turn.execution.get("reply"):
                         st.text(turn.execution["reply"])
                     with st.expander(f"Turn {number} saved execution and tool results"):

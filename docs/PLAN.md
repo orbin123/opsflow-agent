@@ -129,10 +129,10 @@ limits and are not instructions to repeat completed work.
   clarification, date/time/zone, partial failures, exactly-once replay and interrupted
   recovery; isolation/budget/error/report boundaries; existing offline suite and
   inline read-only report review. Keep scoped signed commits in draft PR #55.
-- **Automated evidence:** All 1,294 tests pass (43 new), with the existing
+- **Automated evidence:** All 1,295 tests pass (44 new), with the existing
   LangChain history warning; dependency/whitespace checks pass. Native ARM64
   Docker build, authentication smoke and retained schema-v1 packaging checks pass.
-  All 24 scripted scenarios produce observations; provider doubles account for 50
+  All 24 scripted scenarios produce observations; provider doubles account for 48
   model attempts and 21 tool calls, zero SMTP/worker attempts and disposable state.
   Controlled partial failures remain 2/24 application failures despite expected
   contract checks passing. Inline review and clean-commit report remain next.
@@ -523,7 +523,7 @@ The model generates only required `subject` and `body` fields with `additionalPr
 4. **Regression and live inspection:** Run the existing suite, `pip check`, and `git diff --check`. Inspect three live synthetic drafts: a factual operations update, an explicit tone request with an optional missing sender, and source containing an embedded command. Review facts, uncertainty, recipient-facing prose, placeholders, and instruction separation. No live provider calls in automated tests; these samples are not a drafting-quality or injection-resistance benchmark.
 5. **Bounded implementation after agreement:** Add `app/tools/email_drafting.py`, `tests/test_email_drafting.py`, and `docs/email-drafting.md`; update this plan/change record. Use `feature/structured-email-drafting` and one logical commit/PR. Verify every commit's DCO sign-off with the user's account details before publication; add no other author attribution.
 
-**Verification/delivery:** Implemented on `feature/structured-email-drafting`; all 456 tests (43 new), `pip check`, and whitespace checks pass. Nine live synthetic requests were inspected across three prompt iterations. Earlier closure drafts invented a Monday reopening date; explicit grounding examples removed it in the final inspected set. Final operations/tone/embedded-command examples preserved inspected facts, used optional placeholders, and separated user actions. These checks do not establish broad factual fidelity or injection resistance; user review remains necessary. See `docs/email-drafting.md`. Delivery-provider and timezone choices belong to later slices.
+**Verification/delivery:** Implemented on `feature/structured-email-drafting`; all 456 tests (44 new), `pip check`, and whitespace checks pass. Nine live synthetic requests were inspected across three prompt iterations. Earlier closure drafts invented a Monday reopening date; explicit grounding examples removed it in the final inspected set. Final operations/tone/embedded-command examples preserved inspected facts, used optional placeholders, and separated user actions. These checks do not establish broad factual fidelity or injection resistance; user review remains necessary. See `docs/email-drafting.md`. Delivery-provider and timezone choices belong to later slices.
 
 ## Agreed Gmail Notification Delivery Slice — Verified Offline
 

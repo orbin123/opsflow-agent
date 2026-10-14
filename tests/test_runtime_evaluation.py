@@ -190,6 +190,11 @@ def test_budget_stops_run_and_retains_all_planned_cases(tmp_path, budget):
         assert saved.cases[0].actual.model_requests == 1 and saved.cases[0].actual.budget_exhausted
         assert saved.cases[0].checks["within_budget"] is False
     assert saved.metrics["runtime.contract_success"].denominator == 2
+    from app.evaluation import catalogue
+    from unittest.mock import patch
+    with patch.dict("os.environ", {"OPSFLOW_EVALUATIONS_DIR": str(tmp_path)}):
+        summary = next(run for run in catalogue.list_saved_runs() if run.run_id == saved.run_id)
+    assert summary.observed == 1 and summary.planned == 2
 
 
 @pytest.mark.parametrize("failure", ["timeout", "worker_error", "interrupted"])
@@ -279,6 +284,7 @@ def test_runtime_page_and_api_read_only_retain_old_baseline(workspace, tmp_path,
     assert not ui.exception and any("Scripted provider" in warning.value for warning in ui.warning)
     ui.selectbox(key="evaluation_case").select("reminder-partial-failure-r1").run()
     assert not ui.exception and "Turn 1: partial_failure" in [element.value for element in ui.text]
+    assert "Collection: completed" in [element.value for element in ui.text]
     assert any("SMTP attempts: 0" in element.value for element in ui.text)
     ui.button(key="refresh_evaluations").click().run(); ui.run()
     ui.button(key="return_to_chat").click().run()
@@ -318,3 +324,12 @@ def test_failed_atomic_checkpoint_is_reported_without_reexecuting(tmp_path, monk
     report = load_report(path)
     assert report.state == "failed" and report.failure_code == "evaluation_failed"
     assert report.cases[0].actual.model_requests == 1 and report.cases[1].execution == "not_run"
+
+
+def test_standalone_workflow_does_not_invent_runtime_routing(report):
+    result = item(report, "extract-positive-wrapper")
+    assert result.actual.turns[0].execution["route"] is None
+    assert result.actual.turns[0].execution["entry_point"] == "sentiment_workflow"
+    assert result.actual.turns[0].execution["source_text"] == "The rollout was brilliant!"
+    assert result.checks["turn_1.route"] is None
+    assert item(report, "agent-summary-source").actual.turns[0].execution["route"] == "agent"

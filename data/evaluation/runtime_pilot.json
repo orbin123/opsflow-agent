@@ -12,9 +12,7 @@
       "turns": [
         {
           "input": "Despite this awful wrapper, analyze only: The rollout was brilliant!",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "completed"
           ],
@@ -49,9 +47,7 @@
       "turns": [
         {
           "input": "Analyze sentiment for:\nI’m not unhappy.\nBuild v2.1 shipped.",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "completed"
           ],
@@ -86,9 +82,7 @@
       "turns": [
         {
           "input": "Please analyze sentiment.",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "needs_clarification"
           ],
@@ -114,9 +108,7 @@
       "turns": [
         {
           "input": "Extract keywords from: Orion repairs 12 sensors; delivery is uncertain.",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "completed"
           ],
@@ -151,9 +143,7 @@
       "turns": [
         {
           "input": "Find keywords in the text above.",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "agent_required"
           ],
@@ -179,9 +169,7 @@
       "turns": [
         {
           "input": "Answer only this policy question: Can contractors work remotely under the remote work policy?",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "needs_clarification"
           ],
@@ -216,9 +204,7 @@
       "turns": [
         {
           "input": "Look up this question: Does the demo company reimburse rocket launches?",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "needs_clarification"
           ],
@@ -253,9 +239,7 @@
       "turns": [
         {
           "input": "Find the leave policy and draft an email.",
-          "allowed_routes": [
-            "llm_assisted"
-          ],
+          "allowed_routes": [],
           "expected_statuses": [
             "agent_required"
           ],
