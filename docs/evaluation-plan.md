@@ -47,8 +47,9 @@ scope or order changes before implementing them.
   full suite 1,329 passed, final focused checks 67 passed (35 new). Eight saved
   targets retain 7 available answers, 0/38 rubric scores and pending human review.
   Native ARM64 Docker/authentication and inline desktop/mobile/download/navigation
-  checks pass. Saved snapshots `e73cd9c2e7304894a7265d42000afdc2` and
-  `3d36fb65fd954f018079d9582f7ef97b` compare with 0 scored pairs/38 missing pairs.
+  checks pass. Implementation commit `b5be7bf`; fresh snapshots
+  `fdd5662ab97e42a0b15891713ec98359` and `fb449cfda3a347c4b8ca10c39977e9dc`
+  were prepared after the clean commit and compare with 0 scored pairs/38 missing pairs.
   They are offline saved-review operations, not new runtime executions.
 - **Saved slice 1 evidence:**
   `var/evaluations/89c111c7f91d4382b6ca872b62dbada4/report.json` in that checkout.

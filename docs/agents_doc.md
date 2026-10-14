@@ -16,6 +16,9 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   scores supplied: 7/8 outputs, 0/38 rubric scores; references are AI-authored after
   scripted collection and remain development material. Figma read hit quota;
   existing approved native design used. Next: bounded offline slice 5 discussion.
+  Implementation `b5be7bf`; fresh saved review snapshots
+  `fdd5662ab97e42a0b15891713ec98359`/`fb449cfda3a347c4b8ca10c39977e9dc`
+  retain missing human scores and current scorer fingerprints after the clean commit.
   Keep PR #55 draft; no live model/judge, SMTP/worker, merge or deployment.
 
 - **2026-10-14:** Implemented the user-approved offline part of evaluation slice 3:
