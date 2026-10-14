@@ -106,7 +106,8 @@ limits and are not instructions to repeat completed work.
   8517. Figma deeper read hit quota; documented native adaptation used.
 - **Next bounded discussion:** Slice 3 workflow/agent evaluation; agree cases,
   references, isolated storage/SMTP and opt-in live call budget before coding.
-  PR remains draft; hosted CI is pending publication, no merge/deployment.
+  PR remains draft; commit `ca25384` is pushed, DCO passes and hosted CI
+  run `38523501919` is running. No merge/deployment.
 
 
 ### Remaining work

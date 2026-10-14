@@ -37,7 +37,7 @@ scope or order changes before implementing them.
   mobile, download, Return/draft and refresh checks pass on port 8517. The app
   stays open there; no merge/deployment or live model/SMTP execution occurred.
   Slice 1 remains commit `140d8f6`, with passing CI run `38518747613`/DCO and
-  its original 1,219-test verification. Slice 2 hosted CI is pending publication.
+  its original 1,219-test verification. Slice 2 hosted CI is running.
 - **Saved slice 1 evidence:**
   `var/evaluations/89c111c7f91d4382b6ca872b62dbada4/report.json` in that checkout.
   It records commit `140d8f6` with a clean working tree and all 224 cases executed.
@@ -121,7 +121,8 @@ All 1,251 offline tests pass, including 32 new storage/API/transport/navigation
 checks, plus dependency/whitespace checks. Fresh-process reading blocks runner,
 agent/runtime and side-effect imports. Native ARM64 Docker build, packaged report
 reading without generated storage/CSV/pilot, HTTP/WebSocket authentication and
-missing-password startup smoke checks pass. Hosted AMD64 CI is pending publication.
+missing-password startup smoke checks pass. Hosted AMD64 CI run `38523501919` is running; DCO passes for
+application commit `ca25384`.
 
 Inline browser on `http://127.0.0.1:8517` verifies desktop and 390×844 mobile layout,
 bundled warning, literal failed FAQ evidence and Not scored criteria, JSON download

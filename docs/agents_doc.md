@@ -12,7 +12,8 @@ Keep entries brief: date, completed change, verification, and any changed decisi
   Backend task/tool counts stay zero, review chat has no turns and reminder DB
   is absent. App stays open on 8517. Deeper Figma inspection hit quota; documented
   approved Settings adaptation used. Existing reload/session-draft limits remain.
-  Hosted CI is pending publication; no live model/worker/SMTP, merge or deployment.
+  Commit `ca25384` is pushed to draft PR #55; DCO passes and hosted CI
+  `38523501919` is running. No live model/worker/SMTP, merge or deployment.
   Next: agree slice 3 case/reference/isolation/call-budget contract before coding.
 
 
