@@ -2,6 +2,21 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** Implemented the user-approved offline part of evaluation slice 3:
+  24 synthetic runtime scenarios, pure payload/trajectory/context/state evaluators,
+  schema-v2 reports, dedicated subprocesses/disposable SQLite and fixed reminder
+  clock, blocked SMTP/worker startup, explicit global model budget and opt-in live
+  mode. Existing schema-v1 reports remain readable; Settings displays saved runtime
+  traces and their scripted qualification. All 1,294 offline tests pass (43 new),
+  dependencies/whitespace, native ARM64 Docker/authentication/old-baseline packaging
+  checks pass. Initial full pilot observes 24/24 cases, 50 scripted model attempts,
+  21 tool calls and zero SMTP/worker attempts; controlled failures remain visible.
+  Inline review/clean-commit report are next. All live calls were explicitly deferred;
+  human reference review, live quality/stability and semantic scoring are unverified.
+  Keep PR #55 draft and finish/report the deferred slice 3 work or agree an order
+  change before slice 4. No merge/deployment or actual provider/email execution.
+
+
 - **2026-10-14:** Implemented approved evaluation slice 2 in the shared draft PR #55:
   GET-only list/detail, native Settings catalogue/evidence/downloads, shared report
   directory and exact historical synthetic baseline packaging. All 1,251 offline

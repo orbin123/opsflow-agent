@@ -156,3 +156,84 @@ review and historical-version warning. It is not a live hosted run or evidence
 for the currently deployed version. Generated Docker/Render records use disposable
 `/tmp/opsflow-data/evaluations`; no reports are generated at startup. Packaging
 this baseline does not authorize deployment or live evaluation.
+
+
+## Runtime harness (slice 3, approved offline scope)
+
+```bash
+python -m app.evaluation --suite runtime
+python -m app.evaluation --suite runtime --case agent-policy-to-draft --case reminder-saved-replay
+python -m app.evaluation --suite runtime --case extract-missing-source --repeat 3
+```
+
+Runtime defaults to **scripted provider doubles**, with the unchanged application
+workflows, agent loop, classifier, tools, HTTP/SSE and storage paths. The 24 new
+scenarios comprise eight standalone extraction, eight agent/compound/history and
+eight reminder/recovery cases. References in `runtime_pilot.json` were authored
+before execution and remain **pending human review**. `runtime_scripts.json`
+contains separate synthetic provider responses; passing these cases verifies
+contracts, not a model's decisions or general robustness. They are development
+cases, not the proposed future independent semantic holdout.
+
+Each selected sample runs in a fresh subprocess and disposable directory. Before
+application imports, the worker fixes chat/reminder paths, blocks worker imports
+and SMTP constructors, and blocks socket connections in scripted mode. SQLite
+connections are restricted to those two disposable files; isolation is checked
+again before actual reminder insertion. Reminder context/resolution/creation use
+a frozen instant and real scheduling logic. Real provider factories are replaced
+only in scripted mode. Parent/operational databases and process metrics are not
+used. No delivery worker, real email recipient or SMTP submission is permitted.
+Temporary files are removed after observations; reports retain literal records,
+creation keys, turn outcomes and read/replay evidence, not disposable database paths.
+
+The run records **every planned sample**, including not-run, budget-limited,
+interrupted and failed collection. Defaults are 24 samples and at most 60 model
+attempts. `--max-cases` (1–72), `--max-model-requests` (1–60), `--case` and
+`--repeat` (1–3) are explicit runtime options. Repeated samples keep distinct IDs.
+Wrappers count orchestration, extraction/presentation and summary/draft model
+invocations, including the existing bounded rate-limit retry. A denied request
+never calls the provider. Timeout or unmeasured worker failure stops the run
+rather than assuming a fresh call budget. Successful observations are checkpointed
+atomically; page entry/refresh never starts, resumes or rescores a run.
+
+Schema-v2 reports preserve raw observable executions, tool arguments/results,
+workflow/SSE events, replies, model-attempt timings, human input transported to
+the agent, HTTP transport and terminal outcome status, isolated reminder records
+and recovery evidence. They record data/script/code/model hashes, configured
+model IDs/settings for opt-in live mode, dependency/scorer versions and budgets.
+No private reasoning, system prompt, credentials or raw provider response is saved.
+Readers remain compatible with schema-v1; Docker still bundles only the selected
+historical schema-v1 baseline, never runtime cases or execution at startup.
+
+Pure `runtime_scoring` checks exact literal argument fields, maximum one-to-one
+call matching/multiplicity, independent versus required order, exact dependency
+values from prior tool results, policy IDs, successful result presence, transported
+user history, expected outcomes, forbidden calls and isolated state. Reminder task
+and zone stay literal; due/creation timestamps compare as aware instants (precision
+or equivalent UTC notation alone must not cause a miss). Replay closes/reopens
+storage, submits the same turn ID and compares exact saved outcomes/state while
+asserting zero new model/tool calls. Interrupted recovery only reads retained state.
+
+Metrics distinguish observation coverage, application availability and observable
+contract success, all with explicit planned-sample denominators. Controlled partial
+failures can pass their expected failure-handling contract while remaining failures
+in application availability. Tool precision uses recorded calls once; required-tool
+coverage includes all planned required calls. Empty tool denominators are unscored;
+no-call constraints are separate. Supporting evidence reports matched/missing/extra
+calls. Per-criterion aggregates count only recorded applicable checks. Recorded
+counts and nearest-rank scenario p50/p95 are descriptive; unknown worker attempts
+are not included in those observed counts. No live SLA, NLP accuracy, semantic
+faithfulness/relevance or complete user-goal score is claimed.
+
+Settings shows schema-v2 mode qualifications, harness versus application outcomes,
+exact per-turn source/reply/execution, saved stage events, state/recovery evidence
+and criterion details. Generated-answer semantics remains Not scored. All controls
+remain GET/read-only; no Run evaluation control was introduced.
+
+**Live verification was explicitly deferred by the user on 2026-10-14.** The runner
+supports explicit `--suite runtime --mode live` with existing configured Groq
+factories and the same isolation/call cap. It is not invoked automatically. Live
+provider/configuration compatibility, extraction/trajectory quality and three-run
+model stability are unverified; human reference review is also outstanding. Do not
+call the original full slice 3 live-validation plan complete. Discuss that deferred
+work (or an explicit order change) before proceeding to slice 4's semantic judging.

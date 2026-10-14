@@ -3,12 +3,23 @@
 import os
 from pathlib import Path
 import tempfile
+from typing import Annotated
+
+from pydantic import Field, TypeAdapter
 
 from app.evaluation.contracts import Report
+from app.evaluation.runtime_contracts import RuntimeReport
+
+ReportType = Annotated[Report | RuntimeReport, Field(discriminator="schema_version")]
+_REPORT = TypeAdapter(ReportType)
 
 
-def load_report(path: Path) -> Report:
-    return Report.model_validate_json(path.read_text(encoding="utf-8"))
+def load_report(path: Path) -> Report | RuntimeReport:
+    return parse_report(path.read_text(encoding="utf-8"))
+
+
+def parse_report(data: str) -> Report | RuntimeReport:
+    return _REPORT.validate_json(data)
 
 
 class ReportWriter:
@@ -22,9 +33,9 @@ class ReportWriter:
         self.run_id = run_id
         self.finished = False
 
-    def save(self, report: Report) -> None:
+    def save(self, report: Report | RuntimeReport) -> None:
         # Revalidate after runner mutations and before publishing any snapshot.
-        report = Report.model_validate_json(report.model_dump_json())
+        report = parse_report(report.model_dump_json())
         if self.finished or report.run_id != self.run_id:
             raise ValueError("Cannot replace a finished or different run")
         temporary = None

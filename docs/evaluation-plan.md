@@ -1,7 +1,8 @@
 # OpsFlow evaluation implementation plan
 
 Researched 2026-10-14. **Status: slices 1–2 implemented and verified locally;
-slices 3–5 remain proposed.** This plan covers a Settings → Evaluations
+slice 3's approved offline scope is implemented, with live verification deferred;
+slices 4–5 remain proposed.** This plan covers a Settings → Evaluations
 area, measurable quality criteria, implementation order, verification and
 assessment talking points. It does not authorize every slice at once.
 
@@ -37,23 +38,23 @@ scope or order changes before implementing them.
   mobile, download, Return/draft and refresh checks pass on port 8517. The app
   stays open there; no merge/deployment or live model/SMTP execution occurred.
   Slice 1 remains commit `140d8f6`, with passing CI run `38518747613`/DCO and
-  its original 1,219-test verification. Slice 2 hosted CI is running.
+  its original 1,219-test verification. Slice 2 GitHub CI run `38523659729` and DCO pass.
 - **Saved slice 1 evidence:**
   `var/evaluations/89c111c7f91d4382b6ca872b62dbada4/report.json` in that checkout.
   It records commit `140d8f6` with a clean working tree and all 224 cases executed.
   Reports are ignored local files; if missing, explicitly regenerate with
   `python -m app.evaluation` in the evaluation checkout. Reading never reruns work.
-- **Current boundary:** slices 1–2 are complete. Slice 3 is the next bounded
-  contract discussion: real workflow/agent evaluation, reviewed case expansion
-  and isolated opt-in live execution. Agree its case scope, isolation, call budget
-  and proportional checks before coding. Keep PR #55 draft; no merge/deployment
-  or semantic judge is authorized by this continuation.
+- **Current boundary:** slice 3's harness/offline implementation is approved and
+  implemented. The user explicitly deferred live calls on 2026-10-14. Do not mark
+  live model quality/stability or human reference review complete. Discuss completing
+  that deferred slice 3 work, or an explicit order change, before slice 4. Keep PR #55
+  draft; no merge/deployment or semantic judge is authorized by this continuation.
 
 | Slice | Status | Completion evidence / next action |
 | --- | --- | --- |
 | 1 — Local baseline | ✅ Implemented and verified | Commit `140d8f6`; CLI, 24-case development pilot, 200-row holdout, pure scorers and atomic saved reports; verification above and detailed outcome below. |
 | 2 — Settings catalogue | ✅ Implemented and verified locally | GET list/detail, native Settings, shared report root and exact historical synthetic packaging. 1,251 tests; Docker/container checks; inline desktop/mobile/download/draft/refresh; details below. Hosted deployment remains unverified. |
-| 3 — Real workflows and agent | ⏳ Next: agree contract and verification | Extraction, tool/trajectory, compound/history and reminder/recovery evaluation, with isolated opt-in live execution and reviewed case expansion. Agree case scope, references, isolation and call budget before coding. |
+| 3 — Real workflows and agent | ⏳ Offline scope implemented; verification in progress | 24 development scenarios, pure evaluators, isolated bounded runner and saved traces. User deferred live calls; live quality/stability and human reference review remain explicit gaps. |
 | 4 — Generation quality | Planned | Reviewed facts/rubrics, human annotations, optional validated judge, generation scores and compatible version comparisons. |
 | 5 — Assessment and CI | Planned | Final benchmark/CI regression gates, exports, browser walkthrough and assessment talking points. Slice 1's existing CI checks do not complete this assessment slice. |
 
@@ -74,10 +75,11 @@ verification is below; operation/API/storage details are in [evaluation.md](eval
 Suggested opening message for the next chat:
 
 > Read AGENTS.md and docs/evaluation-plan.md, use the existing evaluation checkout
-> and draft PR #55, and continue from slice 3. Slices 1–2 are complete. Discuss the
-> bounded workflow/agent evaluation contract, references, storage/SMTP isolation,
-> opt-in live call budget and verification before coding. Keep scoped signed commits
-> in the shared draft PR and update this handoff after the agreed work.
+> and draft PR #55. Slices 1–2 are complete; slice 3's harness/offline scope is
+> implemented, with live calls deferred by user choice. Discuss human reference
+> review and the deferred isolated live subset (at most 60 requests; representative
+> scenarios repeated three times), or explicitly agree an order change before
+> starting slice 4. Keep scoped signed commits in the shared draft PR.
 
 Assumptions: English, fictional policies and synthetic evaluation inputs remain
 the project boundary. “Condensed relevance” is interpreted as context relevance
@@ -121,8 +123,8 @@ All 1,251 offline tests pass, including 32 new storage/API/transport/navigation
 checks, plus dependency/whitespace checks. Fresh-process reading blocks runner,
 agent/runtime and side-effect imports. Native ARM64 Docker build, packaged report
 reading without generated storage/CSV/pilot, HTTP/WebSocket authentication and
-missing-password startup smoke checks pass. Hosted AMD64 CI run `38523501919` is running; DCO passes for
-application commit `ca25384`.
+missing-password startup smoke checks pass. Hosted AMD64 CI run `38523659729` and DCO pass on documentation head
+`a9c6f3c`, retaining application commit `ca25384`.
 
 Inline browser on `http://127.0.0.1:8517` verifies desktop and 390×844 mobile layout,
 bundled warning, literal failed FAQ evidence and Not scored criteria, JSON download
@@ -429,4 +431,5 @@ and measured limits. Prepare answers to:
 
 The implementation review must report actual automated/live/browser checks, failed
 cases, unresolved blockers and limits. Slices 1–2 supply the local baseline and read-only Settings display;
-the live workflow/agent and generation quality benchmark remain unimplemented.
+the live workflow/agent verification and generation quality benchmark remain
+unverified/unimplemented respectively.

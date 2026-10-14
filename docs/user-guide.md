@@ -198,8 +198,9 @@ retries still report unfinished work accurately; completion is not guaranteed.
 and case to inspect expected/actual evidence, metric definitions, counts and
 missing scores. Refresh and JSON downloads never run or resume evaluation. The
 bundled baseline is a historical local run with its evaluated date/commit, not
-current hosted verification. Pilot references await human review; agent, generated
-answer and reminder quality remain unevaluated. Return to chat preserves selection
+current hosted verification. Pilot references await human review. Runtime reports labelled scripted contain
+observable workflow/agent/reminder contract checks using provider doubles, not
+live model quality. Generated-answer semantics remains unscored. Return to chat preserves selection
 and the browser-session multiline draft. Running/unsaved work blocks page entry.
 
 Chat navigation pauses during running work. Settings navigation and submission

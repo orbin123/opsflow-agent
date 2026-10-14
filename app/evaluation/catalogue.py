@@ -7,8 +7,8 @@ from typing import Annotated, Literal
 
 from pydantic import StringConstraints
 
-from app.evaluation.contracts import Record, Report
-from app.evaluation.reports import load_report
+from app.evaluation.contracts import Record
+from app.evaluation.reports import ReportType, load_report
 
 ROOT = Path(__file__).resolve().parents[2]
 BUNDLED_ID = "89c111c7f91d4382b6ca872b62dbada4"
@@ -44,7 +44,7 @@ class SavedRun(Record):
 
 class SavedReport(Record):
     source: Source
-    report: Report
+    report: ReportType
 
 
 def read_saved_report(run_id: str, source: Source = "local") -> SavedReport:

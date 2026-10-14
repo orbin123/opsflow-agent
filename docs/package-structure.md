@@ -31,6 +31,10 @@ saved reminders or review the UI.
 Run the local baseline explicitly with `python -m app.evaluation`; see
 `docs/evaluation.md`. It invokes only the saved classifier/local FAQ retriever
 and writes synthetic reports; it does not run chat, an LLM, reminders or delivery.
+`python -m app.evaluation --suite runtime` explicitly runs the isolated scripted
+runtime contract harness. `--mode live` is a separate opt-in invoking configured
+models; no UI read runs it. All scheduling uses disposable storage, never delivery.
+The user deferred live execution; see docs/evaluation.md for budgets and limits.
 
 The repository-level `ui/` directory contains CSS/fonts; `app/ui/` contains Python
 modules. Model artifacts, SQLite defaults and agent environment loading retain

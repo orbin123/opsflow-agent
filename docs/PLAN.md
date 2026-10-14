@@ -110,6 +110,34 @@ limits and are not instructions to repeat completed work.
   run `38523501919` is running. No merge/deployment.
 
 
+### ⏳ Evaluation slice 3 — approved offline scope, 2026-10-14
+
+- **Contract:** 24 synthetic development scenarios covering fixed-workflow literal
+  extraction, agent arguments/dependencies/compound/history, reminders and saved
+  replay/recovery. Pure scorers and schema-v2 reports retain observable executions,
+  results, stage events, failures, call counts and isolated storage evidence. Schema-v1
+  baseline readers/reports remain compatible; Settings continues to read only.
+- **Isolation:** Dedicated subprocesses, disposable chat/reminder databases, frozen
+  reminder time, blocked SMTP/worker startup, synthetic recipients and an explicit
+  60-request run cap. Existing application routing/tools/providers stay unchanged.
+- **Verification decision:** The user selected harness/offline checks and deferred
+  all live calls. Provider doubles exercise real workflows/agent/storage/HTTP/SSE;
+  defective observations test scorer failures. Opt-in live execution is implemented
+  but not invoked or claimed as verified model quality. References remain pending
+  human review; semantic generated-answer scoring belongs to slice 4.
+- **Checks:** Extraction/order/multiplicity/forbidden actions, context dependencies,
+  clarification, date/time/zone, partial failures, exactly-once replay and interrupted
+  recovery; isolation/budget/error/report boundaries; existing offline suite and
+  inline read-only report review. Keep scoped signed commits in draft PR #55.
+- **Automated evidence:** All 1,294 tests pass (43 new), with the existing
+  LangChain history warning; dependency/whitespace checks pass. Native ARM64
+  Docker build, authentication smoke and retained schema-v1 packaging checks pass.
+  All 24 scripted scenarios produce observations; provider doubles account for 50
+  model attempts and 21 tool calls, zero SMTP/worker attempts and disposable state.
+  Controlled partial failures remain 2/24 application failures despite expected
+  contract checks passing. Inline review and clean-commit report remain next.
+
+
 ### Remaining work
 
 The remaining checklist covers observability/remaining endpoints, packaging,

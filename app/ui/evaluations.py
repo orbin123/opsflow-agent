@@ -74,17 +74,21 @@ def show_evaluations(base_url: str) -> None:
             st.error(str(exc))
             return
     report = saved.report
+    runtime_report = report.schema_version == 2
     if saved.source == "bundled":
         st.warning("Bundled synthetic baseline — historical local execution, not a live hosted run. "
                    "The evaluated app version may differ from this app; do not treat it as current-version verification.")
     st.text(f"Evaluated commit: {report.provenance.get('source_commit', 'Unavailable')}\n"
             f"Started (recorded): {report.started_at}\nFinished (recorded): {report.finished_at or 'Not recorded'}\n"
-            f"Execution: {report.state}\nQuality verdict: {report.quality_verdict}\nScorer: {report.scorer_version}")
+            f"{'Harness execution' if runtime_report else 'Execution'}: {report.state}\nQuality verdict: {report.quality_verdict}\nScorer: {report.scorer_version}")
     if report.state == "running":
         st.warning("Incomplete saved snapshot. It may be active or interrupted; this page does not resume or monitor execution.")
     if report.failure_code:
         st.text("Execution failure: " + report.failure_code)
     st.caption("Quality verdict describes recorded criteria; no overall quality acceptance threshold is agreed.")
+    if runtime_report:
+        st.warning("Runtime contract evidence: " + str(report.provenance.get("execution_mode", "unavailable"))
+                   + ". Scripted provider runs do not measure live model quality. Generated-answer semantics are not scored.")
     st.text("Reference status: " + str(report.provenance.get("reference_status", "Unavailable")))
     for limitation in report.limitations:
         st.text("• " + limitation)
@@ -98,7 +102,7 @@ def show_evaluations(base_url: str) -> None:
         checks = [check for item in cases for check in item.checks.values()]
         categories.append({"Category": suite, "Planned": len(cases),
                            "Observed": sum(item.execution == "completed" for item in cases),
-                           "Failed execution": sum(item.execution == "failed" for item in cases),
+                           ("Failed collection" if runtime_report else "Failed execution"): sum(item.execution == "failed" for item in cases),
                            "Not run": sum(item.execution == "not_run" for item in cases),
                            "Scored checks": sum(check is not None for check in checks),
                            "Missing scores": sum(check is None for check in checks),
@@ -106,9 +110,14 @@ def show_evaluations(base_url: str) -> None:
     if categories:
         st.dataframe(categories, hide_index=True, alt="Case execution and recorded criterion counts by category")
     st.caption("Check counts cover recorded criteria; unexecuted cases have no check records. Classifier eligibility is not runtime routing.")
-    st.text("Extraction and tool use: Not evaluated\nGenerated answers: Not evaluated\n"
-            "End-to-end agent goals: Not evaluated\nSide effects and recovery: Not evaluated\n"
-            "Live reliability and efficiency: Not evaluated")
+    if runtime_report:
+        st.text("Extraction, trajectory and reminder/recovery: Observable contract checks below\n"
+                "Generated-answer semantics and complete user goals: Not scored\n"
+                "Live model quality/stability: Not evaluated in scripted mode")
+    else:
+        st.text("Extraction and tool use: Not evaluated\nGenerated answers: Not evaluated\n"
+                "End-to-end agent goals: Not evaluated\nSide effects and recovery: Not evaluated\n"
+                "Live reliability and efficiency: Not evaluated")
     st.subheader("Saved metrics")
     if not report.metrics:
         st.info("No saved metrics. Not scored.")
@@ -125,8 +134,9 @@ def show_evaluations(base_url: str) -> None:
                 st.text(name + "\n" + metric.note)
     with st.expander("Versions and provenance"):
         st.json(report.provenance)
-    with st.expander("Classifier details"):
-        st.json(report.classifier_details)
+    if not runtime_report:
+        with st.expander("Classifier details"):
+            st.json(report.classifier_details)
     st.subheader("Case evidence")
     if not report.cases:
         st.info("No planned cases in this saved report.")
@@ -147,6 +157,30 @@ def show_evaluations(base_url: str) -> None:
     st.caption("Actual saved observation")
     if case.actual is None:
         st.info("No observation recorded; not scored.")
+    elif runtime_report:
+        st.text(f"Model attempts: {case.actual.model_requests} · SMTP attempts: {case.actual.smtp_attempts}")
+        for number, turn in enumerate(case.actual.turns, 1):
+            with st.container(border=True):
+                st.text(f"Turn {number}: {turn.status}")
+                st.text(turn.input)
+                if turn.http_status is not None:
+                    st.text(f"HTTP transport: {turn.http_status} · Terminal outcome HTTP status: {turn.outcome_http_status or 'Not separate'}")
+                if turn.execution:
+                    st.text("Route: " + str(turn.execution.get("route")))
+                    if turn.execution.get("reply"):
+                        st.text(turn.execution["reply"])
+                    with st.expander(f"Turn {number} saved execution and tool results"):
+                        st.json(turn.execution)
+                else:
+                    st.info("No execution result recorded.")
+                with st.expander(f"Turn {number} observable stage events"):
+                    st.json(turn.events)
+        with st.expander("Isolated reminder and recovery evidence"):
+            st.json({"reminders": case.actual.reminder_records, "recovery": case.actual.recovery_evidence,
+                     "storage_isolated": case.actual.storage_isolated, "worker_import_attempts": case.actual.worker_import_attempts,
+                     "budget_exhausted": case.actual.budget_exhausted, "model_attempts": case.actual.request_records})
+        with st.expander("Scorer supporting evidence"):
+            st.json(case.evidence)
     else:
         st.json(case.actual.model_dump(mode="json"))
     st.caption("Criterion evidence")
@@ -156,4 +190,5 @@ def show_evaluations(base_url: str) -> None:
                      alt="Selected case criterion pass, fail and missing-score evidence")
     else:
         st.info("No criterion scores recorded.")
-    st.caption("This baseline records classifier/retrieval observations. Runtime routes, tool calls and generated answers were not evaluated.")
+    st.caption("Observable contracts are scored; prose faithfulness/relevance and live quality need separate review."
+               if runtime_report else "This baseline records classifier/retrieval observations. Runtime routes, tool calls and generated answers were not evaluated.")

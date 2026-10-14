@@ -125,8 +125,13 @@ catalogue/detail APIs and native Settings → Evaluations with exact case eviden
 missing scores and synthetic JSON downloads. Reads never execute/rescore/resume.
 `OPSFLOW_EVALUATIONS_DIR` shares CLI/API storage. Docker packages one historical
 synthetic baseline with evaluated date/commit and version warning; no evaluation
-runs at startup. Local catalogue/UI/container verification passes; live agent/
-workflow evaluation and semantic judging remain later slices. See docs/evaluation.md.
+runs at startup. Local catalogue/UI/container verification passes. Slice 3's approved offline
+scope adds 24 scripted runtime scenarios, pure observable-trajectory/state scorers,
+schema-v2 reports and a subprocess/temporary-storage harness with blocked SMTP/
+worker startup and an explicit model-attempt cap. Existing report readers support
+both schemas. The user deferred all live calls on 2026-10-14; live workflow/agent
+quality, repeated live stability and human reference review remain outstanding.
+Semantic judging belongs to slice 4. See docs/evaluation.md.
 
 ## Read Before Working
 
