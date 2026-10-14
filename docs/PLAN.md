@@ -135,7 +135,18 @@ limits and are not instructions to repeat completed work.
   All 24 scripted scenarios produce observations; provider doubles account for 48
   model attempts and 21 tool calls, zero SMTP/worker attempts and disposable state.
   Controlled partial failures remain 2/24 application failures despite expected
-  contract checks passing. Inline review and clean-commit report remain next.
+  contract checks passing. Inline desktop/mobile/download/draft/refresh review passes.
+  Standalone routing is unobserved/unscored; collection labels/counts retain partial
+  observations without claiming app success.
+- **Saved evidence:** clean `3738c50`, report `45dbe8795b9c4b32ae534d43133be12b`;
+  all 24 cases observed, 48 scripted attempts, 21 tools and zero provider/SMTP/
+  worker invocations. API/browser export match; review backend task/tool counts
+  stay zero and its chat/reminder work is empty. App stays open on 8517.
+- **Publication/next:** initial harness `5a90b82`, correction `3738c50` and signed
+  handoff in draft PR #55. DCO passes; GitHub CI run `38547084304` is running.
+  Live calls, human reference review and three-repeat live stability remain deferred.
+  Discuss completing those checks or an explicit order change before slice 4.
+  No merge/deployment.
 
 
 ### Remaining work
