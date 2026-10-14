@@ -63,6 +63,38 @@ limits and are not instructions to repeat completed work.
   PR #55. Earlier five-slice infrastructure is superseded by this approved submission
   scope; further evaluation work requires discussion. No merge/deployment authorization.
 
+### ✅ Generation sample ratings — verified locally 2026-10-14
+
+- **Request:** Delegate actual generation-quality testing to a subagent and fill
+  all six dimensions in the simplified table. Label the results as AI-reviewed
+  development samples, never human annotations or general model accuracy.
+- **Contract:** Eight planned fictional cases, actual application/Groq outputs,
+  at most 20 provider attempts, isolated temporary chat/reminder state and blocked
+  SMTP/worker startup. Preserve failures/missing outputs and applicable denominators.
+  Subagent rates source-supported faithfulness, required-fact coverage, relevance,
+  instructions, action/status claims and context on the existing 0–3 scale.
+- **Display:** One small reviewed-data file, validated read-only access and equal
+  per-answer dimension means/counts in the same table. Keep sources, method,
+  limitations and concise evidence in the existing collapsed explanation. Do not
+  restore run catalogues, raw traces, imports, comparisons or execution controls.
+- **Checks:** Hand-computable aggregation, missing/inapplicable/invalid ratings,
+  no scores for absent outputs, unavailable-data handling and zero execution on
+  API/page reads; full offline suite/dependencies, Docker and inline browser.
+  Scoped signed commit in draft PR #55; no Ragas or merge/deployment.
+- **Results:** Subagent reviewed five available outputs from eight planned cases
+  in 12 real Groq attempts; three rate-limited cases stay unscored. Faithfulness
+  3.00, coverage 2.80, relevance 3.00, instruction compliance 2.80, status accuracy
+  2.33 and context relevance 3.00, on 0–3 with explicit applicable counts. Contractor
+  FAQ has a completed/needs_clarification status defect and weak fictional
+  qualification; workflow behavior is unchanged in this scoring slice.
+- **Verification:** 1,227 offline tests pass; final 37 focused checks pass,
+  dependencies/whitespace and native ARM64 Docker/authentication checks pass.
+  Packaged data/API/UI means/counts agree. Inline desktop/mobile/explanation/
+  Return/draft/reload checks pass; review backend task counts and chat turns stay
+  zero, its reminder DB is absent. Collection used separate disposable storage,
+  blocked SMTP/worker and no retries; no reminder/email submission occurred.
+  Human calibration, independent references and stability remain absent.
+
 ### Remaining work
 
 The remaining checklist covers observability/remaining endpoints, packaging,

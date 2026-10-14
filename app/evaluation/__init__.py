@@ -1,1 +1,1 @@
-"""Read the trained classifier's recorded classification report."""
+"""Read-only classifier results and AI-reviewed generation sample."""

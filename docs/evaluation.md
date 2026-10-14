@@ -43,23 +43,59 @@ contract is intentionally removed with the user's approved scope reduction.
 
 ## Generation quality
 
-One six-row table defines faithfulness, coverage, relevance, instruction
-compliance, status accuracy and context relevance. All ratings say **Not scored**:
-no human-reviewed answer dataset or ratings have been supplied. These are review
-criteria, not measured model-quality results. No Ragas, automated judge, annotation
-import, saved review snapshots or comparison pipeline remains.
+The same six-row table now reads `data/evaluation/generation_quality.json`, a
+single explicitly collected AI-subagent review of actual Groq/application outputs.
+There is no Ragas, automated judge API, catalogue, annotation-import workflow or
+scoring on normal chat/page entry. `GET /api/v1/evaluations/generation` only validates
+and returns this saved sample; means/counts are arithmetic over its explicit ratings.
+Invalid or missing data remains unavailable, never a fabricated zero or pass.
 
-The collapsed explanation describes reviewing an actual answer against the request,
-source text, retrieved policy, relevant conversation history and tool/action outcomes.
-A human must check reference facts and record an evidence-based rating. The manual
-scale is 0 (fundamental failure), 1 (major errors/omissions), 2 (minor errors/omissions)
-and 3 (fully meets the criterion). Missing review is not a zero.
+The 2026-10-14 pilot planned eight fictional cases: factual and uncertainty/injection
+summaries, constrained email draft, policy explanation, missing contractor eligibility,
+history follow-up, policy-to-draft and reminder status. Five outputs were available
+in 12 real Groq attempts (nine successful and three rate-limited), using
+`openai/gpt-oss-20b`. Two examples used actual standalone generation tools; the
+others used the chat/session runtime. Storage was disposable, SMTP/worker execution
+blocked and collection retries disabled. No reminder was created and no email was submitted or delivered.
 
-Each dimension stands alone. If answer reviews are added in a separately agreed
-future slice, its mean would use supplied ratings with equal weight per answer and
-an explicit reviewed count. There is no combined generation score or custom
-weighting across dimensions. Critical fabricated action/delivery claims must stay
-explicit rather than being cancelled by other high scores.
+The reviewing subagent assigned the existing 0–3 scale against source facts,
+request constraints, actual policy/tool evidence and application outcome labels:
+0 fundamental failure, 1 major error, 2 minor error, 3 fully meets. These are AI
+judgments, not independently supplied human labels. References and ratings came
+from the same reviewing agent; human calibration and repeat stability are absent.
+The eight examples are development material, not a representative held-out benchmark.
+
+| Dimension | Mean / 3 | Rated / applicable planned answers |
+| --- | ---: | ---: |
+| Faithfulness | 3.00 | 5 / 8 |
+| Coverage | 2.80 | 5 / 8 |
+| Relevance | 3.00 | 5 / 8 |
+| Instruction compliance | 2.80 | 5 / 8 |
+| Status accuracy | 2.33 | 3 / 6 |
+| Context relevance | 3.00 | 5 / 8 |
+
+Each dimension's mean = sum of supplied applicable ratings / number of rated
+applicable answers, with equal weight per answer. Missing outputs/reviews remain
+in the applicable planned count; genuinely inapplicable dimensions are excluded.
+Two pure summaries have no action-status claim and are inapplicable for status
+accuracy. The three rate-limited cases retain null scores and failure evidence;
+history generation, compound drafting and successful reminder status remain unassessed.
+There is no combined generation score or percentage interpretation.
+
+The contractor answer correctly acknowledges missing eligibility but its application
+outcome incorrectly says `completed` instead of the prompt-required
+`needs_clarification`. It also says demo without explicitly saying fictional.
+These defects reduce status/instruction/coverage ratings and remain in the evidence;
+this scoring slice does not change the workflow. No unauthorized action or fabricated
+delivery claim was observed among available outputs. Such critical findings would
+stay explicit in the page rather than being averaged away.
+
+The saved sample records the execution-source commit `e6a30b0`; a post-collection
+source audit matched 36 runtime/data/model files to that commit. The exact dirty
+state at invocation was not captured, so no clean-invocation claim is made. Results
+are historical sample evidence, not verification of every future or hosted answer.
+The collapsible explanation shows definitions, model/version/date, reviewed counts,
+limitations and a representative lowest-rated case's reason for each dimension.
 
 ## Navigation and scope
 

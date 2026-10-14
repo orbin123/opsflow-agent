@@ -11,7 +11,7 @@ from urllib.error import URLError
 from fastapi.testclient import TestClient
 import pytest
 
-from app.evaluation import classifier_report
+from app.evaluation import classifier_report, generation_quality
 from app.main import app
 from app.ui import evaluations, ui_client
 from tests.test_streamlit_ui import Response, send_message
@@ -28,6 +28,11 @@ def recorded_model(tmp_path, monkeypatch):
     path.write_text(json.dumps(metadata))
     monkeypatch.setattr(classifier_report, "MODEL_DIR", tmp_path)
     return metadata, path, model
+
+
+@pytest.fixture(autouse=True)
+def missing_generation_review(tmp_path, monkeypatch):
+    monkeypatch.setattr(generation_quality, "REVIEW_PATH", tmp_path / "missing-review.json")
 
 
 def connect_reads(monkeypatch):
@@ -138,11 +143,11 @@ def test_page_has_only_two_reports_and_no_execution_controls(workspace, recorded
     assert ui.metric[0].value == "88.0%"
     quality = ui.table[1].value
     assert quality["Dimension"].tolist() == [name for name, _, _ in evaluations.CRITERIA]
-    assert quality["Rating (0–3)"].tolist() == ["Not scored"] * 6
+    assert quality["AI rating (0–3)"].tolist() == ["Not scored"] * 6
     explanation = "\n".join(m.value for m in ui.markdown)
-    assert "No human-reviewed answer dataset" in explanation
+    assert "not human ratings or Ragas scores" in explanation
     assert "12.5%" in explanation and "no combined generation score" in explanation
-    assert all(method == "GET" and url.endswith("/api/v1/evaluations") for method, url in reads)
+    assert all(method == "GET" and "/api/v1/evaluations" in url for method, url in reads)
     workspace[1].assert_not_called()
 
 
@@ -170,7 +175,7 @@ def test_missing_classifier_still_shows_pending_quality_and_return(workspace, re
     ui.button(key="open_evaluations").click().run()
     assert not ui.exception and "unavailable" in ui.error[0].value
     assert not ui.metric and len(ui.table) == 1
-    assert ui.table[0].value["Rating (0–3)"].tolist() == ["Not scored"]*6
+    assert ui.table[0].value["AI rating (0–3)"].tolist() == ["Not scored"]*6
     ui.button(key="return_to_chat").click().run()
     assert ui.text_area(key="composer").value == "Keep my draft"
     workspace[1].assert_not_called()

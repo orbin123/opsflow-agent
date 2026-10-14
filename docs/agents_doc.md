@@ -2,6 +2,25 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** User requested a subagent generation-quality test and populated
+  scores. Collected eight fictional planned cases via actual application/Groq
+  entry points, with disposable state, blocked SMTP/worker and a 20-attempt cap.
+  Five available outputs in 12 attempts; three rate-limited cases retain null
+  scores. Saved one compact AI-reviewed evidence file, added validated GET-only
+  reading and equal-weight dimension means/counts to the existing six-row table.
+  Ratings /3: faithfulness 3.00, coverage 2.80, relevance 3.00, instruction compliance
+  2.80, status accuracy 2.33, context relevance 3.00. Contractor FAQ's completed
+  label incorrectly replaces needs_clarification; fictional qualification is weak.
+  Findings retained; no workflow fix bundled. 1,227 offline tests pass, final 37
+  focused checks pass, dependencies/whitespace/native ARM64 Docker/authentication
+  pass. Inline desktop/mobile/explanation/Return/draft/reload pass; exact packaged
+  data/API/UI scores agree, zero review-backend tasks/chat turns and no reminder DB.
+  Source execution e6a30b0; post-collection audit matches runtime files, exact
+  invocation dirty state unavailable. Human calibration, independent references,
+  repeat stability and three unavailable scenarios remain gaps. Page open on
+  8517/backend 8024. No Ragas, external judge API, SMTP/worker, merge/deployment.
+  Keep scoped signed commit local in existing draft PR #55 until user review.
+
 - **2026-10-14:** At the user's request, replaced PR #55's five-slice evaluation
   infrastructure with two Settings sections: full recorded classifier report and
   six pending manual generation-quality criteria, each with collapsed explanations.

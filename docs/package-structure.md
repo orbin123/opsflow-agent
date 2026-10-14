@@ -11,7 +11,7 @@ FastAPI entry point; `streamlit_app.py` remains the Streamlit entry point.
 | `app/reminders/` | Chat scheduling, retained reminders and delivery worker | chat_reminders, reminder_catalogue, reminder_worker |
 | `app/ui/` | Streamlit transport, components and saved draft presentation | ui_client, ui_stream, chat_menu, email_catalogue |
 | `app/observability/` | Sanitized request/task/tool logs and process-scoped metrics | monitoring |
-| `app/evaluation/` | Read-only trained classifier report for Settings | classifier_report |
+| `app/evaluation/` | Read-only classifier results and AI generation sample for Settings | classifier_report, generation_quality |
 | `app/routes/` | Deterministic execution gates | sentiment_route, keyword_route, faq_route |
 | `app/tools/` | Individual analysis, retrieval, writing, scheduling and email utilities | existing tool modules |
 | `app/workflows/` | Fixed extraction/tool/presentation workflows | sentiment_workflow, keyword_workflow, faq_workflow |
@@ -28,7 +28,8 @@ started process. `--help` is a read-only check. Do not start it merely to read
 saved reminders or review the UI.
 
 Settings → Evaluations reads the trained classifier's metadata through
-`GET /api/v1/evaluations`, followed by six pending manual generation-quality criteria.
+`GET /api/v1/evaluations`, followed by six AI-reviewed generation-quality sample means and counts.
+The generation endpoint reads the single reviewed evidence file.
 It never runs models/tools. See `docs/evaluation.md`; no evaluation execution CLI,
 run catalogue or runtime harness remains in the approved simplified submission.
 

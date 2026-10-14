@@ -117,10 +117,14 @@ restoration pass without reexecution. See `docs/cicd.md`.
 
 On `feature/evaluation-baseline`, the user-approved evaluation submission scope
 is now two read-only Settings sections: the trained classifier's full classification
-report and one generation-quality table with six manual-review criteria.
+report and one generation-quality table with six AI-reviewed dimensions.
 `GET /api/v1/evaluations` reads validated existing model metadata, verifies its
 association with the model file, and never loads/runs/trains the classifier.
-Generation ratings are not supplied and remain Not scored. The user explicitly
+Generation ratings now come from one user-authorized eight-case AI-subagent
+review: five actual answers available, 12 Groq attempts, three rate-limited cases
+retained unscored. The six-dimension table shows means and rated/applicable counts;
+`GET /api/v1/evaluations/generation` reads one compact saved evidence file, never
+executes work. Human calibration is absent; these are development sample ratings. The user explicitly
 rejected Ragas and requested removing the earlier run catalogue/storage/CLI,
 runtime harness, annotation snapshots/comparisons, logs/JSON and fixtures rather
 than retaining them as backup. Those earlier five-slice implementation contracts

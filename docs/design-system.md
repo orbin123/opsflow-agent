@@ -197,7 +197,9 @@ Settings container, VT323 headings, IBM Plex Mono body and existing semantic err
 colors. Native static tables avoid extra download/search/toolbars; calculation
 explanations use collapsed native expanders. Return to chat and existing navigation
 locks remain. Table content should wrap or stay within the container at 390 px.
-Missing scores stay textual (Not scored); unavailable classifier results must not
-hide the generation criteria. No new CSS/token/component or Figma node is needed.
+The generation table labels ratings as AI scores and shows rated/applicable
+answer counts. Missing scores stay textual (Not scored); unavailable classifier
+results must not hide the generation criteria. AI findings and sample limitations
+belong in the existing collapsed explanation; no extra dashboard is introduced. No new CSS/token/component or Figma node is needed.
 Foundations listing succeeded; deeper inspection hit the Starter quota, so use
 this documented native adaptation. Previous run/case/catalogue layouts are removed.

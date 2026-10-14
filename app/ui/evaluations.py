@@ -6,6 +6,7 @@ from urllib.request import Request, urlopen
 import streamlit as st
 
 from app.evaluation.classifier_report import ClassifierReport
+from app.evaluation.generation_quality import GenerationReview
 from app.ui.ui_client import ChatClientError
 
 INTENTS = {
@@ -63,6 +64,28 @@ def classification_rows(report: ClassifierReport) -> list[dict]:
     return rows
 
 
+def get_generation_review(base_url: str) -> GenerationReview:
+    request = Request(base_url.rstrip("/") + "/api/v1/evaluations/generation", method="GET")
+    try:
+        with urlopen(request, timeout=30) as response:
+            if response.status != 200:
+                raise ChatClientError("Generation review is unavailable.")
+            return GenerationReview.model_validate_json(response.read())
+    except (HTTPError, URLError, OSError, ValueError):
+        raise ChatClientError("Generation review is unavailable.") from None
+
+
+def generation_rows(review: GenerationReview | None) -> list[dict]:
+    scores = review.dimension_scores() if review else {}
+    rows = []
+    for name, _, _ in CRITERIA:
+        result = scores.get(name.lower().replace(" ", "_"))
+        rows.append({"Dimension": name,
+                     "AI rating (0–3)": f"{result['mean']:.2f}" if result and result["mean"] is not None else "Not scored",
+                     "Reviewed answers": f"{result['scored']} / {result['applicable']}" if result else "Unavailable"})
+    return rows
+
+
 def show_evaluations(base_url: str) -> None:
     st.header("Evaluations")
     st.subheader("Classifier report")
@@ -102,28 +125,55 @@ def show_evaluations(base_url: str) -> None:
             "when every intent has equal support. No additional custom weights are applied."
         )
     st.subheader("Generation quality")
-    st.caption("Human review has not been completed. These six criteria have no assigned scores yet.")
-    st.table([{"Dimension": name, "What it checks": meaning, "Rating (0–3)": "Not scored"}
-              for name, meaning, _ in CRITERIA], hide_index=True,
-             alt="Six generation quality criteria, all awaiting human ratings")
+    try:
+        review = get_generation_review(base_url)
+    except ChatClientError as exc:
+        review = None
+        st.error(str(exc))
+    if review:
+        available = sum(bool(c.answer and c.answer.strip()) for c in review.cases)
+        st.caption(f"AI subagent review · {available} of {len(review.cases)} planned answers available. "
+                   "Scores describe this fictional development sample; human review is pending.")
+        findings = [finding for case in review.cases for finding in case.critical_findings]
+        if findings:
+            st.warning(f"The review identified {len(findings)} critical finding(s). See the explanation below.")
+    st.table(generation_rows(review), hide_index=True,
+             alt="AI-reviewed generation quality ratings and reviewed versus applicable answer counts")
     with st.expander("How generation quality is assessed"):
         st.markdown(
-            "**Method:** Manual review of an actual answer against its request, source text, retrieved "
-            "policy, relevant conversation history and recorded tool/action outcomes. A reviewer first "
-            "checks the reference facts, then assigns a rating with a short evidence-based explanation.\n\n"
-            "**Current data:** No human-reviewed answer dataset or ratings have been supplied. "
-            "The table defines the review criteria; it does not report measured model quality. "
-            "Normal chat use and opening this page do not trigger scoring."
+            "**Method:** An AI subagent assesses actual application answers against each request, source "
+            "text, retrieved policy, relevant history and actual tool/action outcomes. "
+            "These are AI judgments, not human ratings or Ragas scores.\n\n"
+            "**Data:** Fictional development examples. The source, actual answer and reason for each "
+            "rating are retained in `data/evaluation/generation_quality.json`. "
+            "Normal chat use and opening this page do not trigger scoring or change these results."
         )
+        if review:
+            st.markdown(f"**Review date:** {review.reviewed_at.strftime('%d %B %Y')}. "
+                        f"**Application version:** `{review.source_commit[:7]}`. "
+                        f"**Models:** {', '.join(sorted(set(review.models.values())))}.")
+            for limitation in review.limitations:
+                st.text(limitation)
         for name, _, explanation in CRITERIA:
             st.markdown(f"**{name}:** {explanation}")
+            if review:
+                dimension = name.lower().replace(" ", "_")
+                scored = [case for case in review.cases if case.ratings[dimension].score is not None]
+                if scored:
+                    example = min(scored, key=lambda case: case.ratings[dimension].score)
+                    st.text(f"Review evidence ({example.case_id}): {example.ratings[dimension].reason}")
+        if review:
+            for case in review.cases:
+                for finding in case.critical_findings:
+                    st.text(f"Critical finding ({case.case_id}): {finding}")
         st.markdown(
             "**Rating scale:** 0 = fundamental failure; 1 = major errors or omissions; "
             "2 = minor errors or omissions; 3 = fully meets the criterion. "
             "A missing review stays **Not scored**, rather than becoming 0.\n\n"
-            "**Weighting:** Each dimension is reported separately. If several answers are reviewed, "
-            "a dimension's mean is the sum of its supplied ratings ÷ the number of rated answers, "
-            "with equal weight per answer and the reviewed count reported. "
+            "**Weighting:** Each dimension is reported separately. Its mean is the sum of supplied "
+            "ratings ÷ the number of rated applicable answers, with equal weight per answer. "
+            "Reviewed answers shows that count against all applicable planned answers; missing "
+            "outputs/reviews stay in that denominator, and inapplicable dimensions are excluded. "
             "There is no combined generation score or custom weighting between dimensions. "
             "Invented delivery or other critical action claims must be identified explicitly; "
             "high ratings on other dimensions cannot cancel them."
