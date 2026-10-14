@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "name": "local-development-pilot-v1",
+  "reference_status": "ai_authored_pending_human_review",
+  "faq_sha256": "39829b8570f8d822c5e8efcc62227977b6348237fd34472b441682b6dc20407c",
+  "cases": [
+    {
+      "case_id": "route-01",
+      "suite": "router_pilot",
+      "input": "Assess the sentiment of this note: The repaired scanner works perfectly and I am delighted.",
+      "expected_intent": "sentiment_analysis",
+      "expected_eligibility": "either",
+      "reference_note": "The request asks for sentiment of supplied source text."
+    },
+    {
+      "case_id": "route-02",
+      "suite": "router_pilot",
+      "input": "Identify the key phrases in this text: The depot needs replacement scanners and a revised stock-count procedure.",
+      "expected_intent": "keyword_extraction",
+      "expected_eligibility": "either",
+      "reference_note": "One keyword extraction request with source text."
+    },
+    {
+      "case_id": "route-03",
+      "suite": "router_pilot",
+      "input": "According to the employee handbook, where should I submit a request for business travel approval?",
+      "expected_intent": "faq_retrieval",
+      "expected_eligibility": "either",
+      "reference_note": "One fictional-policy lookup, not an approval action."
+    },
+    {
+      "case_id": "route-04",
+      "suite": "router_pilot",
+      "input": "Summarize this update: Dock four is closed until Friday. The spare dock remains available.",
+      "expected_intent": "summarization",
+      "expected_eligibility": "agent_required",
+      "reference_note": "Summarization requires agent orchestration even at high confidence."
+    },
+    {
+      "case_id": "route-05",
+      "suite": "router_pilot",
+      "input": "Draft an email to Mira stating that the replacement scanner will arrive on Tuesday.",
+      "expected_intent": "email_drafting",
+      "expected_eligibility": "agent_required",
+      "reference_note": "Writing a draft does not authorize sending it."
+    },
+    {
+      "case_id": "route-06",
+      "suite": "router_pilot",
+      "input": "Remind me tomorrow at 10 am to inspect the loading ramp.",
+      "expected_intent": "reminder_creation",
+      "expected_eligibility": "agent_required",
+      "reference_note": "Reminder requests require the agent; this pilot only classifies."
+    },
+    {
+      "case_id": "route-07",
+      "suite": "router_pilot",
+      "input": "Find the reimbursement policy and draft an email to Dev explaining the required receipts.",
+      "expected_intent": "compound_request",
+      "expected_eligibility": "agent_required",
+      "reference_note": "Lookup and drafting are separate operations with a dependency."
+    },
+    {
+      "case_id": "route-08",
+      "suite": "router_pilot",
+      "input": "Book a passenger flight from Kochi to Delhi for next Thursday.",
+      "expected_intent": "out_of_scope",
+      "expected_eligibility": "agent_required",
+      "reference_note": "Unsupported booking request; eligibility is not a test of agent refusal."
+    },
+    {
+      "case_id": "faq-01",
+      "suite": "faq_pilot",
+      "input": "What steps are needed to submit annual leave for approval?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "LEAVE-01",
+      "source_sufficiency": "sufficient",
+      "reference_note": "Annual leave submission and approval are specified by LEAVE-01."
+    },
+    {
+      "case_id": "faq-02",
+      "suite": "faq_pilot",
+      "input": "Where should I look to check the balance of my available leave?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "LEAVE-03",
+      "source_sufficiency": "sufficient",
+      "reference_note": "LEAVE-03 identifies the Leave Balance section."
+    },
+    {
+      "case_id": "faq-03",
+      "suite": "faq_pilot",
+      "input": "How can I obtain access to the company VPN?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "REMOTE-02",
+      "source_sufficiency": "sufficient",
+      "reference_note": "REMOTE-02 defines the IT access ticket and prerequisites."
+    },
+    {
+      "case_id": "faq-04",
+      "suite": "faq_pilot",
+      "input": "Which steps let me download a payslip for a selected month?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "PAYROLL-03",
+      "source_sufficiency": "sufficient",
+      "reference_note": "PAYROLL-03 specifies Payroll then Payslips."
+    },
+    {
+      "case_id": "faq-05",
+      "suite": "faq_pilot",
+      "input": "What must I include when I submit an expense reimbursement claim?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "EXPENSE-01",
+      "source_sufficiency": "sufficient",
+      "reference_note": "EXPENSE-01 lists receipts, purpose and project code."
+    },
+    {
+      "case_id": "faq-06",
+      "suite": "faq_pilot",
+      "input": "How can I request approval before booking business travel?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "EXPENSE-02",
+      "source_sufficiency": "sufficient",
+      "reference_note": "EXPENSE-02 requires manager and Finance approval before booking."
+    },
+    {
+      "case_id": "faq-07",
+      "suite": "faq_pilot",
+      "input": "What should I do to reset my company account password?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "IT-01",
+      "source_sufficiency": "sufficient",
+      "reference_note": "IT-01 specifies reset and identity verification."
+    },
+    {
+      "case_id": "faq-08",
+      "suite": "faq_pilot",
+      "input": "What do I need to do to report a lost company device?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "SECURITY-02",
+      "source_sufficiency": "sufficient",
+      "reference_note": "SECURITY-02 specifies IT, Security and manager notification."
+    },
+    {
+      "case_id": "faq-09",
+      "suite": "faq_pilot",
+      "input": "Which leave policy applies?",
+      "expected_faq_status": "ambiguous",
+      "expected_policy_id": null,
+      "source_sufficiency": "not_applicable",
+      "reference_note": "Leave alone does not distinguish annual, sick and balance questions."
+    },
+    {
+      "case_id": "faq-10",
+      "suite": "faq_pilot",
+      "input": "How do I request annual leave or report sick leave?",
+      "expected_faq_status": "ambiguous",
+      "expected_policy_id": null,
+      "source_sufficiency": "not_applicable",
+      "reference_note": "Two distinct leave policies are requested; no single answer is expected."
+    },
+    {
+      "case_id": "faq-11",
+      "suite": "faq_pilot",
+      "input": "Which payroll policy should I use?",
+      "expected_faq_status": "ambiguous",
+      "expected_policy_id": null,
+      "source_sufficiency": "not_applicable",
+      "reference_note": "Payroll alone does not distinguish payment, discrepancies and profile questions."
+    },
+    {
+      "case_id": "faq-12",
+      "suite": "faq_pilot",
+      "input": "Does the employer reimburse orthodontic treatment?",
+      "expected_faq_status": "no_match",
+      "expected_policy_id": null,
+      "source_sufficiency": "not_applicable",
+      "reference_note": "No dental-treatment policy exists in the fictional corpus."
+    },
+    {
+      "case_id": "faq-13",
+      "suite": "faq_pilot",
+      "input": "What meals will the cafeteria serve this weekend?",
+      "expected_faq_status": "no_match",
+      "expected_policy_id": null,
+      "source_sufficiency": "not_applicable",
+      "reference_note": "The corpus contains no cafeteria menu."
+    },
+    {
+      "case_id": "faq-14",
+      "suite": "faq_pilot",
+      "input": "How many weeks of adoption leave are available?",
+      "expected_faq_status": "no_match",
+      "expected_policy_id": null,
+      "source_sufficiency": "not_applicable",
+      "reference_note": "The corpus does not specify adoption-leave entitlement."
+    },
+    {
+      "case_id": "faq-15",
+      "suite": "faq_pilot",
+      "input": "Can contractors work from home?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "REMOTE-01",
+      "source_sufficiency": "missing_detail",
+      "reference_note": "REMOTE-01 is relevant but does not establish contractor eligibility; generation/clarification is not scored in this slice."
+    },
+    {
+      "case_id": "faq-16",
+      "suite": "faq_pilot",
+      "input": "When is salary paid for temporary employees?",
+      "expected_faq_status": "matched",
+      "expected_policy_id": "PAYROLL-01",
+      "source_sufficiency": "missing_detail",
+      "reference_note": "PAYROLL-01 specifies a payment day but does not establish temporary-employee applicability; generation/clarification is not scored."
+    }
+  ]
+}

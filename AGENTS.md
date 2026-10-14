@@ -115,6 +115,13 @@ verified to block PR merge. Main CI passes all 1,190 tests, the AMD64 image and
 authentication smoke checks. Hosted health/access, chat/Activity and refresh
 restoration pass without reexecution. See `docs/cicd.md`.
 
+The approved first evaluation slice provides `python -m app.evaluation`: an
+offline classifier holdout and 24-case development pilot with versioned,
+atomically saved synthetic reports. Reads and pure rescoring never execute work.
+Pilot references await human review; classifier eligibility is not runtime routing,
+and FAQ retrieval is not generated-answer quality. Settings display, live agent/
+workflow evaluation and semantic judging remain later slices. See docs/evaluation.md.
+
 ## Read Before Working
 
 - `docs/package-structure.md`: application package responsibilities and launch commands.

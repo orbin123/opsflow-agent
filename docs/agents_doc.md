@@ -2,6 +2,29 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** Implemented approved evaluation slice 1 on
+  `feature/evaluation-baseline` from main in an isolated worktree. Added the offline
+  CLI, 24-case development pilot, classifier holdout/calibration and local FAQ
+  scorers, reference validation and atomic versioned reports. All 1,219 tests
+  pass (29 new), plus dependency/whitespace checks; fresh-process verification
+  blocks network, classifier fitting and provider/side-effect imports. All 224
+  evaluation cases execute; router holdout reproduces metadata. Pilot records
+  7/8 intent labels, 8/8 eligibility, 12/16 FAQ statuses and 8/10 expected matches;
+  references remain AI-authored pending human review, with misses retained.
+  No UI, live LLM, worker/SMTP or hosted evaluation. Next slice is read-only
+  Settings display; merge/deployment remain pending explicit user instruction.
+
+- **2026-10-14:** Researched and documented the evaluation proposal in
+  `docs/evaluation-plan.md`; updated the active plan with staged local baseline,
+  Settings catalogue, workflow/agent, semantic and CI/assessment slices. Reviewed
+  current code, primary sources and Figma Foundations metadata. Offline check
+  reproduces saved classifier holdout/calibration metrics (200 rows, accuracy
+  0.88, macro F1 0.8813), 47/47 threshold-accepted labels at 23.5% coverage,
+  and 25/25 indexed canonical FAQ matches. Documented synthetic/indexed-data
+  limits; no live LLM, SMTP/worker, new UI or full-suite run. Application
+  implementation remains proposed pending first-slice agreement.
+
+
 - **2026-10-10:** At the user's instruction, merged PR #52 as a3176c2 after
   CI/DCO passed. Main CI 38051090755 passes 1,190 tests, dependency/whitespace,
   AMD64 Docker build and smoke checks. Render automatically deployed the same
