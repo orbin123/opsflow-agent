@@ -1,9 +1,83 @@
-# OpsFlow evaluation proposal
+# OpsFlow evaluation implementation plan
 
 Researched 2026-10-14. **Status: slice 1 implemented and verified; Settings and
 remaining evaluation slices are proposed.** This plan covers a Settings → Evaluations
 area, measurable quality criteria, implementation order, verification and
 assessment talking points. It does not authorize every slice at once.
+
+## Continue in a new chat
+
+This file is the evaluation implementation guide. Follow the five slices below
+in order; update their status, evidence and next step after each slice. Discuss
+scope or order changes before implementing them.
+
+- **One shared PR:** [draft PR #55](https://github.com/orbin123/opsflow-agent/pull/55),
+  branch `feature/evaluation-baseline`, targeting `main`. On 2026-10-14 the user
+  changed publication grouping: implement the whole evaluation plan in this PR,
+  with distinct scoped commits for each agreed slice. Keep handoff/verification
+  documentation in the same PR. Do not open a new PR for each slice or squash
+  away the slice commits during the build. Keep the PR draft until all agreed
+  slices are verified and the user authorizes final review/merge.
+- **Existing checkout on this machine:**
+  `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`.
+  Verify its branch and worktree status before editing and reuse this checkout.
+  If it is unavailable, fetch the existing branch into a suitable clean checkout;
+  preserve user changes. The primary project checkout was on
+  `fix/workflow-configuration` at handoff and does not contain evaluation code.
+  A copy of this plan there is for finding the feature work, not evidence that
+  the implementation is on that branch or on `main`.
+- **Read first:** this file, `AGENTS.md`, `docs/package-structure.md`,
+  `docs/PLAN.md`, `docs/agents_doc.md`, `docs/evaluation.md` and
+  `skills/karpathy-guidelines/SKILL.md` in the evaluation checkout. Before UI work,
+  also read `docs/design-system.md` and the required Streamlit skill and references.
+- **Last verified application commit:** `140d8f6` (slice 1, user-signed).
+  Local tests: 1,219 pass, including 29 new evaluation checks; dependency and
+  whitespace checks pass. GitHub CI run `38518747613` passed the offline suite,
+  Linux AMD64 Docker build and container startup/authentication checks; DCO passed.
+  Later documentation commits do not imply new application or browser verification.
+- **Saved slice 1 evidence:**
+  `var/evaluations/89c111c7f91d4382b6ca872b62dbada4/report.json` in that checkout.
+  It records commit `140d8f6` with a clean working tree and all 224 cases executed.
+  Reports are ignored local files; if missing, explicitly regenerate with
+  `python -m app.evaluation` in the evaluation checkout. Reading never reruns work.
+- **Current boundary:** slice 1 is complete. Slice 2 is the next contract discussion;
+  no Settings UI, catalogue API, live agent run or semantic judge has been implemented
+  or approved by this documentation handoff. Agree the next bounded contract and
+  proportional checks with the user, then finish that slice and append its commit
+  to PR #55. Do not merge or deploy as part of continuation alone.
+
+| Slice | Status | Completion evidence / next action |
+| --- | --- | --- |
+| 1 — Local baseline | ✅ Implemented and verified | Commit `140d8f6`; CLI, 24-case development pilot, 200-row holdout, pure scorers and atomic saved reports; verification above and detailed outcome below. |
+| 2 — Settings catalogue | ⏳ Next: agree contract and verification | Add read-only report list/detail APIs and Settings → Evaluations, with empty/error/unscored states and Refresh/Return. Decide report-directory configuration and synthetic hosted-baseline packaging before coding. |
+| 3 — Real workflows and agent | Planned | Extraction, tool/trajectory, compound/history and reminder/recovery evaluation, with isolated opt-in live execution and reviewed case expansion. |
+| 4 — Generation quality | Planned | Reviewed facts/rubrics, human annotations, optional validated judge, generation scores and compatible version comparisons. |
+| 5 — Assessment and CI | Planned | Final benchmark/CI regression gates, exports, browser walkthrough and assessment talking points. Slice 1's existing CI checks do not complete this assessment slice. |
+
+### Next slice: Settings catalogue
+
+Inputs are the existing saved `Report` records and configured local report storage.
+Outputs are a read-only run catalogue/detail API and native Settings page showing
+run state, quality verdict, category metrics/counts and literal expected/actual
+case evidence. Reuse current contracts and storage readers; keep execution behind
+the explicit CLI. Page entry, refresh, filtering, detail reads and downloads must
+not run models/tools or resume interrupted reports. Preserve selected chat,
+browser-session drafts and existing pending/running/unsaved navigation locks.
+
+Discuss the UI adaptation and hosted packaging using the original slice 2 contract
+below. Verification should cover missing/corrupt/incomplete reports and path
+handling, honest missing-score display, navigation/draft retention and zero
+execution on reads/reruns. After automated checks pass, exercise desktop/mobile
+and refresh in the inline browser and leave it open for user review. Record any
+unavailable check; do not replace it with a claim of successful verification.
+
+Suggested opening message for the next chat:
+
+> Read AGENTS.md and docs/evaluation-plan.md, use the existing evaluation checkout
+> and draft PR #55, and continue from slice 2. Confirm the completed slice 1
+> evidence, then discuss the slice 2 contract and checks before coding. Keep each
+> implemented slice in a separate scoped commit within the same PR and update
+> the completion table and handoff as work progresses.
 
 Assumptions: English, fictional policies and synthetic evaluation inputs remain
 the project boundary. “Condensed relevance” is interpreted as context relevance
@@ -54,8 +128,9 @@ Settings display and live agent/generation evaluation remain later agreed slices
 - Prometheus/Grafana already measure operation. Evaluation should measure quality
   against references, with execution failures and performance shown separately.
 
-No live model, SMTP, reminder worker, deployment or new UI was exercised for this
-proposal. Existing tests were inspected; the full application suite was not rerun.
+During initial research, no live model, SMTP, reminder worker, deployment or new
+UI was exercised, and the full suite was not rerun at that point. Current slice 1
+verification is recorded above; live model and UI quality remain unverified.
 
 ## Recommended criteria
 
@@ -267,9 +342,11 @@ stability, retaining each sample; temperature zero does not imply determinism.
 
 ## Bounded implementation order and verification
 
-Each row is a separately discussed slice and logical commit/PR. Its verification
-scope is proposed now and confirmed before coding. Update this plan and
-`docs/agents_doc.md` with actual results and limits at each step.
+Each row is a separately discussed slice with a scoped commit in the single shared
+draft PR #55. Its verification scope is confirmed before coding. Update this
+file's completion table, `docs/PLAN.md` and `docs/agents_doc.md` with actual results,
+limits and the next step after each slice. Keep slice commits distinct during
+the build; do not create or merge a PR for an individual evaluation slice.
 
 | Slice | Deliverable and contract | Proportional verification |
 | --- | --- | --- |

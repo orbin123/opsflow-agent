@@ -44,6 +44,13 @@ limits and are not instructions to repeat completed work.
   semantic review and final CI/assessment evidence. Each slice requires its own
   contract/verification discussion. The user approved slice 1 on 2026-10-14;
   the local baseline is now implemented, with no UI or live LLM work in this slice.
+- **Publication decision, 2026-10-14:** The user wants the entire evaluation plan
+  in the existing draft [PR #55](https://github.com/orbin123/opsflow-agent/pull/55),
+  on `feature/evaluation-baseline` → `main`, with scoped commits for each agreed
+  slice. No new PR per evaluation slice; keep the shared PR draft until the full
+  agreed work is verified and the user authorizes final review/merge. This does
+  not authorize implementing all slices at once. Follow the completion table and
+  new-chat handoff in `docs/evaluation-plan.md`.
 - **Planning verification:** Reviewed actual routing, traces, tools, Settings,
   storage/deployment and primary evaluation documentation; inspected Figma
   Foundations metadata. Offline reproduction matches the saved 200-row synthetic
@@ -71,6 +78,10 @@ limits and are not instructions to repeat completed work.
 - **Next bounded discussion:** Read-only Settings evaluation catalogue/detail
   page and explicit synthetic baseline packaging. Later agent/semantic slices
   remain proposed; no merge or deployment is authorized by the baseline approval.
+  Slice 1 is commit `140d8f6`; GitHub CI run `38518747613` and DCO pass, including
+  the Linux AMD64 image and container checks. The evaluation checkout is
+  `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`; primary checkout
+  changes belong to the separate configuration fix and must be preserved.
 
 ### Remaining work
 

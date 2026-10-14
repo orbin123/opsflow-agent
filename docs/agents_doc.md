@@ -2,6 +2,17 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** User changed evaluation publication to one shared draft PR #55
+  on `feature/evaluation-baseline` → main, with scoped commits for each agreed
+  slice. Updated AGENTS.md and the evaluation plan with this exception, a completion
+  table and a self-contained new-chat handoff. Slice 1 is verified at `140d8f6`;
+  GitHub CI `38518747613` and DCO pass, including the AMD64 image/container checks.
+  Slice 2's read-only Settings catalogue is next for contract/verification discussion;
+  slices 3–5 remain planned. This change is documentation only; prior application
+  verification remains the baseline. Continue in the existing evaluation checkout,
+  preserve the separate primary-checkout changes, and keep the PR draft until final
+  user review/merge authorization.
+
 - **2026-10-14:** Implemented approved evaluation slice 1 on
   `feature/evaluation-baseline` from main in an isolated worktree. Added the offline
   CLI, 24-case development pilot, classifier holdout/calibration and local FAQ

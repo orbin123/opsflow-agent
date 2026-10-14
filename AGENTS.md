@@ -115,7 +115,8 @@ verified to block PR merge. Main CI passes all 1,190 tests, the AMD64 image and
 authentication smoke checks. Hosted health/access, chat/Activity and refresh
 restoration pass without reexecution. See `docs/cicd.md`.
 
-The approved first evaluation slice provides `python -m app.evaluation`: an
+On `feature/evaluation-baseline`, the approved first evaluation slice provides
+`python -m app.evaluation`: an
 offline classifier holdout and 24-case development pilot with versioned,
 atomically saved synthetic reports. Reads and pure rescoring never execute work.
 Pilot references await human review; classifier eligibility is not runtime routing,
@@ -127,6 +128,7 @@ workflow evaluation and semantic judging remain later slices. See docs/evaluatio
 - `docs/package-structure.md`: application package responsibilities and launch commands.
 
 - `docs/PLAN.md`: active implementation agenda for remaining project work.
+- `docs/evaluation-plan.md`: evaluation scope, completed slices, next step and new-chat handoff; read it before continuing evaluation work.
 - `docs/agents_doc.md`: brief record of completed changes and the next step.
 - `skills/karpathy-guidelines/SKILL.md`: follow the supplied Karpathy development guidelines. If missing, ask before development.
 
@@ -136,6 +138,7 @@ workflow evaluation and semantic judging remain later slices. See docs/evaluatio
 - Discuss the next bounded step, its contract and proportional verification with the user, then implement the agreed slice. The plan does not authorize implementing every item at once.
 - Use current code and feature documentation to understand existing behavior and avoid repeating completed work. Existing collaboration, design, routing and side-effect rules still apply.
 - Track decisions, scope, status and verification in `docs/PLAN.md` and `docs/agents_doc.md`. Do not use `agenda.txt` as an alternative agenda.
+- Evaluation work must follow the five slices in `docs/evaluation-plan.md` in order. Keep its completion table and handoff current with the project plan and change record; discuss and record any scope/order change before implementing it.
 
 ## Frontend Design
 
@@ -146,6 +149,7 @@ workflow evaluation and semantic judging remain later slices. See docs/evaluatio
 - Suggest and discuss each implementation step before coding. Explain the problem, proposed change, inputs/outputs, and how we will verify it. Once the user agrees, complete that bounded step without repeatedly requesting permission.
 - Take the slow approach throughout this project so the user understands the code. Prefer one small, explainable step at a time. If asked to implement too much at once, remind the user of this agreement and propose a smaller first slice.
 - Make each development change a logically scoped commit and PR with a clear purpose and relevant verification. Keep unrelated work separate; preserve existing user changes. Use logical job-based branch and PR names such as `fix/...` or `feature/...`, not `codex/...`. Agree on the slice before implementation and prepare its reviewable diff before publication.
+- **Evaluation exception, approved 2026-10-14:** Keep the entire evaluation implementation in the existing draft PR #55 (`feature/evaluation-baseline` → `main`). Make distinct scoped, user-signed commits for each agreed slice and keep related handoff/verification documentation in that same PR. Do not open a PR per evaluation slice or squash away slice boundaries during the build. Keep PR #55 draft until the full agreed plan is verified and the user authorizes final review/merge. This changes publication grouping, not the one-slice-at-a-time discussion and verification rule.
 - Do not add `Co-authored-by`, ChatGPT, Codex, or any other non-user author attribution to commits, merge commits, PR descriptions, or PR details. Authorship should remain only the user's GitHub account.
 - Before opening or updating a PR, confirm the DCO check will pass for every commit. Use only the user's GitHub account details for any required `Signed-off-by` line.
 - State assumptions and ask about material uncertainties before implementing. Do not silently change scope or choose external services.
