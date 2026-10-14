@@ -2,7 +2,8 @@
 
 Researched 2026-10-14. **Status: slices 1–2 implemented and verified locally;
 slice 3's approved offline scope is implemented, with live verification deferred;
-slices 4–5 remain proposed.** This plan covers a Settings → Evaluations
+slice 4's approved offline implementation is verified locally; slice 5 remains
+proposed.** This plan covers a Settings → Evaluations
 area, measurable quality criteria, implementation order, verification and
 assessment talking points. It does not authorize every slice at once.
 
@@ -31,7 +32,7 @@ scope or order changes before implementing them.
   `docs/PLAN.md`, `docs/agents_doc.md`, `docs/evaluation.md` and
   `skills/karpathy-guidelines/SKILL.md` in the evaluation checkout. Before UI work,
   also read `docs/design-system.md` and the required Streamlit skill and references.
-- **Latest application verification:** slice 3's approved offline scope at
+- **Latest runtime execution evidence:** slice 3's approved offline scope at
   `3738c50` (initial harness commit `5a90b82`). All 1,295 offline tests pass
   (44 new); dependencies/whitespace and native ARM64 Docker/container checks pass.
   Inline desktop/390 px mobile, exact download, Return/draft and Refresh pass.
@@ -42,23 +43,32 @@ scope or order changes before implementing them.
   never rerun it. Live calls and human reference review remain deferred.
   App stays open on 8517. Slice 2 CI/DCO pass (`38523659729`); fresh slice 3
   hosted CI runs after publication. Keep the shared PR draft.
+- **Latest review infrastructure verification:** slice 4's approved offline scope;
+  full suite 1,329 passed, final focused checks 67 passed (35 new). Eight saved
+  targets retain 7 available answers, 0/38 rubric scores and pending human review.
+  Native ARM64 Docker/authentication and inline desktop/mobile/download/navigation
+  checks pass. Saved snapshots `e73cd9c2e7304894a7265d42000afdc2` and
+  `3d36fb65fd954f018079d9582f7ef97b` compare with 0 scored pairs/38 missing pairs.
+  They are offline saved-review operations, not new runtime executions.
 - **Saved slice 1 evidence:**
   `var/evaluations/89c111c7f91d4382b6ca872b62dbada4/report.json` in that checkout.
   It records commit `140d8f6` with a clean working tree and all 224 cases executed.
   Reports are ignored local files; if missing, explicitly regenerate with
   `python -m app.evaluation` in the evaluation checkout. Reading never reruns work.
-- **Current boundary:** slice 3's harness/offline implementation is approved and
-  implemented. The user explicitly deferred live calls on 2026-10-14. Do not mark
-  live model quality/stability or human reference review complete. Discuss completing
-  that deferred slice 3 work, or an explicit order change, before slice 4. Keep PR #55
-  draft; no merge/deployment or semantic judge is authorized by this continuation.
+- **Current boundary:** on 2026-10-14 the user explicitly approved proceeding to
+  slice 4's offline scope while keeping slice 3 live verification and the optional
+  judge deferred. Saved human-annotation contracts, pure scoring and compatible
+  comparisons are implemented; no actual human labels have been supplied. Do not
+  mark live quality/stability, reference human review, judge validation or semantic
+  benchmark quality complete. Discuss slice 5's offline CI/assessment contract next;
+  keep PR #55 draft. No merge/deployment is authorized.
 
 | Slice | Status | Completion evidence / next action |
 | --- | --- | --- |
 | 1 — Local baseline | ✅ Implemented and verified | Commit `140d8f6`; CLI, 24-case development pilot, 200-row holdout, pure scorers and atomic saved reports; verification above and detailed outcome below. |
 | 2 — Settings catalogue | ✅ Implemented and verified locally | GET list/detail, native Settings, shared report root and exact historical synthetic packaging. 1,251 tests; Docker/container checks; inline desktop/mobile/download/draft/refresh; details below. Hosted deployment remains unverified. |
 | 3 — Real workflows and agent | ⏳ Offline scope verified; live calls deferred | 24 development scenarios, pure evaluators, isolated bounded runner and saved traces. User deferred live calls; live quality/stability and human reference review remain explicit gaps. |
-| 4 — Generation quality | Planned | Reviewed facts/rubrics, human annotations, optional validated judge, generation scores and compatible version comparisons. |
+| 4 — Generation quality | ✅ Approved offline implementation verified locally | Eight development review targets, versioned 0–3 rubric, immutable schema-v3 human-annotation snapshots, pure scoring and compatible-run comparison. Actual human reference/answer review, live samples and optional judge remain outstanding. |
 | 5 — Assessment and CI | Planned | Final benchmark/CI regression gates, exports, browser walkthrough and assessment talking points. Slice 1's existing CI checks do not complete this assessment slice. |
 
 ### Slice 2 contract — approved 2026-10-14
@@ -78,11 +88,12 @@ verification is below; operation/API/storage details are in [evaluation.md](eval
 Suggested opening message for the next chat:
 
 > Read AGENTS.md and docs/evaluation-plan.md, use the existing evaluation checkout
-> and draft PR #55. Slices 1–2 are complete; slice 3's harness/offline scope is
-> implemented, with live calls deferred by user choice. Discuss human reference
-> review and the deferred isolated live subset (at most 60 requests; representative
-> scenarios repeated three times), or explicitly agree an order change before
-> starting slice 4. Keep scoped signed commits in the shared draft PR.
+> and draft PR #55. Slices 1–2 and the approved offline implementations of slices
+> 3–4 are verified locally. The user approved advancing to slice 4 while keeping
+> live calls and the optional judge deferred. Actual human annotations are absent;
+> semantic scores remain missing. Discuss the bounded slice 5 offline CI/assessment
+> contract before coding; do not turn deferred checks into benchmark claims. Keep
+> scoped signed commits in the shared draft PR; no merge/deployment authorization.
 
 Assumptions: English, fictional policies and synthetic evaluation inputs remain
 the project boundary. “Condensed relevance” is interpreted as context relevance
@@ -172,8 +183,47 @@ and publication evidence are recorded in the handoff/change record.
 This completes the approved **offline** scope, not the original full slice 3 live
 validation. Reference human review, actual live model quality/provider compatibility
 and three-repeat live stability remain deferred/unverified. Discuss completing
-those checks, or explicitly agree a plan order change, before slice 4. Keep PR #55
-draft; no merge/deployment or semantic judge was authorized.
+those checks before claiming live validation complete. The user subsequently
+approved proceeding to offline slice 4, retaining these gaps. Keep PR #55 draft;
+no merge/deployment or semantic judge was authorized.
+
+## Slice 4 offline outcome — verified locally 2026-10-14
+
+The user approved saved human review, pure scoring, compatible-run comparison and
+read-only Settings, explicitly deferring the optional judge and all live calls.
+Eight source-bound development targets and six 0–3 rubric dimensions support
+schema-v3 snapshots. Templates/scoring run only through the explicit offline CLI;
+source runtime reports stay unchanged. Reviews require reviewer/time/reference
+attestations and exact report/reference/output/source fingerprints. Missing outputs,
+unreviewed dimensions, not-applicable decisions and scorer errors stay distinct.
+Critical findings force failures independently of averages. Comparisons require
+matching reference/rubric/scorer implementation, runtime data, execution mode,
+review origin and sample sets; only scored pairs get deltas. Earlier report schemas
+and the historical Docker baseline remain compatible.
+
+The full offline suite passed 1,329 tests, followed by 67 final focused semantic/
+catalogue checks (35 new semantic tests in the final tree). Dependencies/whitespace
+and native ARM64 Docker/container authentication smoke checks pass. Fresh-process
+CLI checks block application/provider imports and network; synthetic good/bad
+annotations catch invented policy/date/promises, omitted uncertainty, off-topic
+answers, stale/malformed reviews, wrong evidence and incompatible comparisons.
+These fixture ratings are not human labels or live-model evidence.
+
+Inline desktop/390 px mobile verifies unscored/missing answers, compatible missing
+pairs, incompatible report rejection, exact JSON download/API agreement, Refresh,
+Return with an unsent multiline draft, and reload restoring the selected chat.
+Existing browser-session draft/page reload limitations remain. Review-backend
+task/tool counts are zero, its chat has no turns and its reminder DB is absent.
+Figma inspection hit its Starter quota; the approved documented native adaptation
+was retained. App remains open on 8517/backend 8024 for user review.
+
+Actual human reference/answer annotations have not been supplied; the real saved
+snapshot has seven available outputs/eight planned targets, zero scored rubric
+dimensions/38 applicable dimensions, and unscored claim/fact/critical-review ratios.
+References were authored after scripted collection and remain development review
+material, not an independent semantic holdout. Live model quality/stability and
+judge validation/agreement remain deferred. Next: discuss bounded offline slice 5;
+no merge, deployment or model/email execution occurred.
 
 ## Existing evidence and gaps
 
@@ -468,5 +518,5 @@ and measured limits. Prepare answers to:
 
 The implementation review must report actual automated/live/browser checks, failed
 cases, unresolved blockers and limits. Slices 1–2 supply the local baseline and read-only Settings display;
-the live workflow/agent verification and generation quality benchmark remain
-unverified/unimplemented respectively.
+the live workflow/agent verification and human-reviewed generation quality benchmark
+remain unverified. Slice 4 provides offline review infrastructure, not those claims.

@@ -131,7 +131,13 @@ schema-v2 reports and a subprocess/temporary-storage harness with blocked SMTP/
 worker startup and an explicit model-attempt cap. Existing report readers support
 both schemas. The user deferred all live calls on 2026-10-14; live workflow/agent
 quality, repeated live stability and human reference review remain outstanding.
-Semantic judging belongs to slice 4. See docs/evaluation.md.
+Slice 4's approved offline implementation adds source/fact rubrics, persisted human
+review attestations, immutable schema-v3 snapshots, pure arithmetic and compatible
+saved-run comparisons in read-only Settings. The user approved advancing to this
+scope while keeping live calls and the optional judge deferred. No actual human
+reference/answer annotations have been supplied; semantic scores stay missing.
+Next is slice 5 contract discussion, not an automatic full benchmark claim.
+See docs/evaluation.md.
 
 ## Read Before Working
 

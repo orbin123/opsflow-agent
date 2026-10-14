@@ -2,6 +2,22 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-14:** User approved advancing to evaluation slice 4's offline scope
+  while keeping slice 3 live calls and the optional judge deferred. Added eight
+  development source/fact targets, six 0–3 rubrics, explicitly attributed human
+  annotation templates/imports, immutable schema-v3 snapshots, pure semantic
+  arithmetic and compatible saved-run comparisons in read-only Settings. Missing
+  review/output/error states and critical findings stay explicit. Full suite:
+  1,329 pass; final focused checks: 67 pass (35 new semantic tests). Dependency/
+  whitespace/native ARM64 Docker/authentication checks pass. Inline desktop/390 px
+  mobile verifies missing scores, comparison limits, JSON/API agreement, Refresh,
+  Return/draft and reload selection; zero review-backend task/tool executions,
+  zero chat turns and no reminder DB. App open on 8517/backend 8024. No real human
+  scores supplied: 7/8 outputs, 0/38 rubric scores; references are AI-authored after
+  scripted collection and remain development material. Figma read hit quota;
+  existing approved native design used. Next: bounded offline slice 5 discussion.
+  Keep PR #55 draft; no live model/judge, SMTP/worker, merge or deployment.
+
 - **2026-10-14:** Implemented the user-approved offline part of evaluation slice 3:
   24 synthetic runtime scenarios, pure payload/trajectory/context/state evaluators,
   schema-v2 reports, dedicated subprocesses/disposable SQLite and fixed reminder

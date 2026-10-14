@@ -95,6 +95,9 @@ def show_evaluations(base_url: str) -> None:
     st.download_button("Download synthetic report JSON", data=report.model_dump_json(indent=2) + "\n",
                        file_name=f"evaluation-{report.run_id}.json", mime="application/json",
                        key="download_evaluation", on_click="ignore", icon=":material/download:")
+    if report.schema_version == 3:
+        _show_semantic(base_url, report, identities, selected)
+        return
     st.subheader("Category evidence")
     categories = []
     for suite in sorted({item.case.suite for item in report.cases}):
@@ -195,3 +198,72 @@ def show_evaluations(base_url: str) -> None:
         st.info("No criterion scores recorded.")
     st.caption("Observable contracts are scored; prose faithfulness/relevance and live quality need separate review."
                if runtime_report else "This baseline records classifier/retrieval observations. Runtime routes, tool calls and generated answers were not evaluated.")
+
+
+def _show_semantic(base_url, report, identities, selected):
+    from app.evaluation.semantic_scoring import compare_reports
+
+    st.subheader("Generation quality review")
+    st.warning("Offline review of saved " + str(report.provenance.get("execution_mode", "unavailable"))
+               + " outputs. Annotation origin: " + report.review.origin
+               + ". Missing reviews are Not scored. No live model or judge runs here.")
+    st.caption("Snapshot completion means saved review processing completed. It does not mean application success or complete human review. "
+               "Fully meets rubric checks mean a rating of 3; they are descriptive, with no agreed acceptance gate.")
+    st.dataframe([{"Dimension": name, **counts} for name, counts in report.review_counts.items()], hide_index=True,
+                 alt="Planned, applicable, scored, missing, not applicable and scorer error review counts")
+    st.dataframe([{"Metric": name, "Status": m.status, "Value": str(m.value) if m.value is not None else "Not scored",
+                   "Numerator": m.numerator, "Denominator": m.denominator} for name, m in report.metrics.items()], hide_index=True,
+                 alt="Human semantic metrics and explicit denominators; missing values are not scores")
+    with st.expander("Rubric, metric definitions and provenance"):
+        st.json(report.references.rubric)
+        st.text(report.references.provenance_note)
+        st.json(report.provenance)
+        for name, metric in report.metrics.items():
+            st.text(name + "\n" + metric.note)
+    cases = {c.case.case_id: c for c in report.cases}
+    case_id = st.selectbox("Saved case", list(cases), key="evaluation_case")
+    if case_id in cases:
+        item = cases[case_id]
+        st.text("Review instruction\n" + item.case.input)
+        st.text("Required reference source\n" + item.case.source)
+        st.caption("Reference status: reviewed for this target · annotation origin: " + report.review.origin if item.annotation.reference_reviewed
+                   else "Reference status: AI-authored, pending human review")
+        with st.expander("Required facts and instructions"):
+            st.json(item.case.model_dump(mode="json"))
+        st.text("Actual saved answer")
+        if item.actual.output is None:
+            st.info(item.actual.unavailable_reason + " Not scored.")
+        else:
+            st.text(item.actual.output)
+        with st.expander("Saved source and tool evidence"):
+            st.text(item.actual.evidence)
+        st.dataframe([{"Dimension": name, "Status": r.status,
+                       "Rating (0–3)": str(r.score) if r.score is not None else "Not scored",
+                       "Evidence / reason": r.explanation} for name, r in item.annotation.dimensions.items()], hide_index=True,
+                     alt="Selected answer's human rubric ratings, missing statuses and evidence explanations")
+        st.text(f"Reviewer: {item.annotation.reviewer or 'Not supplied'}\nReviewed: {item.annotation.reviewed_at or 'Not supplied'}")
+        if item.annotation.critical_violations:
+            for finding in item.annotation.critical_violations:
+                st.error("Critical violation: " + finding)
+        elif not item.annotation.critical_review_complete:
+            st.info("Critical violation review: Not scored.")
+        with st.expander("Literal claim and required-fact annotations"):
+            st.json(item.annotation.model_dump(mode="json"))
+    st.subheader("Compare saved reviews")
+    available = {key: run for key, run in identities.items() if key != selected and run.report_status == "available"}
+    baseline_key = st.selectbox("Comparison baseline", ["None", *available], key="evaluation_comparison")
+    if baseline_key in available:
+        try:
+            baseline = get_evaluation(base_url, available[baseline_key]).report
+        except ChatClientError as exc:
+            st.error(str(exc))
+            return
+        comparison = compare_reports(baseline, report)
+        if not comparison["compatible"]:
+            st.warning("Incompatible comparison: " + comparison["reason"])
+        else:
+            st.text(f"Paired dimensions: {comparison['paired_dimensions']} · Missing pairs: {comparison['missing_pairs']}")
+            st.caption(comparison["note"])
+            st.dataframe(comparison["rows"], hide_index=True, alt="Paired saved human ratings; missing pairs have no delta")
+            with st.expander("Changed configuration and critical findings"):
+                st.json({"versions": comparison["version_changes"], "critical_violations": comparison["critical_violations"]})

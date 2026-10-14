@@ -237,5 +237,109 @@ supports explicit `--suite runtime --mode live` with existing configured Groq
 factories and the same isolation/call cap. It is not invoked automatically. Live
 provider/configuration compatibility, extraction/trajectory quality and three-run
 model stability are unverified; human reference review is also outstanding. Do not
-call the original full slice 3 live-validation plan complete. Discuss that deferred
-work (or an explicit order change) before proceeding to slice 4's semantic judging.
+call the original full slice 3 live-validation plan complete. The user subsequently
+approved proceeding to slice 4's offline saved-review scope, keeping these gaps and
+the optional judge deferred.
+
+## Saved generation review (slice 4, offline scope)
+
+Slice 4 processes **saved schema-v2 runtime outputs**, without rerunning application
+code, models, tools, scheduling or delivery. Its schema-v3 snapshots coexist with
+schema-v1/v2 reports. The original runtime report is never modified. Snapshot
+`completed` means review processing completed, not application success or completed
+human review. Application mode, historical commit/configuration, source-report
+fingerprint, reference/rubric/review fingerprints and semantic implementation hash
+remain visible. The optional model judge and all live calls remain deferred.
+
+Prepare an annotation template and an unscored snapshot explicitly:
+
+```sh
+python -m app.evaluation.semantic_review \
+  --report /absolute/path/to/runtime/report.json \
+  --template /absolute/path/to/annotations.json
+```
+
+The template uses exclusive creation and refuses to overwrite a previous file.
+Without `--template`, the same command saves only an unscored snapshot. Report
+storage uses the existing `--report-dir`/`OPSFLOW_EVALUATIONS_DIR` contract. Every
+snapshot gets a new run ID; saved results are immutable through these commands.
+
+`data/evaluation/semantic_references.json` supplies eight development targets:
+summary facts, draft facts, prior-turn summary, policy-to-draft coverage, missing
+FAQ eligibility, reminder status, partial-failure status and unavailable summary.
+Tool outputs and final replies are separate targets. Selected runtime subsets retain
+missing cases/outputs in planned denominators; repeated samples remain separate.
+Actual output, input/history, local tool evidence and isolated reminder state are
+retained. Generated summaries/drafts and the evaluated reply are excluded from
+source evidence so an answer cannot ground itself.
+
+These references were authored **after scripted runtime collection**, not before an
+independent benchmark. They remain AI-authored development review material pending
+human review. Required facts have stable IDs and literal source quotes. The six
+0–3 rubric dimensions are faithfulness, coverage, relevance, instruction compliance,
+status accuracy and context relevance. Scales and explanations are versioned in
+that file. Context relevance covers the supplied resource/history and acknowledged
+information gaps; coverage concerns what the answer expresses. No embedding/Ragas
+implementation or keyword-based semantic inference is claimed.
+
+A human reviewer inspects each target's saved output/evidence and its reference:
+
+1. Resolve incorrect/disputed reference facts in a new references file, prepare a
+   new template with `--references`, and retain the prior snapshot for provenance.
+2. For each reviewed target, enter `reviewer`, timezone-aware `reviewed_at` and
+   `reference_reviewed: true`. Software checks this **attestation**, not identity
+   or whether the semantic judgment is correct. No AI review is labelled human.
+3. Rate each requested dimension with `status: scored`, `score: 0`–`3`, and a short
+   evidence-based `explanation`. Alternatives are `not_scored`, `not_applicable`
+   and `scorer_error`, each with an explanation and null score. Required facts make
+   coverage applicable. Leave unavailable outputs unscored.
+4. Review factual claims using literal `output_quote`, `supported`, `explanation`
+   and a literal `source_quote` for supported claims. Set `claims_complete` only
+   after reviewing all factual claims. Zero claims produces an unscored claim ratio.
+5. Review every required fact by `fact_id`, `expressed`, `explanation` and a literal
+   `output_quote` when expressed with source support. Set `facts_complete` only
+   when all required facts were reviewed. Omissions have no answer quote.
+6. Set `critical_review_complete` when unauthorized-action/fabricated-delivery or
+   other critical findings have been inspected. Keep each finding in
+   `critical_violations`. Findings force `has_failures` even alongside high ratings.
+
+Preserve every template entry, including unreviewed targets. Fingerprints bind
+annotations to the source report, reference/rubric, sample, exact output and source
+evidence. Unknown/missing/duplicate targets, invalid scores, missing attribution,
+stale hashes, nonliteral evidence, fabricated source quotes and contradictory
+fully-faithful/full-coverage ratings are rejected. Text remains untrusted data;
+no evaluation follows source instructions or invokes a judge.
+
+Save the reviewed/partially reviewed snapshot:
+
+```sh
+python -m app.evaluation.semantic_review \
+  --report /absolute/path/to/runtime/report.json \
+  --annotations /absolute/path/to/annotations.json
+```
+
+The CLI accepts only `origin: human`. `synthetic_test` exists for explicitly labelled
+fixture checks and cannot be imported through the human CLI. Harness fixtures
+exercise good/bad arithmetic and findings; they are not independently supplied
+human annotations or evidence of model quality. Actual human review remains absent
+until the user supplies it. Missing/partial/scorer-error counts stay beside scores.
+
+`semantic_scoring` performs pure arithmetic over explicit judgments, never semantic
+classification. Means use scored applicable dimensions only; supported-claim and
+required-fact ratios use explicitly complete reviews only. Review/output coverage
+retain missing planned targets. Empty denominators remain unscored. A rubric check
+means **fully meets (3)**; lower ratings flag rubric issues, without adopting a
+benchmark acceptance threshold. The quality verdict covers recorded criteria,
+with missing reviews still visible. No overall agent accuracy or universal safety
+claim is produced.
+
+Settings shows literal answers, required facts, source evidence, per-dimension
+ratings/reasons, review origin and critical findings. Comparison reads two saved
+snapshots. Matching reference/rubric/scorer implementation/runtime dataset, execution mode, annotation
+origin and target/sample sets are required. Only paired scored dimensions get a
+delta; missing pairs have none. Changed app/prompt/model configuration and review
+fingerprints are explicit. No comparison between scripted and live evidence or
+between human and synthetic fixture annotations is allowed. Refresh, selection,
+comparison, Return and downloads remain read-only, with no scoring entry-point,
+provider or tool invocation. Saved-schema validation checks identities and aggregate
+arithmetic without creating or updating scores.

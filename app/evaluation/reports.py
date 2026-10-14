@@ -9,16 +9,17 @@ from pydantic import Field, TypeAdapter
 
 from app.evaluation.contracts import Report
 from app.evaluation.runtime_contracts import RuntimeReport
+from app.evaluation.semantic_contracts import SemanticReport
 
-ReportType = Annotated[Report | RuntimeReport, Field(discriminator="schema_version")]
+ReportType = Annotated[Report | RuntimeReport | SemanticReport, Field(discriminator="schema_version")]
 _REPORT = TypeAdapter(ReportType)
 
 
-def load_report(path: Path) -> Report | RuntimeReport:
+def load_report(path: Path) -> Report | RuntimeReport | SemanticReport:
     return parse_report(path.read_text(encoding="utf-8"))
 
 
-def parse_report(data: str) -> Report | RuntimeReport:
+def parse_report(data: str) -> Report | RuntimeReport | SemanticReport:
     return _REPORT.validate_json(data)
 
 
@@ -33,7 +34,7 @@ class ReportWriter:
         self.run_id = run_id
         self.finished = False
 
-    def save(self, report: Report | RuntimeReport) -> None:
+    def save(self, report: Report | RuntimeReport | SemanticReport) -> None:
         # Revalidate after runner mutations and before publishing any snapshot.
         report = parse_report(report.model_dump_json())
         if self.finished or report.run_id != self.run_id:

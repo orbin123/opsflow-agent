@@ -145,9 +145,35 @@ limits and are not instructions to repeat completed work.
 - **Publication/next:** initial harness `5a90b82`, correction `3738c50` and signed
   handoff in draft PR #55. DCO passes; GitHub CI run `38547084304` is running.
   Live calls, human reference review and three-repeat live stability remain deferred.
-  Discuss completing those checks or an explicit order change before slice 4.
+  The user subsequently approved offline slice 4 with these gaps retained.
   No merge/deployment.
 
+
+### ✅ Evaluation slice 4 — offline implementation verified locally, 2026-10-14
+
+- **Decision:** Proceed to slice 4 while slice 3 live verification remains deferred.
+  The user approved versioned facts/0–3 rubrics, persisted human annotations with
+  evidence, pure semantic scoring, compatible-run comparison and read-only Settings
+  display. All live calls and the optional model judge remain deferred.
+- **Contract:** Score saved synthetic runtime outputs only; never replay tools.
+  Reference review and answer annotations must be supplied explicitly by a human;
+  absent reviews stay unscored. Preserve old reports and create immutable new
+  semantic snapshots. Separate critical violations from descriptive averages.
+- **Checks:** Good/bad annotation fixtures, fabricated facts/dates, missing
+  uncertainty, unsupported draft promises, relevance, malformed/stale annotations,
+  incompatible comparisons and zero execution on reads; offline suite and inline
+  desktop/mobile/Refresh/Return review. Keep the shared PR #55 draft.
+- **Results:** Full offline suite: 1,329 pass; final focused semantic/catalogue
+  checks: 67 pass (35 new semantic tests). Dependencies/whitespace and native
+  ARM64 Docker/authentication smoke pass. Inline desktop/390 px mobile verifies
+  missing scores/output, compatible/incompatible comparisons, exact JSON/API,
+  Refresh, Return/draft and reload chat selection. Backend has zero task/tool
+  executions, no chat turns and no reminder DB; app open on 8517/backend 8024.
+- **Limits/next:** Actual human reference/answer annotations remain absent; seven
+  available outputs/eight targets and zero scores/38 applicable dimensions are
+  saved honestly. References were authored after scripted collection for development,
+  not a held-out claim. Human identity/semantic correctness is attested, not verified
+  by software. Discuss bounded offline slice 5 next; live checks/judge remain deferred.
 
 ### Remaining work
 
