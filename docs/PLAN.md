@@ -2,6 +2,35 @@
 
 ## Active Agenda — resumed 2026-10-09
 
+### ✅ Project README and recorded walkthrough — verified 2026-10-15
+
+- **Request:** Stay on `main`, write an in-depth spectator-friendly README from
+  current code/docs, and record the real application flow with 2–3 varied prompts.
+- **Scope:** Documentation/media only. Explain six tools, routing, Activity,
+  persistence, setup, APIs, evaluation evidence and deployment limits. Record
+  three live examples covering policy retrieval, compound analysis/writing and
+  one-time scheduling, plus saved pages/restoration, with synthetic input and
+  isolated SQLite files. No worker/email delivery or application implementation.
+- **Preparation:** User approved updating stale local main and preserving existing
+  edits. Fast-forwarded to `3ed5232`; overlapping earlier evaluation descriptions
+  resolve to the merged current scope. Original files/patch remain under ignored
+  `var/readme-walkthrough/backups/` and in the named Git stash. Existing REWORK
+  deletion and historical plan entry remain local changes.
+- **Verification:** Check README paths/commands against current code, inspect real
+  browser results and saved tool traces, confirm refresh performs reads only,
+  and inspect exported video/audio. No new application tests for documentation
+  alone; no branch, publication, deployment or direct push requested.
+- **Results:** Added the structured root README, actual workspace screenshot and
+  5:47 narrated 1440×900 MP4 with nine chapters, selectable English captions and
+  a WebVTT sidecar. Three live Groq/browser submissions completed: FAQ retrieval,
+  four-tool complaint analysis/writing and one-time scheduling. Saved Activity
+  confirms all six tools. Settings/reminder/draft/evaluation reads and browser
+  refresh leave exactly three completed turns, six tool calls and one pending
+  reminder. Delivery worker stayed stopped; no email was sent. Isolated app stays
+  open on UI 8521/API 8031. Local links, classifier figures, dependency/whitespace
+  checks, representative decoded video frames, audio stream/levels and caption/
+  chapter metadata pass. No full-suite rerun, hosted redeploy or new quality claim.
+
 The user closed the rework agenda and resumed this plan for remaining project work.
 Choose each next bounded slice here, discuss its contract and verification before
 coding, and record outcomes in this file and `docs/agents_doc.md`. No additional

@@ -2,6 +2,19 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** On main at the user's request, added an in-depth README with
+  current architecture/setup/API/storage/evaluation/deployment guidance and an
+  actual app screenshot. Recorded a 5:47 narrated browser walkthrough covering
+  all six tools in three successful live requests, saved pages and restoration;
+  included nine chapters, selectable English captions and a WebVTT sidecar.
+  Read/refresh verification retains exactly three turns, six tool calls and one
+  pending demo reminder. Used separate SQLite files; no worker/email delivery.
+  Verified links, saved classifier figures, dependencies/whitespace, decoded
+  frames and audio/caption/chapter metadata. No application changes/full test
+  rerun or deployment. App remains open on 8521/API 8031. User approved main
+  fast-forward/reconciliation; original documentation edits remain in a named
+  stash and ignored backups, with unrelated local changes outside this slice.
+
 - **2026-10-15:** Reviewed and merged PR #54 (`5e23a47`) and #55 (`a5c1f4d`) after
   current CI/DCO, preserving scoped evaluation commits and both change records.
   All 1,233 combined tests pass locally and in main CI `38668904494`, including
