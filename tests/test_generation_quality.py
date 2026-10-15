@@ -52,8 +52,8 @@ def test_mean_excludes_missing_and_inapplicable_but_retains_planned_counts(sampl
     assert result["status_accuracy"] == {"mean": None, "scored": 0, "applicable": 0, "planned": 3}
     assert sample[1].read_bytes() == before
     rows = evaluations.generation_rows(review)
-    assert rows[1] == {"Dimension": "Coverage", "AI rating (0–3)": "2.00", "Reviewed answers": "2 / 3"}
-    assert rows[4]["AI rating (0–3)"] == "Not scored"
+    assert rows[1] == {"Dimension": "Coverage", "Rating (0–3)": "2.00", "Reviewed answers": "2 / 3"}
+    assert rows[4]["Rating (0–3)"] == "Not scored"
 
 
 @pytest.mark.parametrize("damage", ["missing", "malformed", "score", "absent_scored", "inapplicable_scored",
@@ -85,9 +85,9 @@ def test_read_only_api_and_ui_show_actual_sample_means(workspace, recorded_model
     ui.button(key="open_evaluations").click().run()
     ui.run()
     assert not ui.exception and len(ui.table) == 2
-    assert ui.table[1].value["AI rating (0–3)"].tolist() == ["3.00", "2.00", "3.00", "3.00", "Not scored", "3.00"]
-    assert any("AI subagent review" in c.value and "2 of 3" in c.value for c in ui.caption)
-    assert "synthetic-test-fixture" in "\n".join(m.value for m in ui.markdown)
+    assert ui.table[1].value["Rating (0–3)"].tolist() == ["3.00", "2.00", "3.00", "3.00", "Not scored", "3.00"]
+    assert any("Automated sample review" in c.value and "2 of 3" in c.value for c in ui.caption)
+    assert "**Method**" in "\n".join(m.value for m in ui.markdown)
     assert not ui.selectbox and not ui.json and not ui.get("download_button")
     assert {method for method, _ in reads} == {"GET"} and sample[1].read_bytes() == before
     client = TestClient(app)

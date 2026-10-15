@@ -197,8 +197,8 @@ retries still report unfinished work accurately; completion is not guaranteed.
 **Settings → Evaluations** shows two things: the trained classifier's full
 classification report and six generation-quality review criteria. Classifier
 scores come from the existing model's recorded synthetic holdout; no model is
-rerun. Generation ratings are **AI-reviewed sample scores**, with rated/applicable answer
-counts. They come from a small fictional pilot; human review remains pending.
+rerun. Generation ratings are an **automated sample review**, with rated/applicable
+answer counts. They come from a small fictional pilot; human review remains pending.
 Expand the calculation explanations for sources, definitions and weighting.
 There are no evaluation run/history/download/log/comparison controls. Opening the
 page and ordinary chat use never trigger scoring. Return to chat preserves selection

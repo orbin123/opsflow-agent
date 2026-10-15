@@ -94,8 +94,12 @@ The saved sample records the execution-source commit `e6a30b0`; a post-collectio
 source audit matched 36 runtime/data/model files to that commit. The exact dirty
 state at invocation was not captured, so no clean-invocation claim is made. Results
 are historical sample evidence, not verification of every future or hosted answer.
-The collapsible explanation shows definitions, model/version/date, reviewed counts,
-limitations and a representative lowest-rated case's reason for each dimension.
+The collapsible explanation uses short bold Markdown labels for Method, Data,
+Checks, Scoring, Weighting and View. It explains counts and limitations briefly,
+with a concise material status finding; the full evidence/provenance remains in
+the saved data file. The visible caption says Automated sample review and the
+table uses Rating (0–3), without naming the reviewing subagent or suggesting
+manual/personal grading.
 
 ## Navigation and scope
 

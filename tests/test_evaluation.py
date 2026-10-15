@@ -142,10 +142,11 @@ def test_page_has_only_two_reports_and_no_execution_controls(workspace, recorded
     assert not ui.get("download_button")
     assert ui.metric[0].value == "88.0%"
     quality = ui.table[1].value
-    assert quality["Dimension"].tolist() == [name for name, _, _ in evaluations.CRITERIA]
-    assert quality["AI rating (0–3)"].tolist() == ["Not scored"] * 6
+    assert quality["Dimension"].tolist() == [name for name, _ in evaluations.CRITERIA]
+    assert quality["Rating (0–3)"].tolist() == ["Not scored"] * 6
     explanation = "\n".join(m.value for m in ui.markdown)
-    assert "not human ratings or Ragas scores" in explanation
+    assert "Saved automated sample ratings" in explanation
+    assert "subagent" not in explanation.lower()
     assert "12.5%" in explanation and "no combined generation score" in explanation
     assert all(method == "GET" and "/api/v1/evaluations" in url for method, url in reads)
     workspace[1].assert_not_called()
@@ -175,7 +176,7 @@ def test_missing_classifier_still_shows_pending_quality_and_return(workspace, re
     ui.button(key="open_evaluations").click().run()
     assert not ui.exception and "unavailable" in ui.error[0].value
     assert not ui.metric and len(ui.table) == 1
-    assert ui.table[0].value["AI rating (0–3)"].tolist() == ["Not scored"]*6
+    assert ui.table[0].value["Rating (0–3)"].tolist() == ["Not scored"]*6
     ui.button(key="return_to_chat").click().run()
     assert ui.text_area(key="composer").value == "Keep my draft"
     workspace[1].assert_not_called()

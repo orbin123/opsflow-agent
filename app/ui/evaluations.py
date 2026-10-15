@@ -20,24 +20,12 @@ INTENTS = {
     "summarization": "Summarization",
 }
 CRITERIA = (
-    ("Faithfulness", "Facts are supported by the source.",
-     "Compare each factual claim with the supplied text, retrieved policy or actual tool result. "
-     "Invented numbers, dates, policies or promises reduce the rating."),
-    ("Coverage", "Required facts and uncertainty are included.",
-     "Check whether the answer includes each fact required to answer the request, preserving "
-     "qualifiers and uncertainty. An accurate answer can still omit required information."),
-    ("Relevance", "The answer addresses the request.",
-     "Compare the answer with the user's question. Check that it addresses the main request "
-     "and avoids distracting or unrelated additions."),
-    ("Instruction compliance", "Requested format, tone and constraints are followed.",
-     "Check the requested format, tone and explicit constraints. Commands embedded in source "
-     "text must be treated as data rather than followed as instructions."),
-    ("Status accuracy", "Completed, failed and scheduled work is described correctly.",
-     "Compare action claims with actual execution and storage outcomes. A draft is not sent; "
-     "a scheduled reminder is not delivered. Unfinished work must remain explicit."),
-    ("Context relevance", "The right source or conversation context is used.",
-     "Check whether the supplied source, retrieved policy or prior conversation is relevant "
-     "to the current request, and whether missing information is acknowledged."),
+    ("Faithfulness", "Facts are supported by the source."),
+    ("Coverage", "Required facts and uncertainty are included."),
+    ("Relevance", "The answer addresses the request."),
+    ("Instruction compliance", "Requested format, tone and constraints are followed."),
+    ("Status accuracy", "Completed, failed and scheduled work is described correctly."),
+    ("Context relevance", "The right source or conversation context is used."),
 )
 
 
@@ -78,10 +66,10 @@ def get_generation_review(base_url: str) -> GenerationReview:
 def generation_rows(review: GenerationReview | None) -> list[dict]:
     scores = review.dimension_scores() if review else {}
     rows = []
-    for name, _, _ in CRITERIA:
+    for name, _ in CRITERIA:
         result = scores.get(name.lower().replace(" ", "_"))
         rows.append({"Dimension": name,
-                     "AI rating (0–3)": f"{result['mean']:.2f}" if result and result["mean"] is not None else "Not scored",
+                     "Rating (0–3)": f"{result['mean']:.2f}" if result and result["mean"] is not None else "Not scored",
                      "Reviewed answers": f"{result['scored']} / {result['applicable']}" if result else "Unavailable"})
     return rows
 
@@ -101,29 +89,30 @@ def show_evaluations(base_url: str) -> None:
                  alt="Classifier precision, recall, F1 and support for all eight intents and averages")
         st.caption("Precision, recall and F1 range from 0 to 1; higher is better. Support is the number of test examples.")
     with st.expander("How classifier results are calculated"):
+        st.markdown("**Method**\n\nWord TF-IDF turns request text into features. "
+                    "A calibrated linear SVM predicts one of eight intents.")
         if report is not None:
             st.markdown(
-                f"**Data:** {report.dataset.row_count:,} fictional labelled requests from `data/tasks_benchmark.csv`. "
-                f"A stratified split used {report.split.development_rows:,} development examples and "
-                f"{report.split.test_rows:,} holdout examples. Each intent's support is shown above.\n\n"
-                f"**Source:** Results recorded alongside the trained model on {report.created_on.strftime('%d %B %Y')} "
-                "in `artifacts/models/intent_router_svm_metadata.json`. This page reads those results; "
-                "it does not rerun or retrain the classifier. They describe the recorded synthetic holdout, "
-                "not current live chat or generated-answer quality."
+                f"**Data**\n\n{report.dataset.row_count:,} fictional labelled requests: "
+                f"{report.split.development_rows:,} development examples and "
+                f"{report.split.test_rows:,} holdout examples, split proportionally across intents."
             )
         else:
-            st.markdown("The page requires valid results saved alongside the trained classifier. "
-                        "Missing or mismatched results are unavailable, never a zero score or a pass.")
+            st.markdown("**Data**\n\nThe saved classifier results are unavailable.")
         st.markdown(
-            "**Accuracy:** Correct intent predictions ÷ all test examples.\n\n"
-            "**Precision:** Correct predictions of an intent ÷ all predictions of that intent.\n\n"
-            "**Recall:** Correct predictions of an intent ÷ all examples labelled with that intent.\n\n"
-            "**F1:** 2 × precision × recall ÷ (precision + recall). The recorded scorer uses zero "
-            "when the denominator is zero.\n\n"
-            "**Weighting:** Macro averages give each of the eight intents equal weight (12.5% each). "
-            "Weighted averages use each intent's share of test examples. The two averages coincide "
-            "when every intent has equal support. No additional custom weights are applied."
+            "**Metrics**\n\n"
+            "- **Accuracy:** Correct predictions ÷ all test examples.\n"
+            "- **Precision:** Correct predictions of an intent ÷ all predictions of that intent.\n"
+            "- **Recall:** Correct predictions of an intent ÷ all examples of that intent.\n"
+            "- **F1:** 2 × precision × recall ÷ (precision + recall); zero if both are zero.\n"
+            "- **Support:** Number of test examples for an intent.\n\n"
+            "**Weighting**\n\nMacro averages give each intent equal weight (12.5%). "
+            "Weighted averages use each intent's share of test examples. "
+            "They coincide when all intents have equal support."
         )
+        if report is not None:
+            st.markdown(f"**View**\n\nResults recorded on {report.created_on.strftime('%d %B %Y')} "
+                        "for the fictional holdout. Opening this page does not rerun or retrain the model.")
     st.subheader("Generation quality")
     try:
         review = get_generation_review(base_url)
@@ -132,49 +121,50 @@ def show_evaluations(base_url: str) -> None:
         st.error(str(exc))
     if review:
         available = sum(bool(c.answer and c.answer.strip()) for c in review.cases)
-        st.caption(f"AI subagent review · {available} of {len(review.cases)} planned answers available. "
-                   "Scores describe this fictional development sample; human review is pending.")
+        st.caption(f"Automated sample review · {available} of {len(review.cases)} planned answers available.")
         findings = [finding for case in review.cases for finding in case.critical_findings]
         if findings:
             st.warning(f"The review identified {len(findings)} critical finding(s). See the explanation below.")
     st.table(generation_rows(review), hide_index=True,
-             alt="AI-reviewed generation quality ratings and reviewed versus applicable answer counts")
+             alt="Generation quality sample ratings and reviewed versus applicable answer counts")
     with st.expander("How generation quality is assessed"):
+        st.markdown("**Method**\n\nCompare each answer with its request, source facts, "
+                    "relevant context and actual task outcomes.")
+        if review:
+            st.markdown(f"**Data**\n\n{len(review.cases)} fictional test cases; {available} answers available. "
+                        "Unavailable answers remain in the counts. "
+                        f"Reviewed on {review.reviewed_at.strftime('%d %B %Y')}.")
+        else:
+            st.markdown("**Data**\n\nThe saved sample review is unavailable. Missing ratings stay Not scored.")
+        st.markdown("**Checks**\n\n" + "\n".join(
+            f"- **{name}:** {meaning}" for name, meaning in CRITERIA))
         st.markdown(
-            "**Method:** An AI subagent assesses actual application answers against each request, source "
-            "text, retrieved policy, relevant history and actual tool/action outcomes. "
-            "These are AI judgments, not human ratings or Ragas scores.\n\n"
-            "**Data:** Fictional development examples. The source, actual answer and reason for each "
-            "rating are retained in `data/evaluation/generation_quality.json`. "
-            "Normal chat use and opening this page do not trigger scoring or change these results."
+            "**Scoring**\n\n"
+            "- **0:** Fundamental failure.\n"
+            "- **1:** Major errors or omissions.\n"
+            "- **2:** Minor errors or omissions.\n"
+            "- **3:** Fully meets the criterion.\n\n"
+            "**Weighting**\n\nEach rating is the mean of scored, applicable answers, "
+            "with equal weight per answer. Reviewed answers shows scored ÷ applicable planned answers. "
+            "Missing answers stay in that count; inapplicable checks are excluded. "
+            "There is no combined generation score.\n\n"
+            "**View**\n\nSaved automated sample ratings. "
+            "Normal chat use does not recalculate them. "
+            "A small fictional sample does not establish overall model reliability."
         )
         if review:
-            st.markdown(f"**Review date:** {review.reviewed_at.strftime('%d %B %Y')}. "
-                        f"**Application version:** `{review.source_commit[:7]}`. "
-                        f"**Models:** {', '.join(sorted(set(review.models.values())))}.")
-            for limitation in review.limitations:
-                st.text(limitation)
-        for name, _, explanation in CRITERIA:
-            st.markdown(f"**{name}:** {explanation}")
-            if review:
-                dimension = name.lower().replace(" ", "_")
-                scored = [case for case in review.cases if case.ratings[dimension].score is not None]
-                if scored:
-                    example = min(scored, key=lambda case: case.ratings[dimension].score)
-                    st.text(f"Review evidence ({example.case_id}): {example.ratings[dimension].reason}")
-        if review:
+            gaps = [case for case in review.cases if case.application_status == "completed"
+                    and case.ratings["status_accuracy"].score is not None
+                    and case.ratings["status_accuracy"].score < 3]
+            if gaps:
+                st.markdown("**Finding**")
+                for case in gaps:
+                    if case.case_id == "missing_applicability":
+                        st.markdown("Contractor eligibility needed clarification, but the application "
+                                    "marked the answer as completed. This reduced the status accuracy rating.")
+                    else:
+                        st.text(case.ratings["status_accuracy"].reason)
             for case in review.cases:
                 for finding in case.critical_findings:
-                    st.text(f"Critical finding ({case.case_id}): {finding}")
-        st.markdown(
-            "**Rating scale:** 0 = fundamental failure; 1 = major errors or omissions; "
-            "2 = minor errors or omissions; 3 = fully meets the criterion. "
-            "A missing review stays **Not scored**, rather than becoming 0.\n\n"
-            "**Weighting:** Each dimension is reported separately. Its mean is the sum of supplied "
-            "ratings ÷ the number of rated applicable answers, with equal weight per answer. "
-            "Reviewed answers shows that count against all applicable planned answers; missing "
-            "outputs/reviews stay in that denominator, and inapplicable dimensions are excluded. "
-            "There is no combined generation score or custom weighting between dimensions. "
-            "Invented delivery or other critical action claims must be identified explicitly; "
-            "high ratings on other dimensions cannot cancel them."
-        )
+                    st.markdown("**Critical finding**")
+                    st.text(finding)

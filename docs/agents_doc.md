@@ -2,6 +2,15 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** Simplified visible evaluation explanations at the user's request:
+  short project-voice Markdown labels (Method/Data/Metrics or Scoring/Weighting/View),
+  concise bullet definitions and a plain-language FAQ finding. Removed visible
+  subagent/Ragas attribution; caption accurately says Automated sample review and
+  the table uses Rating (0–3). Saved evidence origin/scores are unchanged; no manual
+  or personal grading claim. All 37 focused checks, dependencies/whitespace and
+  inline desktop/mobile formatting pass. No new model calls, scoring, publication,
+  merge or deployment; page stays open on 8517 for review.
+
 - **2026-10-14:** User requested a subagent generation-quality test and populated
   scores. Collected eight fictional planned cases via actual application/Groq
   entry points, with disposable state, blocked SMTP/worker and a 20-attempt cap.

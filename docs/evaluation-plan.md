@@ -2,7 +2,14 @@
 
 ## Current approved scope — 2026-10-14
 
-**Latest request:** The user approved delegated testing of actual generation
+**Presentation update:** The user requested shorter project-voice explanations,
+without visible subagent wording. Use bold Markdown labels and a concise automated
+sample-review caption; preserve the evidence origin and scores. This is wording
+and formatting only, not personal/manual grading or new model execution. All
+37 focused checks, dependencies/whitespace and inline desktop/mobile formatting
+checks pass; saved evidence and scores are unchanged.
+
+**Latest scoring request:** The user approved delegated testing of actual generation
 outputs to fill the six scores. A subagent reviewed eight planned fictional
 application examples, with a 20-provider-attempt cap and isolated state/blocked
 delivery. The results must be labelled AI-reviewed development samples, with

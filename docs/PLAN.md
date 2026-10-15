@@ -95,6 +95,20 @@ limits and are not instructions to repeat completed work.
   blocked SMTP/worker and no retries; no reminder/email submission occurred.
   Human calibration, independent references and stability remain absent.
 
+### ✅ Evaluation explanation copy — verified locally 2026-10-15
+
+- **Request:** Remove subagent wording from the visible page and shorten both
+  explanations into a simple project voice, using bold Markdown labels for method,
+  data, metrics/scoring and weighting. Keep the two-section layout and all scores.
+- **Truthfulness:** Describe the generation results as an automated sample review;
+  do not imply personal/manual ratings. Keep sample size, missing answers, calculation
+  rules and material findings concise. Retain the saved evidence/provenance unchanged.
+- **Checks:** Existing focused API/UI/arithmetic/navigation tests, dependency/
+  whitespace checks and inline desktop/mobile explanation review. All 37 focused
+  checks pass; dependencies/whitespace and browser Markdown/wrapping checks pass.
+  No new model calls or scoring; data and scores are unchanged. One scoped signed
+  commit, no PR publication/merge/deployment.
+
 ### Remaining work
 
 The remaining checklist covers observability/remaining endpoints, packaging,
