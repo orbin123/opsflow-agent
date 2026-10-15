@@ -115,6 +115,14 @@ verified to block PR merge. Main CI passes all 1,190 tests, the AMD64 image and
 authentication smoke checks. Hosted health/access, chat/Activity and refresh
 restoration pass without reexecution. See `docs/cicd.md`.
 
+The user authorized final PR review/merge and existing deployment verification
+on 2026-10-15. PR #54 merged as `5e23a47`; PR #55 merged as `a5c1f4d`, retaining
+scoped evaluation commits. Main CI `38668904494` passes all 1,233 tests, dependencies,
+AMD64 Docker build and authentication checks. Render automatically deployed the
+exact combined release as `dep-db83a6k9v7es73bg9d1g`; hosted access checks and
+Chrome verification of both evaluation tables/explanations pass after reload.
+See `docs/cicd.md` for release verification.
+
 On `feature/evaluation-baseline`, the user-approved evaluation submission scope
 is now two read-only Settings sections: the trained classifier's full classification
 report and one generation-quality table with six AI-reviewed dimensions.

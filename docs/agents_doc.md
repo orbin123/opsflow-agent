@@ -2,12 +2,15 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
-- **2026-10-15:** User authorized final review/merge of remaining PRs and deployment
-  verification. Reviewed PR #54 and current CI/DCO, then merged it as `5e23a47`.
-  Integrating its fix into #55 preserves both change-record histories. Final
-  combined tests pass (1,233), as do dependency/whitespace checks. #55
-  publication/merge and hosted verification are in progress;
-  unrelated primary-checkout changes remain untouched.
+- **2026-10-15:** Reviewed and merged PR #54 (`5e23a47`) and #55 (`a5c1f4d`) after
+  current CI/DCO, preserving scoped evaluation commits and both change records.
+  All 1,233 combined tests pass locally and in main CI `38668904494`, including
+  AMD64 Docker/authentication checks. Render automatically deployed that exact
+  merge SHA as `dep-db83a6k9v7es73bg9d1g`. Ten hosted access checks pass; Chrome
+  verifies classifier accuracy/table, six saved generation ratings/counts and
+  short explanations. One transient metric-asset failure clears on reload.
+  No new scoring, chat submission, email or worker ran. Unrelated primary edits
+  remain intact; release documentation uses `[skip render]` to preserve runtime.
 
 - **2026-10-15:** Simplified visible evaluation explanations at the user's request:
   short project-voice Markdown labels (Method/Data/Metrics or Scoring/Weighting/View),

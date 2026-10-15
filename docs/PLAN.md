@@ -32,20 +32,24 @@ limits and are not instructions to repeat completed work.
   records. Live SMTP/inbox, deployment and general model reliability remain
   unverified. See feature documentation and `docs/audit.md` for recorded limits.
 
-### ⏳ Final PR review and deployment — authorized 2026-10-15
+### ✅ Final PR review and deployment — verified 2026-10-15
 
-- **Request:** Review and merge all remaining PRs, then verify that the existing
-  CI/CD deployment includes the changes and share the live site.
-- **Status:** Reviewed PR #54's root configuration/error-message fix and passing
-  CI/DCO; merged as `5e23a47`. Integrating it into #55 preserves both documentation
-  histories. Publish the final simplified evaluation page without squashing its
-  scoped commits; require current CI/DCO before merging.
-- **Verification:** Full combined offline suite, dependency/whitespace checks,
-  final PR diff and user-only DCO audit. All 1,233 combined tests pass with
-  the existing LangChain warning; dependencies/whitespace pass. Existing local UI
-  review is complete.
-  Confirm main CI and Render's deployed SHA, then check hosted health/access and
-  the two-section Evaluations page. Preserve unrelated primary-checkout changes.
+- **Request:** Review/merge all remaining PRs and verify the existing deployment.
+- **Merged:** PR #54 as `5e23a47`; PR #55 as `a5c1f4d` after current CI/DCO.
+  Evaluation slice commits remain separate; no implementation PR is open.
+  Only documentation conflicted during integration; both histories were retained.
+- **Checks:** All 1,233 combined offline tests pass locally and in main CI
+  `38668904494`, with the existing LangChain warning. Dependencies/whitespace,
+  AMD64 Docker build/authentication and user-only DCO checks pass.
+- **Deployment:** Render automatically made `dep-db83a6k9v7es73bg9d1g` live on the
+  exact combined merge SHA. Ten hosted health/authentication/WebSocket/backend
+  isolation checks pass. Chrome verifies 88% accuracy, the full classifier report,
+  six saved ratings/counts and both short explanations. A transient metric-asset
+  fetch failed once and cleared on reload. Hosted Evaluations stays open.
+- **Limits:** No new model scoring, chat submission, worker or email delivery ran.
+  Sample ratings/limitations are unchanged. Unrelated primary-checkout edits are
+  preserved. Record this release in a documentation-only PR with `[skip render]`
+  so the verified runtime remains deployed; see docs/cicd.md.
 
 ### ✅ Simplified evaluation submission — verified locally 2026-10-14
 

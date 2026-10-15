@@ -71,6 +71,28 @@ ran. Failed-main deployment gating, rollback and hosting capacity were not
 experimentally tested. The verified documentation-only follow-up uses
 `[skip render]` in its commit/merge message; CI still runs, but Render skips it.
 
+## Combined release — 2026-10-15
+
+At the user's instruction, PR #54 (workflow configuration) merged as `5e23a47`
+and PR #55 (simplified Evaluations) as `a5c1f4d401bcba17c8715a6fe923a7a22088ccf5`.
+Current CI/DCO passed before each merge; #55's final PR run is `38668535349`.
+Main run `38668904494` passes all 1,233 tests, dependencies/whitespace, the AMD64
+Docker build and container authentication checks. Evaluation slice commits remain
+separate; no implementation PR remains open.
+
+Render's existing main/checksPass connection automatically created
+`dep-db83a6k9v7es73bg9d1g` with trigger `new_commit`. It is live on the exact
+#55 merge SHA, which contains both fixes. Ten hosted checks pass for health,
+HTTP/WebSocket authentication and hidden backend paths, including both evaluation
+API paths. No manual deployment or access-configuration change was needed.
+Chrome verifies 88% holdout accuracy, all classification rows, the six saved
+ratings/counts and both shortened explanations. A metric JavaScript asset failed
+to load once immediately after deployment; the asset returned HTTP 200 and a
+reload cleared the failure. The final page renders correctly and stays open.
+No new scoring, chat submission, email sending or worker startup ran. The release
+record uses `[skip render]`; CI still runs, and the deployed runtime remains the
+verified #55 merge SHA.
+
 ## Recovery
 
 For a bad release, open the service's Render Deploys page and roll back to a

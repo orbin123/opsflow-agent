@@ -82,12 +82,15 @@ changes belonging to the separate workflow configuration fix. Keep scoped,
 user-only DCO-signed commits; do not squash previous slice boundaries or open a
 second evaluation PR. The current scope supersedes earlier five-slice next steps.
 
-**Status:** simplified page and AI sample display implemented and verified locally.
+**Status:** simplified page and sample display merged in PR #55 as `a5c1f4d`
+after final CI/DCO passed. The combined 1,233 tests pass. Main CI `38668904494` passes; Render deployment
+`dep-db83a6k9v7es73bg9d1g` is live on the exact merge SHA. Hosted access checks
+pass. Chrome verifies both tables, ratings/counts and short explanations after
+reload. Hosted Evaluations stays open; no new scoring or chat execution ran.
 The app remains open on 8517/backend 8024. Source execution was recorded at
 `e6a30b0`, with a post-collection runtime-source audit; exact dirty state at
 invocation was not captured. Human calibration, independent reference review,
 repeat stability and the three rate-limited cases remain outstanding. These are
-small development-sample ratings, not a general quality benchmark. Publication
-and independent user review remain pending; no Ragas, external judge API,
-SMTP/worker, merge or deployment is authorized. Further collection requires its
+small development-sample ratings, not a general quality benchmark. User approved final review/merge and existing deployment on 2026-10-15.
+No Ragas, external judge API or SMTP/worker is authorized. Further collection requires its
 own bounded discussion; reopening the page never regenerates scores.
