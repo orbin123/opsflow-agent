@@ -2,6 +2,32 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** GitHub rejected direct main publication because a PR and CI/DCO
+  are required. The user authorized normal PR publication, monitoring/fixes and
+  merge through to public availability. Keep the local checkout on main, preserve
+  the two signed commits, and publish through a documentation branch with the
+  existing protection and `[skip render]` documentation-only convention.
+
+- **2026-10-15:** User authorized pushing all remaining work on main. Included
+  the pre-existing REWORK.md removal and historical evaluation-baseline plan
+  entry in a separate signed documentation commit; explicitly marked that entry
+  superseded by the simplified, merged evaluation release. README/video checks
+  remain applicable; no application behavior changed. Publication uses normal
+  Git push without changing repository protection.
+
+- **2026-10-15:** On main at the user's request, added an in-depth README with
+  current architecture/setup/API/storage/evaluation/deployment guidance and an
+  actual app screenshot. Recorded a 5:47 narrated browser walkthrough covering
+  all six tools in three successful live requests, saved pages and restoration;
+  included nine chapters, selectable English captions and a WebVTT sidecar.
+  Read/refresh verification retains exactly three turns, six tool calls and one
+  pending demo reminder. Used separate SQLite files; no worker/email delivery.
+  Verified links, saved classifier figures, dependencies/whitespace, decoded
+  frames and audio/caption/chapter metadata. No application changes/full test
+  rerun or deployment. App remains open on 8521/API 8031. User approved main
+  fast-forward/reconciliation; original documentation edits remain in a named
+  stash and ignored backups, with unrelated local changes outside this slice.
+
 - **2026-10-15:** Reviewed and merged PR #54 (`5e23a47`) and #55 (`a5c1f4d`) after
   current CI/DCO, preserving scoped evaluation commits and both change records.
   All 1,233 combined tests pass locally and in main CI `38668904494`, including

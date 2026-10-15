@@ -1,0 +1,162 @@
+WEBVTT
+
+00:00:00.700 --> 00:00:09.006
+This is OpsFlow Agent, an operations copilot for understanding text, finding demo
+employee policies, drafting emails and scheduling reminders.
+
+00:00:09.006 --> 00:00:13.378
+This is a real browser recording with live model responses.
+
+00:00:13.378 --> 00:00:19.935
+We will try three requests, inspect the tools in Activity, and return to saved
+results.
+
+00:00:21.979 --> 00:00:23.880
+First, a policy question.
+
+00:00:23.880 --> 00:00:28.159
+OpsFlow searches a local collection of fictional employee policies.
+
+00:00:28.159 --> 00:00:32.437
+These are demonstration policies, not a real employer’s rules.
+
+00:00:38.836 --> 00:00:44.795
+Activity shows the work as it happens: classification, routing, model calls and
+tool execution.
+
+00:00:44.795 --> 00:00:48.626
+The answer appears after the outcome has been saved.
+
+00:00:59.684 --> 00:01:03.384
+The answer is based on the matching remote work policy.
+
+00:01:03.384 --> 00:01:11.153
+Activity keeps the exact retrieval result, the selected route and elapsed time, so
+we can inspect the evidence behind the explanation.
+
+00:01:16.284 --> 00:01:19.766
+Opening Activity reveals the workflow and tool records.
+
+00:01:19.766 --> 00:01:23.684
+This is observable execution data, not private model reasoning.
+
+00:01:23.684 --> 00:01:27.602
+The policy answer remains marked as fictional demo information.
+
+00:01:31.537 --> 00:01:34.015
+Second, one request with four operations.
+
+00:01:34.015 --> 00:01:41.449
+We will analyze a complaint, extract its keywords, summarize the incident, and
+draft a professional email to Alex.
+
+00:01:41.449 --> 00:01:45.992
+The agent can choose tools in sequence and use their results.
+
+00:01:51.714 --> 00:01:57.673
+Activity shows the work as it happens: classification, routing, model calls and
+tool execution.
+
+00:01:57.673 --> 00:02:01.504
+The answer appears after the outcome has been saved.
+
+00:02:27.379 --> 00:02:31.067
+The completed response brings the analysis and draft together.
+
+00:02:31.067 --> 00:02:36.394
+The draft has a recipient, subject and body, followed by separate review
+instructions.
+
+00:02:36.394 --> 00:02:39.672
+Creating this draft has not sent an email.
+
+00:02:44.154 --> 00:02:51.347
+Activity records the tools that actually ran: sentiment analysis, keyword
+extraction, summarization and email drafting.
+
+00:02:51.347 --> 00:02:55.183
+Each tool has saved arguments, results and timing.
+
+00:02:55.183 --> 00:03:00.458
+Earlier successful results would remain available if a later operation failed.
+
+00:03:17.716 --> 00:03:19.363
+Third, a follow-up reminder.
+
+00:03:19.363 --> 00:03:24.305
+We supply one task, a date, a clear time and a timezone.
+
+00:03:24.305 --> 00:03:28.836
+Reminder requests always use the agent, with local validation before storage.
+
+00:03:36.706 --> 00:03:42.665
+Activity shows the work as it happens: classification, routing, model calls and
+tool execution.
+
+00:03:42.665 --> 00:03:46.496
+The answer appears after the outcome has been saved.
+
+00:03:50.623 --> 00:03:54.690
+The acknowledgement shows the stored task and exact resolved due time.
+
+00:03:54.690 --> 00:03:56.538
+Scheduling writes a reminder record.
+
+00:03:56.538 --> 00:03:59.865
+It does not send an email or start delivery.
+
+00:03:59.865 --> 00:04:02.823
+This recording leaves the separate reminder worker stopped.
+
+00:04:06.752 --> 00:04:12.077
+Settings, Reminders shows the task, its recorded timezone and current delivery
+state.
+
+00:04:12.077 --> 00:04:13.852
+Refresh only reads storage.
+
+00:04:13.852 --> 00:04:20.952
+A scheduled state means delivery is still pending; even SMTP acceptance would not
+prove inbox arrival.
+
+00:04:25.363 --> 00:04:28.645
+Settings, Emails collects successful drafts across saved chats.
+
+00:04:28.645 --> 00:04:34.799
+Here is the draft from our complaint example, with its source conversation and
+review actions.
+
+00:04:34.799 --> 00:04:38.901
+Opening this page does not draft again or send anything.
+
+00:04:47.065 --> 00:04:50.177
+Evaluations separates classifier performance from generation quality.
+
+00:04:50.177 --> 00:04:55.067
+The recorded classifier accuracy is eighty-eight percent on a synthetic holdout.
+
+00:04:55.067 --> 00:05:01.290
+These saved results are historical evidence; opening the page does not rerun the
+model.
+
+00:05:06.131 --> 00:05:11.991
+The generation table is an automated review of five available answers from eight
+planned examples.
+
+00:05:11.991 --> 00:05:15.117
+Ratings use a zero-to-three scale with explicit counts.
+
+00:05:15.117 --> 00:05:20.978
+This small development sample is not an overall agent accuracy or an independent
+human benchmark.
+
+00:05:27.741 --> 00:05:34.036
+Refreshing restores the saved conversation and its Activity without submitting the
+request again.
+
+00:05:34.036 --> 00:05:43.236
+OpsFlow connects natural language to inspectable tools, keeps the results, and
+distinguishes analysis, drafts, scheduled work and actual delivery.
+
+00:05:43.236 --> 00:05:47.109
+Review the README for setup, architecture and limitations.

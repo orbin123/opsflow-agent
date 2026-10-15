@@ -2,6 +2,40 @@
 
 ## Active Agenda — resumed 2026-10-09
 
+### ✅ Project README and recorded walkthrough — verified 2026-10-15
+
+- **Request:** Stay on `main`, write an in-depth spectator-friendly README from
+  current code/docs, and record the real application flow with 2–3 varied prompts.
+- **Scope:** Documentation/media only. Explain six tools, routing, Activity,
+  persistence, setup, APIs, evaluation evidence and deployment limits. Record
+  three live examples covering policy retrieval, compound analysis/writing and
+  one-time scheduling, plus saved pages/restoration, with synthetic input and
+  isolated SQLite files. No worker/email delivery or application implementation.
+- **Preparation:** User approved updating stale local main and preserving existing
+  edits. Fast-forwarded to `3ed5232`; overlapping earlier evaluation descriptions
+  resolve to the merged current scope. Original files/patch remain under ignored
+  `var/readme-walkthrough/backups/` and in the named Git stash. Existing REWORK
+  deletion and historical plan entry remain local changes.
+- **Verification:** Check README paths/commands against current code, inspect real
+  browser results and saved tool traces, confirm refresh performs reads only,
+  and inspect exported video/audio. No new application tests for documentation
+  alone; no branch, publication, deployment or direct push requested.
+- **Results:** Added the structured root README, actual workspace screenshot and
+  5:47 narrated 1440×900 MP4 with nine chapters, selectable English captions and
+  a WebVTT sidecar. Three live Groq/browser submissions completed: FAQ retrieval,
+  four-tool complaint analysis/writing and one-time scheduling. Saved Activity
+  confirms all six tools. Settings/reminder/draft/evaluation reads and browser
+  refresh leave exactly three completed turns, six tool calls and one pending
+  reminder. Delivery worker stayed stopped; no email was sent. Isolated app stays
+  open on UI 8521/API 8031. Local links, classifier figures, dependency/whitespace
+  checks, representative decoded video frames, audio stream/levels and caption/
+  chapter metadata pass. No full-suite rerun, hosted redeploy or new quality claim.
+- **Publication authorization:** Direct main push was rejected by GitHub's PR and
+  CI/DCO protection. The user authorized the usual PR path, monitoring checks,
+  fixing failures and merging until the changes are public. Publish the existing
+  signed commits through a documentation branch while retaining the local main
+  checkout. Use `[skip render]` for this documentation/media-only merge.
+
 The user closed the rework agenda and resumed this plan for remaining project work.
 Choose each next bounded slice here, discuss its contract and verification before
 coding, and record outcomes in this file and `docs/agents_doc.md`. No additional
@@ -157,6 +191,61 @@ limits and are not instructions to repeat completed work.
   guarantees. Reminder creation/delivery and actual email sending were not tested.
 - **Publication:** User authorized branch push/PR; merge and deployment of this
   fix remain pending independent user review. Local review stays open on 8516.
+
+### ✅ Historical evaluation baseline — verified 2026-10-14
+
+This retained slice-1 record describes the earlier implementation and its then-next
+step. The simplified evaluation submission and final merged release documented
+above supersede its CLI, catalogue and pending-publication statements.
+
+- **Request:** Plan a Settings evaluation area with major project-relevant agent,
+  ground-truth, context/summary relevance and generation criteria; include staged
+  implementation, self-verification and assessment talking points.
+- **Proposal:** [evaluation-plan.md](evaluation-plan.md) defines seven evaluation
+  areas, reviewed reference data, explicit score denominators, local execution/
+  scoring separation and saved reports. Recommend an offline baseline first,
+  then read-only Settings catalogue, isolated live workflow/agent evaluation,
+  semantic review and final CI/assessment evidence. Each slice requires its own
+  contract/verification discussion. The user approved slice 1 on 2026-10-14;
+  the local baseline is now implemented, with no UI or live LLM work in this slice.
+- **Publication decision, 2026-10-14:** The user wants the entire evaluation plan
+  in the existing draft [PR #55](https://github.com/orbin123/opsflow-agent/pull/55),
+  on `feature/evaluation-baseline` → `main`, with scoped commits for each agreed
+  slice. No new PR per evaluation slice; keep the shared PR draft until the full
+  agreed work is verified and the user authorizes final review/merge. This does
+  not authorize implementing all slices at once. Follow the completion table and
+  new-chat handoff in `docs/evaluation-plan.md`.
+- **Planning verification:** Reviewed actual routing, traces, tools, Settings,
+  storage/deployment and primary evaluation documentation; inspected Figma
+  Foundations metadata. Offline reproduction matches the saved 200-row synthetic
+  classifier holdout (accuracy 0.88, macro F1 0.8813, calibration metrics) and
+  historical threshold figures (47/47 accepted labels, 23.5% coverage). Canonical
+  FAQ checks match 25/25 indexed questions. These do not measure live workflow
+  quality or independent FAQ generalization. No live LLM, worker/email execution,
+  UI implementation, full-suite rerun or publication performed for this proposal.
+- **Implementation:** `python -m app.evaluation` runs the unchanged 200-row
+  classifier holdout plus eight router/sixteen FAQ development cases. Versioned
+  contracts, pure scorers, fingerprints, explicit unscored states and atomic
+  per-run JSON reports separate execution state from quality misses. Pilot
+  references are AI-authored pending human review. See [evaluation.md](evaluation.md).
+- **Verification:** All 1,219 offline tests pass (29 new evaluation checks), with
+  the existing LangChain history warning; dependency/whitespace checks pass. A
+  fresh-process CLI blocks network, classifier fitting and provider/side-effect
+  imports. Failure tests cover wrong scores/policies, invalid references/reports,
+  changed artifacts, zero denominators, interruption and failed atomic writes.
+  All 224 baseline cases execute; holdout scores reproduce saved metadata. Pilot
+  finds 7/8 intent labels, 8/8 permitted eligibility, 12/16 FAQ statuses, 8/8
+  accepted policy matches and 8/10 expected matches. Two proposed ambiguity labels
+  yield safe no-match abstention. These results are provisional development evidence,
+  not model-quality guarantees. No UI/browser, live LLM, reminder/SMTP or hosted
+  execution was needed or performed in this CLI-only slice.
+- **Next bounded discussion:** Read-only Settings evaluation catalogue/detail
+  page and explicit synthetic baseline packaging. Later agent/semantic slices
+  remain proposed; no merge or deployment is authorized by the baseline approval.
+  Slice 1 is commit `140d8f6`; GitHub CI run `38518747613` and DCO pass, including
+  the Linux AMD64 image and container checks. The evaluation checkout is
+  `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`; primary checkout
+  changes belong to the separate configuration fix and must be preserved.
 
 ### Remaining work
 
