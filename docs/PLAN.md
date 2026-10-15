@@ -30,6 +30,11 @@
   open on UI 8521/API 8031. Local links, classifier figures, dependency/whitespace
   checks, representative decoded video frames, audio stream/levels and caption/
   chapter metadata pass. No full-suite rerun, hosted redeploy or new quality claim.
+- **Publication authorization:** Direct main push was rejected by GitHub's PR and
+  CI/DCO protection. The user authorized the usual PR path, monitoring checks,
+  fixing failures and merging until the changes are public. Publish the existing
+  signed commits through a documentation branch while retaining the local main
+  checkout. Use `[skip render]` for this documentation/media-only merge.
 
 The user closed the rework agenda and resumed this plan for remaining project work.
 Choose each next bounded slice here, discuss its contract and verification before

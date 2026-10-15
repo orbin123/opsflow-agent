@@ -2,6 +2,12 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** GitHub rejected direct main publication because a PR and CI/DCO
+  are required. The user authorized normal PR publication, monitoring/fixes and
+  merge through to public availability. Keep the local checkout on main, preserve
+  the two signed commits, and publish through a documentation branch with the
+  existing protection and `[skip render]` documentation-only convention.
+
 - **2026-10-15:** User authorized pushing all remaining work on main. Included
   the pre-existing REWORK.md removal and historical evaluation-baseline plan
   entry in a separate signed documentation commit; explicitly marked that entry
