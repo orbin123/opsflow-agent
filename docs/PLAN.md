@@ -32,6 +32,98 @@ limits and are not instructions to repeat completed work.
   records. Live SMTP/inbox, deployment and general model reliability remain
   unverified. See feature documentation and `docs/audit.md` for recorded limits.
 
+### ⏳ Final PR review and deployment — authorized 2026-10-15
+
+- **Request:** Review and merge all remaining PRs, then verify that the existing
+  CI/CD deployment includes the changes and share the live site.
+- **Status:** Reviewed PR #54's root configuration/error-message fix and passing
+  CI/DCO; merged as `5e23a47`. Integrating it into #55 preserves both documentation
+  histories. Publish the final simplified evaluation page without squashing its
+  scoped commits; require current CI/DCO before merging.
+- **Verification:** Full combined offline suite, dependency/whitespace checks,
+  final PR diff and user-only DCO audit. All 1,233 combined tests pass with
+  the existing LangChain warning; dependencies/whitespace pass. Existing local UI
+  review is complete.
+  Confirm main CI and Render's deployed SHA, then check hosted health/access and
+  the two-section Evaluations page. Preserve unrelated primary-checkout changes.
+
+### ✅ Simplified evaluation submission — verified locally 2026-10-14
+
+- **Decision:** The user rejected Ragas and requested only a full classifier report
+  plus one generation-quality table (faithfulness, coverage, relevance, instruction
+  compliance, status accuracy, context relevance). Explanations of sources,
+  calculations and weighting belong in collapsible panels.
+- **Removal:** The user explicitly requested removing unwanted code rather than
+  keeping it as backup. Delete the evaluation run catalogue/storage/CLI, runtime
+  harness, detailed traces, annotation snapshots/comparison machinery, development
+  fixtures and their obsolete tests. Keep existing application behavior and tests.
+- **Contract:** Read the existing trained model's metadata for classification
+  results, without loading/retraining/executing the model. Display all eight labels,
+  accuracy, precision/recall/F1/support, macro and weighted averages. Validate saved
+  metrics and model association; unavailable evidence never becomes zero or a pass.
+  Show the six manual-review criteria with pending ratings; no human labels exist.
+- **Verification:** Saved-value/average checks, invalid metadata/model mismatch,
+  read-only API/UI failure handling, the two-section UI and chat/draft locks. Run
+  full offline suite/dependencies/whitespace and packaging checks, then inline
+  desktop/mobile/navigation/reload review on 8517. No model/provider/SMTP/worker work.
+- **Results:** All 1,210 offline tests pass (20 focused evaluation checks), with
+  the existing LangChain history warning. Dependencies/whitespace and native ARM64
+  Docker build/authentication smoke checks pass; the image reads classifier metadata
+  without evaluation fixtures. Inline desktop/390 px mobile verifies both tables,
+  collapsed source/formula/weighting explanations, table-contained mobile scrolling,
+  Return with multiline draft and reload restoring the same chat. Review backend
+  task counts stay zero, the chat has zero turns and no reminder DB exists. Deeper
+  Figma inspection remains quota-limited; documented native adaptation used.
+- **Publication:** One scoped user-signed removal/rework commit in existing draft
+  PR #55. Earlier five-slice infrastructure is superseded by this approved submission
+  scope; further evaluation work requires discussion. No merge/deployment authorization.
+
+### ✅ Generation sample ratings — verified locally 2026-10-14
+
+- **Request:** Delegate actual generation-quality testing to a subagent and fill
+  all six dimensions in the simplified table. Label the results as AI-reviewed
+  development samples, never human annotations or general model accuracy.
+- **Contract:** Eight planned fictional cases, actual application/Groq outputs,
+  at most 20 provider attempts, isolated temporary chat/reminder state and blocked
+  SMTP/worker startup. Preserve failures/missing outputs and applicable denominators.
+  Subagent rates source-supported faithfulness, required-fact coverage, relevance,
+  instructions, action/status claims and context on the existing 0–3 scale.
+- **Display:** One small reviewed-data file, validated read-only access and equal
+  per-answer dimension means/counts in the same table. Keep sources, method,
+  limitations and concise evidence in the existing collapsed explanation. Do not
+  restore run catalogues, raw traces, imports, comparisons or execution controls.
+- **Checks:** Hand-computable aggregation, missing/inapplicable/invalid ratings,
+  no scores for absent outputs, unavailable-data handling and zero execution on
+  API/page reads; full offline suite/dependencies, Docker and inline browser.
+  Scoped signed commit in draft PR #55; no Ragas or merge/deployment.
+- **Results:** Subagent reviewed five available outputs from eight planned cases
+  in 12 real Groq attempts; three rate-limited cases stay unscored. Faithfulness
+  3.00, coverage 2.80, relevance 3.00, instruction compliance 2.80, status accuracy
+  2.33 and context relevance 3.00, on 0–3 with explicit applicable counts. Contractor
+  FAQ has a completed/needs_clarification status defect and weak fictional
+  qualification; workflow behavior is unchanged in this scoring slice.
+- **Verification:** 1,227 offline tests pass; final 37 focused checks pass,
+  dependencies/whitespace and native ARM64 Docker/authentication checks pass.
+  Packaged data/API/UI means/counts agree. Inline desktop/mobile/explanation/
+  Return/draft/reload checks pass; review backend task counts and chat turns stay
+  zero, its reminder DB is absent. Collection used separate disposable storage,
+  blocked SMTP/worker and no retries; no reminder/email submission occurred.
+  Human calibration, independent references and stability remain absent.
+
+### ✅ Evaluation explanation copy — verified locally 2026-10-15
+
+- **Request:** Remove subagent wording from the visible page and shorten both
+  explanations into a simple project voice, using bold Markdown labels for method,
+  data, metrics/scoring and weighting. Keep the two-section layout and all scores.
+- **Truthfulness:** Describe the generation results as an automated sample review;
+  do not imply personal/manual ratings. Keep sample size, missing answers, calculation
+  rules and material findings concise. Retain the saved evidence/provenance unchanged.
+- **Checks:** Existing focused API/UI/arithmetic/navigation tests, dependency/
+  whitespace checks and inline desktop/mobile explanation review. All 37 focused
+  checks pass; dependencies/whitespace and browser Markdown/wrapping checks pass.
+  No new model calls or scoring; data and scores are unchanged. One scoped signed
+  commit, no PR publication/merge/deployment.
+
 ### ✅ Fixed-workflow configuration correction — verified 2026-10-10
 
 - **Diagnosis:** The reported `check the sentiment of I am sad` failure is saved
@@ -447,7 +539,7 @@ The model generates only required `subject` and `body` fields with `additionalPr
 4. **Regression and live inspection:** Run the existing suite, `pip check`, and `git diff --check`. Inspect three live synthetic drafts: a factual operations update, an explicit tone request with an optional missing sender, and source containing an embedded command. Review facts, uncertainty, recipient-facing prose, placeholders, and instruction separation. No live provider calls in automated tests; these samples are not a drafting-quality or injection-resistance benchmark.
 5. **Bounded implementation after agreement:** Add `app/tools/email_drafting.py`, `tests/test_email_drafting.py`, and `docs/email-drafting.md`; update this plan/change record. Use `feature/structured-email-drafting` and one logical commit/PR. Verify every commit's DCO sign-off with the user's account details before publication; add no other author attribution.
 
-**Verification/delivery:** Implemented on `feature/structured-email-drafting`; all 456 tests (43 new), `pip check`, and whitespace checks pass. Nine live synthetic requests were inspected across three prompt iterations. Earlier closure drafts invented a Monday reopening date; explicit grounding examples removed it in the final inspected set. Final operations/tone/embedded-command examples preserved inspected facts, used optional placeholders, and separated user actions. These checks do not establish broad factual fidelity or injection resistance; user review remains necessary. See `docs/email-drafting.md`. Delivery-provider and timezone choices belong to later slices.
+**Verification/delivery:** Implemented on `feature/structured-email-drafting`; all 456 tests (44 new), `pip check`, and whitespace checks pass. Nine live synthetic requests were inspected across three prompt iterations. Earlier closure drafts invented a Monday reopening date; explicit grounding examples removed it in the final inspected set. Final operations/tone/embedded-command examples preserved inspected facts, used optional placeholders, and separated user actions. These checks do not establish broad factual fidelity or injection resistance; user review remains necessary. See `docs/email-drafting.md`. Delivery-provider and timezone choices belong to later slices.
 
 ## Agreed Gmail Notification Delivery Slice — Verified Offline
 

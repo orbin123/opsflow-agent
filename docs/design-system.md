@@ -187,3 +187,20 @@ The approved temporary Render demo uses a native warning above the existing
 workspace, only when `OPSFLOW_TEMPORARY_DEMO=1`. It states disposable storage,
 disabled reminder emails and synthetic-data use. Reuse the existing warning
 palette and body typography; no new layout, CSS or reusable component is added.
+
+
+## Evaluations adaptation
+
+The user simplified Evaluations on 2026-10-14 to two sections: a full classifier
+report followed by one six-dimension generation-quality table. Reuse the 760 px
+Settings container, VT323 headings, IBM Plex Mono body and existing semantic error
+colors. Native static tables avoid extra download/search/toolbars; calculation
+explanations use collapsed native expanders. Return to chat and existing navigation
+locks remain. Table content should wrap or stay within the container at 390 px.
+The generation caption says Automated sample review; its table uses Rating (0–3)
+and rated/applicable answer counts. Missing scores stay textual (Not scored); unavailable classifier
+results must not hide the generation criteria. Both collapsed explanations use short bold Markdown labels for Method, Data,
+Metrics/Scoring, Weighting and View. Definitions are concise bullets; findings
+and sample limits stay brief within that explanation; no extra dashboard is introduced. No new CSS/token/component or Figma node is needed.
+Foundations listing succeeded; deeper inspection hit the Starter quota, so use
+this documented native adaptation. Previous run/case/catalogue layouts are removed.

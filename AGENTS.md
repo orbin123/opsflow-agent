@@ -115,11 +115,29 @@ verified to block PR merge. Main CI passes all 1,190 tests, the AMD64 image and
 authentication smoke checks. Hosted health/access, chat/Activity and refresh
 restoration pass without reexecution. See `docs/cicd.md`.
 
+On `feature/evaluation-baseline`, the user-approved evaluation submission scope
+is now two read-only Settings sections: the trained classifier's full classification
+report and one generation-quality table with six AI-reviewed dimensions.
+`GET /api/v1/evaluations` reads validated existing model metadata, verifies its
+association with the model file, and never loads/runs/trains the classifier.
+Generation ratings now come from one user-authorized eight-case AI-subagent
+review: five actual answers available, 12 Groq attempts, three rate-limited cases
+retained unscored. The six-dimension table shows means and rated/applicable counts;
+`GET /api/v1/evaluations/generation` reads one compact saved evidence file, never
+executes work. Human calibration is absent; these are development sample ratings. The user explicitly
+rejected Ragas and requested removing the earlier run catalogue/storage/CLI,
+runtime harness, annotation snapshots/comparisons, logs/JSON and fixtures rather
+than retaining them as backup. Those earlier five-slice implementation contracts
+are superseded by the simplified scope; application chat Activity, reminder
+behavior and monitoring remain separate. See docs/evaluation.md and
+`docs/evaluation-plan.md` for the current scope and verification status.
+
 ## Read Before Working
 
 - `docs/package-structure.md`: application package responsibilities and launch commands.
 
 - `docs/PLAN.md`: active implementation agenda for remaining project work.
+- `docs/evaluation-plan.md`: evaluation scope, completed slices, next step and new-chat handoff; read it before continuing evaluation work.
 - `docs/agents_doc.md`: brief record of completed changes and the next step.
 - `skills/karpathy-guidelines/SKILL.md`: follow the supplied Karpathy development guidelines. If missing, ask before development.
 
@@ -129,6 +147,7 @@ restoration pass without reexecution. See `docs/cicd.md`.
 - Discuss the next bounded step, its contract and proportional verification with the user, then implement the agreed slice. The plan does not authorize implementing every item at once.
 - Use current code and feature documentation to understand existing behavior and avoid repeating completed work. Existing collaboration, design, routing and side-effect rules still apply.
 - Track decisions, scope, status and verification in `docs/PLAN.md` and `docs/agents_doc.md`. Do not use `agenda.txt` as an alternative agenda.
+- Evaluation work must follow the current approved scope in `docs/evaluation-plan.md`. Keep its handoff current with the project plan and change record; discuss and record any scope change before implementing it.
 
 ## Frontend Design
 
@@ -139,6 +158,8 @@ restoration pass without reexecution. See `docs/cicd.md`.
 - Suggest and discuss each implementation step before coding. Explain the problem, proposed change, inputs/outputs, and how we will verify it. Once the user agrees, complete that bounded step without repeatedly requesting permission.
 - Take the slow approach throughout this project so the user understands the code. Prefer one small, explainable step at a time. If asked to implement too much at once, remind the user of this agreement and propose a smaller first slice.
 - Make each development change a logically scoped commit and PR with a clear purpose and relevant verification. Keep unrelated work separate; preserve existing user changes. Use logical job-based branch and PR names such as `fix/...` or `feature/...`, not `codex/...`. Agree on the slice before implementation and prepare its reviewable diff before publication.
+- **Final publication, authorized 2026-10-15:** The user authorized reviewing/merging all remaining PRs and verifying the existing CI/CD deployment. Preserve scoped evaluation commits and require current CI/DCO; final deployment must include both workflow configuration and the simplified evaluation page.
+- **Evaluation exception, approved 2026-10-14:** Keep the entire evaluation implementation in the existing draft PR #55 (`feature/evaluation-baseline` → `main`). Make distinct scoped, user-signed commits for each agreed slice and keep related handoff/verification documentation in that same PR. Do not open a PR per evaluation slice or squash away slice boundaries during the build. Keep PR #55 draft until the full agreed plan is verified and the user authorizes final review/merge. This changes publication grouping, not the one-slice-at-a-time discussion and verification rule.
 - Do not add `Co-authored-by`, ChatGPT, Codex, or any other non-user author attribution to commits, merge commits, PR descriptions, or PR details. Authorship should remain only the user's GitHub account.
 - Before opening or updating a PR, confirm the DCO check will pass for every commit. Use only the user's GitHub account details for any required `Signed-off-by` line.
 - State assumptions and ask about material uncertainties before implementing. Do not silently change scope or choose external services.

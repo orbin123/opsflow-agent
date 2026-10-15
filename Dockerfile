@@ -16,6 +16,7 @@ RUN pip install --no-cache-dir -r requirements.runtime.txt && pip check
 COPY app/ app/
 COPY artifacts/models/ artifacts/models/
 COPY data/company_faq.json data/company_faq.json
+COPY data/evaluation/generation_quality.json data/evaluation/generation_quality.json
 COPY ui/ ui/
 COPY .streamlit/config.toml .streamlit/config.toml
 COPY docs/user-guide.md docs/user-guide.md

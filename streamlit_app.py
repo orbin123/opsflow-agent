@@ -13,6 +13,7 @@ import streamlit as st
 from app.ui.ui_client import ChatClientError, create_chat, get_chat, list_chats, submit_chat, rename_chat, delete_chat, list_reminders
 from app.ui.chat_menu import chat_menu, HTML, CSS, JS
 from app.ui.email_catalogue import saved_email_entries
+from app.ui.evaluations import show_evaluations
 
 
 st.set_page_config(page_title="OpsFlow · Console", layout="wide")
@@ -374,6 +375,15 @@ with st.sidebar:
                       width="stretch", on_click=change_view, args=("emails",))
             st.button("Reminders", key="open_reminders", icon=":material/alarm:",
                       width="stretch", on_click=change_view, args=("reminders",))
+            st.button("Evaluations", key="open_evaluations", icon=":material/fact_check:",
+                      width="stretch", on_click=change_view, args=("evaluations",))
+
+if st.session_state.view == "evaluations":
+    with st.container(width=760, key="evaluations_page"):
+        st.button("Return to chat", key="return_to_chat", icon=":material/arrow_back:",
+                  on_click=change_view, args=("chat",))
+        show_evaluations(api_url)
+    st.stop()
 
 if st.session_state.view == "docs":
     with st.container(width=760, key="docs_guide"):

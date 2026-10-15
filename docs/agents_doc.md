@@ -2,6 +2,145 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** User authorized final review/merge of remaining PRs and deployment
+  verification. Reviewed PR #54 and current CI/DCO, then merged it as `5e23a47`.
+  Integrating its fix into #55 preserves both change-record histories. Final
+  combined tests pass (1,233), as do dependency/whitespace checks. #55
+  publication/merge and hosted verification are in progress;
+  unrelated primary-checkout changes remain untouched.
+
+- **2026-10-15:** Simplified visible evaluation explanations at the user's request:
+  short project-voice Markdown labels (Method/Data/Metrics or Scoring/Weighting/View),
+  concise bullet definitions and a plain-language FAQ finding. Removed visible
+  subagent/Ragas attribution; caption accurately says Automated sample review and
+  the table uses Rating (0–3). Saved evidence origin/scores are unchanged; no manual
+  or personal grading claim. All 37 focused checks, dependencies/whitespace and
+  inline desktop/mobile formatting pass. No new model calls, scoring, publication,
+  merge or deployment; page stays open on 8517 for review.
+
+- **2026-10-14:** User requested a subagent generation-quality test and populated
+  scores. Collected eight fictional planned cases via actual application/Groq
+  entry points, with disposable state, blocked SMTP/worker and a 20-attempt cap.
+  Five available outputs in 12 attempts; three rate-limited cases retain null
+  scores. Saved one compact AI-reviewed evidence file, added validated GET-only
+  reading and equal-weight dimension means/counts to the existing six-row table.
+  Ratings /3: faithfulness 3.00, coverage 2.80, relevance 3.00, instruction compliance
+  2.80, status accuracy 2.33, context relevance 3.00. Contractor FAQ's completed
+  label incorrectly replaces needs_clarification; fictional qualification is weak.
+  Findings retained; no workflow fix bundled. 1,227 offline tests pass, final 37
+  focused checks pass, dependencies/whitespace/native ARM64 Docker/authentication
+  pass. Inline desktop/mobile/explanation/Return/draft/reload pass; exact packaged
+  data/API/UI scores agree, zero review-backend tasks/chat turns and no reminder DB.
+  Source execution e6a30b0; post-collection audit matches runtime files, exact
+  invocation dirty state unavailable. Human calibration, independent references,
+  repeat stability and three unavailable scenarios remain gaps. Page open on
+  8517/backend 8024. No Ragas, external judge API, SMTP/worker, merge/deployment.
+  Keep scoped signed commit local in existing draft PR #55 until user review.
+
+- **2026-10-14:** At the user's request, replaced PR #55's five-slice evaluation
+  infrastructure with two Settings sections: full recorded classifier report and
+  six pending manual generation-quality criteria, each with collapsed explanations.
+  Removed the old catalogue/storage/CLI, runtime harness, semantic annotation/
+  snapshot/comparison pipeline, development fixtures and obsolete tests; no backup
+  implementation retained. One GET reads validated model metadata/hash, without
+  model execution. Updated scope/guide/package/design documentation. All 1,210
+  offline tests pass (20 focused checks), dependencies/whitespace and native ARM64
+  Docker/authentication smoke checks pass. Inline desktop/390 px mobile verifies
+  tables/formulas/weights, contained scrolling, Return/draft and reload selection;
+  zero backend tasks/chat turns and no reminder DB. Figma deep read quota-limited;
+  documented native adaptation used. App open on 8517/backend 8024. Generation
+  scores remain unassigned. Ragas/live judge/model/SMTP/worker and merge/deployment
+  excluded. Earlier evaluation entries below are historical, superseded where
+  they describe removed code or next steps. Keep existing PR #55 draft pending review.
+
+- **2026-10-14:** User approved advancing to evaluation slice 4's offline scope
+  while keeping slice 3 live calls and the optional judge deferred. Added eight
+  development source/fact targets, six 0–3 rubrics, explicitly attributed human
+  annotation templates/imports, immutable schema-v3 snapshots, pure semantic
+  arithmetic and compatible saved-run comparisons in read-only Settings. Missing
+  review/output/error states and critical findings stay explicit. Full suite:
+  1,329 pass; final focused checks: 67 pass (35 new semantic tests). Dependency/
+  whitespace/native ARM64 Docker/authentication checks pass. Inline desktop/390 px
+  mobile verifies missing scores, comparison limits, JSON/API agreement, Refresh,
+  Return/draft and reload selection; zero review-backend task/tool executions,
+  zero chat turns and no reminder DB. App open on 8517/backend 8024. No real human
+  scores supplied: 7/8 outputs, 0/38 rubric scores; references are AI-authored after
+  scripted collection and remain development material. Figma read hit quota;
+  existing approved native design used. Next: bounded offline slice 5 discussion.
+  Implementation `b5be7bf`; fresh saved review snapshots
+  `fdd5662ab97e42a0b15891713ec98359`/`fb449cfda3a347c4b8ca10c39977e9dc`
+  retain missing human scores and current scorer fingerprints after the clean commit.
+  Keep PR #55 draft; no live model/judge, SMTP/worker, merge or deployment.
+
+- **2026-10-14:** Implemented the user-approved offline part of evaluation slice 3:
+  24 synthetic runtime scenarios, pure payload/trajectory/context/state evaluators,
+  schema-v2 reports, dedicated subprocesses/disposable SQLite and fixed reminder
+  clock, blocked SMTP/worker startup, explicit global model budget and opt-in live
+  mode. Existing schema-v1 reports remain readable; Settings displays saved runtime
+  traces and their scripted qualification. All 1,295 offline tests pass (44 new),
+  dependencies/whitespace, native ARM64 Docker/authentication/old-baseline packaging
+  checks pass. Initial full pilot observes 24/24 cases, 48 scripted model attempts,
+  21 tool calls and zero SMTP/worker attempts; controlled failures remain visible.
+  Inline desktop/mobile/download/draft/refresh review passed. Corrected standalone
+  routing is unobserved/unscored; collection labels/counts retain budget observations
+  without implying app success. Clean report `45dbe8795b9c4b32ae534d43133be12b` at
+  `3738c50` records 24 cases, 48 scripted attempts and 21 tools with zero delivery
+  attempts/provider invocations. API/download match; the review backend has zero
+  task/tool executions and no chat turns/reminder DB. App remains open on 8517.
+  Initial harness commit `5a90b82` and correction `3738c50` stay distinct in PR #55. All live calls were explicitly deferred;
+  human reference review, live quality/stability and semantic scoring are unverified.
+  Keep PR #55 draft and finish/report the deferred slice 3 work or agree an order
+  change before slice 4. No merge/deployment or actual provider/email execution.
+
+
+- **2026-10-14:** Implemented approved evaluation slice 2 in the shared draft PR #55:
+  GET-only list/detail, native Settings catalogue/evidence/downloads, shared report
+  directory and exact historical synthetic baseline packaging. All 1,251 offline
+  tests pass (32 new), dependencies/whitespace pass. Native ARM64 Docker build,
+  bundled report inspection and authentication smoke pass. Inline desktop/390 px
+  mobile verifies historical warning, failed/unscored FAQ evidence, exact JSON
+  download, Return/draft retention, Refresh and reload selection restoration.
+  Backend task/tool counts stay zero, review chat has no turns and reminder DB
+  is absent. App stays open on 8517. Deeper Figma inspection hit quota; documented
+  approved Settings adaptation used. Existing reload/session-draft limits remain.
+  Commit `ca25384` is pushed to draft PR #55; DCO passes and hosted CI
+  `38523501919` is running. No live model/worker/SMTP, merge or deployment.
+  Next: agree slice 3 case/reference/isolation/call-budget contract before coding.
+
+
+- **2026-10-14:** User changed evaluation publication to one shared draft PR #55
+  on `feature/evaluation-baseline` → main, with scoped commits for each agreed
+  slice. Updated AGENTS.md and the evaluation plan with this exception, a completion
+  table and a self-contained new-chat handoff. Slice 1 is verified at `140d8f6`;
+  GitHub CI `38518747613` and DCO pass, including the AMD64 image/container checks.
+  Slice 2's read-only Settings catalogue is next for contract/verification discussion;
+  slices 3–5 remain planned. This change is documentation only; prior application
+  verification remains the baseline. Continue in the existing evaluation checkout,
+  preserve the separate primary-checkout changes, and keep the PR draft until final
+  user review/merge authorization.
+
+- **2026-10-14:** Implemented approved evaluation slice 1 on
+  `feature/evaluation-baseline` from main in an isolated worktree. Added the offline
+  CLI, 24-case development pilot, classifier holdout/calibration and local FAQ
+  scorers, reference validation and atomic versioned reports. All 1,219 tests
+  pass (29 new), plus dependency/whitespace checks; fresh-process verification
+  blocks network, classifier fitting and provider/side-effect imports. All 224
+  evaluation cases execute; router holdout reproduces metadata. Pilot records
+  7/8 intent labels, 8/8 eligibility, 12/16 FAQ statuses and 8/10 expected matches;
+  references remain AI-authored pending human review, with misses retained.
+  No UI, live LLM, worker/SMTP or hosted evaluation. Next slice is read-only
+  Settings display; merge/deployment remain pending explicit user instruction.
+
+- **2026-10-14:** Researched and documented the evaluation proposal in
+  `docs/evaluation-plan.md`; updated the active plan with staged local baseline,
+  Settings catalogue, workflow/agent, semantic and CI/assessment slices. Reviewed
+  current code, primary sources and Figma Foundations metadata. Offline check
+  reproduces saved classifier holdout/calibration metrics (200 rows, accuracy
+  0.88, macro F1 0.8813), 47/47 threshold-accepted labels at 23.5% coverage,
+  and 25/25 indexed canonical FAQ matches. Documented synthetic/indexed-data
+  limits; no live LLM, SMTP/worker, new UI or full-suite run. Application
+  implementation remains proposed pending first-slice agreement.
+
 - **2026-10-10:** Diagnosed the reported sentiment failure in the credential-free
   local CI container (8515): Activity reports `configuration`, with no scoring.
   Render samples pass for sentiment, keywords, FAQ, summary and drafting; missing
@@ -643,7 +782,7 @@ implementation awaits discussion.
 
 - **2026-10-06:** Recorded a proposed standalone email-drafting contract in `docs/PLAN.md`: recipient/source/writing inputs, generated subject/body separated from fixed user actions, strict Groq settings, sanitized failures, and proportional offline/live verification. Reviewed existing summarization code and current Groq/LangChain documentation. Proposal awaits agreement; no application code, provider calls, or runtime tests changed.
 
-- **2026-10-06:** Implemented the agreed standalone `draft_email` tool with separate source/writing inputs, unchanged recipient, strict subject/body generation, fixed user actions, lazy Groq configuration, and sanitized failures. All 456 tests (43 new), `pip check`, and whitespace checks pass. Nine synthetic live calls across three prompt iterations exposed invented reopening dates; explicit grounding examples corrected the final inspected set. Final samples preserved inspected facts and excluded an embedded command, without establishing general fidelity/injection resistance. Added `docs/email-drafting.md`; no delivery, routing, agent, API, or memory changes.
+- **2026-10-06:** Implemented the agreed standalone `draft_email` tool with separate source/writing inputs, unchanged recipient, strict subject/body generation, fixed user actions, lazy Groq configuration, and sanitized failures. All 456 tests (44 new), `pip check`, and whitespace checks pass. Nine synthetic live calls across three prompt iterations exposed invented reopening dates; explicit grounding examples corrected the final inspected set. Final samples preserved inspected facts and excluded an embedded command, without establishing general fidelity/injection resistance. Added `docs/email-drafting.md`; no delivery, routing, agent, API, or memory changes.
 
 - **2026-10-06:** Recorded a provider-independent notification-delivery proposal: configured-user-only envelope, separate draft/action sections, accepted/failed/unknown outcomes, no automatic retries, and proportional transport-double tests. Requested the existing sender provider and confirmation of Asia/Kolkata as the future reminder default. No delivery code or messages sent; settings/implementation agreement remain pending. Email-drafting PR #11 remains open and separate.
 
