@@ -1,14 +1,13 @@
 # Evaluation submission plan
 
-## Final publication — authorized 2026-10-15
+## Final publication — merged and deployed 2026-10-15
 
 The user authorized review/merge of all remaining PRs and verification of the
-existing deployment. Publish the final simplified scope in #55, retain the
-scoped signed commits and require CI/DCO before merge. Check the combined tree
-with the reviewed #54 configuration fix; then confirm main CI, matching Render
-release and hosted Evaluations. Earlier no-publication statements below are
-historical boundaries superseded by this instruction. No new scoring collection
-or application feature is authorized.
+existing deployment. PRs #54/#55 are merged after CI/DCO, retaining scoped signed
+commits. Main CI passes and Render's automatic release matches the combined
+merge SHA; hosted Evaluations is verified. See docs/cicd.md. Earlier exclusion
+of merge/deployment is a historical boundary superseded by this instruction.
+No new scoring collection or application feature is authorized.
 
 ## Current approved scope — 2026-10-14
 
@@ -75,15 +74,18 @@ outside this evaluation-only removal.
 
 ## Continue in a new chat
 
-Use `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`, branch
-`feature/evaluation-baseline`, and existing draft
-[PR #55](https://github.com/orbin123/opsflow-agent/pull/55). Preserve primary-checkout
-changes belonging to the separate workflow configuration fix. Keep scoped,
-user-only DCO-signed commits; do not squash previous slice boundaries or open a
-second evaluation PR. The current scope supersedes earlier five-slice next steps.
+PR #55 is merged; use current `main` for future work. Its scoped implementation
+history remains on `feature/evaluation-baseline` and in
+[PR #55](https://github.com/orbin123/opsflow-agent/pull/55). The review worktree is
+`/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`; inspect its
+branch/status before editing. Preserve unrelated primary-checkout changes.
+Keep user-only DCO-signed commits and the recorded slice boundaries. Further
+evaluation implementation requires a new bounded discussion; the earlier
+five-slice agenda is superseded by the current simplified submission scope.
 
 **Status:** simplified page and sample display merged in PR #55 as `a5c1f4d`
-after final CI/DCO passed. The combined 1,233 tests pass. Main CI `38668904494` passes; Render deployment
+after final CI/DCO passed. The combined 1,233 tests and main CI `38668904494`
+pass. Render deployment
 `dep-db83a6k9v7es73bg9d1g` is live on the exact merge SHA. Hosted access checks
 pass. Chrome verifies both tables, ratings/counts and short explanations after
 reload. Hosted Evaluations stays open; no new scoring or chat execution ran.
@@ -91,6 +93,8 @@ The app remains open on 8517/backend 8024. Source execution was recorded at
 `e6a30b0`, with a post-collection runtime-source audit; exact dirty state at
 invocation was not captured. Human calibration, independent reference review,
 repeat stability and the three rate-limited cases remain outstanding. These are
-small development-sample ratings, not a general quality benchmark. User approved final review/merge and existing deployment on 2026-10-15.
-No Ragas, external judge API or SMTP/worker is authorized. Further collection requires its
+small development-sample ratings, not a general quality benchmark. User approved
+final review/merge and existing deployment on 2026-10-15.
+No Ragas, external judge API or SMTP/worker is authorized. Further collection
+requires its
 own bounded discussion; reopening the page never regenerates scores.
