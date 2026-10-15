@@ -187,6 +187,61 @@ limits and are not instructions to repeat completed work.
 - **Publication:** User authorized branch push/PR; merge and deployment of this
   fix remain pending independent user review. Local review stays open on 8516.
 
+### ✅ Historical evaluation baseline — verified 2026-10-14
+
+This retained slice-1 record describes the earlier implementation and its then-next
+step. The simplified evaluation submission and final merged release documented
+above supersede its CLI, catalogue and pending-publication statements.
+
+- **Request:** Plan a Settings evaluation area with major project-relevant agent,
+  ground-truth, context/summary relevance and generation criteria; include staged
+  implementation, self-verification and assessment talking points.
+- **Proposal:** [evaluation-plan.md](evaluation-plan.md) defines seven evaluation
+  areas, reviewed reference data, explicit score denominators, local execution/
+  scoring separation and saved reports. Recommend an offline baseline first,
+  then read-only Settings catalogue, isolated live workflow/agent evaluation,
+  semantic review and final CI/assessment evidence. Each slice requires its own
+  contract/verification discussion. The user approved slice 1 on 2026-10-14;
+  the local baseline is now implemented, with no UI or live LLM work in this slice.
+- **Publication decision, 2026-10-14:** The user wants the entire evaluation plan
+  in the existing draft [PR #55](https://github.com/orbin123/opsflow-agent/pull/55),
+  on `feature/evaluation-baseline` → `main`, with scoped commits for each agreed
+  slice. No new PR per evaluation slice; keep the shared PR draft until the full
+  agreed work is verified and the user authorizes final review/merge. This does
+  not authorize implementing all slices at once. Follow the completion table and
+  new-chat handoff in `docs/evaluation-plan.md`.
+- **Planning verification:** Reviewed actual routing, traces, tools, Settings,
+  storage/deployment and primary evaluation documentation; inspected Figma
+  Foundations metadata. Offline reproduction matches the saved 200-row synthetic
+  classifier holdout (accuracy 0.88, macro F1 0.8813, calibration metrics) and
+  historical threshold figures (47/47 accepted labels, 23.5% coverage). Canonical
+  FAQ checks match 25/25 indexed questions. These do not measure live workflow
+  quality or independent FAQ generalization. No live LLM, worker/email execution,
+  UI implementation, full-suite rerun or publication performed for this proposal.
+- **Implementation:** `python -m app.evaluation` runs the unchanged 200-row
+  classifier holdout plus eight router/sixteen FAQ development cases. Versioned
+  contracts, pure scorers, fingerprints, explicit unscored states and atomic
+  per-run JSON reports separate execution state from quality misses. Pilot
+  references are AI-authored pending human review. See [evaluation.md](evaluation.md).
+- **Verification:** All 1,219 offline tests pass (29 new evaluation checks), with
+  the existing LangChain history warning; dependency/whitespace checks pass. A
+  fresh-process CLI blocks network, classifier fitting and provider/side-effect
+  imports. Failure tests cover wrong scores/policies, invalid references/reports,
+  changed artifacts, zero denominators, interruption and failed atomic writes.
+  All 224 baseline cases execute; holdout scores reproduce saved metadata. Pilot
+  finds 7/8 intent labels, 8/8 permitted eligibility, 12/16 FAQ statuses, 8/8
+  accepted policy matches and 8/10 expected matches. Two proposed ambiguity labels
+  yield safe no-match abstention. These results are provisional development evidence,
+  not model-quality guarantees. No UI/browser, live LLM, reminder/SMTP or hosted
+  execution was needed or performed in this CLI-only slice.
+- **Next bounded discussion:** Read-only Settings evaluation catalogue/detail
+  page and explicit synthetic baseline packaging. Later agent/semantic slices
+  remain proposed; no merge or deployment is authorized by the baseline approval.
+  Slice 1 is commit `140d8f6`; GitHub CI run `38518747613` and DCO pass, including
+  the Linux AMD64 image and container checks. The evaluation checkout is
+  `/Users/orbin/.codex/worktrees/evaluation-baseline/opsflow-agent`; primary checkout
+  changes belong to the separate configuration fix and must be preserved.
+
 ### Remaining work
 
 The remaining checklist covers observability/remaining endpoints, packaging,

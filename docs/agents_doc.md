@@ -2,6 +2,13 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** User authorized pushing all remaining work on main. Included
+  the pre-existing REWORK.md removal and historical evaluation-baseline plan
+  entry in a separate signed documentation commit; explicitly marked that entry
+  superseded by the simplified, merged evaluation release. README/video checks
+  remain applicable; no application behavior changed. Publication uses normal
+  Git push without changing repository protection.
+
 - **2026-10-15:** On main at the user's request, added an in-depth README with
   current architecture/setup/API/storage/evaluation/deployment guidance and an
   actual app screenshot. Recorded a 5:47 narrated browser walkthrough covering
