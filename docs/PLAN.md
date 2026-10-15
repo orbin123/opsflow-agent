@@ -32,6 +32,21 @@ limits and are not instructions to repeat completed work.
   records. Live SMTP/inbox, deployment and general model reliability remain
   unverified. See feature documentation and `docs/audit.md` for recorded limits.
 
+### ⏳ Final PR review and deployment — authorized 2026-10-15
+
+- **Request:** Review and merge all remaining PRs, then verify that the existing
+  CI/CD deployment includes the changes and share the live site.
+- **Status:** Reviewed PR #54's root configuration/error-message fix and passing
+  CI/DCO; merged as `5e23a47`. Integrating it into #55 preserves both documentation
+  histories. Publish the final simplified evaluation page without squashing its
+  scoped commits; require current CI/DCO before merging.
+- **Verification:** Full combined offline suite, dependency/whitespace checks,
+  final PR diff and user-only DCO audit. All 1,233 combined tests pass with
+  the existing LangChain warning; dependencies/whitespace pass. Existing local UI
+  review is complete.
+  Confirm main CI and Render's deployed SHA, then check hosted health/access and
+  the two-section Evaluations page. Preserve unrelated primary-checkout changes.
+
 ### ✅ Simplified evaluation submission — verified locally 2026-10-14
 
 - **Decision:** The user rejected Ragas and requested only a full classifier report

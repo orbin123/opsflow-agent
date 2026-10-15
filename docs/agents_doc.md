@@ -2,6 +2,13 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-15:** User authorized final review/merge of remaining PRs and deployment
+  verification. Reviewed PR #54 and current CI/DCO, then merged it as `5e23a47`.
+  Integrating its fix into #55 preserves both change-record histories. Final
+  combined tests pass (1,233), as do dependency/whitespace checks. #55
+  publication/merge and hosted verification are in progress;
+  unrelated primary-checkout changes remain untouched.
+
 - **2026-10-15:** Simplified visible evaluation explanations at the user's request:
   short project-voice Markdown labels (Method/Data/Metrics or Scoring/Weighting/View),
   concise bullet definitions and a plain-language FAQ finding. Removed visible

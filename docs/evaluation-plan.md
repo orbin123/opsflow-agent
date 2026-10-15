@@ -1,5 +1,15 @@
 # Evaluation submission plan
 
+## Final publication — authorized 2026-10-15
+
+The user authorized review/merge of all remaining PRs and verification of the
+existing deployment. Publish the final simplified scope in #55, retain the
+scoped signed commits and require CI/DCO before merge. Check the combined tree
+with the reviewed #54 configuration fix; then confirm main CI, matching Render
+release and hosted Evaluations. Earlier no-publication statements below are
+historical boundaries superseded by this instruction. No new scoring collection
+or application feature is authorized.
+
 ## Current approved scope — 2026-10-14
 
 **Presentation update:** The user requested shorter project-voice explanations,
