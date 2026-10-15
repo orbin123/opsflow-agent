@@ -2,6 +2,18 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-10:** Diagnosed the reported sentiment failure in the credential-free
+  local CI container (8515): Activity reports `configuration`, with no scoring.
+  Render samples pass for sentiment, keywords, FAQ, summary and drafting; missing
+  source/reminder time clarify. User approved correcting root `.env` loading in
+  all three fixed workflows and explicit configuration failure replies. Three
+  new regression cases failed before the fix; 134 focused and all 1,196 tests
+  pass, plus dependency/whitespace checks. Inline review on 8516 verifies all
+  three configuration errors, successful live workflows after configured restart,
+  and refresh restoration with three executions only. No email/worker execution;
+  reminder creation/delivery and general model reliability remain unverified.
+  Branch `fix/workflow-configuration`; PR publication authorized, merge pending.
+
 - **2026-10-10:** At the user's instruction, merged PR #52 as a3176c2 after
   CI/DCO passed. Main CI 38051090755 passes 1,190 tests, dependency/whitespace,
   AMD64 Docker build and smoke checks. Render automatically deployed the same

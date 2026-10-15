@@ -127,7 +127,7 @@ beyond the recorded sentiment analysis. Do not repeat the entire request or long
 
 
 def _create_model(schema: dict, name: str):
-    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
     key = os.environ.get("GROQ_API_KEY", "").strip()
     model = os.environ.get("GROQ_SENTIMENT_MODEL", "openai/gpt-oss-20b").strip()
     if not key or model not in {"openai/gpt-oss-20b", "openai/gpt-oss-120b"}:
@@ -201,6 +201,10 @@ def run_sentiment_workflow(request: str) -> SentimentWorkflowResult:
         trace.append(SentimentStage("extract_source", "failed", str(error),
                                     (perf_counter() - stage_started) * 1000))
         finish_step(step_id, trace[-1])
+        if str(error) == "configuration":
+            return finish("error", "extraction_failed",
+                          "Sentiment analysis is unavailable because its model configuration is missing or invalid. "
+                          "No text was scored.")
         return finish("error", "extraction_failed", "Could not identify text for sentiment analysis. No text was scored.")
     trace.append(SentimentStage("extract_source", "completed", extraction.reason,
                                 (perf_counter() - stage_started) * 1000))
