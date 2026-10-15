@@ -133,7 +133,7 @@ expose reasoning, or suggest any tool or email was run beyond the recorded extra
 
 
 def _create_model(schema: dict, name: str):
-    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
+    load_dotenv(Path(__file__).resolve().parents[2] / ".env", override=False)
     key = os.environ.get("GROQ_API_KEY", "").strip()
     model = os.environ.get("GROQ_KEYWORD_MODEL", "openai/gpt-oss-20b").strip()
     if not key or model not in {"openai/gpt-oss-20b", "openai/gpt-oss-120b"}:
@@ -207,6 +207,10 @@ def run_keyword_workflow(request: str) -> KeywordWorkflowResult:
         trace.append(KeywordStage("extract_source", "failed", str(error),
                                 (perf_counter() - stage_started) * 1000))
         finish_step(step_id, trace[-1])
+        if str(error) == "configuration":
+            return finish("error", "extraction_failed",
+                          "Keyword extraction is unavailable because its model configuration is missing or invalid. "
+                          "No keywords were extracted.")
         return finish("error", "extraction_failed", "Could not identify text for keyword extraction. No keywords were extracted.")
     trace.append(KeywordStage("extract_source", "completed", extraction.reason,
                               (perf_counter() - stage_started) * 1000))
