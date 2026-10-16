@@ -14,6 +14,11 @@
 - **Verification:** Inspect the actual GitHub-rendered README, play the embedded
   video and check its duration/progress; verify anonymous access. Follow the
   already-authorized PR/CI/DCO/merge process and verify the final public main page.
+- **Browser evidence:** The signed-out GitHub branch README renders one native
+  video with controls, duration 347.333 seconds, readyState 4 and no media error.
+  Playback advances from 13.59 to 20.59 seconds while unpaused. Screenshot/watch
+  hyperlink are removed from the README. PR #58 carries the protected-branch fix;
+  DCO passes and required CI remains the merge gate. No video re-encode needed.
 
 ### ✅ Project README and recorded walkthrough — verified 2026-10-15
 
