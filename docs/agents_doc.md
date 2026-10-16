@@ -2,6 +2,21 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-16:** User requested a playable video directly in GitHub's README,
+  replacing the screenshot and relative watch link. The original MP4 is already
+  H.264/AAC and below 10 MB; uploaded it as a GitHub video attachment and used its
+  standalone URL for native player rendering. Preserve the original recording,
+  captions and chapter guide. Signed-out GitHub branch review confirms the native
+  player, 347.333-second duration, readyState 4/no media error and playback
+  advancing from 13.59 to 20.59 seconds. Screenshot/watch link removed. PR #58
+  follows the authorized CI/DCO/merge process; final main verification follows.
+
+- **2026-10-15:** README/walkthrough PR #57 merged as `ae5c0f2` after CI/DCO.
+  PR CI `38756178841` and main CI `38756734012` pass. Anonymous public-main
+  reads match local SHA-256 for the README, video, captions and chapter guide.
+  The later inline-player request addresses README rendering; those original
+  file/hash checks did not establish embedded playback.
+
 - **2026-10-15:** GitHub rejected direct main publication because a PR and CI/DCO
   are required. The user authorized normal PR publication, monitoring/fixes and
   merge through to public availability. Keep the local checkout on main, preserve
