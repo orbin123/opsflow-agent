@@ -2,6 +2,19 @@
 
 ## Active Agenda — resumed 2026-10-09
 
+### ⏳ Inline GitHub README video — 2026-10-16
+
+- **Request:** Replace the README screenshot and watch link with the actual video
+  playing directly on GitHub; check whether compression or shortening is needed.
+- **Diagnosis/contract:** The original relative MP4 link opens a repository file;
+  it does not embed a player. Use a standalone GitHub-hosted video attachment URL.
+  The existing 9,248,785-byte H.264/AAC MP4 is below the 10 MB free-plan limit;
+  preserve its length and quality. Uploaded through GitHub's attachment endpoint
+  following the official CLI uploader's protocol. No app behavior changes.
+- **Verification:** Inspect the actual GitHub-rendered README, play the embedded
+  video and check its duration/progress; verify anonymous access. Follow the
+  already-authorized PR/CI/DCO/merge process and verify the final public main page.
+
 ### ✅ Project README and recorded walkthrough — verified 2026-10-15
 
 - **Request:** Stay on `main`, write an in-depth spectator-friendly README from

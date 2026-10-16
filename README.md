@@ -11,7 +11,6 @@ tools handle scoring and retrieval; Groq-hosted models interpret requests and
 produce summaries, drafts and explanations. Each turn exposes the tools, inputs,
 results and timings in **Activity**, so the user can inspect what happened.
 
-[Watch the narrated walkthrough](media/opsflow-walkthrough.mp4) ·
 [User guide](docs/user-guide.md) ·
 [API contract](docs/chat-api.md) ·
 [Temporary hosted demo](https://opsflow-temporary-demo.onrender.com)
@@ -23,10 +22,13 @@ fictional workspace with disposable storage and disabled email delivery.
 [Local setup](#run-locally) · [API](#api-at-a-glance) ·
 [Evaluation](#evaluation-what-the-numbers-mean) · [Deployment](#docker-and-hosted-deployment)
 
-![OpsFlow chat showing a completed fictional remote-work policy lookup and expandable Activity](media/opsflow-workspace.png)
+## Watch OpsFlow in action
 
-The [narrated walkthrough and chapter guide](media/walkthrough.md) cover three
-live requests across all six tools, saved pages and refresh restoration.
+https://github.com/user-attachments/assets/13d41fd4-0935-4a66-acee-5c2eabca31cd
+
+A 5:47 narrated walkthrough covering all six tools in three live requests,
+including Activity, saved results and refresh restoration.
+[Chapters and English captions](media/walkthrough.md).
 
 ## What you can do
 
