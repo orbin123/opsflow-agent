@@ -2,6 +2,19 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-18:** Merged monitoring plan PR #59 as `95d0f12` after CI/DCO pass;
+  main CI also passes. Started Docker and existing monitoring containers. Actual
+  Prometheus targets the unavailable old local 8012 backend; Grafana is healthy;
+  fresh Render health/metrics return 200/404 after cold-start timeouts. Implemented
+  opt-in separately authenticated metrics, Render HTTPS Compose/scrape config and
+  Grafana instance filtering for a separate scoped PR. All 1,242 offline tests,
+  dependency/whitespace, ARM64 build, enabled/disabled container authentication,
+  promtool and Compose configuration checks pass. Fixed new fixture environment
+  leakage before the passing full run. Isolated review on 9091/3001 confirms UP,
+  healthy Grafana data source, valid panel queries and inline availability 1.
+  No model/chat/worker/SMTP work or live settings change. Existing Render release
+  is unchanged; hosted action/refresh verification awaits implementation release.
+
 - **2026-10-18:** Prepared the requested deployed monitoring plan for a draft PR.
   User clarified they have local Prometheus/Grafana; plan reuses the existing
   Docker stack to scrape Render. Docker's socket and localhost 9090/3000 services

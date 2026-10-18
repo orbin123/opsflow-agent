@@ -40,6 +40,76 @@ It does not send notifications. `docker compose -f compose.monitoring.yaml down`
 stops the services while preserving their named volumes. Backend and Streamlit
 have their own process lifetimes.
 
+## Monitor the deployed Render app from local Docker
+
+The optional deployment route exposes only the existing metrics registry over
+Render HTTPS. Set `OPSFLOW_METRICS_PASSWORD` on the Render service at runtime:
+16–72 UTF-8 bytes, no line breaks or surrounding whitespace, and different from `OPSFLOW_DEMO_PASSWORD`.
+Username is `opsflow-metrics`. The launcher hashes this separate credential and
+removes it from API/UI child environments; nginx strips it before proxying.
+Surrounding whitespace is rejected because Prometheus trims its secret file.
+The UI credential cannot scrape metrics, and the metrics credential cannot open
+the UI or its WebSocket. API/docs/schema paths stay blocked. With the variable
+absent, `/metrics` stays 404; an explicitly empty/invalid value fails startup.
+Do not add the secret to `render.yaml`, Git, build arguments or command arguments.
+
+After the reviewed implementation is deployed, save the same metrics password
+locally. Use a private ignored parent directory; the file must be readable by the
+Prometheus container's unprivileged user. The parent prevents other local users
+from traversing to the file; the file is mounted separately read-only in Docker.
+
+```sh
+mkdir -p var/monitoring-render
+chmod 700 var/monitoring-render
+python3 - <<'PYSECRET'
+from getpass import getpass
+from pathlib import Path
+secret = getpass("Render metrics password: ")
+if (not 16 <= len(secret.encode()) <= 72 or "\n" in secret or "\r" in secret
+        or secret != secret.strip()):
+    raise SystemExit("Use the same valid metrics password configured on Render")
+path = Path("var/monitoring-render/password")
+path.write_text(secret)
+path.chmod(0o644)
+PYSECRET
+export OPSFLOW_METRICS_PASSWORD_FILE="$PWD/var/monitoring-render/password"
+docker compose -f compose.monitoring.yaml -f compose.monitoring.render.yaml config
+docker compose -f compose.monitoring.yaml -f compose.monitoring.render.yaml up -d
+```
+
+This reuses the existing local services/volumes. The override replaces only the
+scrape configuration and adds the credential-file mount; a missing source file
+fails instead of creating a directory. The default local config is unchanged.
+The checked-in Render config uses HTTPS, certificate validation, a 60-second
+scrape interval, a 15-second timeout, and the `environment="render"` label.
+No inbound port or tunnel into the computer is needed. Local ports remain bound
+to localhost, and Grafana still queries `http://prometheus:9090` inside Docker.
+
+Open Prometheus Targets and confirm the Render hostname is **UP** with recent
+samples. In **OpsFlow → OpsFlow monitoring**, select
+`opsflow-temporary-demo.onrender.com:443` in **Backend**. Every panel filters this
+instance so historical/local observations are not summed into Render results.
+Use cumulative task/tool/persistence panels to compare samples before/after a new
+synthetic deployed chat. Inspect the actual saved Activity, then refresh the chat
+and confirm execution counters do not rise again. HTTP read counters may rise.
+Rate/p95 panels need several scrapes and observations; empty panels are not zeroes.
+
+The computer and Docker must stay running to collect samples. Render counters
+reset on restart; the Prometheus volume retains collected history but cannot
+recover work lost before a scrape. Cold starts can temporarily fail scrapes.
+Scraping is inbound traffic and may affect Free idle sleep and instance-hour
+usage. Stop collection when finished with
+`docker compose -f compose.monitoring.yaml -f compose.monitoring.render.yaml stop prometheus`.
+This is an operating-window setup, not continuous availability monitoring.
+
+Rollback: stop the Render scrape, remove the Render metrics runtime variable,
+and redeploy through the existing service procedure; verify `/metrics` returns
+404. Return to the local backend with
+`docker compose -f compose.monitoring.yaml up -d`, using the original local
+configuration override if applicable. Preserve named volumes. Runtime and hosted
+verification status is recorded in `docs/PLAN.md`; configuration alone is not proof
+that a deployed action reached Prometheus/Grafana.
+
 ## Logging and request correlation
 
 Every HTTP response gets a generated `X-Request-ID`. Caller-provided values are
@@ -108,8 +178,8 @@ Tests cover correlation and route labels, validation and unexpected HTTP errors,
 content exclusion, outcome labels, actual tool calls without SSE, saved replay,
 unsaved finalization, SSE task failure under HTTP 200 and disconnected completion.
 Live browser/scrape evidence and remaining limitations are recorded in
-`docs/PLAN.md` and `docs/agents_doc.md`. No production deployment, alerting,
-distributed tracing, cloud export or durable log retention is included.
+`docs/PLAN.md` and `docs/agents_doc.md`. The optional Render scrape path is documented above. No alerting, distributed
+tracing, cloud metric storage or durable log retention is included.
 
 Implementation references: [Prometheus instrumentation guidance](https://prometheus.io/docs/practices/instrumentation/),
 [Grafana Prometheus configuration](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure/),

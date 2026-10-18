@@ -91,6 +91,15 @@ persistence outcomes remain separate; saved replay/recovery never counts as new
 work. Metrics are process-scoped and reset on restart. The monitoring Compose
 stack does not start the app or reminder worker. See `docs/monitoring.md`.
 
+The approved Render monitoring extension reuses local Docker Prometheus/Grafana.
+Optional `OPSFLOW_METRICS_PASSWORD` enables a separately authenticated metrics-only
+proxy; absent configuration retains 404. The Render scrape/Compose override uses
+HTTPS and a local secret file, and Grafana filters the selected backend instance.
+Collection requires the computer/Docker to run; restart and scrape gaps can lose
+observations. Plan PR #59 is merged; implementation is verified locally and its
+release/actual deployed action evidence remain pending. See
+`docs/deployed-monitoring-plan.md` and `docs/monitoring.md`.
+
 The user approved a protected temporary Render Free demo. Its Docker launcher
 runs one loopback-only API, Streamlit and a password-protected public nginx proxy;
 it never starts the reminder worker. Cloud SQLite records are disposable and local

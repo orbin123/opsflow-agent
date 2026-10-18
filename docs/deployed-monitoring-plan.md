@@ -1,6 +1,7 @@
 # Deployed application monitoring plan
 
-Planning status: 2026-10-18. The connection and runtime verification are pending.
+Status: 2026-10-18. Plan PR #59 merged as `95d0f12`. Implementation is verified
+locally and awaits its separate PR/release; the deployed connection is pending.
 
 ## Goal and hosting choice
 
@@ -100,10 +101,21 @@ Regular scrapes are inbound traffic and may affect idle sleep behavior and Free
 instance-hour usage. Document the chosen scrape interval and operating window;
 this setup provides no continuous availability guarantee.
 
-Keep the first PR as a draft planning change, with `[skip render]` in its signed
-commit. Discuss the connection contract and proportional checks before coding.
-Prepare implementation for review before merge or changing live settings. Final
-completion requires actual Render action evidence through both monitoring tools.
+The planning PR merged with CI/DCO passing and `[skip render]`, preserving the
+existing deployed release. The implementation adds the opt-in metrics route,
+Render Compose/scrape configuration and an instance selector in every Grafana
+panel. Prepare its separate PR for review before merge or changing live settings.
+Final completion requires actual Render action evidence through both tools.
+
+Local implementation checks pass: 1,242 offline tests, dependencies/whitespace,
+native ARM64 image build, enabled/disabled container HTTP/WebSocket authentication,
+Prometheus config validation and merged Compose mount/bind inspection. An isolated
+review stack scrapes the new container successfully, Grafana's data-source health
+is OK, every panel query parses and the inline dashboard shows the selected review
+backend with availability 1. No local model/chat/worker/SMTP execution was used;
+task/tool/persistence behavior is covered by existing offline regressions. Real
+Render task/tool/persistence deltas remain unverified. The latest live check still
+returns `/metrics` 404 on the existing release; no live secret/settings changed.
 
 Rollback: stop the Render scrape configuration and remove the metrics runtime
 configuration, then verify the public route is disabled. Preserve the local

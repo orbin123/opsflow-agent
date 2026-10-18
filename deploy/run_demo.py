@@ -13,6 +13,13 @@ RUNTIME = Path("/tmp/opsflow-runtime")
 SHUTDOWN_SECONDS = 140
 
 
+def write_password_file(path, username, password):
+    subprocess.run(["htpasswd", "-i", "-B", "-c", str(path), username],
+                   input=password + "\n", text=True, check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    path.chmod(0o600)
+
+
 def prepare_proxy():
     port = int(os.environ.get("PORT", "10000"))
     if not 1024 <= port <= 65535 or port in {8000, 8501}:
@@ -20,14 +27,27 @@ def prepare_proxy():
     password = os.environ.pop("OPSFLOW_DEMO_PASSWORD", "")
     if not 16 <= len(password.encode()) <= 72 or "\n" in password or "\r" in password:
         raise ValueError("Set a demo password of 16–72 bytes without line breaks")
+    metrics_password = os.environ.pop("OPSFLOW_METRICS_PASSWORD", None)
+    if metrics_password is not None and (
+        not 16 <= len(metrics_password.encode()) <= 72
+        or any(char in metrics_password for char in "\n\r")
+        or metrics_password != metrics_password.strip()
+        or metrics_password == password
+    ):
+        raise ValueError("Set a separate metrics password of 16–72 bytes without line breaks or surrounding whitespace")
     RUNTIME.mkdir(mode=0o700, exist_ok=True)
-    subprocess.run(["htpasswd", "-i", "-B", "-c", str(RUNTIME / "htpasswd"), "opsflow"],
-                   input=password + "\n", text=True, check=True,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    (RUNTIME / "htpasswd").chmod(0o600)
+    write_password_file(RUNTIME / "htpasswd", "opsflow", password)
+    metrics_access = "return 404;"
+    if metrics_password is not None:
+        write_password_file(RUNTIME / "metrics-htpasswd", "opsflow-metrics", metrics_password)
+        metrics_access = '''auth_basic "OpsFlow metrics";
+            auth_basic_user_file /tmp/opsflow-runtime/metrics-htpasswd;
+            limit_except GET { deny all; }
+            proxy_pass http://127.0.0.1:8000/metrics;
+            proxy_set_header Authorization "";'''
     template = Path(__file__).with_name("nginx.conf.template").read_text()
     config = RUNTIME / "nginx.conf"
-    config.write_text(template.replace("__PORT__", str(port)))
+    config.write_text(template.replace("__PORT__", str(port)).replace("__METRICS_ACCESS__", metrics_access))
     # Demo packaging always keeps requests internal and never starts delivery.
     os.environ["OPSFLOW_API_URL"] = "http://127.0.0.1:8000"
     os.environ["OPSFLOW_TEMPORARY_DEMO"] = "1"
