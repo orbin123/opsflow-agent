@@ -2,23 +2,40 @@
 
 ## Active Agenda — resumed 2026-10-09
 
-### ⏳ Deployed Prometheus/Grafana connection — planning 2026-10-18
+### ⏳ Deployed Prometheus/Grafana connection — implementation 2026-10-18
 
 - **Request:** Plan first and create a PR for observing deployed application
   actions in Prometheus and Grafana.
 - **Decision:** The user clarified monitoring is local. Reuse the existing Docker
   Prometheus/Grafana stack to scrape Render over HTTPS while the computer is on;
-  separate monitoring hosting is deferred. Local Docker/services are currently
-  unavailable, so actual container configuration remains uninspected.
+  separate monitoring hosting is deferred. Plan PR #59 merged as `95d0f12` with
+  CI/DCO passing; the user asked for merge and deployed monitoring verification.
 - **Diagnosis:** Repository Prometheus targets the local backend; Render nginx
   blocks `/metrics`. Existing task/tool/persistence instrumentation is available.
 - **Proposal:** A protected metrics-only endpoint, local Render target/data-source
   setup and Render-specific dashboard filtering. See
   [the connection plan](deployed-monitoring-plan.md) for scope and acceptance checks.
-- **Verification:** This first PR contains planning documentation only. Runtime
-  checks belong to the agreed implementation slice; completion requires actual
+- **Current inspection:** Docker and the two existing containers now run. Actual
+  Prometheus targets the old local review backend on 8012 and is down with
+  connection refused. Grafana reports a healthy database. Fresh Render checks
+  return health 200 and metrics 404 after cold-start timeouts.
+- **Verification:** Implement the agreed opt-in route/configuration with focused
+  credential/proxy checks, existing monitoring regressions, container checks and
+  required CI. Completion requires actual
   Render scrape/dashboard evidence and task/tool/persistence deltas for a new UI
   action, followed by refresh without reexecution. No live connection is claimed.
+- **Local result:** 1,242 offline tests, dependencies/whitespace, native ARM64
+  build and both enabled/disabled container HTTP/WebSocket access checks pass.
+  Corrected a new launcher fixture's environment leak before the passing full run.
+  Promtool validates Render config; merged Compose inspection confirms localhost
+  binds, one config mount and read-only secret mounting. Isolated Prometheus is
+  UP against the new app container; Grafana's data source is OK, all panel queries
+  parse and inline review shows Backend selection and availability 1. No provider,
+  chat submission, worker or SMTP execution used for local review.
+- **Release boundary:** Implementation PR and hosted CI/release remain pending.
+  Render still runs the earlier application release; metrics stays 404 until the
+  reviewed code and separate runtime secret are deployed. Local review dashboard
+  is on 3001/Prometheus 9091; existing services stay on 3000/9090 with their volumes.
 
 ### ⏳ Inline GitHub README video — 2026-10-16
 

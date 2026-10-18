@@ -1,0 +1,10 @@
+services:
+  prometheus:
+    volumes:
+      - ./monitoring/prometheus.render.yml:/etc/prometheus/prometheus.yml:ro
+      - type: bind
+        source: ${OPSFLOW_METRICS_PASSWORD_FILE:?Set OPSFLOW_METRICS_PASSWORD_FILE to the local metrics password file}
+        target: /run/secrets/opsflow_metrics_password
+        read_only: true
+        bind:
+          create_host_path: false

@@ -10,7 +10,9 @@ verified release commit SHAs with read-only repository permissions.
 
 The smoke check uses a generated test password and disposable containers. It
 checks health, missing/wrong/correct UI and WebSocket authentication, hidden
-backend routes and failure without a password. It makes no chat submissions,
+backend routes and failure without a password. It runs with optional metrics both
+disabled and enabled, checking separate UI/metrics credentials, Prometheus sample
+format, scrape-count exclusion and rejection of write methods. It makes no chat submissions,
 starts no delivery worker and supplies no Groq/SMTP credentials. Existing tests
 use provider/email doubles. Streamlit AppTest constructors explicitly allow 15
 seconds per run for slower environments; assertions and application timeouts

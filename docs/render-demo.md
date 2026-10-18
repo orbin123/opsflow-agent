@@ -20,7 +20,8 @@ notebooks, tests and caches. All processes run as the unprivileged `opsflow` use
 `deploy/run_demo.py` starts one Uvicorn process on loopback port 8000, checks the
 read-only chat catalogue for storage readiness, starts Streamlit on loopback
 8501, and then starts nginx on `0.0.0.0:$PORT` (default 10000). Only nginx is
-public. API, metrics and OpenAPI paths are not routed to the backend. The public
+public. API and OpenAPI paths are not routed to the backend. Metrics is disabled
+by default; optional separately authenticated access is described below. The public
 `/health` exposes only UI liveness; child failure stops the whole service.
 
 The proxy requires HTTP Basic authentication for UI resources and WebSocket
@@ -29,6 +30,14 @@ startup fails without a 16–72-byte password without line breaks. The password
 is hashed using bcrypt through stdin, removed from child environments and never
 forwarded to Streamlit. Passwords and Groq keys must never be committed or used
 as Docker build arguments. Render supplies HTTPS for browser connections.
+
+Optional `OPSFLOW_METRICS_PASSWORD` enables a read-only `/metrics` proxy with
+username `opsflow-metrics` and its own bcrypt password file. It must be 16–72
+UTF-8 bytes without line breaks or surrounding whitespace and differ from the UI password. Absent means
+404; empty/invalid fails startup. Both credentials are removed before child
+launch. Metrics credentials cannot access UI/WebSockets, and UI credentials cannot
+scrape. See [monitoring](monitoring.md) for the local Docker Render scrape setup,
+secret handling, verification and rollback. This adds no public application API.
 
 SIGTERM/interrupt stops the proxy/UI and asks the API to drain execution before
 exit, allowing up to 140 seconds locally before forcing termination. Render Free

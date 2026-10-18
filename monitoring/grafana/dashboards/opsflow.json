@@ -2,7 +2,7 @@
   "uid": "opsflow-monitoring",
   "title": "OpsFlow monitoring",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "editable": false,
   "refresh": "30s",
   "time": {
@@ -28,8 +28,8 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "up{job=\"opsflow\"}",
-          "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
+          "expr": "up{job=\"opsflow\",instance=\"$instance\"}",
+          "legendFormat": "{{instance}}",
           "instant": true
         }
       ],
@@ -58,7 +58,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (route) (rate(opsflow_http_requests_total{job=\"opsflow\"}[5m]))",
+          "expr": "sum by (route) (rate(opsflow_http_requests_total{job=\"opsflow\",instance=\"$instance\"}[5m]))",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": false
         }
@@ -88,7 +88,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(opsflow_http_request_duration_seconds_bucket{job=\"opsflow\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(opsflow_http_request_duration_seconds_bucket{job=\"opsflow\",instance=\"$instance\"}[5m])))",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": false
         }
@@ -118,7 +118,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "100 * sum(rate(opsflow_http_outcomes_total{job=\"opsflow\",outcome=\"server_error\"}[5m])) / sum(rate(opsflow_http_outcomes_total{job=\"opsflow\"}[5m]))",
+          "expr": "100 * sum(rate(opsflow_http_outcomes_total{job=\"opsflow\",instance=\"$instance\",outcome=\"server_error\"}[5m])) / sum(rate(opsflow_http_outcomes_total{job=\"opsflow\",instance=\"$instance\"}[5m]))",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": false
         }
@@ -148,7 +148,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "100 * sum(rate(opsflow_task_outcomes_total{job=\"opsflow\",outcome=~\"error|partial_failure\"}[5m])) / sum(rate(opsflow_task_outcomes_total{job=\"opsflow\"}[5m]))",
+          "expr": "100 * sum(rate(opsflow_task_outcomes_total{job=\"opsflow\",instance=\"$instance\",outcome=~\"error|partial_failure\"}[5m])) / sum(rate(opsflow_task_outcomes_total{job=\"opsflow\",instance=\"$instance\"}[5m]))",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": false
         }
@@ -178,7 +178,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (intent) (opsflow_tasks_total{job=\"opsflow\"})",
+          "expr": "sum by (intent) (opsflow_tasks_total{job=\"opsflow\",instance=\"$instance\"})",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": true,
           "format": "table"
@@ -225,7 +225,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (route, outcome) (opsflow_tasks_total{job=\"opsflow\"})",
+          "expr": "sum by (route, outcome) (opsflow_tasks_total{job=\"opsflow\",instance=\"$instance\"})",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": true,
           "format": "table"
@@ -269,7 +269,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(opsflow_task_duration_seconds_bucket{job=\"opsflow\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, route) (rate(opsflow_task_duration_seconds_bucket{job=\"opsflow\",instance=\"$instance\"}[5m])))",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": false
         }
@@ -299,7 +299,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (tool, outcome) (opsflow_tool_calls_total{job=\"opsflow\"})",
+          "expr": "sum by (tool, outcome) (opsflow_tool_calls_total{job=\"opsflow\",instance=\"$instance\"})",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": true,
           "format": "table"
@@ -343,7 +343,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "histogram_quantile(0.95, sum by (le, tool) (rate(opsflow_tool_duration_seconds_bucket{job=\"opsflow\"}[5m])))",
+          "expr": "histogram_quantile(0.95, sum by (le, tool) (rate(opsflow_tool_duration_seconds_bucket{job=\"opsflow\",instance=\"$instance\"}[5m])))",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": false
         }
@@ -373,7 +373,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (status) (opsflow_http_requests_total{job=\"opsflow\"})",
+          "expr": "sum by (status) (opsflow_http_requests_total{job=\"opsflow\",instance=\"$instance\"})",
           "legendFormat": "{{route}}{{intent}}{{tool}} {{outcome}}{{status}}",
           "instant": true,
           "format": "table"
@@ -417,7 +417,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "sum by (outcome) (opsflow_turn_persistence_total{job=\"opsflow\"})",
+          "expr": "sum by (outcome) (opsflow_turn_persistence_total{job=\"opsflow\",instance=\"$instance\"})",
           "legendFormat": "{{outcome}}",
           "instant": true,
           "format": "table"
@@ -445,5 +445,25 @@
       ]
     }
   ],
-  "description": "Process-scoped backend metrics. HTTP streams and execution outcomes are separate. No traffic means rate panels may have no data; cumulative panels show observed work."
+  "description": "Process-scoped backend metrics. HTTP streams and execution outcomes are separate. No traffic means rate panels may have no data; cumulative panels show observed work. Select the Render hostname in Backend to inspect deployed observations separately from local traffic.",
+  "templating": {
+    "list": [
+      {
+        "name": "instance",
+        "label": "Backend",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "opsflow-prometheus"
+        },
+        "query": "label_values(up{job=\"opsflow\"}, instance)",
+        "refresh": 1,
+        "sort": 1,
+        "multi": false,
+        "includeAll": false,
+        "options": [],
+        "current": {}
+      }
+    ]
+  }
 }
