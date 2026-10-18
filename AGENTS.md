@@ -96,8 +96,9 @@ Optional `OPSFLOW_METRICS_PASSWORD` enables a separately authenticated metrics-o
 proxy; absent configuration retains 404. The Render scrape/Compose override uses
 HTTPS and a local secret file, and Grafana filters the selected backend instance.
 Collection requires the computer/Docker to run; restart and scrape gaps can lose
-observations. Plan PR #59 is merged; implementation is verified locally and its
-release/actual deployed action evidence remain pending. See
+observations. PR #59/#60 are merged; main CI passes 1,242 tests, and Render deployment
+`dep-dba3uerrjlhs73c83ugg` runs `d28deca`. Actual hosted sentiment increments one
+task/tool/save in local Prometheus and Grafana; refresh preserves those counts. See
 `docs/deployed-monitoring-plan.md` and `docs/monitoring.md`.
 
 The user approved a protected temporary Render Free demo. Its Docker launcher

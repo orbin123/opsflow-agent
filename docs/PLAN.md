@@ -2,40 +2,38 @@
 
 ## Active Agenda — resumed 2026-10-09
 
-### ⏳ Deployed Prometheus/Grafana connection — implementation 2026-10-18
+### ✅ Deployed Prometheus/Grafana connection — verified 2026-10-18
 
-- **Request:** Plan first and create a PR for observing deployed application
-  actions in Prometheus and Grafana.
-- **Decision:** The user clarified monitoring is local. Reuse the existing Docker
-  Prometheus/Grafana stack to scrape Render over HTTPS while the computer is on;
-  separate monitoring hosting is deferred. Plan PR #59 merged as `95d0f12` with
-  CI/DCO passing; the user asked for merge and deployed monitoring verification.
-- **Diagnosis:** Repository Prometheus targets the local backend; Render nginx
-  blocks `/metrics`. Existing task/tool/persistence instrumentation is available.
-- **Proposal:** A protected metrics-only endpoint, local Render target/data-source
-  setup and Render-specific dashboard filtering. See
-  [the connection plan](deployed-monitoring-plan.md) for scope and acceptance checks.
-- **Current inspection:** Docker and the two existing containers now run. Actual
-  Prometheus targets the old local review backend on 8012 and is down with
-  connection refused. Grafana reports a healthy database. Fresh Render checks
-  return health 200 and metrics 404 after cold-start timeouts.
-- **Verification:** Implement the agreed opt-in route/configuration with focused
-  credential/proxy checks, existing monitoring regressions, container checks and
-  required CI. Completion requires actual
-  Render scrape/dashboard evidence and task/tool/persistence deltas for a new UI
-  action, followed by refresh without reexecution. No live connection is claimed.
-- **Local result:** 1,242 offline tests, dependencies/whitespace, native ARM64
-  build and both enabled/disabled container HTTP/WebSocket access checks pass.
-  Corrected a new launcher fixture's environment leak before the passing full run.
-  Promtool validates Render config; merged Compose inspection confirms localhost
-  binds, one config mount and read-only secret mounting. Isolated Prometheus is
-  UP against the new app container; Grafana's data source is OK, all panel queries
-  parse and inline review shows Backend selection and availability 1. No provider,
-  chat submission, worker or SMTP execution used for local review.
-- **Release boundary:** Implementation PR and hosted CI/release remain pending.
-  Render still runs the earlier application release; metrics stays 404 until the
-  reviewed code and separate runtime secret are deployed. Local review dashboard
-  is on 3001/Prometheus 9091; existing services stay on 3000/9090 with their volumes.
+- **Decision:** Reuse existing local Docker Prometheus/Grafana to observe the
+  Render app while the computer/Docker run. No separate monitoring host.
+- **Publication:** Planning PR #59 merged as `95d0f12`; implementation PR #60
+  merged as `d28deca` after genuine CI/DCO. Main CI `39094163260` passes all
+  1,242 tests, dependencies, AMD64 image and enabled/disabled authentication smoke
+  checks. Render automatically deployed that exact SHA as
+  `dep-dba3uerrjlhs73c83ugg` after main CI; no manual deploy bypass.
+- **Connection:** Dedicated runtime metrics secret and ignored local password file
+  configured without exposing values. Existing local Compose services/volumes now
+  use the Render HTTPS override at 60-second intervals. Grafana selects the Render
+  instance explicitly. Temporary review containers stopped/removed; normal services
+  remain on localhost 9090/3000. Original local configuration/volumes are preserved.
+- **Evidence:** All 13 hosted health, UI/WebSocket, metrics credential-isolation and
+  hidden API/docs/schema checks pass. Prometheus records Render UP with multiple
+  successful scrapes. One real Chrome sentiment request completes `llm_assisted`,
+  positive, with saved Activity. At 03:40:36 UTC the completed-task aggregate is 0;
+  at 03:41:36 it is 1, alongside exactly one completed `analyze_sentiment` call
+  and one saved finalization. Grafana renders those same three counts as 1.
+  Browser refresh restores the same answer; the 03:42:36 scrape retains identical
+  execution/tool/persistence counters. HTTP reads increase separately.
+- **Local verification:** Native ARM64 build, container authentication, promtool,
+  Compose mounts/localhost binds and inline Grafana selector checks pass. Corrected
+  a new test fixture's environment leak before the passing full-suite run.
+- **Limits/handoff:** One representative hosted action verifies connection and
+  refresh semantics, not general model quality or capacity. No worker/SMTP/email
+  delivery. Collection stops when the computer/Docker stops; restart/scrape gaps
+  can lose observations. Deployed chat, Prometheus and Grafana remain open.
+  Local main is fast-forwarded with the user's report-note additions preserved;
+  originals/patch and a named stash remain under the ignored local backup path.
+  Record this verification in a documentation-only follow-up with `[skip render]`.
 
 ### ⏳ Inline GitHub README video — 2026-10-16
 

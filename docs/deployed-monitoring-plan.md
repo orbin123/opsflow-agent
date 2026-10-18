@@ -1,7 +1,8 @@
 # Deployed application monitoring plan
 
-Status: 2026-10-18. Plan PR #59 merged as `95d0f12`. Implementation is verified
-locally and awaits its separate PR/release; the deployed connection is pending.
+Status: verified 2026-10-18. Plan PR #59 merged as `95d0f12`; implementation
+PR #60 merged as `d28deca` and is deployed. Local Prometheus/Grafana reflect
+actual deployed actions; refresh stability is verified.
 
 ## Goal and hosting choice
 
@@ -14,7 +15,7 @@ The user clarified that monitoring is local on 2026-10-18. Reuse
 running; deploying monitoring to a separate host is deferred. This slice requires
 no new hosting service.
 
-## Current evidence
+## Initial evidence before setup
 
 - `app/observability/monitoring.py` already records HTTP requests, new tasks,
   actual tools, durations and chat finalization, with bounded, content-free labels.
@@ -101,21 +102,26 @@ Regular scrapes are inbound traffic and may affect idle sleep behavior and Free
 instance-hour usage. Document the chosen scrape interval and operating window;
 this setup provides no continuous availability guarantee.
 
-The planning PR merged with CI/DCO passing and `[skip render]`, preserving the
-existing deployed release. The implementation adds the opt-in metrics route,
-Render Compose/scrape configuration and an instance selector in every Grafana
-panel. Prepare its separate PR for review before merge or changing live settings.
-Final completion requires actual Render action evidence through both tools.
+The planning PR merged with `[skip render]`. The user then approved implementation
+merge, Render secret setup and deployed verification. PR #60 merged as `d28deca`;
+main CI `39094163260` passes 1,242 tests, dependency/whitespace checks, AMD64 build
+and both enabled/disabled access smoke checks. Render automatically deployed the
+exact SHA as `dep-dba3uerrjlhs73c83ugg`.
 
-Local implementation checks pass: 1,242 offline tests, dependencies/whitespace,
-native ARM64 image build, enabled/disabled container HTTP/WebSocket authentication,
-Prometheus config validation and merged Compose mount/bind inspection. An isolated
-review stack scrapes the new container successfully, Grafana's data-source health
-is OK, every panel query parses and the inline dashboard shows the selected review
-backend with availability 1. No local model/chat/worker/SMTP execution was used;
-task/tool/persistence behavior is covered by existing offline regressions. Real
-Render task/tool/persistence deltas remain unverified. The latest live check still
-returns `/metrics` 404 on the existing release; no live secret/settings changed.
+Local checks also cover native ARM64 build, promtool configuration validation,
+merged Compose mounts/binds and actual protected scraping/Grafana queries. One
+new launcher fixture initially leaked the demo flag; isolation was corrected
+before the passing full run. The temporary review stack is stopped/removed.
+
+All 13 hosted health/authentication/WebSocket/backend-boundary checks pass. The
+existing local stack now scrapes Render successfully with its separate credential
+and renders the selected instance. At 03:40:36 UTC the task aggregate was 0. One
+synthetic Chrome sentiment turn completed with positive output and saved Activity;
+at 03:41:36 Prometheus shows exactly one completed task, one completed sentiment
+tool and one saved finalization. Grafana's task/tool/persistence panels each show 1.
+Refresh restores the same saved answer; the 03:42:36 successful scrape preserves
+all three counts. No worker or email delivery ran. This verifies one representative
+connection/action, not general model reliability or continuous availability.
 
 Rollback: stop the Render scrape configuration and remove the metrics runtime
 configuration, then verify the public route is disabled. Preserve the local
