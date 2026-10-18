@@ -2,6 +2,16 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-18:** Prepared the requested deployed monitoring plan for a draft PR.
+  User clarified they have local Prometheus/Grafana; plan reuses the existing
+  Docker stack to scrape Render. Docker's socket and localhost 9090/3000 services
+  are currently unavailable; running setup is uninspected. Source finds a local-only scrape target
+  and Render's explicitly blocked `/metrics`. Proposed separately authenticated
+  metrics access, local Render configuration and Render-filtered dashboard evidence.
+  Recorded access/regression checks and a hosted action/refresh delta contract in
+  `docs/deployed-monitoring-plan.md`. Planning documentation only; no application
+  changes, runtime tests, hosted configuration changes or deployment verification.
+
 - **2026-10-16:** User requested a playable video directly in GitHub's README,
   replacing the screenshot and relative watch link. The original MP4 is already
   H.264/AAC and below 10 MB; uploaded it as a GitHub video attachment and used its

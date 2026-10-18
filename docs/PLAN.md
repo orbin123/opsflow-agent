@@ -2,6 +2,24 @@
 
 ## Active Agenda — resumed 2026-10-09
 
+### ⏳ Deployed Prometheus/Grafana connection — planning 2026-10-18
+
+- **Request:** Plan first and create a PR for observing deployed application
+  actions in Prometheus and Grafana.
+- **Decision:** The user clarified monitoring is local. Reuse the existing Docker
+  Prometheus/Grafana stack to scrape Render over HTTPS while the computer is on;
+  separate monitoring hosting is deferred. Local Docker/services are currently
+  unavailable, so actual container configuration remains uninspected.
+- **Diagnosis:** Repository Prometheus targets the local backend; Render nginx
+  blocks `/metrics`. Existing task/tool/persistence instrumentation is available.
+- **Proposal:** A protected metrics-only endpoint, local Render target/data-source
+  setup and Render-specific dashboard filtering. See
+  [the connection plan](deployed-monitoring-plan.md) for scope and acceptance checks.
+- **Verification:** This first PR contains planning documentation only. Runtime
+  checks belong to the agreed implementation slice; completion requires actual
+  Render scrape/dashboard evidence and task/tool/persistence deltas for a new UI
+  action, followed by refresh without reexecution. No live connection is claimed.
+
 ### ⏳ Inline GitHub README video — 2026-10-16
 
 - **Request:** Replace the README screenshot and watch link with the actual video
