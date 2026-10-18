@@ -95,6 +95,25 @@ No new scoring, chat submission, email sending or worker startup ran. The releas
 record uses `[skip render]`; CI still runs, and the deployed runtime remains the
 verified #55 merge SHA.
 
+## Deployed monitoring release — 2026-10-18
+
+Planning PR #59 merged as `95d0f12` with `[skip render]`. User-approved runtime
+PR #60 merged as `d28deca90c2c7785dad5aabdfb77f821d10ccbe9` after CI/DCO.
+Main CI `39094163260` passes all 1,242 offline tests, dependency/whitespace checks,
+AMD64 Docker build and the enabled/disabled metrics authentication smoke checks.
+Render automatically deployed that exact SHA as `dep-dba3uerrjlhs73c83ugg` with
+trigger `new_commit`; it became live at 03:39:51 UTC. No manual deploy bypass.
+
+The dedicated runtime metrics secret and matching ignored local file enable the
+existing local Docker monitoring stack to scrape Render over verified HTTPS.
+All 13 hosted health, UI/WebSocket, metrics credential-isolation and hidden API/
+docs/schema checks pass. Multiple Prometheus scrapes show UP. One actual Chrome
+sentiment request completes and saves, incrementing task/tool/persistence to 1;
+Grafana renders all three. Refresh restores its saved answer, and a later scrape
+keeps the counts unchanged. No worker/SMTP/email delivery ran. This representative
+check does not establish capacity or general model reliability. A documentation
+follow-up uses `[skip render]` to preserve the verified running release.
+
 ## Recovery
 
 For a bad release, open the service's Render Deploys page and roll back to a

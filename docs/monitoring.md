@@ -184,3 +184,15 @@ tracing, cloud metric storage or durable log retention is included.
 Implementation references: [Prometheus instrumentation guidance](https://prometheus.io/docs/practices/instrumentation/),
 [Grafana Prometheus configuration](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure/),
 and [Grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/).
+
+## Recorded Render connection verification — 2026-10-18
+
+PR #60 is deployed as `d28deca` in `dep-dba3uerrjlhs73c83ugg`; main CI passes
+1,242 tests, AMD64 image and enabled/disabled access checks. Dedicated metrics
+access passes all 13 hosted boundary checks. Existing local Docker Prometheus
+shows the Render target UP, and Grafana selects that hostname. One synthetic
+hosted sentiment request increments completed task, tool and saved-turn counters
+to 1 in both tools. Refresh restores the saved reply; a later successful scrape
+retains those counts. No reminder worker or email delivery ran. Local monitoring
+must keep running to collect future samples; deployment does not host Grafana or
+Prometheus. See `docs/cicd.md` and `docs/PLAN.md` for the release evidence/limits.

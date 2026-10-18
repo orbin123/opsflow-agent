@@ -2,6 +2,18 @@
 
 Keep entries brief: date, completed change, verification, and any changed decision. Track actual work rather than restating the plan.
 
+- **2026-10-18:** User approved #60 merge, Render setup and deployed verification.
+  Merged as `d28deca`; main CI `39094163260` passes 1,242 tests, AMD64 image and
+  both metrics-mode authentication checks. Render auto-deployment
+  `dep-dba3uerrjlhs73c83ugg` is live on that exact SHA. Configured separate metrics
+  secret/local ignored file and switched existing Docker monitoring to Render,
+  preserving volumes. All 13 hosted access checks pass. Real Chrome sentiment
+  completes with one task/tool/save reflected in Prometheus and Grafana; refresh
+  restores the same answer and the next successful scrape keeps those counts at 1.
+  No worker/SMTP/delivery. Local main updated while preserving report-note edits;
+  named stash/files/patch retained. Review containers removed; normal monitoring
+  and deployed chat remain open. Verification record uses `[skip render]`.
+
 - **2026-10-18:** Merged monitoring plan PR #59 as `95d0f12` after CI/DCO pass;
   main CI also passes. Started Docker and existing monitoring containers. Actual
   Prometheus targets the unavailable old local 8012 backend; Grafana is healthy;
